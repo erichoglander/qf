@@ -7,19 +7,20 @@ class Db {
 	private $database, $user, $pass;
 	private $db;
 
-	public function __construct($user, $pass, $db) {
+	public function connect($user, $pass, $db) {
 		try {
 			$this->db = new PDO("mysql:host=localhost;dbname=".$db.";charset=utf8", $user, $pass);
 			$this->db->query("SET COLLATION_CONNECTION=UTF8_SWEDISH_CI");
 		}
 		catch (PDOException $e) {
-			die("Oj då, nu är det lite många som är inne på sidan och vi klarar inte trycket. Försök gärna igen om en stund.");
+			return false;
 		}
 		$this->database = $db;
 		$this->user = $user;
 		$this->pass = $pass;
 		$this->db->query("SET NAMES UTF8");
 		$this->db->query("SET COLLATION_CONNECTION=UTF8_SWEDISH_CI");
+		return true;
 	}
 	
 	public function dump($file) {

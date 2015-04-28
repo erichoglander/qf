@@ -9,5 +9,9 @@ require_once(DOC_ROOT."/core/model/model.php");
 if (file_exists(DOC_ROOT."/extend/inc/functions.php"))
 	require_once(DOC_ROOT."/extend/inc/functions.php");
 
-// TODO: new Db();
-$Db = new stdClass;
+
+$Db = new Db();
+if (!$Db->connect("localuser", "hallonsaft", "test_db")) {
+	$Controller = new Error_Controller($Db);
+	die($Controller->databaseFail().PHP_EOL);
+}
