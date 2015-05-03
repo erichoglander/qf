@@ -1,13 +1,12 @@
 <?php
 class ControllerFactory {
 
-	public function __construct() {
-	}
-
 	# uri: /controller/action/arg0/arg1/arg2/...
 	public function executeUri($uri) {
+		$uri = strtolower($uri);
 		if (strpos($uri, "/") === 0)
 			$uri = substr($uri, 1);
+		// TODO: Url alias
 		$params = explode("/", $uri);
 		$n = count($params);
 		if ($n < 2) {
@@ -27,7 +26,9 @@ class ControllerFactory {
 
 	public function executeControllerAction($controller, $action, $args = Array()) {
 		$Controller = $this->getController($controller);
-		return $Controller->$action($args);
+		if (!is_callable($Controller, $action))
+			return $Controller->callAction("notFound");
+		return $Controller->callAction($action, $args);
 	}
 
 	public function getController($controller) {

@@ -5,13 +5,13 @@
 	<title><?=$title?></title>
 	<?=$favicon?>
 	<?=$meta?>
-	<?=$pre_styles?>
-	<?php foreach ($styles as $style) { ?>
-	<link rel="stylesheet" type="text/css" href="<?=$style?>">
+	<?=$pre_css?>
+	<?php foreach ($css as $c) { ?>
+	<link rel="stylesheet" type="text/css" href="<?=$c?>">
 	<?php } ?>
-	<?=$pre_scripts?>
-	<?php foreach ($scripts as $script) { ?>
-	<script type="text/javascript" src="<?=$script?>"></script>
+	<?=$pre_js?>
+	<?php foreach ($js as $j) { ?>
+	<script type="text/javascript" src="<?=$j?>"></script>
 	<?php } ?>
 	<?=$head_end?>
 </head>

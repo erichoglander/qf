@@ -25,6 +25,8 @@ class Theme {
 		if ($part == "html") {
 			$vars['css'] = array_merge($vars['css'], $this->css);
 			$vars['js'] = array_merge($vars['js'], $this->js);
+			$vars['favicon'] = "";
+			$vars['meta'] = "";
 		}
 		extract($vars);
 		ob_start();

@@ -2,6 +2,7 @@
 class Controller {
 
 	public $args = Array();
+	public $connected;
 	protected $Config, $Db, $Html, $Model;
 
 	public function __construct() {
@@ -10,18 +11,26 @@ class Controller {
 		$this->Html = new Html($this->Db);
 		$this->name = $this->getName();
 		$this->real_name = $this->getRealName();
-		if (!$this->connect()) {
-			return $this->databaseFail();
+		if ($this->connect()) {
+			$this->connected = true;
+			$this->Model = $this->getModel();
 		}
-		$this->Model = $this->getModel();
+		else {
+			$this->connected = false;
+		}
 	}
 
-	public function __call($name, $arguments = Array()) {
-		if (!method_exists($this, $name))
-			return $this->notFound();
-		if ($this->access($this, $name) === false)
+
+	public function callAction($action, $args = Array()) {
+		if (!$this->connected)
+			return $this->databaseFail();
+		if (!$this->access($action, $args))
 			return $this->accessDenied();
+		if (!method_exists($this, $action))
+			return $this->notFound();
+		return $this->$action($args);
 	}
+
 	
 	protected function databaseFail() {
 		return $this->serverBusy();
