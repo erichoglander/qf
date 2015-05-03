@@ -28,6 +28,7 @@ class Controller {
 			return $this->accessDenied();
 		if (!method_exists($this, $action)) 
 			return $this->notFound();
+		$this->Html->title = ucwords($this->name." ".$action);
 		return $this->$action($args);
 	}
 
