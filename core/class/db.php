@@ -1,18 +1,18 @@
 <?php
-
 class Db {
 
-	public $errors = Array();
+	protected $errors = Array();
 
 	private $database, $user, $pass;
 	private $db;
 
-	public function connect($user, $pass, $db) {
+	public function connect($user, $pass, $db, $host = "localhost") {
 		try {
-			$this->db = new PDO("mysql:host=localhost;dbname=".$db.";charset=utf8", $user, $pass);
+			$this->db = new PDO("mysql:host=".$host.";dbname=".$db.";charset=utf8", $user, $pass);
 			$this->db->query("SET COLLATION_CONNECTION=UTF8_SWEDISH_CI");
 		}
 		catch (PDOException $e) {
+			$this->errors[] = $e->getMessage();
 			return false;
 		}
 		$this->database = $db;
@@ -27,9 +27,9 @@ class Db {
 		exec("mysqldump ".$this->database." --password=".$this->pass." --user=".$this->user." --single-transaction > ".$file);
 		return true;
 	}
-	
-	public function error($e = null) {
-		die("Ett fel uppstod");
+
+	public function getErrors() {
+		return $this->errors;
 	}
 	
 	private function where(&$sql, &$vars, $conditions = Array()) {
@@ -87,7 +87,7 @@ class Db {
 			$this->errors[] = $err;
 			$debug = print_r(debug_backtrace(), true);
 			$debug.= print_r($err, true);
-			addlog("database", "error ".$err[0], $debug);
+			// addlog("database", "error ".$err[0], $debug);
 			die("Ett fel uppstod med en fråga till databasen. (mysql error)");
 		}
 		return $stmt;

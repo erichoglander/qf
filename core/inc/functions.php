@@ -5,9 +5,9 @@ function classAutoload($class) {
 		$epath = DOC_ROOT."/extend/controller/".$fname;
 		$cpath = DOC_ROOT."/core/controller/".$fname;
 		if (file_exists($epath)) {
-			require_once($epath);
 			if (file_exists($cpath))
 				require_once($cpath);
+			require_once($epath);
 		}
 		else if (file_exists($cpath))
 			require_once($cpath);
@@ -16,9 +16,9 @@ function classAutoload($class) {
 		$epath = DOC_ROOT."/extend/model/".$fname;
 		$cpath = DOC_ROOT."/core/model/".$fname;
 		if (file_exists($epath)) {
-			require_once($epath);
 			if (file_exists($cpath))
 				require_once($cpath);
+			require_once($epath);
 		}
 		else if (file_exists($cpath))
 			require_once($cpath);
@@ -28,9 +28,9 @@ function classAutoload($class) {
 		$epath = DOC_ROOT."/extend/class/".$fname;
 		$cpath = DOC_ROOT."/core/class/".$fname;
 		if (file_exists($epath)) {
-			require_once($epath);
 			if (file_exists($cpath))
 				require_once($cpath);
+			require_once($epath);
 		}
 		else if (file_exists($cpath))
 			require_once($cpath);
