@@ -39,7 +39,7 @@ class Theme {
 			return null;
 	}
 
-	protected function favicon() {
+	protected function getFavicon() {
 		return "";
 	}
 	protected function getMeta() {
