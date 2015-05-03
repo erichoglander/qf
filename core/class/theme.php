@@ -11,13 +11,6 @@ class Theme {
 		$this->Db = &$Db;
 	}
 
-	public function getCss() {
-		return $this->css;
-	}
-	public function getJs() {
-		return $this->js;
-	}
-
 	public function render($part, $vars = Array()) {
 		$template = $this->getTemplate($part);
 		if (!$template)
@@ -25,8 +18,8 @@ class Theme {
 		if ($part == "html") {
 			$vars['css'] = array_merge($vars['css'], $this->css);
 			$vars['js'] = array_merge($vars['js'], $this->js);
-			$vars['favicon'] = "";
-			$vars['meta'] = "";
+			$vars['favicon'] = $this->getFavicon();
+			$vars['meta'] = $this->getMeta();
 		}
 		extract($vars);
 		ob_start();
@@ -34,7 +27,8 @@ class Theme {
 		return ob_get_clean();
 	}
 
-	public function getTemplate($name) {
+
+	protected function getTemplate($name) {
 		$cpath = DOC_ROOT."/core/theme/".$this->name."/template/".$name.".php";
 		$epath = DOC_ROOT."/extend/theme/".$this->name."/template/".$name.".php";
 		if (file_exists($epath))
@@ -43,6 +37,13 @@ class Theme {
 			return $cpath;
 		else
 			return null;
+	}
+
+	protected function favicon() {
+		return "";
+	}
+	protected function getMeta() {
+		return "";
 	}
 
 };
