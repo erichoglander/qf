@@ -2,7 +2,7 @@
 class Core_Config {
 	
 	protected $database;
-	protected $www, $https;
+	protected $subdomain, $https;
 	protected $menu = Array();
 
 	public function __construct() {
@@ -22,8 +22,8 @@ class Core_Config {
 	public function getDatabase() {
 		return $this->database;
 	}
-	public function getWww() {
-		return $this->www;
+	public function getSubdomain() {
+		return $this->subdomain;
 	}
 	public function getHttps() {
 		return $this->https;

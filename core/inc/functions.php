@@ -23,6 +23,18 @@ function classAutoload($class) {
 		else if (file_exists($cpath))
 			require_once($cpath);
 	}
+	else if (strpos($class, "_Theme") !== false) {
+		$dir = str_replace("_core", "", str_replace("_theme", "", strtolower($class)));
+		$epath = DOC_ROOT."/extend/theme/".$dir."/theme.php";
+		$cpath = DOC_ROOT."/core/theme/".$dir."/theme.php";
+		if (file_exists($epath)) {
+			if (file_exists($cpath))
+				require_once($cpath);
+			require_once($epath);
+		}
+		else if (file_exists($cpath))
+			require_once($cpath);
+	}
 	else {
 		$fname = strtolower(preg_replace("/([a-z])([A-Z])/", "$1_$2", $class).".php");
 		$epath = DOC_ROOT."/extend/class/".$fname;

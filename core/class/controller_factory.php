@@ -1,10 +1,7 @@
 <?php
 class ControllerFactory {
 
-	protected $Db;
-
-	public function __construct($Db) {
-		$this->Db = &$Db;
+	public function __construct() {
 	}
 
 	# uri: /controller/action/arg0/arg1/arg2/...
@@ -30,23 +27,6 @@ class ControllerFactory {
 
 	public function executeControllerAction($controller, $action, $args = Array()) {
 		$Controller = $this->getController($controller);
-		if ($Controller) {
-			if (is_callable(Array($Controller, $action))) {
-				if (!$Controller->access($action, $args)) {
-					$Controller = new Error_Controller($this->Db);
-					$action = "accessDenied";
-				}
-			}
-			else {
-				$action = "defaultAction";
-				if (!is_callable(Array($Controller, $action)))
-					$Controller = null;
-			}
-		}
-		if (!$Controller) {
-			$Controller = new Error_Controller($this->Db);
-			$action = "notFound";
-		}
 		return $Controller->$action($args);
 	}
 
@@ -54,11 +34,11 @@ class ControllerFactory {
 		$class = ucwords($controller)."_Controller";
 		$core_class = ucwords($controller)."_Core_Controller";
 		if (class_exists($class))
-			return new $class($this->Db);
+			return new $class();
 		else if (class_exists($core_class))
-			return new $core_class($this->Db);
+			return new $core_class();
 		else
-			return null;
+			return new Controller();
 	}
 
 };
