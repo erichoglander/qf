@@ -19,15 +19,8 @@ class Html_Core {
 		$this->Db = &$Db;
 	}
 
-	public function __call($name, $arguments = Array()) {
-		die($name);
-		if (method_exists($this, $name) && strpos($name, "render") === 0) {
-			$this->loadTheme();
-		}
-	}
-
 	public function renderHtml() {
-			$this->loadTheme();
+		$this->loadTheme();
 		$vars = Array(
 			"css" => $this->css,
 			"js" => $this->js,
@@ -44,6 +37,7 @@ class Html_Core {
 	}
 
 	public function renderPage() {
+		$this->loadTheme();
 		$vars = Array(
 			"h1" => $this->h1,
 			"pre_content" => $this->pre_content,
