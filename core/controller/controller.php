@@ -26,7 +26,7 @@ class Controller {
 			return $this->databaseFail();
 		if (!$this->access($action, $args))
 			return $this->accessDenied();
-		if (!method_exists($this, $action))
+		if (!method_exists($this, $action)) 
 			return $this->notFound();
 		return $this->$action($args);
 	}
@@ -41,11 +41,17 @@ class Controller {
 	}
 	protected function notFound() {
 		header("HTTP/1.1 404 Not found");
-		return $this->viewRender("404");
+		$this->Html->title = "404";
+		$this->Html->h1 = "Page not found";
+		$this->Html->content = $this->viewRender("404");
+		return $this->Html->renderHtml();
 	}
 	protected function accessDenied() {
 		header("HTTP/1.1 403 Forbidden");
-		return $this->viewRender("403");
+		$this->Html->title = "403";
+		$this->Html->h1 = "Access denied";
+		$this->Html->content = $this->viewRender("403");
+		return $this->Html->renderHtml();
 	}
 
 	protected function access($action, $args = Array()) {
