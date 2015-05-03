@@ -1,4 +1,0 @@
-Ajax
-	- Specify header
-	- HtmlToJson class
-
