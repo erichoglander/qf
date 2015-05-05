@@ -81,3 +81,10 @@ function formatBytes($bytes) {
 function guid() {
 	return substr(md5(microtime().REQUEST_TIME.rand(1, 1000)), 0, 12);
 }
+
+function renderTemplate($path, $vars) {
+	extract($vars);
+	ob_start();
+	include $path;
+	return ob_get_clean();
+}

@@ -38,20 +38,20 @@ class Controller {
 	}
 	protected function serverBusy() {
 		header("HTTP/1.1 503 Service unavailable");
-		return $this->viewRender("503");
+		return $this->view("503");
 	}
 	protected function notFound() {
 		header("HTTP/1.1 404 Not found");
 		$this->Html->title = "404";
 		$this->Html->h1 = "Page not found";
-		$this->Html->content = $this->viewRender("404");
+		$this->Html->content = $this->view("404");
 		return $this->Html->renderHtml();
 	}
 	protected function accessDenied() {
 		header("HTTP/1.1 403 Forbidden");
 		$this->Html->title = "403";
 		$this->Html->h1 = "Access denied";
-		$this->Html->content = $this->viewRender("403");
+		$this->Html->content = $this->view("403");
 		return $this->Html->renderHtml();
 	}
 
@@ -95,7 +95,7 @@ class Controller {
 			return null;
 	}
 
-	protected function viewRender($name, $variables = Array()) {
+	protected function view($name, $variables = Array()) {
 		$path = $this->viewPath($name);
 		if ($path) {
 			extract($variables);
