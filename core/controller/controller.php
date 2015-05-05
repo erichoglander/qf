@@ -3,12 +3,11 @@ class Controller {
 
 	public $args = Array();
 	public $connected;
-	protected $Config, $Db, $Html, $Model;
+	protected $Config, $Db, $Model;
 
 	public function __construct() {
 		$this->Config = new Config();
 		$this->Db = new Db();
-		$this->Html = new Html($this->Db);
 		$this->name = $this->getName();
 		$this->real_name = $this->getRealName();
 		if ($this->connect()) {
@@ -28,31 +27,28 @@ class Controller {
 			return $this->accessDenied();
 		if (!method_exists($this, $action)) 
 			return $this->notFound();
-		$this->Html->title = ucwords($this->name." ".$action);
 		return $this->$action($args);
 	}
 
 	
+	protected function internalError() {
+		header("HTTP/1.1 500 Internal error");
+		return $this->viewBare("500");
+	}
 	protected function databaseFail() {
 		return $this->serverBusy();
 	}
 	protected function serverBusy() {
 		header("HTTP/1.1 503 Service unavailable");
-		return $this->view("503");
+		return $this->viewBare("503");
 	}
-	protected function notFound() {
+	protected function notFound($vars = Array()) {
 		header("HTTP/1.1 404 Not found");
-		$this->Html->title = "404";
-		$this->Html->h1 = "Page not found";
-		$this->Html->content = $this->view("404");
-		return $this->Html->renderHtml();
+		return $this->view("404", $vars);
 	}
 	protected function accessDenied() {
 		header("HTTP/1.1 403 Forbidden");
-		$this->Html->title = "403";
-		$this->Html->h1 = "Access denied";
-		$this->Html->content = $this->view("403");
-		return $this->Html->renderHtml();
+		return $this->view("403");
 	}
 
 	protected function access($action, $args = Array()) {
@@ -84,27 +80,25 @@ class Controller {
 			return null;
 	}
 
-	protected function viewPath($name) {
-		$epath = DOC_ROOT."/extend/view/".$this->name."/".$name.".php";
-		$cpath = DOC_ROOT."/core/view/".$this->name."/".$name.".php";
-		if (file_exists($epath))
-			return $epath;
-		else if (file_exists($cpath))
-			return $cpath;
-		else
-			return null;
+	// Do not include html backbone
+	protected function viewBare($name, $variables = Array()) {
+		$View = new View(null, $this->name, $name, $variables);
+		try {
+			return $View->render();
+		}
+		catch (Exception $e) {
+			// TODO: log exception
+			return $this->internalError();
+		}
 	}
 
 	protected function view($name, $variables = Array()) {
-		$path = $this->viewPath($name);
-		if ($path) {
-			extract($variables);
-			ob_start();
-			include $path;
-			return ob_get_clean();
+		$View = new View($this->Db, $this->name, $name, $variables);
+		try {
+			return $View->render();
 		}
-		else {
-			return null;
+		catch (Exception $e) {
+			return $this->notFound(Array("console" => $e->getMessage()));
 		}
 	}
 
