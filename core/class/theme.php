@@ -2,8 +2,8 @@
 class Theme {
 	
 	public $name;
-	public $css = Array();
-	public $js = Array();
+	public $css = [];
+	public $js = [];
 
 	protected $Db;
 
@@ -11,7 +11,7 @@ class Theme {
 		$this->Db = &$Db;
 	}
 
-	public function render($part, $vars = Array()) {
+	public function render($part, $vars = []) {
 		$template = $this->getTemplate($part);
 		if (!$template)
 			throw new Exception("Unable to find ".$this->name." template for ".$part);

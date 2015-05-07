@@ -9,9 +9,9 @@ class Html_Core {
 	public $content;
 	public $theme = "admin";
 
-	public $css = Array();
-	public $js = Array();
-	public $body_class = Array();
+	public $css = [];
+	public $js = [];
+	public $body_class = [];
 
 	protected $Theme, $Db;
 
@@ -21,7 +21,7 @@ class Html_Core {
 
 	public function renderHtml() {
 		$this->loadTheme();
-		$vars = Array(
+		$vars = [
 			"css" => $this->css,
 			"js" => $this->js,
 			"pre_css" => $this->pre_css,
@@ -32,18 +32,18 @@ class Html_Core {
 			"pre_page" => $this->pre_page,
 			"post_page" => $this->post_page,
 			"page" => $this->renderPage(),
-		);
+		];
 		return $this->Theme->render("html", $vars);
 	}
 
 	public function renderPage() {
 		$this->loadTheme();
-		$vars = Array(
+		$vars = [
 			"h1" => $this->h1,
 			"pre_content" => $this->pre_content,
 			"post_content" => $this->post_content,
 			"content" => $this->content,
-		);
+		];
 		return $this->Theme->render("page", $vars);
 	}
 

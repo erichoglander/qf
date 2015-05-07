@@ -1,29 +1,23 @@
 <?php
 function classAutoload($class) {
 	$fname = strtolower($class).".php";
-	if (strpos($class, "_Controller") !== false) {
-		$epath = DOC_ROOT."/extend/controller/".$fname;
-		$cpath = DOC_ROOT."/core/controller/".$fname;
-		if (file_exists($epath)) {
+	$suffixes = ["controller", "model", "entity"];
+	foreach ($suffixes as $suffix) {
+		$csuffix = "_".ucwords($suffix);
+		if (strpos($class, $csuffix) !== false) {
+			$epath = DOC_ROOT."/extend/".$suffix."/".$fname;
+			$cpath = DOC_ROOT."/core/".$suffix."/".$fname;
+			if (file_exists($epath)) {
+				if (file_exists($cpath))
+					require_once($cpath);
+				require_once($epath);
+			}
 			if (file_exists($cpath))
 				require_once($cpath);
-			require_once($epath);
+			return;
 		}
-		else if (file_exists($cpath))
-			require_once($cpath);
 	}
-	else if (strpos($class, "_Model") !== false) {
-		$epath = DOC_ROOT."/extend/model/".$fname;
-		$cpath = DOC_ROOT."/core/model/".$fname;
-		if (file_exists($epath)) {
-			if (file_exists($cpath))
-				require_once($cpath);
-			require_once($epath);
-		}
-		else if (file_exists($cpath))
-			require_once($cpath);
-	}
-	else if (strpos($class, "_Theme") !== false) {
+	if (strpos($class, "_Theme") !== false) {
 		$dir = str_replace("_core", "", str_replace("_theme", "", strtolower($class)));
 		$epath = DOC_ROOT."/extend/theme/".$dir."/theme.php";
 		$cpath = DOC_ROOT."/core/theme/".$dir."/theme.php";
@@ -61,7 +55,7 @@ function promptFile($path) {
 	$info = pathinfo($path);
 	header_remove("Content-Type");
 	$ext = strtolower($info['extension']);
-	$images = Array("png", "jpg", "jpeg", "gif");
+	$images = ["png", "jpg", "jpeg", "gif"];
 	if (in_array($ext, $images))
 		header("Content-Type: image/".$ext);
 	$file = fopen($path, "r");
@@ -72,7 +66,7 @@ function promptFile($path) {
 
 function formatBytes($bytes) {
 	if (!$bytes) return "0B";
-	$units = Array("B", "kB", "MB", "GB", "TB");
+	$units = ["B", "kB", "MB", "GB", "TB"];
 	$pow = floor(log($bytes)/log(1024));
 	$bytes/= pow(1024, $pow);
 	return round($bytes, 2).$units[$pow];

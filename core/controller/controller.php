@@ -1,7 +1,7 @@
 <?php
 class Controller {
 
-	public $args = Array();
+	public $args = [];
 	public $connected;
 	protected $Config, $Db, $Model;
 
@@ -19,8 +19,7 @@ class Controller {
 		}
 	}
 
-
-	public function callAction($action, $args = Array()) {
+	public function callAction($action, $args = []) {
 		if (!$this->connected)
 			return $this->databaseFail();
 		if (!$this->access($action, $args))
@@ -42,7 +41,7 @@ class Controller {
 		header("HTTP/1.1 503 Service unavailable");
 		return $this->viewBare("503");
 	}
-	protected function notFound($vars = Array()) {
+	protected function notFound($vars = []) {
 		header("HTTP/1.1 404 Not found");
 		return $this->view("404", $vars);
 	}
@@ -51,7 +50,7 @@ class Controller {
 		return $this->view("403");
 	}
 
-	protected function access($action, $args = Array()) {
+	protected function access($action, $args = []) {
 		return true;
 	}
 
@@ -81,7 +80,7 @@ class Controller {
 	}
 
 	// Do not include html backbone
-	protected function viewBare($name, $variables = Array()) {
+	protected function viewBare($name, $variables = []) {
 		$View = new View(null, $this->name, $name, $variables);
 		try {
 			return $View->render();
@@ -92,13 +91,13 @@ class Controller {
 		}
 	}
 
-	protected function view($name, $variables = Array()) {
+	protected function view($name, $variables = []) {
 		$View = new View($this->Db, $this->name, $name, $variables);
 		try {
 			return $View->render();
 		}
 		catch (Exception $e) {
-			return $this->notFound(Array("console" => $e->getMessage()));
+			return $this->notFound(["console" => $e->getMessage()]);
 		}
 	}
 

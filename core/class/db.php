@@ -1,7 +1,7 @@
 <?php
 class Db {
 
-	protected $errors = Array();
+	protected $errors = [];
 
 	private $database, $user, $pass;
 	private $db;
@@ -32,10 +32,10 @@ class Db {
 		return $this->errors;
 	}
 	
-	private function where(&$sql, &$vars, $conditions = Array()) {
+	private function where(&$sql, &$vars, $conditions = []) {
 		if (!empty($conditions)) {
 			$sql.= " WHERE ";
-			$condarr = Array();
+			$condarr = [];
 			$n = 0;
 			foreach ($conditions as $i => $cond) {
 				$n++;
@@ -54,7 +54,7 @@ class Db {
 						$pred = " IN ";
 					if ($pred == "!=")
 						$pred = " NOT IN ";
-					$or = Array();
+					$or = [];
 					foreach ($val as $j => $v) {
 						$varkey = ":".$key.$n."_".$j;
 						$vars[$varkey] = $v;
@@ -74,7 +74,7 @@ class Db {
 		}
 	}
 	
-	public function query($sql, $param = Array()) {
+	public function query($sql, $param = []) {
 		try  {
 			$stmt = $this->db->prepare($sql);
 			$stmt->execute($param);
@@ -93,7 +93,7 @@ class Db {
 		return $stmt;
 	}
 	
-	public function numRows($sql, $param = Array()) {
+	public function numRows($sql, $param = []) {
 		$stmt = $this->query($sql, $param);
 		return $stmt->rowCount();
 	}
@@ -102,8 +102,8 @@ class Db {
 		if (!is_array($data))
 			$data = (array) $data;
 		$keys = array_keys($data);
-		$vars = Array();
-		$holders = Array();
+		$vars = [];
+		$holders = [];
 		foreach ($data as $key => $val) {
 			$vars[":".$key] = $val;
 			$holders[] = ":".$key;
@@ -117,10 +117,10 @@ class Db {
 		return (int) $this->db->lastInsertId();
 	}
 	
-	public function update($table, $data, $conditions = Array()) {
+	public function update($table, $data, $conditions = []) {
 		if (!is_array($data))
 			$data = (array) $data;
-		$vars = Array();
+		$vars = [];
 		$sql = "UPDATE `".$table."` SET ";
 		foreach ($data as $key => $val) {
 			$vars[":".$key] = $val;
@@ -133,19 +133,19 @@ class Db {
 	}
 	
 	public function delete($table, $conditions) {
-		$vars = Array();
+		$vars = [];
 		$sql = "DELETE FROM `".$table."`";
 		$this->where($sql, $vars, $conditions);
 		$this->query($sql, $vars);
 		return true;
 	}
 	
-	public function getRow($sql, $param = Array()) {
+	public function getRow($sql, $param = []) {
 		$stmt = $this->query($sql, $param);
 		return $stmt->fetch(PDO::FETCH_OBJ);
 	}
 	
-	public function getRows($sql, $param = Array()) {
+	public function getRows($sql, $param = []) {
 		$stmt = $this->query($sql, $param);
 		return $stmt->fetchAll(PDO::FETCH_OBJ);
 	}

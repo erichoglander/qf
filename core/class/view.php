@@ -5,12 +5,14 @@ class View {
 	protected $name;
 	protected $Html;
 
-	public function __construct(&$Db, $controller_name, $name, $variables = Array()) {
+	public function __construct(&$Db, $controller_name, $name, $variables = []) {
 		$this->controller_name = $controller_name;
 		$this->name = $name;
 		$this->variables = $variables;
-		if ($Db)
+		if ($Db) {
 			$this->Html = new Html($Db);
+			$this->Html->title = ucwords($controller_name)." ".$name;
+		}
 	}
 
 	public function render() {

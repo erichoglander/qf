@@ -3,20 +3,20 @@ class Core_Config {
 	
 	protected $database;
 	protected $subdomain, $https;
-	protected $menu = Array();
+	protected $menu = [];
 
 	public function __construct() {
-		$this->menu = Array(
-			"admin" => Array(
+		$this->menu = [
+			"admin" => [
 				"body_class" => "admin-menu",
-				"links" => Array(
-					"home" => Array(
+				"links" => [
+					"home" => [
 						"title" => "Home",
 						"href" => "",
-					),
-				),
-			),
-		);
+					],
+				],
+			],
+		];
 	}
 
 	public function getDatabase() {

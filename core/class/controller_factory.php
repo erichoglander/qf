@@ -14,7 +14,7 @@ class ControllerFactory {
 			$action = $params[0];
 			if (!$action)
 				$action = "index";
-			$args = Array();
+			$args = [];
 		}
 		else {
 			$controller = $params[0];
@@ -24,9 +24,9 @@ class ControllerFactory {
 		return $this->executeControllerAction($controller, $action, $args);
 	}
 
-	public function executeControllerAction($controller, $action, $args = Array()) {
+	public function executeControllerAction($controller, $action, $args = []) {
 		$Controller = $this->getController($controller);
-		if (!is_callable(Array($Controller, $action)) )
+		if (!is_callable([$Controller, $action]) )
 			return $Controller->callAction("notFound");
 		return $Controller->callAction($action, $args);
 	}
