@@ -65,29 +65,9 @@ function newClass($cname) {
 function pr($data) {
 	print "<pre>".print_r($data,1)."</pre>";
 }
+
 function xss($str) {
 	return htmlspecialchars($str, ENT_QUOTES);
-}
-
-function promptFile($path) {
-	$info = pathinfo($path);
-	header_remove("Content-Type");
-	$ext = strtolower($info['extension']);
-	$images = ["png", "jpg", "jpeg", "gif"];
-	if (in_array($ext, $images))
-		header("Content-Type: image/".$ext);
-	$file = fopen($path, "r");
-	echo fpassthru($file);
-	fclose($file);
-	exit;
-}
-
-function formatBytes($bytes) {
-	if (!$bytes) return "0B";
-	$units = ["B", "kB", "MB", "GB", "TB"];
-	$pow = floor(log($bytes)/log(1024));
-	$bytes/= pow(1024, $pow);
-	return round($bytes, 2).$units[$pow];
 }
 
 function guid() {
