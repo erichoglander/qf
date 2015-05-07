@@ -3,7 +3,7 @@ class Controller {
 
 	public $args = [];
 	public $connected;
-	protected $Config, $Db, $Model;
+	protected $Config, $Db, $Model, $User;
 
 	public function __construct() {
 		$this->Config = new Config();
@@ -13,6 +13,7 @@ class Controller {
 		if ($this->connect()) {
 			$this->connected = true;
 			$this->Model = $this->getModel();
+			$this->User = $this->getUser();
 		}
 		else {
 			$this->connected = false;
@@ -69,14 +70,15 @@ class Controller {
 	}
 
 	protected function getModel() {
-		$emodel = ucwords($this->name)."_Model";
-		$cmodel = $this->real_name."_Model";
-		if (class_exists($emodel))
-			return new $emodel($this->Db);
-		else if (class_exists($cmodel))
-			return new $cmodel($this->Db);
-		else
-			return null;
+		$cname = ucwords($this->name)."_Model";
+		return newClass($cname, $this->Db);
+	}
+
+	protected function getUser() {
+		$User = newClass("User_Entity", $this->Db);
+		if (!empty($_SESSION['user_id']))
+			$User->load($_SESSION['user_id']);
+		return $User;
 	}
 
 	// Do not include html backbone

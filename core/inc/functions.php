@@ -46,6 +46,21 @@ function classAutoload($class) {
 }
 spl_autoload_register("classAutoload");
 
+function newClass($cname) {
+	if (!class_exists($cname) && strpos($cname, "_") !== false) {
+		$cname = str_replace("_", "_Core_", $cname);
+		if (!class_exists($cname))
+			return null;
+	}
+	$args = func_get_args();
+	if (empty($args))
+		return new $cname();
+	else {
+		$r = new ReflectionClass($cname);
+		return $r->newInstanceArgs($args);
+	}
+}
+
 
 function pr($data) {
 	print "<pre>".print_r($data,1)."</pre>";

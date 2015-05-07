@@ -58,16 +58,22 @@ class Entity {
 
 	public function save() {
 		$this->set("updated", REQUEST_TIME);
+		if (!$this->id())
+			$this->set("created", REQUEST_TIME);
+		$data = [];
+		foreach ($this->schema['fields'] as $key => $field) {
+			if (array_key_exists($key, $this->fields))
+				$data[$key] = $this->get($key);
+		}
 		if ($this->id()) {
-			return $this->update($this->schema['table'], $this->fields, ["id" => $this->id()]);
+			return $this->update($this->schema['table'], $data, ["id" => $this->id()]);
 		}
 		else {
-			$this->set("created", REQUEST_TIME);
 			foreach ($this->schema['fields'] as $key => $field) {
-				if (!array_key_exists($key, $this->fields) && array_key_exists("default", $field))
-					$this->set($key, $field['default']);
+				if (!array_key_exists($key, $data) && array_key_exists("default", $field))
+					$data[$key] = $field['default'];
 			}
-			return $this->fields['id'] = $this->insert($this->schema['table'], $this->fields);
+			return $this->fields['id'] = $this->insert($this->schema['table'], $data);
 		}
 	}
 

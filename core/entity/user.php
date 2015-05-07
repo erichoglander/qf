@@ -6,18 +6,54 @@ class User_Core_Entity extends Entity {
 			$this->fields['salt'] = $this->generateSalt();
 			$this->fields['pass'] = $this->hash($this->get("pass"), $this->get("salt"));
 		}
-		return parent::save();
+		if (!parent::save())
+			return false;
+		$this->Db->delete("user_role", ["user_id" => $this->id()]);
+		foreach ($this->get("roles") as $role)
+			$this->Db->insert("user_role", ["user_id" => $this->id(), "role_id" => $role->id]);
+		return true;
+	}
+
+	public function load($id) {
+		if (!parent::load($id))
+			return false;
+		$this->roles = $this->Db->getRows(
+				"SELECT * FROM `role` 
+				INNER JOIN `user_role` ON 
+					`user_role`.role_id = `role`.id
+				WHERE 
+					`user_role`.user_id = :id", 
+				[":id" => $this->id()]);
+		return true;
+	}
+
+	public function name() {
+		if ($this->id())
+			return $this->get("name");
+		else
+			return "Anonymous";
+	}
+
+	public function hasRole($title) {
+		$roles = $this->get("roles");
+		if (!empty($roles)) {
+			foreach ($roles as $role) {
+				if ($role->title === $title)
+					return true;
+			}
+		}
+		return false;
 	}
 
 	public function logout() {
 		unset($_SESSION['user_id']);
 	}
+
 	public function login() {
 		$_SESSION['user_id'] = $this->id();
 		$this->set("login", REQUEST_TIME);
 		$this->save();
 	}
-
 
 	public function authorize($pass) {
 		return $this->hash($pass, $this->get("salt")) === $this->get("pass");

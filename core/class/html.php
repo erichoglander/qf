@@ -56,13 +56,7 @@ class Html_Core {
 
 	protected function getTheme($theme) {
 		$class = ucwords($theme)."_Theme";
-		$core_class = ucwords($theme)."_Core_Theme";
-		if (class_exists($class))
-			return new $class($this->Db);
-		else if (class_exists($core_class))
-			return new $core_class($this->Db);
-		else
-			return null;
+		return newClass($class, $this->Db);
 	}
 
 	protected function loadTheme() {
