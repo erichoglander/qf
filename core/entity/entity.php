@@ -1,6 +1,7 @@
 <?php
 class Entity {
 
+	protected $type = "default";
 	protected $fields;
 	protected $schema;
 	protected $Db;
@@ -56,10 +57,18 @@ class Entity {
 	}
 
 	public function save() {
-		if ($this->id())
+		$this->set("updated", REQUEST_TIME);
+		if ($this->id()) {
 			return $this->update($this->schema['table'], $this->fields, ["id" => $this->id()]);
-		else
+		}
+		else {
+			$this->set("created", REQUEST_TIME);
+			foreach ($this->schema['fields'] as $key => $field) {
+				if (!array_key_exists($key, $this->fields) && array_key_exists("default", $field))
+					$this->set($key, $field['default']);
+			}
 			return $this->fields['id'] = $this->insert($this->schema['table'], $this->fields);
+		}
 	}
 
 	public function delete() {
@@ -68,20 +77,27 @@ class Entity {
 
 
 	protected function schema() {
-		return [
+		$schema = [
 			"table" => "",
-			"fields" => [
+			"fields" => [],
+		];
+		if ($this->type == "default") {
+			$schema['fields'] = [
 				"status" => [
 					"type" => "uint",
+					"default" => 0,
 				],
 				"created" => [
 					"type" => "uint",
+					"default" => 0,
 				],
 				"updated" => [
 					"type" => "uint",
+					"default" => 0,
 				],
-			],
-		];
+			];
+		}
+		return $schema;
 	}
 
 };

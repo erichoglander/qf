@@ -50,6 +50,9 @@ spl_autoload_register("classAutoload");
 function pr($data) {
 	print "<pre>".print_r($data,1)."</pre>";
 }
+function xss($str) {
+	return htmlspecialchars($str, ENT_QUOTES);
+}
 
 function promptFile($path) {
 	$info = pathinfo($path);

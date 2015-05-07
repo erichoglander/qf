@@ -14,6 +14,8 @@ class User_Core_Entity extends Entity {
 	}
 	public function login() {
 		$_SESSION['user_id'] = $this->id();
+		$this->set("login", REQUEST_TIME);
+		$this->save();
 	}
 
 
