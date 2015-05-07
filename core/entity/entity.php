@@ -72,6 +72,8 @@ class Entity {
 	}
 
 	public function delete() {
+		if (!$this->id())
+			return false;
 		return $this->delete($this->schema['table'], ["id" => $this->id()]);
 	}
 
