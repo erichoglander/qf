@@ -9,7 +9,6 @@ class Controller {
 		$this->Config = new Config();
 		$this->Db = new Db();
 		$this->name = $this->getName();
-		$this->real_name = $this->getRealName();
 		if ($this->connect()) {
 			$this->connected = true;
 			$this->Model = $this->getModel();
@@ -60,13 +59,6 @@ class Controller {
 		if ($class == "Controller")
 			return "default";
 		return strtolower(str_replace("_Controller", "", str_replace("_Core_Controller", "", $class)));
-	}
-
-	protected function getRealName() {
-		$class = get_class($this);
-		if ($class == "Controller")
-			return "default";
-		return str_replace("_Controller", "", $class);
 	}
 
 	protected function getModel() {
