@@ -22,9 +22,9 @@ class Entity {
 		if (!array_key_exists($field, $this->fields))
 			return null;
 		$value = $this->$fields[$field];
-		if (!empty($this->schema[$field]['serialize'])
+		if (!empty($this->schema[$field]['serialize']))
 			$value = unserialize($value);
-		if (!empty($this->schema[$field]['json'])
+		if (!empty($this->schema[$field]['json']))
 			$value = json_decode($value);
 		return $value;
 	}
@@ -32,9 +32,9 @@ class Entity {
 	public function set($field, $value) {
 		if (!array_key_exists($field, $this->schema))
 			return null;
-		if (!empty($this->schema[$field]['serialize'])
+		if (!empty($this->schema[$field]['serialize']))
 			$value = serialize($value);
-		if (!empty($this->schema[$field]['json'])
+		if (!empty($this->schema[$field]['json']))
 			$value = json_encode($value);
 		if ($this->schema[$field]['type'] == "uint")
 			$value = abs((int) $value);
