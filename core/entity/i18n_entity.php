@@ -1,6 +1,7 @@
 <?php
 class i18n_Entity extends Entity {
 
+	public $default_lang = "en";
 
 	public function __construct(&$Db, $id = null, $lang = null) {
 		parent::__construct($Db, null);
@@ -90,7 +91,7 @@ class i18n_Entity extends Entity {
 		];
 		$schema['fields']['lang'] = [
 			"type" => "varchar",
-			"default" => "en",
+			"default" => $this->default_lang,
 		];
 		return $schema;
 	}
