@@ -93,7 +93,7 @@ class Entity {
 			$schema['fields'] = [
 				"status" => [
 					"type" => "uint",
-					"default" => 0,
+					"default" => 1,
 				],
 				"created" => [
 					"type" => "uint",
