@@ -11,4 +11,8 @@ require_once(DOC_ROOT."/core/model/model.php");
 if (file_exists(DOC_ROOT."/extend/inc/functions.php"))
 	require_once(DOC_ROOT."/extend/inc/functions.php");
 
+$classes = glob(DOC_ROOT."/core/class/*");
+foreach ($classes as $class)
+	require_once($class);
+
 $ControllerFactory = new ControllerFactory();

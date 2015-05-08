@@ -32,14 +32,8 @@ function classAutoload($class) {
 	else {
 		$fname = strtolower(preg_replace("/([a-z])([A-Z])/", "$1_$2", $class).".php");
 		$epath = DOC_ROOT."/extend/class/".$fname;
-		$cpath = DOC_ROOT."/core/class/".$fname;
-		if (file_exists($epath)) {
-			if (file_exists($cpath))
-				require_once($cpath);
+		if (file_exists($epath))
 			require_once($epath);
-		}
-		else if (file_exists($cpath))
-			require_once($cpath);
 		else
 			throw new Exception("Can't find class ".$class." (".$fname.")");
 	}
