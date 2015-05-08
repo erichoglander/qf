@@ -34,8 +34,6 @@ function classAutoload($class) {
 		$epath = DOC_ROOT."/extend/class/".$fname;
 		if (file_exists($epath))
 			require_once($epath);
-		else
-			throw new Exception("Can't find class ".$class." (".$fname.")");
 	}
 }
 spl_autoload_register("classAutoload");
