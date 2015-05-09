@@ -123,11 +123,11 @@ class Form_Core {
 		if (empty($item['type']))
 			throw new Exception("No type given for form item ".$name);
 		$a = explode("_", $item['type']);
-		$class = "";
+		$class = "FormItem";
 		foreach ($a as $b)
-			$class.= ucwords($b)."_FormItem";
+			$class.= ucwords($b);
 		if (!class_exists($class))
-			throw new Exception("Class not found for form type ".$item['type']);
+			$class = "FormItem";
 		$item['name'] = $name;
 		$item['full_name'] = $this->inputName().$name;
 		$this->items[$name] = new $class($item);

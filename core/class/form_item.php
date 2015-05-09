@@ -9,6 +9,9 @@ class FormItem {
 	protected $add_button, $delete_button;
 	protected $required, $focus;
 	protected $attributes;
+	protected $value;
+	protected $options = [];
+	protected $empty_option = "- Choose -";
 	protected $filter, $validation;
 	protected $contains = "inputs"; // 
 
@@ -31,7 +34,7 @@ class FormItem {
 		return (isset($this->error[$i]) ? $this->error[$i] : null);
 	}
 
-	public function value() {
+	public function value($n = null) {
 		return null; // TODO: value
 	}
 
@@ -44,6 +47,7 @@ class FormItem {
 		$suffix = $this->suffix;
 		$input_prefix = $this->input_prefix;
 		$input_suffix = $this->input_suffix;
+		$options = $this->options();
 		$add_button = $this->renderAddButton();
 		$delete_button = $this->renderDeleteButton();
 		$error = $this->getError();
@@ -72,17 +76,24 @@ class FormItem {
 		if (empty($item['type']))
 			throw new Exception("No type given for form item ".$name);
 		$a = explode("_", $item['type']);
-		$class = "";
+		$class = "FormItem";
 		foreach ($a as $b)
-			$class.= ucwords($b)."_FormItem";
+			$class.= ucwords($b);
 		if (!class_exists($class))
-			throw new Exception("Class not found for form type ".$item['type']);
+			$class = "FormItem";
 		$item['name'] = $name;
 		$this->items[$name] = new $class($item);
 	}
 
 	protected function numRows() {
 		return ($this->multiple ? max(count($this->values()), 1) : 1);
+	}
+
+	protected function options() {
+		$options = $this->options;
+		if ($this->empty_option)
+			$options = array_merge(["" => $this->empty_option], $options);
+		return $options;
 	}
 
 	protected function inputType() {
@@ -103,11 +114,13 @@ class FormItem {
 		return $class;
 	}
 
-	protected	function getAttributes() {
+	protected	function getAttributes($name = null) {
 		$attr = [];
 		$attr['type'] = $this->inputType();
 		foreach ($this->attributes as $key => $val)
 			$attr[$key] = $val;
+		if ($name)
+			$attr['name'] = $name;
 		if (empty($attr['class']))
 			$attr['class'] = $this->inputClass();
 		else
@@ -157,8 +170,9 @@ class FormItem {
 		if ($this->multiple) {
 			$n = $this->numRows();
 			if ($this->contains == "inputs") {
-				for ($i=0; $i<$n; $i++)
-					$containers[0][] = $this->renderInput($name."[".$i."]");
+				for ($i=0; $i<$n; $i++) {
+					$containers[0][] = $this->renderInput($name."[".$i."]", $this->value($n));
+				}
 			}
 			else if ($this->contains == "items") {
 				$n = $this->numRows();
@@ -173,23 +187,12 @@ class FormItem {
 		}
 		return $containers;
 	}
-	protected function renderInput($name) {
-		$path = $this->ftemplateInputPath();
-		if (!$path)
-			throw new Exception("Can't find input template for form item ".$name);
-		$attributes = $this->getAttributes();
-		$value = $this->value();
-		$attributes['name'] = $name;
-		if ($this->multiple) {
-			$attributes['value'] = (isset($value[$row]) ? $value[$row] : null);
-		}
-		else {
-			$attributes['value'] = $value;
-		}
-		$attributes = $this->attributes($attributes);
-		ob_start();
-		include $path;
-		return ob_get_clean();
+	protected function renderInput($name, $value) {
+		$path = $this->templateInputPath();
+		$vars = [
+			"attributes" => $this->attributes(),
+		];
+		return renderTemplate($path, $vars);
 	}
 	protected function renderAddButton() {
 		return '<input type="button" class="form-button" value="'.$this->add_button.'" onclick="formAddButton(this)">';

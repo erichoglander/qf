@@ -1,1 +1,1 @@
-<input <?=$attributes?>
+<input <?=$attributes?> value="<?=$value?>">
