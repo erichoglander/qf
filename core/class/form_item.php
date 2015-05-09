@@ -151,8 +151,12 @@ class FormItem {
 		$prefix = "form_input";
 		$d = "__";
 		$names = [];
-		if ($this->template)
+		if ($this->template) {
 			$names[] = $prefix.$d.$this->type.$d.$this->template;
+			if ($this->type != $this->inputType)
+				$names[] = $prefix.$d.$this->inputType().$d.$this->template;
+			$names[] = $prefix.$d.$this->template;
+		}
 		$names[] = $prefix.$d.$this->type;
 		if ($this->type != $this->inputType)
 			$names[] = $prefix.$d.$this->inputType();
