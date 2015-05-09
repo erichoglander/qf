@@ -1,5 +1,4 @@
-<div class="form-input">
-	<?=$inputPrefix?>
-	<?=$input?>
-	<?=$inputSuffix?>
-</div>
+<input <?=$attributes?>
+<?php if (!empty($error)) { ?>
+<div class="form-input-error"><?=$error?>
+<?php } ?>

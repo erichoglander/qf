@@ -171,7 +171,9 @@ class Form_Core {
 			$class.= ucwords($b)."_FormItem";
 		if (!class_exists($class))
 			throw new Exception("Class not found for form type ".$item['type']);
-		$this->items[$name] = new $class($name, $item);
+		$item['name'] = $name;
+		$item['full_name'] = $this->inputName().$name;
+		$this->items[$name] = new $class($item);
 	}
 
 	protected function validate() {

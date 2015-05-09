@@ -5,8 +5,15 @@
 <?php } ?>
 <?php if (!empty($inputs)) { ?>
 	<div class="form-inputs">
-	<?php foreach ($inputs as $input) { ?>
-		<?=$input?>
+	<?php foreach ($inputs as $i => $input) { ?>
+		<div class="form-input">
+			<?=$inputPrefix?>
+			<?=$input?>
+			<?php if (isset($error[$i])) { ?>
+			<div class="form-input-error"><?=$error[$i]?></div>
+			<?php } ?>
+			<?=$inputSuffix?>
+		</div>
 	<?php } ?>
 	</div>
 <?php } ?>
