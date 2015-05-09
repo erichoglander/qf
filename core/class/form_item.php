@@ -10,10 +10,12 @@ class FormItem {
 	protected $required, $focus;
 	protected $attributes;
 	protected $value;
+	protected $items = [];
 	protected $options = [];
 	protected $empty_option = "- Choose -";
 	protected $filter, $validation;
 	protected $template;
+	protected $submitted = false;
 	protected $contains = "inputs";
 
 	protected $prefix, $suffix;
@@ -21,8 +23,7 @@ class FormItem {
 	protected $item_class;
 
 	protected $error = [];
-	protected $items = [];
-
+	protected $validation_error;
 
 	public function __construct($structure) {
 		$this->loadStructure($structure);
@@ -35,8 +36,92 @@ class FormItem {
 		return (isset($this->error[$i]) ? $this->error[$i] : null);
 	}
 
-	public function value($n = null) {
-		return null; // TODO: value
+	public function value($name) {
+		if (!$this->submitted)
+			return $this->value;
+		$name_arr = explode("[", str_replace("]", "", $name)); 
+		$data = $_POST;
+		foreach ($name_arr as $f) {
+			if (!array_key_exists($f, $data))
+				return null;
+			$data = $data[$f];
+		}
+		if ($this->contains == "inputs") {
+			return $this->filter($data, $this->filter);
+		}
+		else if ($this->contains == "items") {
+			$values = [];
+			if ($this->multiple) {
+				$n = count($data);
+				for ($i=0; $i<$n; $i++) {
+					foreach ($this->items as $key => $item)
+						$values[$key] = $item->value($name."[".$i."]".$key); 
+				}
+			}
+			else {
+				foreach ($this->items as $key => $item)
+					$values[$key] = $item->value($name.$key); 
+			}
+			return $values;
+		}
+	}
+
+	public function validated($name) {
+		$value = $this->value($name);
+		if ($this->contains == "inputs") {
+			if ($this->multiple) {
+				$n = count($value);
+				for ($i=0; $i<$n; $i++) {
+					$val = $value[$i];
+					$is_arr = is_array($val);
+					if ($this->required && ($is_arr && empty($val) || !$is_arr && strlen($val) === 0)) {
+						$this->setError(t("Field is required"));
+						return false;
+					}
+					if (!empty($this->options) && ($is_arr || !array_key_exists($val, $this->options()))) {
+						$this->setError(t("Invalid option"));
+						return false;
+					}
+					if ($this->validation && !$this->validate($val, $this->validation)) {
+						$this->setError($this->validation_error);
+						return false;
+					}
+				}
+			}
+			else {
+				$is_arr = is_array($value);
+				if ($this->required && ($is_arr && empty($value) || !$is_arr && strlen($value) === 0)) {
+					$this->setError(t("Field is required"));
+					return false;
+				}
+				if (!empty($this->options) && ($is_arr || !array_key_exists($value, $this->options()))) {
+					$this->setError(t("Invalid option"));
+					return false;
+				}
+				if ($this->validation && !$this->validate($value, $this->validation)) {
+					$this->setError($this->validation_error);
+					return false;
+				}
+			}
+		}
+		else if ($this->containers == "items") {
+			if ($this->multiple) {
+				$n = count($value);
+				for ($i=0; $i<$n; $i++) {
+					foreach ($this->items as $item) {
+						if (!$this->validated($name."[".$i."]".$item->name))
+							return false;
+					}
+				}
+			}
+			else {
+				foreach ($this->items as $item) {
+					if (!$this->validated($name.$item->name))
+						return false;
+				}
+			}
+		}
+		return true;
 	}
 
 	public function render($name) {
@@ -83,11 +168,15 @@ class FormItem {
 		if (!class_exists($class))
 			$class = "FormItem";
 		$item['name'] = $name;
+		$item['submitted'] = $this->submitted;
 		$this->items[$name] = new $class($item);
 	}
 
-	protected function numRows() {
-		return ($this->multiple ? max(count($this->values()), 1) : 1);
+	protected function filter($value, $filter) {
+		return $value; // TODO: filter
+	}
+	protected function validate($value, $validation) {
+		return true; // TODO: validation
 	}
 
 	protected function options() {
@@ -128,9 +217,8 @@ class FormItem {
 			$attr['class'].= " ".$this->inputClass();
 		return $attr;
 	}
-	protected function attributes($attributes = null) {
-		if (!$attributes)
-			$attributes = $this->getAttributes();
+	protected function attributes($name = null) {
+		$attributes = $this->getAttributes($name);
 		$attr = "";
 		foreach ($attributes as $key => $val)
 			$attr.= $key.'="'.$val.'" ';
@@ -177,14 +265,13 @@ class FormItem {
 	protected function renderContainers($name) {
 		$containers = [];
 		if ($this->multiple) {
-			$n = $this->numRows();
+			$n = max(count($this->value($name)), 1);
 			if ($this->contains == "inputs") {
 				for ($i=0; $i<$n; $i++) {
-					$containers[0][] = $this->renderInput($name."[".$i."]", $this->value($n));
+					$containers[0][] = $this->renderInput($name."[".$i."]", $this->value($name."[".$i."]"));
 				}
 			}
 			else if ($this->contains == "items") {
-				$n = $this->numRows();
 				for ($i=0; $i<$n; $i++) {
 					foreach ($this->items as $item)
 						$containers[] = $item->render($name."[".$i."]".$item->name);
@@ -192,14 +279,15 @@ class FormItem {
 			}
 		}
 		else {
-			$containers[0][] = $this->renderInput($name);
+			$containers[0][] = $this->renderInput($name, $this->value($name));
 		}
 		return $containers;
 	}
 	protected function renderInput($name, $value) {
 		$path = $this->templateInputPath();
 		$vars = [
-			"attributes" => $this->attributes(),
+			"attributes" => $this->attributes($name),
+			"value" => $value,
 		];
 		return renderTemplate($path, $vars);
 	}

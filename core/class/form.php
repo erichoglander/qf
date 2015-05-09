@@ -49,7 +49,7 @@ class Form_Core {
 	public function values() {
 		$values = [];
 		foreach ($this->items as $name => $item)
-			$values[$name] = $item->value();
+			$values[$name] = $item->value($name);
 		return $values;
 	}
 
@@ -68,8 +68,8 @@ class Form_Core {
 	public function validated() {
 		if (!empty($this->errors))
 			return false;
-		foreach ($this->items as $item) {
-			if (!$this->validate())
+		foreach ($this->items as $name => $item) {
+			if (!$this->validated($name))
 				return false;
 		}
 		return true;
@@ -129,7 +129,7 @@ class Form_Core {
 		if (!class_exists($class))
 			$class = "FormItem";
 		$item['name'] = $name;
-		$item['full_name'] = $this->inputName().$name;
+		$item['submitted'] = $this->submitted(false);
 		$this->items[$name] = new $class($item);
 	}
 
