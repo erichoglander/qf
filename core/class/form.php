@@ -69,7 +69,7 @@ class Form_Core {
 		if (!empty($this->errors))
 			return false;
 		foreach ($this->items as $name => $item) {
-			if (!$this->validated($name))
+			if (!$item->validated($name))
 				return false;
 		}
 		return true;
