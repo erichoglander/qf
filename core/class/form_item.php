@@ -13,7 +13,8 @@ class FormItem {
 	protected $options = [];
 	protected $empty_option = "- Choose -";
 	protected $filter, $validation;
-	protected $contains = "inputs"; // 
+	protected $template;
+	protected $contains = "inputs";
 
 	protected $prefix, $suffix;
 	protected $input_prefix, $input_suffix;
@@ -147,11 +148,15 @@ class FormItem {
 		return null;
 	}
 	protected function templateInputPath() {
-		$names = [
-			"form_input__".$this->type,
-			"form_input__".$this->inputType(),
-			"form_input",
-		];
+		$prefix = "form_input";
+		$d = "__";
+		$names = [];
+		if ($this->template)
+			$names[] = $prefix.$d.$this->type.$d.$this->template;
+		$names[] = $prefix.$d.$this->type;
+		if ($this->type != $this->inputType)
+			$names[] = $prefix.$d.$this->inputType();
+		$names[] = $prefix;
 		foreach ($names as $name) {
 			$path = DOC_ROOT."/extend/template/form/".$name.".php";
 			if (file_exists($path))
