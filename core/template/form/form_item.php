@@ -1,27 +1,31 @@
 <?=$prefix?>
 <div class="<?=$itemClass?>">
 <?php if (!empty($label)) { ?>
-	<label class="form-label" for="<?=$inputName?>"><?=$label?></label>
+	<label class="form-label" for="<?=$name?>"><?=$label?></label>
 <?php } ?>
-<?php if (!empty($inputs)) { ?>
-	<div class="form-inputs">
-	<?php foreach ($inputs as $i => $input) { ?>
+<?php foreach ($containers as $i => $container) { ?>
+	<div class="form-container form-<?=$contains?>">
+	<?php 
+	if ($contains == "items") {
+		foreach ($container as $item) {
+			print $item;
+		}
+	}
+	else if ($contains == "inputs") {
+		foreach ($container as $j => $input) {
+	?>
 		<div class="form-input">
 			<?=$inputPrefix?>
 			<?=$input?>
-			<?php if (isset($error[$i])) { ?>
-			<div class="form-input-error"><?=$error[$i]?></div>
+			<?php if (isset($error[$j]) { ?>
+			<div class="form-input-error"><?=$error[$j]?></div>
 			<?php } ?>
 			<?=$inputSuffix?>
 		</div>
-	<?php } ?>
-	</div>
-<?php } ?>
-<?php if (!empty($items)) { ?>
-	<div class="form-items">
-	<?php foreach ($items as $item) { ?>
-		<?=$item?>
-	<?php } ?>
+	<?php
+		}
+	}
+	?>
 	</div>
 <?php } ?>
 <?php if (!empty($description)) { ?>

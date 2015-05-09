@@ -62,6 +62,14 @@ function xss($str) {
 	return htmlspecialchars($str, ENT_QUOTES);
 }
 
+function cssClass($str) {
+	$str = strtolower($str);
+	$str = preg_replace("/[\ \_]/", "-", $str);
+	$str = preg_replace("/[\-]+/", "-", $str);
+	$str = preg_replace("/[^a-z0-9\-]/", "", $str);
+	return $str;
+}
+
 function guid() {
 	return substr(md5(microtime().REQUEST_TIME.rand(1, 1000)), 0, 12);
 }

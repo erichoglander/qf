@@ -1,5 +1,12 @@
 <?php
 /*
+	Form class
+
+	Goal is to handle the following:
+		ajax
+		nested items
+		multiple items with an add/delete buttons
+
 	class UserLogin_Form extends Form {
 
 		public function structure() {
@@ -19,12 +26,45 @@
 						"type" => "container",
 						"label" => "Family",
 						"items" => [
-							"siblings" => [
+							"pets" => [
 								"type" => "text",
-								"label" => "Siblings",
+								"label" => "Pets",
+								"value" => [
+									"Mr. whiskers",
+									"Fluffy",
+								],
 								"multiple" => true,
-								"add_button" => "Add item",
-								"delete_button" => "Delete item",
+								"add_button" => "Add pet",
+								"delete_button" => "Remove pet",
+							],
+							"siblings" => [
+								"type" => "container",
+								"label" => "Siblings",
+								"items" => [
+									"name" => [
+										"type" => "text",
+										"label" => "Name",
+									],
+									"age" => [
+										"type" => "text",
+										"label" => "Age",
+									],
+								],
+								"value" => [
+									[
+										"name" => "John",
+										"age" => 18,
+									],[
+										"name" => "Sarah",
+										"age" => 16,
+									],[
+										"name" => "Jennifer",
+										"age" => 13,
+									],
+								],
+								"multiple" => true,
+								"add_button" => "Add sibling",
+								"delete_button" => "Remove sibling",
 							],
 						],
 					],
@@ -54,12 +94,12 @@
 
 	<div class="form-wrapper">
 		<form action="" method="POST" class="form">
-			<div class="form-items">
-				<div class="form-item form-type-text form-item-required">
+			<div class="form-container form-items form-root-container">
+				<div class="form-item form-type-text form-item-name form-item-required">
 					<label for="name" class="form-label">
 						Name
 					</label>
-					<div class="form-inputs">
+					<div class="form-container form-inputs">
 						<div class="form-input">
 							<input type="text" name="name" placeholder="Enter your name" class="form-text">
 							<div class="form-input-error">Field is required</div>
@@ -69,37 +109,101 @@
 						Your full legal name
 					</div>
 				</div>
-				<div class="form-item form-type-container">
+				<div class="form-item form-type-container form-item-family">
 					<label class="form-label">Family</label>
-					<div class="form-items">
-						<div class="form-item form-type-text">
-							<label class="form-label" for="siblings[]">
-								Siblings
+					<div class="form-container form-items">
+						<div class="form-item form-type-text form-item-pets">
+							<label class="form-label" for="pets">
+								Pets
 							</label>
-							<div class="form-inputs">
+							<div class="form-container form-inputs">
 								<div class="form-input">
-									<input type="text" name="siblings[]" class="form-text">
-								</div>
-								<div class="form-input">
-									<input type="text" name="siblings[]" class="form-text">
+									<input type="text" name="pets[0]" class="form-text" value="Mr. whiskers">
 									<input type="button" value="Delete item" class="form-button form-delete-button" onclick="formDeleteItem(this)">
 								</div>
+								<div class="form-input">
+									<input type="text" name="pets[1]" class="form-text" value="Fluffy">
+									<input type="button" value="Delete item" class="form-button form-delete-button" onclick="formDeleteItem(this)">
+								</div>
+							</div>
+							<input type="button" value="Add item" class="form-button form-add-button" onclick="formAddItem(this)">
+						</div>
+						<div class="form-item form-type-text form-item-siblings form-item-multiple">
+							<label class="form-label" for="family[siblings][0][name]">
+								Siblings
+							</label>
+							<div class="form-container form-items">
+								<div class="form-item form-type-text form-item-name">
+									<label class="form-label" for="family[siblings][0][name]">
+									<div class="form-container form-inputs">
+										<div class="form-input">
+											<input type="text" name="family[siblings][0][name]" value="John" class="form-text">
+										</div>
+									</div>
+								</div>
+								<div class="form-item form-type-text form-item-age">
+									<label class="form-label" for="family[siblings][0][age]">
+									<div class="form-container form-inputs">
+										<div class="form-input">
+											<input type="text" name="family[siblings][0][age]" value="18" class="form-text">
+										</div>
+									</div>
+								</div>
+								<input type="button" value="Delete item" class="form-button form-delete-button" onclick="formDeleteItem(this)">
+							</div>
+							<div class="form-container form-items">
+								<div class="form-item form-type-text form-item-name">
+									<label class="form-label" for="family[siblings][1][name]">
+									<div class="form-container form-inputs">
+										<div class="form-input">
+											<input type="text" name="family[siblings][1][name]" value="Sarah" class="form-text">
+										</div>
+									</div>
+								</div>
+								<div class="form-item form-type-text form-item-age">
+									<label class="form-label" for="family[siblings][1][age]">
+									<div class="form-container form-inputs">
+										<div class="form-input">
+											<input type="text" name="family[siblings][1][age]" value="16" class="form-text">
+										</div>
+									</div>
+								</div>
+								<input type="button" value="Delete item" class="form-button form-delete-button" onclick="formDeleteItem(this)">
+							</div>
+							<div class="form-container form-items">
+								<div class="form-item form-type-text form-item-name">
+									<label class="form-label" for="family[siblings][2][name]">
+									<div class="form-container form-inputs">
+										<div class="form-input">
+											<input type="text" name="family[siblings][2][name]" value="Jennifer" class="form-text">
+										</div>
+									</div>
+								</div>
+								<div class="form-item form-type-text form-item-age">
+									<label class="form-label" for="family[siblings][2][age]">
+									<div class="form-container form-inputs">
+										<div class="form-input">
+											<input type="text" name="family[siblings][2][age]" value="13" class="form-text">
+										</div>
+									</div>
+								</div>
+								<input type="button" value="Delete item" class="form-button form-delete-button" onclick="formDeleteItem(this)">
 							</div>
 							<input type="button" value="Add item" class="form-button form-add-button" onclick="formAddItem(this)">
 						</div>
 					</div>
 				</div>
 				<div class="form-item form-type-actions">
-					<div class="form-items">
+					<div class="form-container form-items">
 						<div class="form-item form-type-submit">
-							<div class="form-inputs">
+							<div class="form-container form-inputs">
 								<div class="form-input">
 									<input type="submit" value="Send">
 								</div>
 							</div>
 						</div>
 						<div class="form-item form-type-button">
-							<div class="form-inputs">
+							<div class="form-container form-inputs">
 								<div class="form-input">
 									<input type="button" value="Cancel" onclick="window.history.go(-1)">
 								</div>
@@ -140,6 +244,14 @@ class Form_Core {
 		return $values;
 	}
 
+	public function render() {
+		$path = $this->templatePath();
+		$items = $this->renderItems();
+		$errors = $this->getErrors();
+		$attributes = $this->attributes();
+		include $path;
+	}
+
 
 	protected function structure() {
 		return [
@@ -174,6 +286,44 @@ class Form_Core {
 		$item['name'] = $name;
 		$item['full_name'] = $this->inputName().$name;
 		$this->items[$name] = new $class($item);
+	}
+
+	protected	function getAttributes() {
+		$attr = [];
+		foreach ($this->attributes as $key => $val)
+			$attr[$key] = $val;
+		$class = cssClass("form-".$this->name);
+		if (empty($attr['class']))
+			$attr['class'] = $class;
+		else
+			$attr['class'].= " ".$class;
+		return $attr;
+	}
+	protected function attributes($attributes = null) {
+		if (!$attributes)
+			$attributes = $this->getAttributes();
+		$attr = "";
+		foreach ($attributes as $key => $val)
+			$attr.= $key.'="'.$val.'" ';
+		$attr = substr($attr, 0, -1);
+		return $attr;
+	}
+
+	protected function templatePath() {
+		$epath = DOC_ROOT."/extend/template/form/form.php";
+		$cpath = DOC_ROOT."/core/template/form/form.php";
+		if (file_exists($epath))
+			return $path;
+		if (file_exists($cpath))
+			return $path;
+		return null;
+	}
+
+	protected function renderItems() {
+		$items = [];
+		foreach ($this->items as $name => $item)
+			$items[] = $item->render($name);
+		return $items;
 	}
 
 	protected function validate() {
