@@ -126,20 +126,20 @@ class FormItem {
 
 	public function render($name) {
 		$path = $this->templateItemPath();
-		$label = $this->label;
-		$description = $this->description;
-		$containers = $this->renderContainers($name);
-		$prefix = $this->prefix;
-		$suffix = $this->suffix;
-		$input_prefix = $this->input_prefix;
-		$input_suffix = $this->input_suffix;
-		$options = $this->options();
-		$add_button = $this->renderAddButton();
-		$delete_button = $this->renderDeleteButton();
-		$error = $this->getError();
-		ob_start();
-		include $path;
-		return ob_get_clean();
+		$vars = [
+			"label" => $this->label,
+			"description" => $this->description,
+			"prefix"=> $this->prefix,
+			"suffix" => $this->suffix,
+			"input_prefix" => $this->input_prefix,
+			"input_suffix" => $this->input_suffix,
+			"options" => $this->options(),
+			"containers" => $this->renderContainers($name),
+			"add_button" => $this->renderAddButton($name),
+			"delete_button" => $this->renderDeleteButton($name),
+			"error" => $this->getError(),
+		];
+		return renderTemplate($path, $vars);
 	}
 
 
@@ -291,11 +291,11 @@ class FormItem {
 		];
 		return renderTemplate($path, $vars);
 	}
-	protected function renderAddButton() {
-		return '<input type="button" class="form-button" value="'.$this->add_button.'" onclick="formAddButton(this)">';
+	protected function renderAddButton($name) {
+		return '<input type="button" class="form-button" value="'.$this->add_button.'" onclick="formAddButton(this, \''.$name.'\')">';
 	}
-	protected function renderDeleteButton() {
-		return '<input type="button" class="form-button" value="'.$this->delete_button.'" onclick="formDeleteButton(this)">';
+	protected function renderDeleteButton($name) {
+		return '<input type="button" class="form-button" value="'.$this->delete_button.'" onclick="formDeleteButton(this, \''.$name.'\')">';
 	}
 
 };
