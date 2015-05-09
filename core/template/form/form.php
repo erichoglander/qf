@@ -14,6 +14,8 @@
 			print $item;
 		?>
 		</div>
+		<input type="hidden" name="form_<?=$name?>" value="1">
+		<input type="hidden" name="form_token" value="<?=$token?>">
 	</form>
 </div>
 <?=$suffix?>

@@ -31,9 +31,11 @@ class Form_Core {
 	protected $items;
 	protected $errors = [];
 	protected $prefix, $suffix;
+	protected $Db;
 
 
-	public function __construct() {
+	public function __construct(&$Db) {
+		$this->Db = $Db;
 		$this->loadStructure();
 	}
 
@@ -56,9 +58,33 @@ class Form_Core {
 		$items = $this->renderItems();
 		$errors = $this->getErrors();
 		$attributes = $this->attributes();
+		$token = $this->token();
+		$name = $this->name;
 		ob_start();
 		include $path;
 		return ob_get_clean();
+	}
+
+	public function validated() {
+		if (!empty($this->errors))
+			return false;
+		foreach ($this->items as $item) {
+			if (!$this->validate())
+				return false;
+		}
+		return true;
+	}
+
+	public function submitted($validate = true) {
+		if (!isset($_POST['form_'.$this->name]))
+			return false;
+		if ($validate && !$this->validated())
+			return false;
+		return true;
+	}
+
+	public function onSubmit() {
+		// Any code that runs on form submition		
 	}
 
 
@@ -71,6 +97,16 @@ class Form_Core {
 				"class" => "form",
 			],
 		];
+	}
+
+	protected function verifyToken() {
+		return $_POST['form_token'] === $this->token();
+	}
+
+	protected function token() {
+		if (!isset($_SESSION['form_token']))
+			$_SESSION['form_token'] = hash("sha512", rand(1,1000).microtime(true)."qfformtoken");
+		return $_SESSION['form_token'];
 	}
 
 	protected function loadStructure() {
@@ -133,16 +169,6 @@ class Form_Core {
 		foreach ($this->items as $name => $item)
 			$items[] = $item->render($name);
 		return $items;
-	}
-
-	protected function validate() {
-		if (!empty($this->errors))
-			return false;
-		foreach ($this->items as $item) {
-			if (!$this->validate())
-				return false;
-		}
-		return true;
 	}
 
 };
