@@ -15,12 +15,12 @@
 		foreach ($container as $j => $input) {
 	?>
 		<div class="form-input">
-			<?=$inputPrefix?>
+			<?=$input_prefix?>
 			<?=$input?>
 			<?php if (isset($error[$j]) { ?>
 			<div class="form-input-error"><?=$error[$j]?></div>
 			<?php } ?>
-			<?=$inputSuffix?>
+			<?=$input_suffix?>
 		</div>
 	<?php
 		}

@@ -13,21 +13,22 @@ class FormItem {
 	protected $contains = "inputs"; // 
 
 	protected $prefix, $suffix;
-	protected $inputPrefix, $inputSuffix;
-	protected $itemClass;
+	protected $input_prefix, $input_suffix;
+	protected $item_class;
 
 	protected $error = [];
 	protected $items = [];
+
 
 	public function __construct($structure) {
 		$this->loadStructure($structure);
 	}
 
-	public function setError($msg, $i = 0, $j = 0) {
-		$this->error[$i][$j] = $msg;
+	public function setError($msg, $i = 0) {
+		$this->error[$i] = $msg;
 	}
-	public function getError($i = 0, $j = 0) {
-		return (isset($this->error[$i][$j]) ? $this->error[$i][$j] : null);
+	public function getError($i = 0) {
+		return (isset($this->error[$i]) ? $this->error[$i] : null);
 	}
 
 	public function value() {
@@ -41,10 +42,14 @@ class FormItem {
 		$containers = $this->renderContainers($name);
 		$prefix = $this->prefix;
 		$suffix = $this->suffix;
-		$inputPrefix = $this->inputPrefix;
-		$inputSuffix = $this->inputSuffix;
+		$input_prefix = $this->input_prefix;
+		$input_suffix = $this->input_suffix;
+		$add_button = $this->renderAddButton();
+		$delete_button = $this->renderDeleteButton();
 		$error = $this->getError();
+		ob_start();
 		include $path;
+		return ob_get_clean();
 	}
 
 
@@ -73,7 +78,6 @@ class FormItem {
 		if (!class_exists($class))
 			throw new Exception("Class not found for form type ".$item['type']);
 		$item['name'] = $name;
-		$item['parent_name'] = $this->name;
 		$this->items[$name] = new $class($item);
 	}
 
@@ -183,7 +187,15 @@ class FormItem {
 			$attributes['value'] = $value;
 		}
 		$attributes = $this->attributes($attributes);
-
+		ob_start();
+		include $path;
+		return ob_get_clean();
+	}
+	protected function renderAddButton() {
+		return '<input type="button" class="form-button" value="'.$this->add_button.'" onclick="formAddButton(this)">';
+	}
+	protected function renderDeleteButton() {
+		return '<input type="button" class="form-button" value="'.$this->delete_button.'" onclick="formDeleteButton(this)">';
 	}
 
 };
