@@ -10,7 +10,7 @@ class FormItem {
 
 	protected $prefix, $suffix;
 	protected $inputPrefix, $inputSuffix;
-	protected $itemClass,
+	protected $itemClass;
 
 	protected $error;
 
@@ -100,12 +100,12 @@ class FormItem {
 			"form_item__".$this->inputType(),
 			"form_item",
 		];
-		foreach ($names as $name) {}
+		foreach ($names as $name) {
 			$path = DOC_ROOT."/extend/template/form/".$name.".php";
 			if (file_exists($epath))
 				return $path;
 		}
-		foreach ($names as $name) {}
+		foreach ($names as $name) {
 			$path = DOC_ROOT."/core/template/form/".$name.".php";
 			if (file_exists($epath))
 				return $path;
@@ -117,7 +117,7 @@ class FormItem {
 		$path = $this->templatePath();
 		if (!$path)
 			throw new Exception("Can't find template for form item ".$name);
-		$label => $this->label;
+		$label = $this->label;
 		$description = $this->description;
 		$items = $this->renderItems();
 		$inputs = $this->renderInputs();
