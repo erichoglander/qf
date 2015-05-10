@@ -137,7 +137,7 @@ class FormItem {
 			"containers" => $this->renderContainers($name),
 			"add_button" => $this->renderAddButton($name),
 			"delete_button" => $this->renderDeleteButton($name),
-			"error" => $this->getError($name),
+			"error" => ($this->multiple ? $this->getError($name) : [$this->getError($name)]),
 		];
 		return renderTemplate($path, $vars);
 	}
