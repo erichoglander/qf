@@ -41,7 +41,6 @@ class Form {
 
 	public function setError($msg, $name = null) {
 		if ($name) {
-			var_dump($name);
 			$arr = explode("[", str_replace("]", "", $name));
 			$n = count($arr);
 			for ($i=0; $i<$n; $i++) {
@@ -51,6 +50,8 @@ class Form {
 				if ($item->multiple)
 					$i++;
 			}
+			var_dump($item->name);
+			var_dump($msg);
 			$item->setError($msg, $name);
 		}
 		else {
