@@ -90,10 +90,6 @@ class Form {
 			return false;
 		}
 		foreach ($this->items as $name => $item) {
-			if (!$item->checkRequired($name))
-				return false;
-		}
-		foreach ($this->items as $name => $item) {
 			if (!$item->validated($name))
 				return false;
 		}
