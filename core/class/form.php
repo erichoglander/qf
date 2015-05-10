@@ -43,6 +43,7 @@ class Form {
 		if ($name) {
 			$arr = explode("[", str_replace("]", "", $name));
 			$n = count($arr);
+			$item = $this;
 			for ($i=0; $i<$n; $i++) {
 				if (!isset($item->items[$arr[$i]]))
 					return;
@@ -50,8 +51,6 @@ class Form {
 				if ($item->multiple)
 					$i++;
 			}
-			var_dump($item->name);
-			var_dump($msg);
 			$item->setError($msg, $name);
 		}
 		else {
