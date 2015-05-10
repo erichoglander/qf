@@ -27,15 +27,16 @@ class Form {
 		"action" => "",
 		"class" => "form"
 	];
+	protected $name;
 	protected $items;
 	protected $errors = [];
 	protected $prefix, $suffix;
+	protected $vars = [];
 	protected $Db;
 
 
-	public function __construct(&$Db) {
+	public function __construct(&$Db, $vars = []) {
 		$this->Db = $Db;
-		$this->loadStructure();
 	}
 
 	public function setError($msg) {
@@ -88,34 +89,12 @@ class Form {
 		return true;
 	}
 
-	public function onSubmit() {
-		// Any code that runs on form submition		
-	}
-
-
-	protected function structure() {
-		return [
-			"name" => "default_form",
-			"attributes" => [
-				"method" => "POST",
-				"action" => "",
-				"class" => "form",
-			],
-		];
-	}
-
-	protected function verifyToken() {
-		return $_POST['form_token'] === $this->token();
-	}
-
-	protected function token() {
-		if (!isset($_SESSION['form_token']))
-			$_SESSION['form_token'] = substr(hash("sha512", rand(1,1000).microtime(true)."qfformtoken"), 4, 32);
-		return $_SESSION['form_token'];
-	}
-
-	protected function loadStructure() {
-		$structure = $this->structure();
+	public function loadStructure() {
+		$args = func_get_args();
+		if (empty($args))
+			$structure = $this->structure();
+		else
+			$structure = call_user_func_array([$this, "structure"], func_get_args());
 		if (empty($structure['name']))
 			throw new Exception("No name given for form");
 		if (!empty($structure['attributes'])) {
@@ -131,6 +110,18 @@ class Form {
 			$this->loadItem($name, $item);
 	}
 
+
+	protected function structure() {
+		return [
+			"name" => "default_form",
+			"attributes" => [
+				"method" => "POST",
+				"action" => "",
+				"class" => "form",
+			],
+		];
+	}
+
 	protected function loadItem($name, $item) {
 		if (empty($item['type']))
 			throw new Exception("No type given for form item ".$name);
@@ -143,6 +134,16 @@ class Form {
 		$item['name'] = $name;
 		$item['submitted'] = $this->submitted(false);
 		$this->items[$name] = new $class($item);
+	}
+
+	protected function verifyToken() {
+		return $_POST['form_token'] === $this->token();
+	}
+
+	protected function token() {
+		if (!isset($_SESSION['form_token']))
+			$_SESSION['form_token'] = substr(hash("sha512", rand(1,1000).microtime(true)."qfformtoken"), 4, 32);
+		return $_SESSION['form_token'];
 	}
 
 	protected	function getAttributes() {

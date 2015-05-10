@@ -9,9 +9,9 @@ class Model {
 
 
 	protected function getForm($name) {
-		
+		return newClass($name."_Form", $this->Db);
 	}
-	
+
 	protected function getEntity($name, $id = null) {
 		return newClass($name."_Entity", $this->Db, $id);
 	}
