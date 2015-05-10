@@ -16,20 +16,20 @@ class UserEdit_Core_Form extends Form {
 		return true;
 	}
 	
-	public function structure($User) {
+	public function structure($vars) {
 		$structure = [
 			"name" => "user_edit",
 			"items" => [
 				"name" => [
 					"type" => "text",
 					"label" => t("Username"),
-					"value" => $User->get("name"),
+					"value" => $vars['name'],
 					"required" => true,
 				],
 				"email" => [
 					"type" => "email",
 					"label" => t("Email"),
-					"value" => $User->get("email"),
+					"value" => $vars['email'],
 					"required" => true,
 				],
 				"password" => [

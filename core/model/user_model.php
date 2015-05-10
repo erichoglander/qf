@@ -9,7 +9,10 @@ class User_Core_Model extends Model {
 	}
 	public function getEditForm($User) {
 		$Form = $this->getForm("UserEdit");
-		$Form->loadStructure($User);
+		$Form->loadStructure([
+			"name" => $User->get("name"),
+			"email" => $User->get("email"),
+		]);
 		if ($Form->submitted(true)) {
 			print "Submitted & validated";
 			$Form->onSubmit();
