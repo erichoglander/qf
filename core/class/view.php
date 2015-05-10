@@ -12,6 +12,9 @@ class View {
 		if ($Db) {
 			$this->Html = new Html($Db);
 			$this->Html->title = ucwords($controller_name)." ".$name;
+			$this->Html->body_class[] = cssClass("page-".$controller_name."-".$name);
+			$this->Html->body_class[] = cssClass("controller-".$controller_name);
+			$this->Html->body_class[] = cssClass("action-".$name);
 		}
 	}
 

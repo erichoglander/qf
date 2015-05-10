@@ -1,5 +1,5 @@
 <?=$prefix?>
-<div class="<?=$itemClass?>">
+<div class="<?=$item_class?>">
 <?php if (!empty($label)) { ?>
 	<label class="form-label" for="<?=$name?>"><?=$label?></label>
 <?php } ?>
@@ -7,6 +7,7 @@
 	<div class="form-container form-<?=$contains?>">
 	<?php 
 	if ($contains == "items") {
+		// pr($container);
 		foreach ($container as $item) {
 			print $item;
 		}
@@ -17,7 +18,7 @@
 		<div class="form-input">
 			<?=$input_prefix?>
 			<?=$input?>
-			<?php if (isset($error[$j]) { ?>
+			<?php if (isset($error[$j])) { ?>
 			<div class="form-input-error"><?=$error[$j]?></div>
 			<?php } ?>
 			<?=$input_suffix?>

@@ -8,7 +8,7 @@ class FormItem {
 	protected $multiple, $dragable;
 	protected $add_button, $delete_button;
 	protected $required, $focus;
-	protected $attributes;
+	protected $attributes = [];
 	protected $value;
 	protected $items = [];
 	protected $options = [];
@@ -122,13 +122,16 @@ class FormItem {
 	public function render($name) {
 		$path = $this->templateItemPath();
 		$vars = [
+			"name" => $name,
 			"label" => $this->label,
 			"description" => $this->description,
 			"prefix"=> $this->prefix,
 			"suffix" => $this->suffix,
 			"input_prefix" => $this->input_prefix,
 			"input_suffix" => $this->input_suffix,
+			"item_class" => $this->itemClass(),
 			"options" => $this->options(),
+			"contains" => $this->contains,
 			"containers" => $this->renderContainers($name),
 			"add_button" => $this->renderAddButton($name),
 			"delete_button" => $this->renderDeleteButton($name),
@@ -146,7 +149,7 @@ class FormItem {
 		}
 		if (!empty($structure['items'])) {
 			foreach ($structure['items'] as $name => $item)
-				$this->loadItem($name, $item, $this->data[$this->name]);
+				$this->loadItem($name, $item);
 			unset($structure['items']);
 		}
 		foreach ($structure as $key => $val)
@@ -222,13 +225,7 @@ class FormItem {
 	}
 
 	protected function templateItemPath() {
-		$epath = DOC_ROOT."/extend/template/form/form_item.php";
-		$cpath = DOC_ROOT."/core/template/form/form_item.php";
-		if (file_exists($epath))
-			return $path;
-		if (file_exists($cpath))
-			return $path;
-		return null;
+		return filePath("template/form/form_item.php");
 	}
 	protected function templateInputPath() {
 		$prefix = "form_input";
@@ -241,7 +238,7 @@ class FormItem {
 			$names[] = $prefix.$d.$this->template;
 		}
 		$names[] = $prefix.$d.$this->type;
-		if ($this->type != $this->inputType)
+		if ($this->type != $this->inputType())
 			$names[] = $prefix.$d.$this->inputType();
 		$names[] = $prefix;
 		foreach ($names as $name) {
@@ -265,16 +262,22 @@ class FormItem {
 				$value[] = null;
 			if ($this->contains == "inputs") {
 				foreach ($value as $i => $val)
-					$containers[0][] = $this->renderInput($name."[".$i."]", $this->value($name."[".$i."]"));
+					$containers[$i][] = $this->renderInput($name."[".$i."]", $this->value($name."[".$i."]"));
 			}
 			else if ($this->contains == "items") {
 				foreach ($value as $i => $val)
 					foreach ($this->items as $item)
-						$containers[] = $item->render($name."[".$i."]".$item->name);
+						$containers[$i][] = $item->render($name."[".$i."]".$item->name);
 			}
 		}
 		else {
-			$containers[0][] = $this->renderInput($name, $this->value($name));
+			if ($this->contains == "inputs") {
+				$containers[0][] = $this->renderInput($name, $this->value($name));
+			}
+			else if ($this->contains == "items") {
+				foreach ($this->items as $item)
+					$containers[0][] = $item->render($name.$item->name);
+			}
 		}
 		return $containers;
 	}

@@ -8,6 +8,10 @@ class Model {
 	}
 
 
+	protected function getForm($name) {
+		
+	}
+	
 	protected function getEntity($name, $id = null) {
 		return newClass($name."_Entity", $this->Db, $id);
 	}

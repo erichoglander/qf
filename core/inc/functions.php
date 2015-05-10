@@ -1,7 +1,7 @@
 <?php
 function classAutoload($class) {
 	$fname = strtolower($class).".php";
-	$suffixes = ["controller", "model", "entity"];
+	$suffixes = ["controller", "model", "entity", "form"];
 	foreach ($suffixes as $suffix) {
 		$csuffix = "_".ucwords($suffix);
 		if (strpos($class, $csuffix) !== false) {
@@ -56,8 +56,12 @@ function newClass($cname) {
 }
 
 
-function pr($data) {
-	print "<pre>".print_r($data,1)."</pre>";
+function pr($data, $ret = 0) {
+	$html = "<pre>".print_r($data,1)."</pre>";
+	if ($ret)
+		return $html;
+	else
+		print $html;
 }
 
 function xss($str) {
@@ -74,6 +78,25 @@ function cssClass($str) {
 
 function guid() {
 	return substr(md5(microtime().REQUEST_TIME.rand(1, 1000)), 0, 12);
+}
+
+function filePath($path) {
+	$epath = DOC_ROOT."/extend/".$path;
+	$cpath = DOC_ROOT."/core/".$path;
+	if (file_exists($epath))
+		return $epath;
+	if (file_exists($cpath))
+		return $cpath;
+	return null;
+}
+function fileUrl($path) {
+	$epath = "/extend/".$path;
+	$cpath = "/core/".$path;
+	if (file_exists(DOC_ROOT.$epath))
+		return $epath;
+	if (file_exists(DOC_ROOT.$cpath))
+		return $cpath;
+	return null;
 }
 
 function renderTemplate($path, $vars) {

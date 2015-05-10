@@ -20,10 +20,9 @@
 			
 
 */
-class Form_Core {
+class Form {
 	
 	protected $attributes = [
-		"name" => "default_form",
 		"method" => "POST",
 		"action" => "",
 		"class" => "form"
@@ -55,14 +54,16 @@ class Form_Core {
 
 	public function render() {
 		$path = $this->templatePath();
-		$items = $this->renderItems();
-		$errors = $this->getErrors();
-		$attributes = $this->attributes();
-		$token = $this->token();
-		$name = $this->name;
-		ob_start();
-		include $path;
-		return ob_get_clean();
+		$vars = [
+			"items" => $this->renderItems(),
+			"errors" => $this->getErrors(),
+			"attributes" => $this->attributes(),
+			"token" => $this->token(),
+			"name" => $this->name,
+			"prefix" => $this->prefix,
+			"suffix" => $this->suffix,
+		];
+		return renderTemplate($path, $vars);
 	}
 
 	public function validated() {
@@ -111,11 +112,18 @@ class Form_Core {
 
 	protected function loadStructure() {
 		$structure = $this->structure();
+		if (empty($structure['name']))
+			throw new Exception("No name given for form");
 		if (!empty($structure['attributes'])) {
 			foreach ($structure['attributes'] as $key => $val)
 				$this->attributes[$key] = $val;
+			unset($structure['attributes']);
 		}
-		foreach ($structure['items'] as $name => $item) 
+		$items = $structure['items'];
+		unset($structure['items']);
+		foreach ($structure as $key => $val)
+			$this->{$key} = $val;
+		foreach ($items as $name => $item)
 			$this->loadItem($name, $item);
 	}
 
@@ -126,7 +134,7 @@ class Form_Core {
 		$class = "FormItem";
 		foreach ($a as $b)
 			$class.= ucwords($b);
-		if (!class_exists($class))
+		if (!class_exists($class)) 
 			$class = "FormItem";
 		$item['name'] = $name;
 		$item['submitted'] = $this->submitted(false);
@@ -158,9 +166,9 @@ class Form_Core {
 		$epath = DOC_ROOT."/extend/template/form/form.php";
 		$cpath = DOC_ROOT."/core/template/form/form.php";
 		if (file_exists($epath))
-			return $path;
+			return $epath;
 		if (file_exists($cpath))
-			return $path;
+			return $cpath;
 		return null;
 	}
 

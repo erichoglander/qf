@@ -22,22 +22,17 @@ class Theme {
 
 	protected function preRender($part, &$vars) {
 		if ($part == "html") {
-			$vars['css'] = array_merge($vars['css'], $this->css);
-			$vars['js'] = array_merge($vars['js'], $this->js);
+			foreach ($this->css as $css)
+				$vars['css'][] = fileUrl("theme/".$this->name."/css/".$css);
+			foreach ($this->js as $js)
+				$vars['js'][] = fileUrl("theme/".$this->name."/js/".$js);
 			$vars['favicon'] = $this->getFavicon();
 			$vars['meta'] = $this->getMeta();
 		}
 	}
 
 	protected function getTemplate($name) {
-		$cpath = DOC_ROOT."/core/theme/".$this->name."/template/".$name.".php";
-		$epath = DOC_ROOT."/extend/theme/".$this->name."/template/".$name.".php";
-		if (file_exists($epath))
-			return $epath;
-		else if (file_exists($cpath))
-			return $cpath;
-		else
-			return null;
+		return filePath("theme/".$this->name."/template/".$name.".php");
 	}
 
 	protected function getFavicon() {

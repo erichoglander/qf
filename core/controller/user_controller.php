@@ -2,7 +2,7 @@
 class User_Core_Controller extends Controller {
 
 	public function access($action, $args = []) {
-		return true;
+		return true; // TODO: Check access
 	}
 
 	public function index() {
@@ -24,7 +24,7 @@ class User_Core_Controller extends Controller {
 	public function add() {
 		$vars = [];
 		$vars['User'] = $this->getEntity("User");
-		// $vars['Form'] = $this->Model->getEditForm($vars['User']);
+		$vars['Form'] = $this->Model->getEditForm($vars['User']);
 		return $this->view("edit", $vars);
 	}
 
