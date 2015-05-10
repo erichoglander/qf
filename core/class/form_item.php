@@ -71,15 +71,15 @@ class FormItem {
 				foreach ($value as $i => $val) {
 					$is_arr = is_array($val);
 					if ($this->required && ($is_arr && empty($val) || !$is_arr && strlen($val) === 0)) {
-						$this->setError(t("Field is required"));
+						$this->setError(t("Field is required"), $i);
 						return false;
 					}
 					if (!empty($this->options) && ($is_arr || !array_key_exists($val, $this->options()))) {
-						$this->setError(t("Invalid option"));
+						$this->setError(t("Invalid option"), $i);
 						return false;
 					}
 					if ($this->validation && !$this->validate($val, $this->validation)) {
-						$this->setError($this->validation_error);
+						$this->setError($this->validation_error, $i);
 						return false;
 					}
 				}
