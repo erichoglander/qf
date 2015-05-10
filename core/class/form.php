@@ -69,6 +69,10 @@ class Form {
 	public function validated() {
 		if (!empty($this->errors))
 			return false;
+		if (!$this->verifyToken()) {
+			$this->setError(t("Form token expired, please reload the page and refill the form"));
+			return false;
+		}
 		foreach ($this->items as $name => $item) {
 			if (!$item->validated($name))
 				return false;
@@ -106,7 +110,7 @@ class Form {
 
 	protected function token() {
 		if (!isset($_SESSION['form_token']))
-			$_SESSION['form_token'] = hash("sha512", rand(1,1000).microtime(true)."qfformtoken");
+			$_SESSION['form_token'] = substr(hash("sha512", rand(1,1000).microtime(true)."qfformtoken"), 4, 32);
 		return $_SESSION['form_token'];
 	}
 

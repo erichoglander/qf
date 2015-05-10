@@ -7,7 +7,6 @@
 	<div class="form-container form-<?=$contains?>">
 	<?php 
 	if ($contains == "items") {
-		// pr($container);
 		foreach ($container as $item) {
 			print $item;
 		}
