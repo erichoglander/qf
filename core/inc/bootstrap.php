@@ -1,4 +1,5 @@
 <?php
+session_start();
 define("DOC_ROOT", str_replace("/core/inc", "", __DIR__));
 
 require_once(DOC_ROOT."/core/inc/constants.php");

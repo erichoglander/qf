@@ -39,8 +39,22 @@ class Form {
 		$this->Db = $Db;
 	}
 
-	public function setError($msg) {
-		$this->errors[] = $msg;
+	public function setError($msg, $name = null) {
+		if ($name) {
+			$arr = explode("[", str_replace("]", "", $name));
+			$n = count($arr);
+			for ($i=0; $i<$n; $i++) {
+				if (!isset($item->items[$arr[$i]]))
+					return;
+				$item = $item->items[$arr[$i]];
+				if ($item->multiple)
+					$i++;
+			}
+			$item->setError($msg, $name);
+		}
+		else {
+			$this->errors[] = $msg;
+		}
 	}
 	public function getErrors() {
 		return $this->errors;

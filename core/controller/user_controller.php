@@ -22,9 +22,7 @@ class User_Core_Controller extends Controller {
 	}
 	
 	public function add() {
-		$vars = [];
-		$vars['User'] = $this->getEntity("User");
-		$vars['Form'] = $this->Model->getEditForm($vars['User']);
+		$vars = $this->Model->getEditPage();
 		return $this->view("edit", $vars);
 	}
 

@@ -2,17 +2,18 @@
 class FormItem {
 	
 	public $name;
+	public $items;
+	public $multiple;
 
 	protected $type;
 	protected $label, $description;
-	protected $multiple, $dragable;
+	protected $dragable;
 	protected $add_button, $delete_button;
 	protected $required, $focus;
 	protected $attributes = [];
 	protected $value;
-	protected $items = [];
 	protected $options = [];
-	protected $empty_option = "- Choose -";
+	protected $empty_option;
 	protected $filter, $validation;
 	protected $template;
 	protected $submitted = false;
@@ -26,14 +27,15 @@ class FormItem {
 	protected $validation_error;
 
 	public function __construct($structure) {
+		$this->empty_option = t("- Choose -");
 		$this->loadStructure($structure);
 	}
 
-	public function setError($msg, $i = 0) {
-		$this->error[$i] = $msg;
+	public function setError($msg, $name) {
+		$this->error[$name] = $msg;
 	}
-	public function getError($i = 0) {
-		return (isset($this->error[$i]) ? $this->error[$i] : null);
+	public function getError($name) {
+		return (isset($this->error[$name]) ? $this->error[$name] : null);
 	}
 
 	public function value($name) {
@@ -71,15 +73,15 @@ class FormItem {
 				foreach ($value as $i => $val) {
 					$is_arr = is_array($val);
 					if ($this->required && ($is_arr && empty($val) || !$is_arr && strlen($val) === 0)) {
-						$this->setError(t("Field is required"), $i);
+						$this->setError(t("Field is required"), $name."[".$i."]");
 						return false;
 					}
 					if (!empty($this->options) && ($is_arr || !array_key_exists($val, $this->options()))) {
-						$this->setError(t("Invalid option"), $i);
+						$this->setError(t("Invalid option"), $name."[".$i."]");
 						return false;
 					}
 					if ($this->validation && !$this->validate($val, $this->validation)) {
-						$this->setError($this->validation_error, $i);
+						$this->setError($this->validation_error, $name."[".$i."]");
 						return false;
 					}
 				}
@@ -87,15 +89,15 @@ class FormItem {
 			else {
 				$is_arr = is_array($value);
 				if ($this->required && ($is_arr && empty($value) || !$is_arr && strlen($value) === 0)) {
-					$this->setError(t("Field is required"));
+					$this->setError(t("Field is required"), $name);
 					return false;
 				}
 				if (!empty($this->options) && ($is_arr || !array_key_exists($value, $this->options()))) {
-					$this->setError(t("Invalid option"));
+					$this->setError(t("Invalid option"), $name);
 					return false;
 				}
 				if ($this->validation && !$this->validate($value, $this->validation)) {
-					$this->setError($this->validation_error);
+					$this->setError($this->validation_error, $name);
 					return false;
 				}
 			}

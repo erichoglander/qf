@@ -1,5 +1,20 @@
 <?php
 class UserEdit_Core_Form extends Form {
+
+	public function onSubmit() {
+		
+	}
+
+	public function validated() {
+		if (!parent::validated())
+			return false;
+		$values = $this->values();
+		if ($values['password'] != $values['password_confirm']) {
+			$this->setError(t("Passwords mismatch"), "password");
+			return false;
+		}
+		return true;
+	}
 	
 	public function structure($User) {
 		$structure = [
