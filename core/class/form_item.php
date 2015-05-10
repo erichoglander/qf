@@ -102,16 +102,19 @@ class FormItem {
 		if ($this->contains == "inputs") {
 			if ($this->multiple) {
 				$values = $value;
-				$nm = $name."[".$i."]";
 			}
 			else {
 				$values = [$value];
 				$nm = $name;
 			}
 			foreach ($values as $i => $val) {
+				if ($this->multiple)
+					$nm = $name."[".$i."]";
 				if ($this->emptyValue($val)) {
-					if ($this->required)
+					if ($this->required) {
+						$this->setError(t("Field is required"), $nm);
 						return false;
+					}
 					continue;
 				}
 				$is_arr = is_array($val);
