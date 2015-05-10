@@ -56,11 +56,11 @@ class FormItem {
 			if ($this->multiple) {
 				foreach ($data as $i => $val) 
 					foreach ($this->items as $key => $item)
-						$values[$key] = $item->value($name."[".$i."]".$key); 
+						$values[$key] = $item->value($name."[".$i."][".$key."]"); 
 			}
 			else {
 				foreach ($this->items as $key => $item)
-					$values[$key] = $item->value($name.$key); 
+					$values[$key] = $item->value($name."[".$key."]"); 
 			}
 			return $values;
 		}
@@ -106,14 +106,14 @@ class FormItem {
 			if ($this->multiple) {
 				foreach ($value as $i => $val) {
 					foreach ($this->items as $item) {
-						if (!$this->validated($name."[".$i."]".$item->name))
+						if (!$this->validated($name."[".$i."][".$item->name."]"))
 							return false;
 					}
 				}
 			}
 			else {
 				foreach ($this->items as $item) {
-					if (!$this->validated($name.$item->name))
+					if (!$this->validated($name."[".$item->name."]"))
 						return false;
 				}
 			}
@@ -269,7 +269,7 @@ class FormItem {
 			else if ($this->contains == "items") {
 				foreach ($value as $i => $val)
 					foreach ($this->items as $item)
-						$containers[$i][] = $item->render($name."[".$i."]".$item->name);
+						$containers[$i][] = $item->render($name."[".$i."][".$item->name."]");
 			}
 		}
 		else {
@@ -278,7 +278,7 @@ class FormItem {
 			}
 			else if ($this->contains == "items") {
 				foreach ($this->items as $item)
-					$containers[0][] = $item->render($name.$item->name);
+					$containers[0][] = $item->render($name."[".$item->name."]");
 			}
 		}
 		return $containers;
