@@ -298,8 +298,11 @@ class FormItem {
 			if (empty($value))
 				$value[] = null;
 			if ($this->contains == "inputs") {
-				foreach ($value as $i => $val)
-					$containers[$i][] = $this->renderInput($name."[".$i."]", $this->value($name."[".$i."]"));
+				$focus = $this->focus;
+				foreach ($value as $i => $val) {
+					$containers[$i][] = $this->renderInput($name."[".$i."]", $focus);
+					$focus = false;
+				}
 			}
 			else if ($this->contains == "items") {
 				foreach ($value as $i => $val)
@@ -309,7 +312,7 @@ class FormItem {
 		}
 		else {
 			if ($this->contains == "inputs") {
-				$containers[0][] = $this->renderInput($name, $this->value($name));
+				$containers[0][] = $this->renderInput($name, $this->focus);
 			}
 			else if ($this->contains == "items") {
 				foreach ($this->items as $item)
@@ -318,11 +321,13 @@ class FormItem {
 		}
 		return $containers;
 	}
-	protected function renderInput($name, $value) {
+	protected function renderInput($name, $focus = false) {
 		$path = $this->templateInputPath();
 		$vars = [
 			"attributes" => $this->attributes($name),
-			"value" => $value,
+			"name" => $name,
+			"focus" => $focus,
+			"value" => $this->value($name),
 		];
 		return renderTemplate($path, $vars);
 	}

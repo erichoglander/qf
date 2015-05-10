@@ -24,6 +24,7 @@ class UserEdit_Core_Form extends Form {
 					"type" => "text",
 					"label" => t("Username"),
 					"value" => $vars['name'],
+					"focus" => true,
 					"required" => true,
 				],
 				"email" => [
