@@ -3,7 +3,7 @@ class FormItem {
 	
 	public $name;
 	public $items;
-	public $multiple;
+	public $multiple, $parent_multiple;
 
 	protected $type;
 	protected $label, $description;
@@ -17,7 +17,6 @@ class FormItem {
 	protected $filter, $validation;
 	protected $template;
 	protected $submitted = false;
-	protected $contains = "inputs";
 
 	protected $prefix, $suffix;
 	protected $input_prefix, $input_suffix;
@@ -31,128 +30,31 @@ class FormItem {
 		$this->loadStructure($structure);
 	}
 
-	public function setError($msg, $name) {
-		$this->error[$name] = $msg;
+	public function setError($msg) {
+		$this->error = $msg;
 	}
-	public function getError($name) {
-		return (isset($this->error[$name]) ? $this->error[$name] : null);
+	public function getError() {
+		return $this->error;
 	}
 
 	public function value($name) {
-		if (!$this->submitted)
-			return $this->value;
-		$name_arr = explode("[", str_replace("]", "", $name)); 
-		$data = $_POST;
-		foreach ($name_arr as $f) {
-			if (!array_key_exists($f, $data))
-				return null;
-			$data = $data[$f];
-		}
-		if ($this->contains == "inputs") {
-			return $this->filter($data, $this->filter);
-		}
-		else if ($this->contains == "items") {
-			$values = [];
-			if ($this->multiple) {
-				foreach ($data as $i => $val) 
-					foreach ($this->items as $key => $item)
-						$values[$key] = $item->value($name."[".$i."][".$key."]"); 
-			}
-			else {
-				foreach ($this->items as $key => $item)
-					$values[$key] = $item->value($name."[".$key."]"); 
-			}
-			return $values;
-		}
+		
 	}
 
-	public function hasValue($name) {
-		$value = $this->value($name);
-		if ($this->contains == "inputs") {
-			if ($this->multiple) 
-				$values = $value;
-			else
-				$values = [$value];
-			foreach ($values as $val) {
-				if (!$this->emptyValue($val))
-					return true;
-			}
-		}
-		else if ($this->contains == "items") {
-			if ($this->multiple) {
-				foreach ($value as $i => $val) {
-					foreach ($this->items as $item) {
-						if ($this->hasValue($name."[".$i."][".$item->name."]"))
-							return true;
-					}
-				}
-			}
-			else {
-				foreach ($this->items as $item) {
-					if ($item->hasValue($name."[".$item->name."]"))
-						return true;
-				}
-			}
-		}
+	public function hasValue() {
+		$value = $this->value();
 		return false;
 	}
 
-	public function validated($name) {
-		$value = $this->value($name);
-		if ($this->contains == "inputs") {
-			if ($this->multiple) {
-				$values = $value;
-			}
-			else {
-				$values = [$value];
-				$nm = $name;
-			}
-			foreach ($values as $i => $val) {
-				if ($this->multiple)
-					$nm = $name."[".$i."]";
-				if ($this->emptyValue($val)) {
-					if ($this->required) {
-						$this->setError(t("Field is required"), $nm);
-						return false;
-					}
-					continue;
-				}
-				$is_arr = is_array($val);
-				if (!empty($this->options) && ($is_arr || !array_key_exists($val, $this->options()))) {
-					$this->setError(t("Invalid option"), $nm);
-					return false;
-				}
-				if ($this->validation && !$this->validate($val, $this->validation)) {
-					$this->setError($this->validation_error, $nm);
-					return false;
-				}
-			}
-		}
-		else if ($this->contains == "items") {
-			if ($this->multiple) {
-				foreach ($value as $i => $val) {
-					foreach ($this->items as $item) {
-						$nm = $name."[".$i."][".$item->name."]";
-						if ($item->hasValue($nm) && !$this->validated($nm))
-							return false;
-					}
-				}
-			}
-			else {
-				foreach ($this->items as $item) {
-					$nm = $name."[".$item->name."]";
-					if ($item->hasValue($nm) && !$this->validated($nm))
-						return false;
-				}
-			}
-		}
+	public function validated() {
+		$value = $this->value();
 		return true;
 	}
 
-	public function render($name) {
+	public function render() {
 		$path = $this->templateItemPath();
 		$vars = [
-			"name" => $name,
+			"name" => $this->name,
 			"label" => $this->label,
 			"description" => $this->description,
 			"prefix"=> $this->prefix,
@@ -161,11 +63,10 @@ class FormItem {
 			"input_suffix" => $this->input_suffix,
 			"item_class" => $this->itemClass(),
 			"options" => $this->options(),
-			"contains" => $this->contains,
-			"containers" => $this->renderContainers($name),
-			"add_button" => $this->renderAddButton($name),
-			"delete_button" => $this->renderDeleteButton($name),
-			"error" => ($this->multiple ? $this->getError($name) : [$this->getError($name)]),
+			"containers" => $this->renderContainers(),
+			"add_button" => $this->renderAddButton(),
+			"delete_button" => $this->renderDeleteButton(),
+			"error" => $this->getError(),
 		];
 		return renderTemplate($path, $vars);
 	}
@@ -175,15 +76,30 @@ class FormItem {
 		if (!empty($structure['attributes'])) {
 			foreach ($structure['attributes'] as $key => $val)
 				$this->attributes[$key] = $val;
-			unset($structure['attributes']);
 		}
-		if (!empty($structure['items'])) {
-			foreach ($structure['items'] as $name => $item)
-				$this->loadItem($name, $item);
-			unset($structure['items']);
-		}
-		foreach ($structure as $key => $val)
+		$properties = $structure;
+		unset($properties['attributes']);
+		unset($properties['items']);
+		foreach ($properties as $key => $val)
 			$this->{$key} = $val;
+		if ($this->multiple) {
+			$value = $this->value();
+			if (empty($value))
+				$value[] = null;
+			$this->items = [];
+			$structure['multiple'] = false;
+			$structure['parent_multiple'] = true;
+			unset($structure['label']);
+			foreach ($value as $i => $val) {
+				$this->loadItem($i, $structure);
+			}
+		}
+		else {
+			if (isset($items)) {
+				foreach ($items as $name => $item)
+					$this->loadItem($name, $item);
+			}
+		}
 	}
 
 	protected function loadItem($name, $item) {
@@ -239,21 +155,19 @@ class FormItem {
 		return $class;
 	}
 
-	protected	function getAttributes($name = null) {
+	protected	function getAttributes() {
 		$attr = [];
 		$attr['type'] = $this->inputType();
 		foreach ($this->attributes as $key => $val)
 			$attr[$key] = $val;
-		if ($name)
-			$attr['name'] = $name;
 		if (empty($attr['class']))
 			$attr['class'] = $this->inputClass();
 		else
 			$attr['class'].= " ".$this->inputClass();
 		return $attr;
 	}
-	protected function attributes($name = null) {
-		$attributes = $this->getAttributes($name);
+	protected function attributes() {
+		$attributes = $this->getAttributes();
 		$attr = "";
 		foreach ($attributes as $key => $val)
 			$attr.= $key.'="'.$val.'" ';
@@ -291,51 +205,25 @@ class FormItem {
 		return null;
 	}
 
-	protected function renderContainers($name) {
-		$containers = [];
-		if ($this->multiple) {
-			$value = $this->value($name);
-			if (empty($value))
-				$value[] = null;
-			if ($this->contains == "inputs") {
-				$focus = $this->focus;
-				foreach ($value as $i => $val) {
-					$containers[$i][] = $this->renderInput($name."[".$i."]", $focus);
-					$focus = false;
-				}
-			}
-			else if ($this->contains == "items") {
-				foreach ($value as $i => $val)
-					foreach ($this->items as $item)
-						$containers[$i][] = $item->render($name."[".$i."][".$item->name."]");
-			}
-		}
-		else {
-			if ($this->contains == "inputs") {
-				$containers[0][] = $this->renderInput($name, $this->focus);
-			}
-			else if ($this->contains == "items") {
-				foreach ($this->items as $item)
-					$containers[0][] = $item->render($name."[".$item->name."]");
-			}
-		}
-		return $containers;
-	}
-	protected function renderInput($name, $focus = false) {
+	protected function renderInput($focus = false) {
 		$path = $this->templateInputPath();
 		$vars = [
-			"attributes" => $this->attributes($name),
-			"name" => $name,
+			"attributes" => $this->attributes(),
+			"name" => $this->name,
 			"focus" => $focus,
-			"value" => $this->value($name),
+			"value" => $this->value(),
 		];
 		return renderTemplate($path, $vars);
 	}
-	protected function renderAddButton($name) {
-		return '<input type="button" class="form-button" value="'.$this->add_button.'" onclick="formAddButton(this, \''.$name.'\')">';
+	protected function renderAddButton() {
+		if ($this->multiple)
+			return '<input type="button" class="form-button" value="'.$this->add_button.'" onclick="formAddButton(this)">';
+		return "";
 	}
-	protected function renderDeleteButton($name) {
-		return '<input type="button" class="form-button" value="'.$this->delete_button.'" onclick="formDeleteButton(this, \''.$name.'\')">';
+	protected function renderDeleteButton() {
+		if ($this->parent_multiple)
+			return '<input type="button" class="form-button" value="'.$this->delete_button.'" onclick="formDeleteButton(this)">';
+		return "";
 	}
 
 };

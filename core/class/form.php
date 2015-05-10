@@ -64,7 +64,7 @@ class Form {
 	public function values() {
 		$values = [];
 		foreach ($this->items as $name => $item)
-			$values[$name] = $item->value($name);
+			$values[$name] = $item->value();
 		return $values;
 	}
 
@@ -90,7 +90,7 @@ class Form {
 			return false;
 		}
 		foreach ($this->items as $name => $item) {
-			if (!$item->validated($name))
+			if (!$item->validated())
 				return false;
 		}
 		return true;
@@ -185,13 +185,7 @@ class Form {
 	}
 
 	protected function templatePath() {
-		$epath = DOC_ROOT."/extend/template/form/form.php";
-		$cpath = DOC_ROOT."/core/template/form/form.php";
-		if (file_exists($epath))
-			return $epath;
-		if (file_exists($cpath))
-			return $cpath;
-		return null;
+		return filePath("template/form/form.php");
 	}
 
 	protected function renderItems() {
