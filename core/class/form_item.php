@@ -66,54 +66,79 @@ class FormItem {
 		}
 	}
 
-	public function validated($name) {
+	public function hasValue($name) {
 		$value = $this->value($name);
 		if ($this->contains == "inputs") {
+			if ($this->multiple) 
+				$values = $value;
+			else
+				$values = [$value];
+			foreach ($values as $val) {
+				if (!$this->emptyValue($val))
+					return true;
+			}
+		}
+		else if ($this->contains == "items") {
 			if ($this->multiple) {
 				foreach ($value as $i => $val) {
-					$is_arr = is_array($val);
-					if ($this->required && ($is_arr && empty($val) || !$is_arr && strlen($val) === 0)) {
-						$this->setError(t("Field is required"), $name."[".$i."]");
-						return false;
-					}
-					if (!empty($this->options) && ($is_arr || !array_key_exists($val, $this->options()))) {
-						$this->setError(t("Invalid option"), $name."[".$i."]");
-						return false;
-					}
-					if ($this->validation && !$this->validate($val, $this->validation)) {
-						$this->setError($this->validation_error, $name."[".$i."]");
-						return false;
+					foreach ($this->items as $item) {
+						if ($this->hasValue($name."[".$i."][".$item->name."]"))
+							return true;
 					}
 				}
 			}
 			else {
-				$is_arr = is_array($value);
-				if ($this->required && ($is_arr && empty($value) || !$is_arr && strlen($value) === 0)) {
-					$this->setError(t("Field is required"), $name);
+				foreach ($this->items as $item) {
+					if ($item->hasValue($name."[".$item->name."]"))
+						return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	public function validated($name) {
+		$value = $this->value($name);
+		if ($this->contains == "inputs") {
+			if ($this->multiple) {
+				$values = $value;
+				$nm = $name."[".$i."]";
+			}
+			else {
+				$values = [$value];
+				$nm = $name;
+			}
+			foreach ($values as $i => $val) {
+				if ($this->emptyValue($val)) {
+					if ($this->required)
+						return false;
+					continue;
+				}
+				$is_arr = is_array($val);
+				if (!empty($this->options) && ($is_arr || !array_key_exists($val, $this->options()))) {
+					$this->setError(t("Invalid option"), $nm);
 					return false;
 				}
-				if (!empty($this->options) && ($is_arr || !array_key_exists($value, $this->options()))) {
-					$this->setError(t("Invalid option"), $name);
-					return false;
-				}
-				if ($this->validation && !$this->validate($value, $this->validation)) {
-					$this->setError($this->validation_error, $name);
+				if ($this->validation && !$this->validate($val, $this->validation)) {
+					$this->setError($this->validation_error, $nm);
 					return false;
 				}
 			}
 		}
-		else if ($this->containers == "items") {
+		else if ($this->contains == "items") {
 			if ($this->multiple) {
 				foreach ($value as $i => $val) {
 					foreach ($this->items as $item) {
-						if (!$this->validated($name."[".$i."][".$item->name."]"))
+						$nm = $name."[".$i."][".$item->name."]";
+						if ($item->hasValue($nm) && !$this->validated($nm))
 							return false;
 					}
 				}
 			}
 			else {
 				foreach ($this->items as $item) {
-					if (!$this->validated($name."[".$item->name."]"))
+					$nm = $name."[".$item->name."]";
+					if ($item->hasValue($nm) && !$this->validated($nm))
 						return false;
 				}
 			}
@@ -179,6 +204,11 @@ class FormItem {
 	}
 	protected function validate($value, $validation) {
 		return true; // TODO: validation
+	}
+
+	protected function emptyValue($val) {
+		$is_arr = is_array($val);
+		return ($is_arr && empty($val) || !$is_arr && strlen($val) === 0);
 	}
 
 	protected function options() {

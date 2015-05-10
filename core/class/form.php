@@ -86,8 +86,12 @@ class Form {
 		if (!empty($this->errors))
 			return false;
 		if (!$this->verifyToken()) {
-			$this->setError(t("Form token expired, please reload the page and refill the form"));
+			$this->setError(t("Form token expired, please try to submit the form again."));
 			return false;
+		}
+		foreach ($this->items as $name => $item) {
+			if (!$item->checkRequired($name))
+				return false;
 		}
 		foreach ($this->items as $name => $item) {
 			if (!$item->validated($name))
