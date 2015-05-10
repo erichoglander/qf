@@ -52,11 +52,9 @@ class FormItem {
 		else if ($this->contains == "items") {
 			$values = [];
 			if ($this->multiple) {
-				$n = count($data);
-				for ($i=0; $i<$n; $i++) {
+				foreach ($data as $i => $val) 
 					foreach ($this->items as $key => $item)
 						$values[$key] = $item->value($name."[".$i."]".$key); 
-				}
 			}
 			else {
 				foreach ($this->items as $key => $item)
@@ -70,9 +68,7 @@ class FormItem {
 		$value = $this->value($name);
 		if ($this->contains == "inputs") {
 			if ($this->multiple) {
-				$n = count($value);
-				for ($i=0; $i<$n; $i++) {
-					$val = $value[$i];
+				foreach ($value as $i => $val) {
 					$is_arr = is_array($val);
 					if ($this->required && ($is_arr && empty($val) || !$is_arr && strlen($val) === 0)) {
 						$this->setError(t("Field is required"));
@@ -106,8 +102,7 @@ class FormItem {
 		}
 		else if ($this->containers == "items") {
 			if ($this->multiple) {
-				$n = count($value);
-				for ($i=0; $i<$n; $i++) {
+				foreach ($value as $i => $val) {
 					foreach ($this->items as $item) {
 						if (!$this->validated($name."[".$i."]".$item->name))
 							return false;
@@ -265,17 +260,17 @@ class FormItem {
 	protected function renderContainers($name) {
 		$containers = [];
 		if ($this->multiple) {
-			$n = max(count($this->value($name)), 1);
+			$value = $this->value($name);
+			if (empty($value))
+				$value[] = null;
 			if ($this->contains == "inputs") {
-				for ($i=0; $i<$n; $i++) {
+				foreach ($value as $i => $val)
 					$containers[0][] = $this->renderInput($name."[".$i."]", $this->value($name."[".$i."]"));
-				}
 			}
 			else if ($this->contains == "items") {
-				for ($i=0; $i<$n; $i++) {
+				foreach ($value as $i => $val)
 					foreach ($this->items as $item)
 						$containers[] = $item->render($name."[".$i."]".$item->name);
-				}
 			}
 		}
 		else {
