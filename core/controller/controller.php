@@ -43,11 +43,11 @@ class Controller {
 	}
 	protected function notFound($vars = []) {
 		header("HTTP/1.1 404 Not found");
-		return $this->view("404", $vars);
+		return $this->viewDefault("404", $vars);
 	}
 	protected function accessDenied() {
 		header("HTTP/1.1 403 Forbidden");
-		return $this->view("403");
+		return $this->viewDefault("403");
 	}
 
 	protected function access($action, $args = []) {
@@ -67,22 +67,14 @@ class Controller {
 	}
 
 	protected function getUser() {
-		$User = newClass("User_Entity", $this->Db);
+		$User = $this->getEntity("User");
 		if (!empty($_SESSION['user_id']))
 			$User->load($_SESSION['user_id']);
 		return $User;
 	}
 
-	// Do not include html backbone
-	protected function viewBare($name, $variables = []) {
-		$View = new View(null, $this->name, $name, $variables);
-		try {
-			return $View->render();
-		}
-		catch (Exception $e) {
-			// TODO: log exception
-			return $this->internalError();
-		}
+	protected function getEntity($name, $id = null) {
+		return newClass($name."_Entity", $this->Db, $id);
 	}
 
 	protected function view($name, $variables = []) {
@@ -92,6 +84,28 @@ class Controller {
 		}
 		catch (Exception $e) {
 			return $this->notFound(["console" => $e->getMessage()]);
+		}
+	}
+
+	protected function viewDefault($name, $variables = []) {
+		$View = new View($this->Db, "default", $name, $variables);
+		try {
+			return $View->render();
+		}
+		catch (Exception $e) {
+			die($e->getMessage());
+		}
+	}
+
+	// Do not include html backbone
+	protected function viewBare($name, $variables = []) {
+		$View = new View(null, "default", $name, $variables);
+		try {
+			return $View->render();
+		}
+		catch (Exception $e) {
+			die($e->getMessage());
+			return $this->internalError();
 		}
 	}
 

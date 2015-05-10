@@ -11,12 +11,14 @@ class Html_Core {
 
 	public $css = [];
 	public $js = [];
+	public $breadcrumbs = [];
 	public $body_class = [];
 
 	protected $Theme, $Db;
 
 	public function __construct($Db) {
 		$this->Db = &$Db;
+		$this->breadcrumbs[] = ["" => t("Home")];
 	}
 
 	public function renderHtml() {

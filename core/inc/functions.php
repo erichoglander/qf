@@ -6,7 +6,7 @@ function classAutoload($class) {
 		$csuffix = "_".ucwords($suffix);
 		if (strpos($class, $csuffix) !== false) {
 			$epath = DOC_ROOT."/extend/".$suffix."/".$fname;
-			$cpath = DOC_ROOT."/core/".$suffix."/".$fname;
+			$cpath = DOC_ROOT."/core/".$suffix."/".str_replace("_core", "", $fname);
 			if (file_exists($epath)) {
 				if (file_exists($cpath))
 					require_once($cpath);
@@ -41,10 +41,12 @@ spl_autoload_register("classAutoload");
 function newClass($cname) {
 	if (!class_exists($cname) && strpos($cname, "_") !== false) {
 		$cname = str_replace("_", "_Core_", $cname);
-		if (!class_exists($cname))
+		if (!class_exists($cname)) {
 			return null;
+		}
 	}
 	$args = func_get_args();
+	array_shift($args); // Remove the class name from argument list
 	if (empty($args))
 		return new $cname();
 	else {

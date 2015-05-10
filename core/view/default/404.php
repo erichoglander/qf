@@ -4,5 +4,5 @@ $this->Html->h1 = "404";
 ?>
 <p>Page could not be found</p>
 <?php if (isset($console)) { ?>
-<script>console.log(<?=$console?>);</script>
+<script>console.log("<?=$console?>");</script>
 <?php } ?>
