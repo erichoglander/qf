@@ -13,7 +13,7 @@ class User_Core_Model extends Model {
 			"name" => $User->get("name"),
 			"email" => $User->get("email"),
 		]);
-		if ($Form->submitted(true)) {
+		if ($Form->submitted()) {
 			print "Submitted & validated";
 			$Form->onSubmit();
 		}
