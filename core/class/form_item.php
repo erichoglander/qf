@@ -161,15 +161,17 @@ class FormItem {
 	protected function loadItem($name, $item) {
 		if (empty($item['type']))
 			throw new Exception("No type given for form item ".$name);
-		$a = explode("_", $item['type']);
-		$class = "FormItem";
-		foreach ($a as $b)
-			$class.= ucwords($b);
-		if (!class_exists($class))
-			$class = "FormItem";
 		$item['name'] = $name;
 		$item['submitted'] = $this->submitted;
-		$this->items[$name] = new $class($item);
+		$a = explode("_", $item['type']);
+		$cname = "";
+		foreach ($a as $b)
+			$cname.= ucwords($b);
+		$cname.= "_FormItem";
+		$class = newClass($cname, $item);
+		if (!$class) 
+			$class = new FormItem($item);
+		$this->items[$name] = $class;
 	}
 
 	protected function filter($value, $filter) {

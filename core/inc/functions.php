@@ -1,10 +1,12 @@
 <?php
 function classAutoload($class) {
-	$fname = strtolower($class).".php";
-	$suffixes = ["controller", "model", "entity", "form"];
+	$fname = strtolower(preg_replace("/([a-z])([A-Z])/", "$1_$2", $class).".php");
+	$suffixes = ["controller", "model", "entity", "form_item", "form"];
 	foreach ($suffixes as $suffix) {
-		$csuffix = "_".ucwords($suffix);
-		if (strpos($class, $csuffix) !== false) {
+		$csuffix = "_";
+		foreach (explode("_", $suffix) as $sfx)
+			$csuffix.= ucwords($sfx);
+		if (strpos($class, $csuffix) === strlen($class)-strlen($csuffix)) {
 			$epath = DOC_ROOT."/extend/".$suffix."/".$fname;
 			$cpath = DOC_ROOT."/core/".$suffix."/".str_replace("_core", "", $fname);
 			if (file_exists($epath)) {
@@ -30,7 +32,6 @@ function classAutoload($class) {
 			require_once($cpath);
 	}
 	else {
-		$fname = strtolower(preg_replace("/([a-z])([A-Z])/", "$1_$2", $class).".php");
 		$epath = DOC_ROOT."/extend/class/".$fname;
 		if (file_exists($epath))
 			require_once($epath);
@@ -41,9 +42,8 @@ spl_autoload_register("classAutoload");
 function newClass($cname) {
 	if (!class_exists($cname) && strpos($cname, "_") !== false) {
 		$cname = str_replace("_", "_Core_", $cname);
-		if (!class_exists($cname)) {
+		if (!class_exists($cname)) 
 			return null;
-		}
 	}
 	$args = func_get_args();
 	array_shift($args); // Remove the class name from argument list
