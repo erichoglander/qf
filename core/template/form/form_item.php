@@ -14,7 +14,7 @@ else {
 		<?=$input_prefix?>
 		<?=$input?>
 		<?php if (!empty($error)) { ?>
-		<div class="form-input-error"><?=$error?></div>
+			<div class="form-input-error"><?=$error?></div>
 		<?php } ?>
 		<?=$input_suffix?>
 	</div>
@@ -24,5 +24,7 @@ else {
 <?php if (!empty($description)) { ?>
 	<div class="form-item-description"><?=$description?></div>
 <?php } ?>
+	<?=$delete_button?>
+	<?=$add_button?>
 </div>
 <?=$suffix?>

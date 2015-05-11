@@ -345,9 +345,9 @@ class FormItem {
 		return '<input type="button" class="form-button" value="'.$this->add_button.'" onclick="formAddButton(this, '.$json.')">';
 	}
 	protected function renderDeleteButton() {
-		if ($this->parent_multiple)
-			return '<input type="button" class="form-button" value="'.$this->delete_button.'" onclick="formDeleteButton(this)">';
-		return "";
+		if (!$this->parent_multiple)
+			return null;
+		return '<input type="button" class="form-button" value="'.$this->delete_button.'" onclick="formDeleteButton(this)">';
 	}
 
 };
