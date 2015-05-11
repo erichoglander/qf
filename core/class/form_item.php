@@ -12,9 +12,10 @@ class FormItem {
 	protected $required, $focus;
 	protected $attributes = [];
 	protected $value;
-	protected $options = [];
+	protected $options;
 	protected $empty_option;
-	protected $filter, $validation;
+	protected $filter = "trim";
+	protected $validation;
 	protected $template;
 	protected $submitted = false;
 
@@ -22,10 +23,12 @@ class FormItem {
 	protected $input_prefix, $input_suffix;
 	protected $item_class;
 
+	protected $structure = [];
+	protected $data;
 	protected $error = [];
 	protected $validation_error;
 
-	public function __construct($structure) {
+	public function __construct($structure, $data) {
 		$this->empty_option = t("- Choose -");
 		$this->loadStructure($structure);
 	}
@@ -37,17 +40,65 @@ class FormItem {
 		return $this->error;
 	}
 
-	public function value($name) {
-		
+	public function value() {
+		if (!$this->submitted)
+			return $this->value;
+		if (!isset($this->data[$this->name]))
+			return null;
+		if ($this->items !== null) {
+			$value = [];
+			foreach ($this->items as $item)
+				$value[$item->name] = $item->value();
+		}
+		else {
+			$value = $this->data[$this->name];
+			if ($this->filter)
+				$value = $this->filter($value, $this->filter);
+		}
+		return $value;
 	}
 
 	public function hasValue() {
-		$value = $this->value();
+		if ($this->items === null) {
+			return $this->emptyValue($this->value());
+		}
+		else {
+			foreach ($this->items as $item) 
+				if ($item->hasValue())
+					return true;
+		}
 		return false;
 	}
 
-	public function validated() {
-		$value = $this->value();
+	public function validated($req = true) {
+		if (!$this->submitted)
+			return false;
+		if ($this->items !== null) {
+			if (!$this->hasValue() && !$this->required)
+				$req = false;
+			foreach ($this->items as $item)
+				if (!$item->validated($req))
+					return false;
+		}
+		else {
+			$value = $this->value();
+			if ($req && $this->required && !$this->hasValue()) {
+				$this->setError(t("Field is required"));
+				return false;
+			}
+			if ($this->validation && !$this->validate($value, $this->validation))
+				return false;
+			if ($this->options !== null) {
+				if (!is_array($value))
+					$value = [$value];
+				foreach ($value as $val) {
+					if (is_array($val) || !array_key_exists($val, $this->options())) {
+						$this->setError(t("Invalid option"));
+						return false;
+					}
+				}
+			}
+		}
 		return true;
 	}
 
@@ -62,8 +113,9 @@ class FormItem {
 			"input_prefix" => $this->input_prefix,
 			"input_suffix" => $this->input_suffix,
 			"item_class" => $this->itemClass(),
+			"items" => $this->renderItems(),
+			"input" => $this->renderInput(),
 			"options" => $this->options(),
-			"containers" => $this->renderContainers(),
 			"add_button" => $this->renderAddButton(),
 			"delete_button" => $this->renderDeleteButton(),
 			"error" => $this->getError(),
@@ -73,13 +125,16 @@ class FormItem {
 
 
 	protected function loadStructure($structure) {
+		$this->structure = $structure;
 		if (!empty($structure['attributes'])) {
 			foreach ($structure['attributes'] as $key => $val)
 				$this->attributes[$key] = $val;
 		}
+		$st = $structure;
 		$properties = $structure;
 		unset($properties['attributes']);
 		unset($properties['items']);
+		$data = (isset($this->data[$this->name]) ? $this->data[$this->name] : null);
 		foreach ($properties as $key => $val)
 			$this->{$key} = $val;
 		if ($this->multiple) {
@@ -87,22 +142,30 @@ class FormItem {
 			if (empty($value))
 				$value[] = null;
 			$this->items = [];
-			$structure['multiple'] = false;
-			$structure['parent_multiple'] = true;
-			unset($structure['label']);
+			$st['multiple'] = false;
+			$st['parent_multiple'] = true;
+			unset($st['label']);
 			foreach ($value as $i => $val) {
-				$this->loadItem($i, $structure);
+				if (!empty($structure['value']) && array_key_exists($structure['value'][$i]))
+					$st = $structure['value'][$i];
+				else
+					unset($st['value']);
+				unset($st['focus']);
+				$this->loadItem($i, $st, $data);
 			}
 		}
 		else {
-			if (isset($items)) {
-				foreach ($items as $name => $item)
-					$this->loadItem($name, $item);
+			if (isset($structure['items'])) {
+				foreach ($structure['items'] as $name => $item) {
+					if (!empty($structure['value']) && array_key_exists($structure['value'][$name]))
+						$item['value'] = $structure['value'][$name];
+					$this->loadItem($name, $item, $data);
+				}
 			}
 		}
 	}
 
-	protected function loadItem($name, $item) {
+	protected function loadItem($name, $item, $data) {
 		if (empty($item['type']))
 			throw new Exception("No type given for form item ".$name);
 		$item['name'] = $name;
@@ -112,9 +175,9 @@ class FormItem {
 		foreach ($a as $b)
 			$cname.= ucwords($b);
 		$cname.= "_FormItem";
-		$class = newClass($cname, $item);
+		$class = newClass($cname, $item, $data);
 		if (!$class) 
-			$class = new FormItem($item);
+			$class = new FormItem($item, $data);
 		$this->items[$name] = $class;
 	}
 
@@ -131,6 +194,8 @@ class FormItem {
 	}
 
 	protected function options() {
+		if ($this->options === null)
+			return null;
 		$options = $this->options;
 		if ($this->empty_option)
 			$options = array_merge(["" => $this->empty_option], $options);
@@ -145,7 +210,7 @@ class FormItem {
 	}
 
 	protected function itemClass() {
-		$class = "form-item ".cssClass("form-type-".$this->type);
+		$class = "form-item ".cssClass("form-type-".$this->type)." ".cssClass("form-name-".$this->name);
 		if ($this->type != $this->inputType())
 			$class.= " ".cssClass("form-type-".$this->inputType());
 		if ($this->required)
@@ -176,7 +241,30 @@ class FormItem {
 	}
 
 	protected function templateItemPath() {
-		return filePath("template/form/form_item.php");
+		$prefix = "form_item";
+		$d = "__";
+		$names = [];
+		if ($this->template) {
+			$names[] = $prefix.$d.$this->type.$d.$this->template;
+			if ($this->type != $this->inputType)
+				$names[] = $prefix.$d.$this->inputType().$d.$this->template;
+			$names[] = $prefix.$d.$this->template;
+		}
+		$names[] = $prefix.$d.$this->type;
+		if ($this->type != $this->inputType())
+			$names[] = $prefix.$d.$this->inputType();
+		$names[] = $prefix;
+		foreach ($names as $name) {
+			$path = DOC_ROOT."/extend/template/form/".$name.".php";
+			if (file_exists($path))
+				return $path;
+		}
+		foreach ($names as $name) {
+			$path = DOC_ROOT."/core/template/form/".$name.".php";
+			if (file_exists($path))
+				return $path;
+		}
+		return null;
 	}
 	protected function templateInputPath() {
 		$prefix = "form_input";
@@ -205,12 +293,22 @@ class FormItem {
 		return null;
 	}
 
-	protected function renderInput($focus = false) {
+	protected function renderItems() {
+		if ($this->items === null)
+			return null;
+		$items = [];
+		foreach ($this->items as $item)
+			$items[$item->name] = $item->render();
+		return $items;
+	}
+	protected function renderInput() {
+		if ($this->items !== null)
+			return null;
 		$path = $this->templateInputPath();
 		$vars = [
 			"attributes" => $this->attributes(),
 			"name" => $this->name,
-			"focus" => $focus,
+			"focus" => $this->focus,
 			"value" => $this->value(),
 		];
 		return renderTemplate($path, $vars);
