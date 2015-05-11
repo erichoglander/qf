@@ -107,7 +107,8 @@ class FormItem {
 	public function render() {
 		$path = $this->templateItemPath();
 		$vars = [
-			"name" => $this->inputName(),
+			"name" => $this->name,
+			"input_name" => $this->inputName(),
 			"label" => $this->label,
 			"description" => $this->description,
 			"prefix"=> $this->prefix,
