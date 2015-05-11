@@ -18,13 +18,14 @@ class FormItem {
 	protected $validation;
 	protected $template;
 	protected $submitted = false;
+	protected $tree = true;
 
 	protected $prefix, $suffix;
 	protected $input_prefix, $input_suffix;
 	protected $item_class;
 
 	protected $structure = [];
-	protected $data;
+	protected $parent_name;
 	protected $error = [];
 	protected $validation_error;
 
@@ -43,7 +44,8 @@ class FormItem {
 	public function value() {
 		if (!$this->submitted)
 			return $this->value;
-		if (!isset($this->data[$this->name]))
+		$data = $this->postData();
+		if (!isset($data[$this->name]))
 			return null;
 		if ($this->items !== null) {
 			$value = [];
@@ -51,7 +53,7 @@ class FormItem {
 				$value[$item->name] = $item->value();
 		}
 		else {
-			$value = $this->data[$this->name];
+			$value = $data[$this->name];
 			if ($this->filter)
 				$value = $this->filter($value, $this->filter);
 		}
@@ -105,7 +107,7 @@ class FormItem {
 	public function render() {
 		$path = $this->templateItemPath();
 		$vars = [
-			"name" => $this->name,
+			"name" => $this->inputName(),
 			"label" => $this->label,
 			"description" => $this->description,
 			"prefix"=> $this->prefix,
@@ -130,11 +132,9 @@ class FormItem {
 			foreach ($structure['attributes'] as $key => $val)
 				$this->attributes[$key] = $val;
 		}
-		$st = $structure;
 		$properties = $structure;
 		unset($properties['attributes']);
 		unset($properties['items']);
-		$data = (isset($this->data[$this->name]) ? $this->data[$this->name] : null);
 		foreach ($properties as $key => $val)
 			$this->{$key} = $val;
 		if ($this->multiple) {
@@ -142,6 +142,8 @@ class FormItem {
 			if (empty($value))
 				$value[] = null;
 			$this->items = [];
+			$st = $structure;
+			$st['parent_name'] = $this->inputName();
 			$st['multiple'] = false;
 			$st['parent_multiple'] = true;
 			unset($st['label']);
@@ -151,7 +153,7 @@ class FormItem {
 				else
 					unset($st['value']);
 				unset($st['focus']);
-				$this->loadItem($i, $st, $data);
+				$this->loadItem($i, $st);
 			}
 		}
 		else {
@@ -159,13 +161,14 @@ class FormItem {
 				foreach ($structure['items'] as $name => $item) {
 					if (!empty($structure['value']) && array_key_exists($structure['value'][$name]))
 						$item['value'] = $structure['value'][$name];
-					$this->loadItem($name, $item, $data);
+					$item['parent_name'] = $this->inputName();
+					$this->loadItem($name, $item);
 				}
 			}
 		}
 	}
 
-	protected function loadItem($name, $item, $data) {
+	protected function loadItem($name, $item) {
 		if (empty($item['type']))
 			throw new Exception("No type given for form item ".$name);
 		$item['name'] = $name;
@@ -175,9 +178,9 @@ class FormItem {
 		foreach ($a as $b)
 			$cname.= ucwords($b);
 		$cname.= "_FormItem";
-		$class = newClass($cname, $item, $data);
+		$class = newClass($cname, $item);
 		if (!$class) 
-			$class = new FormItem($item, $data);
+			$class = new FormItem($item);
 		$this->items[$name] = $class;
 	}
 
@@ -191,6 +194,14 @@ class FormItem {
 	protected function emptyValue($val) {
 		$is_arr = is_array($val);
 		return ($is_arr && empty($val) || !$is_arr && strlen($val) === 0);
+	}
+
+	protected function postData() {
+		$arr = explode("[", str_replace("]", "", $this->parent_name));
+		$data = $_POST;
+		foreach ($arr as $f)
+			$data = $data[$f];
+		return $data[$this->name];
 	}
 
 	protected function options() {
@@ -208,6 +219,11 @@ class FormItem {
 	protected function inputClass() {
 		return cssClass("form-".$this->inputType());
 	}
+	protected function inputName() {
+		if (!$this->tree)
+			return $this->parent_name;
+		return ($this->parent_name ? $this->parent_name."[".$this->name."]" : $this->name);
+	}
 
 	protected function itemClass() {
 		$class = "form-item ".cssClass("form-type-".$this->type)." ".cssClass("form-name-".$this->name);
@@ -223,6 +239,7 @@ class FormItem {
 	protected	function getAttributes() {
 		$attr = [];
 		$attr['type'] = $this->inputType();
+		$attr['name'] = $this->inputName();
 		foreach ($this->attributes as $key => $val)
 			$attr[$key] = $val;
 		if (empty($attr['class']))
@@ -307,7 +324,7 @@ class FormItem {
 		$path = $this->templateInputPath();
 		$vars = [
 			"attributes" => $this->attributes(),
-			"name" => $this->name,
+			"name" => $this->inputName(),
 			"focus" => $this->focus,
 			"value" => $this->value(),
 		];

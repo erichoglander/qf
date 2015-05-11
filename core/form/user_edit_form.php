@@ -41,6 +41,11 @@ class UserEdit_Core_Form extends Form {
 					"type" => "password",
 					"label" => t("Confirm password"),
 				],
+				"status" => [
+					"type" => "checkbox",
+					"label" => t("Active"),
+					"value" => $vars['status'],
+				],
 				"actions" => [
 					"type" => "actions",
 					"items" => [

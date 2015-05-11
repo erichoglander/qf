@@ -12,6 +12,7 @@ class User_Core_Model extends Model {
 		$Form->loadStructure([
 			"name" => $User->get("name"),
 			"email" => $User->get("email"),
+			"status" => $User->get("status"),
 		]);
 		if ($Form->submitted()) {
 			print "Submitted & validated";
