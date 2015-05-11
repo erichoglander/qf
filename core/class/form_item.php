@@ -148,6 +148,9 @@ class FormItem {
 			$st['multiple'] = false;
 			$st['parent_multiple'] = true;
 			unset($st['label']);
+			unset($st['description']);
+			unset($st['prefix']);
+			unset($st['suffix']);
 			foreach ($value as $i => $val) {
 				if (!empty($structure['value']) && array_key_exists($structure['value'][$i]))
 					$st = $structure['value'][$i];
@@ -332,9 +335,14 @@ class FormItem {
 		return renderTemplate($path, $vars);
 	}
 	protected function renderAddButton() {
-		if ($this->multiple)
-			return '<input type="button" class="form-button" value="'.$this->add_button.'" onclick="formAddButton(this)">';
-		return "";
+		if (!$this->multiple) 
+			return null;
+		$data = $this->structure;
+		unset($data['filter']);
+		unset($data['validation']);
+		unset($data['submitted']);
+		$json = json_encode($data);
+		return '<input type="button" class="form-button" value="'.$this->add_button.'" onclick="formAddButton(this, '.$json.')">';
 	}
 	protected function renderDeleteButton() {
 		if ($this->parent_multiple)
