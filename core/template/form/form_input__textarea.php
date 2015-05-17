@@ -1,1 +1,1 @@
-<textarea <?=$attributes?>><?=xss($value)?></textarea>
+<textarea <?=$attributes?>><?=$value?></textarea>

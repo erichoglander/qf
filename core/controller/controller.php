@@ -3,12 +3,13 @@ class Controller {
 
 	public $args = [];
 	public $connected;
-	protected $Config, $Db, $Model, $User;
+	protected $Config, $Db, $Model, $User, $Io;
 
 	public function __construct() {
 		$this->Config = new Config();
 		$this->Db = new Db();
 		$this->Db->debug = $this->Config->getDebug();
+		$this->Io = newClass("Io");
 		$this->name = $this->getName();
 		if ($this->connect()) {
 			$this->connected = true;

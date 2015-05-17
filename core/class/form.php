@@ -31,12 +31,12 @@ class Form {
 	protected $items;
 	protected $errors = [];
 	protected $prefix, $suffix;
-	protected $vars = [];
-	protected $Db;
+	protected $Db, $Io;
 
 
-	public function __construct(&$Db, $vars = []) {
+	public function __construct(&$Db, &$Io) {
 		$this->Db = $Db;
+		$this->Io = $Io;
 	}
 
 	public function setError($msg, $name = null) {
@@ -149,9 +149,9 @@ class Form {
 		foreach ($a as $b)
 			$cname.= ucwords($b);
 		$cname.= "_FormItem";
-		$class = newClass($cname, $item);
+		$class = newClass($cname, $this->Io, $item);
 		if (!$class) 
-			$class = new FormItem($item);
+			$class = new FormItem($this->Io, $item);
 		$this->items[$name] = $class;
 	}
 

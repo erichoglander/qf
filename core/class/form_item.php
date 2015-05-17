@@ -31,7 +31,11 @@ class FormItem {
 	protected $error = [];
 	protected $validation_error;
 
-	public function __construct($structure) {
+	protected $Io;
+
+
+	public function __construct(&$Io, $structure) {
+		$this->Io = $Io;
 		$this->empty_option = t("- Choose -");
 		$this->loadStructure($structure);
 	}
@@ -181,17 +185,17 @@ class FormItem {
 		foreach ($a as $b)
 			$cname.= ucwords($b);
 		$cname.= "_FormItem";
-		$class = newClass($cname, $item);
+		$class = newClass($cname, $this->Io, $item);
 		if (!$class) 
-			$class = new FormItem($item);
+			$class = new FormItem($this->Io, $item);
 		$this->items[$name] = $class;
 	}
 
 	protected function filter($value, $filter) {
-		return $value; // TODO: filter
+		return $this->Io->filter($value, $filter);
 	}
 	protected function validate($value, $validation) {
-		return true; // TODO: validation
+		return $this->Io->validate($value, $validation);
 	}
 
 	protected function emptyValue($val) {

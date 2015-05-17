@@ -40,11 +40,14 @@ function classAutoload($class) {
 spl_autoload_register("classAutoload");
 
 function newClass($cname) {
-	if (!class_exists($cname) && strpos($cname, "_") !== false) {
-		$cname = str_replace("_", "_Core_", $cname);
-		if (!class_exists($cname)) 
-			return null;
+	if (!class_exists($cname)) {
+		if (strpos($cname, "_") !== false) 
+			$cname = str_replace("_", "_Core_", $cname);
+		else 
+			$cname.= "_Core";
 	}
+	if (!class_exists($cname)) 
+		return null;
 	$args = func_get_args();
 	array_shift($args); // Remove the class name from argument list
 	if (empty($args))
