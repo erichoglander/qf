@@ -5,6 +5,10 @@ class User_Core_Model extends Model {
 		$vars = [];
 		$vars['User'] = $this->getEntity("User");
 		$vars['Form'] = $this->getEditForm($vars['User']);
+		if ($vars['Form']->submitted()) {
+			$values = $vars['Form']->values();
+			pr($values);
+		}
 		return $vars;
 	}
 	public function getEditForm($User) {
@@ -12,12 +16,8 @@ class User_Core_Model extends Model {
 		$Form->loadStructure([
 			"name" => $User->get("name"),
 			"email" => $User->get("email"),
-			"status" => $User->get("status"),
+			"status" => $User->get("status", 1),
 		]);
-		if ($Form->submitted()) {
-			print "Submitted & validated";
-			$Form->onSubmit();
-		}
 		return $Form;
 	}
 	

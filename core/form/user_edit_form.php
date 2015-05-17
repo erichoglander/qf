@@ -1,10 +1,6 @@
 <?php
 class UserEdit_Core_Form extends Form {
 
-	public function onSubmit() {
-		
-	}
-
 	public function validated() {
 		if (!parent::validated())
 			return false;

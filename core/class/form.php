@@ -63,8 +63,10 @@ class Form {
 
 	public function values() {
 		$values = [];
-		foreach ($this->items as $name => $item)
-			$values[$name] = $item->value();
+		foreach ($this->items as $name => $item) {
+			if ($item->submit_data)
+				$values[$name] = $item->value();
+		}
 		return $values;
 	}
 

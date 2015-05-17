@@ -19,9 +19,9 @@ class Entity {
 		return (int) $this->fields['id'];
 	}
 
-	public function get($field) {
+	public function get($field, $def = null) {
 		if (!array_key_exists($field, $this->fields))
-			return null;
+			return $def;
 		$value = $this->$fields[$field];
 		if (!empty($this->schema[$field]['serialize']))
 			$value = unserialize($value);

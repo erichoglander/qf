@@ -4,6 +4,7 @@ class FormItem {
 	public $name;
 	public $items;
 	public $multiple, $parent_multiple;
+	public $submit_data = true;
 
 	protected $type;
 	protected $label, $description;
@@ -45,16 +46,16 @@ class FormItem {
 	public function value() {
 		if (!$this->submitted)
 			return $this->value;
-		$data = $this->postData();
-		if (!isset($data[$this->name]))
+		$value = $this->postValue();
+		if ($value === null)
 			return null;
 		if ($this->items !== null) {
 			$value = [];
 			foreach ($this->items as $item)
-				$value[$item->name] = $item->value();
+				if ($item->submit_data)
+					$value[$item->name] = $item->value();
 		}
 		else {
-			$value = $data[$this->name];
 			if ($this->filter)
 				$value = $this->filter($value, $this->filter);
 		}
@@ -63,7 +64,7 @@ class FormItem {
 
 	public function hasValue() {
 		if ($this->items === null) {
-			return $this->emptyValue($this->value());
+			return !$this->emptyValue($this->value());
 		}
 		else {
 			foreach ($this->items as $item) 
@@ -200,12 +201,14 @@ class FormItem {
 		return ($is_arr && empty($val) || !$is_arr && strlen($val) === 0);
 	}
 
-	protected function postData() {
-		$arr = explode("[", str_replace("]", "", $this->parent_name));
+	protected function postValue() {
 		$data = $_POST;
-		foreach ($arr as $f)
-			$data = $data[$f];
-		return $data[$this->name];
+		if ($this->parent_name) {
+			$arr = explode("[", str_replace("]", "", $this->parent_name));
+			foreach ($arr as $f)
+				$data = $data[$f];
+		}
+		return (isset($data[$this->name]) ? $data[$this->name] : null);
 	}
 
 	protected function options() {
