@@ -8,7 +8,8 @@ class FormItem {
 	protected $type;
 	protected $label, $description;
 	protected $dragable;
-	protected $add_button, $delete_button;
+	protected $add_button = "Add item";
+	protected $delete_button = "Delete item";
 	protected $required, $focus;
 	protected $attributes = [];
 	protected $value;
@@ -118,7 +119,6 @@ class FormItem {
 			"item_class" => $this->itemClass(),
 			"items" => $this->renderItems(),
 			"input" => $this->renderInput(),
-			"options" => $this->options(),
 			"add_button" => $this->renderAddButton(),
 			"delete_button" => $this->renderDeleteButton(),
 			"error" => $this->getError(),
@@ -330,6 +330,7 @@ class FormItem {
 			"attributes" => $this->attributes(),
 			"name" => $this->inputName(),
 			"focus" => $this->focus,
+			"options" => $this->options(),
 			"value" => $this->value(),
 		];
 		return renderTemplate($path, $vars);
@@ -341,7 +342,7 @@ class FormItem {
 		unset($data['filter']);
 		unset($data['validation']);
 		unset($data['submitted']);
-		$json = json_encode($data);
+		$json = htmlspecialchars(json_encode($data), ENT_QUOTES);
 		return '<input type="button" class="form-button" value="'.$this->add_button.'" onclick="formAddButton(this, '.$json.')">';
 	}
 	protected function renderDeleteButton() {
