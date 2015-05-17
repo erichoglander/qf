@@ -92,7 +92,13 @@ class Io_Core {
 	protected function validateDate($value) {
 		if (preg_match("/^[0-9]{4}\-[0-9]{2}\-[0-9]{2}$/", $value))
 			return true;
-		$this->setError("Invalid date");
+		$this->setError("Invalid date (YYYY-MM-DD)");
+		return false;
+	}
+	protected function validateTime($value) {
+		if (preg_match("/^([0-9]{2}\:){1,2}[0-9]{2}$/", $value)) 
+			return true;
+		$this->setError("Invalid time (HH:MM or HH:MM:SS)");
 		return false;
 	}
 	protected function validateEmail($value) {
