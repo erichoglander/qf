@@ -8,6 +8,7 @@ class Controller {
 	public function __construct() {
 		$this->Config = new Config();
 		$this->Db = new Db();
+		$this->Db->debug = $this->Config->getDebug();
 		$this->name = $this->getName();
 		if ($this->connect()) {
 			$this->connected = true;
@@ -35,6 +36,8 @@ class Controller {
 		return $this->viewBare("500");
 	}
 	protected function databaseFail() {
+		if ($this->Config->getDebug())
+			die(pr($this->Db->getErrors(), 1));
 		return $this->serverBusy();
 	}
 	protected function serverBusy() {

@@ -6,9 +6,10 @@ class Config extends Core_Config {
 		$this->database = [
 			"user" => "localuser",
 			"pass" => "hallonsaft",
-			"db" => "test_db",
+			"db" => "qf_db",
 			"host" => "localhost",
 		];
+		$this->debug = true;
 	}
 
 };

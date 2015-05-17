@@ -2,18 +2,21 @@
 class User_Core_Model extends Model {
 	
 	public function getEditPage() {
-		$vars = [];
-		$vars['User'] = $this->getEntity("User");
-		$vars['Form'] = $this->getEditForm($vars['User']);
-		if ($vars['Form']->submitted()) {
-			$values = $vars['Form']->values();
+		$User = $this->getEntity("User");
+		$Form = $this->getEditForm($User);
+		if ($Form->submitted()) {
+			$values = $Form->values();
 			pr($values);
 		}
-		return $vars;
+		return [
+			"User" => $User,
+			"form" => $Form->render()
+		];
 	}
 	public function getEditForm($User) {
 		$Form = $this->getForm("UserEdit");
 		$Form->loadStructure([
+			"id" => $User->id(),
 			"name" => $User->get("name"),
 			"email" => $User->get("email"),
 			"status" => $User->get("status", 1),

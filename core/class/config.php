@@ -4,6 +4,7 @@ class Core_Config {
 	protected $database;
 	protected $subdomain, $https;
 	protected $menu = [];
+	protected $debug = false;
 
 	public function __construct() {
 		$this->menu = [
@@ -31,6 +32,8 @@ class Core_Config {
 	public function getMenu() {
 		return $this->menu;
 	}
-
+	public function getDebug() {
+		return $this->debug;
+	}
 
 };

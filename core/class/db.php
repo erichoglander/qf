@@ -1,6 +1,8 @@
 <?php
 class Db {
 
+	public $debug = false;
+
 	protected $errors = [];
 
 	private $database, $user, $pass;
@@ -88,6 +90,8 @@ class Db {
 			$debug = print_r(debug_backtrace(), true);
 			$debug.= print_r($err, true);
 			// addlog("database", "error ".$err[0], $debug);
+			if ($this->debug)
+				pr($debug);
 			die("Ett fel uppstod med en fråga till databasen. (mysql error)");
 		}
 		return $stmt;

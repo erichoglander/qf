@@ -31,7 +31,7 @@ class FormItem {
 	protected $error = [];
 	protected $validation_error;
 
-	public function __construct($structure, $data) {
+	public function __construct($structure) {
 		$this->empty_option = t("- Choose -");
 		$this->loadStructure($structure);
 	}
@@ -46,9 +46,6 @@ class FormItem {
 	public function value() {
 		if (!$this->submitted)
 			return $this->value;
-		$value = $this->postValue();
-		if ($value === null)
-			return null;
 		if ($this->items !== null) {
 			$value = [];
 			foreach ($this->items as $item)
@@ -56,6 +53,7 @@ class FormItem {
 					$value[$item->name] = $item->value();
 		}
 		else {
+			$value = $this->itemValue();
 			if ($this->filter)
 				$value = $this->filter($value, $this->filter);
 		}
@@ -209,6 +207,10 @@ class FormItem {
 				$data = $data[$f];
 		}
 		return (isset($data[$this->name]) ? $data[$this->name] : null);
+	}
+
+	protected function itemValue() {
+		return $this->postValue();
 	}
 
 	protected function options() {

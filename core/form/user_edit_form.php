@@ -9,6 +9,16 @@ class UserEdit_Core_Form extends Form {
 			$this->setError(t("Passwords mismatch"), "password");
 			return false;
 		}
+		$row = $this->Db->getRow("SELECT id FROM `user` WHERE name = :name", [":name" => $values['name']]);
+		if ($row && $row->id != $values['id']) {
+			$this->setError(t("Username unavailable"), "name");
+			return false;
+		}
+		$row = $this->Db->getRow("SELECT id FROM `user` WHERE email = :email", [":email" => $values['email']]);
+		if ($row && $row->id != $values['id']) {
+			$this->setError(t("E-mail unavailable"), "email");
+			return false;
+		}
 		return true;
 	}
 	
@@ -16,6 +26,10 @@ class UserEdit_Core_Form extends Form {
 		$structure = [
 			"name" => "user_edit",
 			"items" => [
+				"id" => [
+					"type" => "value",
+					"value" => $vars['id'],
+				],
 				"name" => [
 					"type" => "text",
 					"label" => t("Username"),

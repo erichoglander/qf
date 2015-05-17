@@ -1,7 +1,7 @@
 <?php
 class Value_FormItem extends FormItem {
 	
-	public function value() {
+	public function itemValue() {
 		return $this->value;
 	}
 
