@@ -17,7 +17,7 @@ class FormItem {
 	protected $options;
 	protected $empty_option;
 	protected $filter = "trim";
-	protected $validation;
+	protected $validation, $validation_error;
 	protected $template;
 	protected $submitted = false;
 	protected $tree = true;
@@ -29,7 +29,6 @@ class FormItem {
 	protected $structure = [];
 	protected $parent_name;
 	protected $error = [];
-	protected $validation_error;
 
 	protected $Io;
 
@@ -195,7 +194,14 @@ class FormItem {
 		return $this->Io->filter($value, $filter);
 	}
 	protected function validate($value, $validation) {
-		return $this->Io->validate($value, $validation);
+		if (!$this->Io->validate($value, $validation)) {
+			if ($this->validation_error)
+				$this->setError($this->validation_error);
+			else
+				$this->setError($this->Io->getError());
+			return false;
+		}
+		return true;
 	}
 
 	protected function emptyValue($val) {

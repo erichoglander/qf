@@ -3,6 +3,16 @@
 	Class to filter and validate values
 */
 class Io_Core {
+
+	protected $error;
+
+
+	public function getError() {
+		return t($this->error);
+	}
+	public function setError($e) {
+		$this->error = $e;
+	}
 	
 	public function validate($value, $validation) {
 		if (is_array($value)) {
@@ -49,30 +59,59 @@ class Io_Core {
 	}
 
 
-	protected function regexBool($regex, $value) {
-		return (preg_match($regex, $value) ? true: false);
+	protected function validateNumber($value) {
+		if (preg_match("/^\-?[0-9]+[\.|\,]?[0-9]*$/", $value))
+			return true;
+		$this->setError("Invalid number");
+		return false;
 	}
-
 	protected function validateInt($value) {
-		return $this->regexBool("/^\-?[0-9]+$/", $value);
+		if (preg_match("/^\-?[0-9]+$/", $value))
+			return true;
+		$this->setError("Invalid integer");
+		return false;
 	}
 	protected function validateUint($value) {
-		return $this->regexBool("/^[0-9]+$/", $value);
+		if (preg_match("/^[0-9]+$/", $value))
+			return true;
+		$this->setError("Invalid positive integer");
+		return false;
 	}
 	protected function validateFloat($value) {
-		return $this->regexBool("/^\-?[0-9]+\.?[0-9]*$/", $value);
+		if (preg_match("/^\-?[0-9]+\.?[0-9]*$/", $value))
+			return true;
+		$this->setError("Invalid decimal number");
+		return false;
 	}
 	protected function validateUfloat($value) {
-		return $this->regexBool("/^[0-9]+\.?[0-9]*$/", $value);
+		if (preg_match("/^[0-9]+\.?[0-9]*$/", $value))
+			return true;
+		$this->setError("Invalid positive decimal number");
+		return false;
 	}
 	protected function validateDate($value) {
-		return $this->regexBool("/^[0-9]{4}\-[0-9]{2}\-[0-9]{2}$/", $value);
+		if (preg_match("/^[0-9]{4}\-[0-9]{2}\-[0-9]{2}$/", $value))
+			return true;
+		$this->setError("Invalid date");
+		return false;
 	}
 	protected function validateEmail($value) {
-		return (filter_var($value, FILTER_VALIDATE_EMAIL) ? true : false);
+		if (filter_var($value, FILTER_VALIDATE_EMAIL))
+			return true;
+		$this->setError("Invalid e-mail address");
+		return false;
 	}
 	protected function validateIp($value) {
-		return (filter_var($value, FILTER_VALIDATE_IP) ? true : false);
+		if (filter_var($value, FILTER_VALIDATE_IP))
+			return true;
+		$this->setError("Invalid IP-address");
+		return false;
+	}
+	protected function validateUsername($value) {
+		if ($this->regexBool("/^[a-z0-9\-\_\@\.\*\^\~]+$/i"))
+			return true;
+		$this->setError("Illegal username");
+		return false;
 	}
 
 	protected function filterTrim($value) {
