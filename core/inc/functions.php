@@ -53,6 +53,7 @@ function newClass($cname) {
 }
 
 function classToFile($class) {
+	// SomeClassName_Model_Core -> some_class_name_model.php
 	return str_replace(["_core", "_theme"], ["", ""], strtolower(preg_replace("/([a-z])([A-Z])/", "$1_$2", $class).".php"));
 }
 
@@ -110,4 +111,12 @@ function renderTemplate($path, $vars) {
 function t($str) {
 	// TODO: Translation
 	return $str;
+}
+
+function setmsg($msg, $type = "normal") {
+	if (!isset($_SESSION["sysmsg"]))
+		$_SESSION["sysmsg"] = [];
+	if (!isset($_SESSION["sysmsg"][$type]))
+		$_SESSION["sysmsg"][$type] = [];
+	$_SESSION["sysmsg"][$type][] = $msg;
 }
