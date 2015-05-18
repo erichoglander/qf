@@ -1,5 +1,5 @@
 <?php
-class User_Core_Controller extends Controller {
+class User_Controller_Core extends Controller {
 
 	public function access($action, $args = []) {
 		return true; // TODO: Check access

@@ -1,5 +1,5 @@
 <?php
-class Config extends Core_Config {
+class Config extends Config_Core {
 	
 	public function __construct() {
 		parent::__construct();

@@ -1,5 +1,5 @@
 <?php
-class Select_FormItem extends FormItem {
+class Select_FormItem_Core extends FormItem {
 	
 	protected function getAttributes() {
 		$attr = parent::getAttributes();

@@ -1,5 +1,5 @@
 <?php
-class View {
+class View_Core {
 	
 	protected $controller_name;
 	protected $name;
@@ -10,7 +10,7 @@ class View {
 		$this->name = $name;
 		$this->variables = $variables;
 		if ($Db) {
-			$this->Html = new Html($Db);
+			$this->Html = newClass("Html", $Db);
 			$this->Html->title = ucwords($controller_name)." ".$name;
 			$this->Html->body_class[] = cssClass("page-".$controller_name."-".$name);
 			$this->Html->body_class[] = cssClass("controller-".$controller_name);
@@ -32,12 +32,9 @@ class View {
 	}
 
 	protected function path() {
-		$epath = DOC_ROOT."/extend/view/".$this->controller_name."/".$this->name.".php";
-		$cpath = DOC_ROOT."/core/view/".$this->controller_name."/".$this->name.".php";
-		if (file_exists($epath))
-			return $epath;
-		else if (file_exists($cpath))
-			return $cpath;
+		$path = filePath("view/".$this->controller_name."/".$this->name.".php");
+		if ($path)
+			return $path;
 		else
 			throw new Exception("Unable to find view ".$this->controller_name."/".$this->name);
 	}

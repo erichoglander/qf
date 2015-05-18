@@ -1,5 +1,5 @@
 <?php
-class Core_Config {
+class Config_Core {
 	
 	protected $database;
 	protected $subdomain, $https;

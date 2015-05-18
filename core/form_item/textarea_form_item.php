@@ -1,5 +1,5 @@
 <?php
-class Textarea_FormItem extends FormItem {
+class Textarea_FormItem_Core extends FormItem {
 	
 	protected function getAttributes() {
 		$attr = parent::getAttributes();

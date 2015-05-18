@@ -1,5 +1,5 @@
 <?php
-class Button_FormItem extends FormItem {
+class Button_FormItem_Core extends FormItem {
 
 	public $return_data = false;
 	

@@ -1,38 +1,35 @@
 <?php
 function classAutoload($class) {
-	$fname = strtolower(preg_replace("/([a-z])([A-Z])/", "$1_$2", $class).".php");
+	$fname = classToFile($class);
 	$suffixes = ["controller", "model", "entity", "form_item", "form"];
 	foreach ($suffixes as $suffix) {
-		$csuffix = "_";
+		$csuffix = "";
 		foreach (explode("_", $suffix) as $sfx)
 			$csuffix.= ucwords($sfx);
-		if (strpos($class, $csuffix) === strlen($class)-strlen($csuffix)) {
+		if (preg_match("/_".$csuffix."(_|$)/", $class)) {
+			$cpath = DOC_ROOT."/core/".$suffix."/".$fname;
 			$epath = DOC_ROOT."/extend/".$suffix."/".$fname;
-			$cpath = DOC_ROOT."/core/".$suffix."/".str_replace("_core", "", $fname);
-			if (file_exists($epath)) {
-				if (file_exists($cpath))
-					require_once($cpath);
-				require_once($epath);
-			}
 			if (file_exists($cpath))
 				require_once($cpath);
+			if (file_exists($epath))
+				require_once($epath);
 			return;
 		}
 	}
 	if (strpos($class, "_Theme") !== false) {
-		$dir = str_replace("_core", "", str_replace("_theme", "", strtolower($class)));
-		$epath = DOC_ROOT."/extend/theme/".$dir."/theme.php";
+		$dir = str_replace(".php", "", $fname);
 		$cpath = DOC_ROOT."/core/theme/".$dir."/theme.php";
-		if (file_exists($epath)) {
-			if (file_exists($cpath))
-				require_once($cpath);
-			require_once($epath);
-		}
-		else if (file_exists($cpath))
+		$epath = DOC_ROOT."/extend/theme/".$dir."/theme.php";
+		if (file_exists($cpath))
 			require_once($cpath);
+		if (file_exists($epath)) 
+			require_once($epath);
 	}
 	else {
+		$cpath = DOC_ROOT."/core/class/".$fname;
 		$epath = DOC_ROOT."/extend/class/".$fname;
+		if (file_exists($cpath))
+			require_once($cpath);
 		if (file_exists($epath))
 			require_once($epath);
 	}
@@ -41,13 +38,10 @@ spl_autoload_register("classAutoload");
 
 function newClass($cname) {
 	if (!class_exists($cname)) {
-		if (strpos($cname, "_") !== false) 
-			$cname = str_replace("_", "_Core_", $cname);
-		else 
-			$cname.= "_Core";
+		$cname.= "_Core";
+		if (!class_exists($cname))
+			return null;
 	}
-	if (!class_exists($cname)) 
-		return null;
 	$args = func_get_args();
 	array_shift($args); // Remove the class name from argument list
 	if (empty($args))
@@ -56,6 +50,10 @@ function newClass($cname) {
 		$r = new ReflectionClass($cname);
 		return $r->newInstanceArgs($args);
 	}
+}
+
+function classToFile($class) {
+	return str_replace(["_core", "_theme"], ["", ""], strtolower(preg_replace("/([a-z])([A-Z])/", "$1_$2", $class).".php"));
 }
 
 

@@ -1,5 +1,5 @@
 <?php
-class Submit_FormItem extends FormItem {
+class Submit_FormItem_Core extends FormItem {
 
 	public $return_data = false;
 	

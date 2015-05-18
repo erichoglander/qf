@@ -1,5 +1,5 @@
 <?php
-class Value_FormItem extends FormItem {
+class Value_FormItem_Core extends FormItem {
 	
 	public function itemValue() {
 		return $this->value;

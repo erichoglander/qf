@@ -1,5 +1,5 @@
 <?php
-class ControllerFactory {
+class ControllerFactory_Core {
 
 	# uri: /controller/action/arg0/arg1/arg2/...
 	public function executeUri($uri) {
@@ -23,14 +23,10 @@ class ControllerFactory {
 	}
 
 	public function getController($controller) {
-		$class = ucwords($controller)."_Controller";
-		$core_class = ucwords($controller)."_Core_Controller";
-		if (class_exists($class))
-			return new $class();
-		else if (class_exists($core_class))
-			return new $core_class();
-		else
-			return new Controller();
+		$class = newClass($controller."_Controller");
+		if (!$class)
+			$class = new Controller();
+		return $class;
 	}
 
 };

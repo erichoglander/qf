@@ -1,5 +1,5 @@
 <?php
-class User_Core_Entity extends Entity {
+class User_Entity_Core extends Entity {
 
 	public function save() {
 		if (substr($this->get("pass"), 0, 2) !== "1#") {

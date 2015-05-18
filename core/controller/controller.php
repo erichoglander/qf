@@ -6,8 +6,8 @@ class Controller {
 	protected $Config, $Db, $Model, $User, $Io;
 
 	public function __construct() {
-		$this->Config = new Config();
-		$this->Db = new Db();
+		$this->Config = newClass("Config");
+		$this->Db = newClass("Db");
 		$this->Db->debug = $this->Config->getDebug();
 		$this->Io = newClass("Io");
 		$this->name = $this->getName();
@@ -62,7 +62,7 @@ class Controller {
 		$class = get_class($this);
 		if ($class == "Controller")
 			return "default";
-		return strtolower(str_replace("_Controller", "", str_replace("_Core_Controller", "", $class)));
+		return strtolower(str_replace("_Controller", "", str_replace("_Core", "", $class)));
 	}
 
 	protected function getModel() {
@@ -82,7 +82,7 @@ class Controller {
 	}
 
 	protected function view($name, $variables = []) {
-		$View = new View($this->Db, $this->name, $name, $variables);
+		$View = newClass("View", $this->Db, $this->name, $name, $variables);
 		try {
 			return $View->render();
 		}
@@ -92,7 +92,7 @@ class Controller {
 	}
 
 	protected function viewDefault($name, $variables = []) {
-		$View = new View($this->Db, "default", $name, $variables);
+		$View = newClass("View", $this->Db, "default", $name, $variables);
 		try {
 			return $View->render();
 		}
@@ -103,7 +103,7 @@ class Controller {
 
 	// Do not include html backbone
 	protected function viewBare($name, $variables = []) {
-		$View = new View(null, "default", $name, $variables);
+		$View = newClass("View", null, "default", $name, $variables);
 		try {
 			return $View->render();
 		}

@@ -1,5 +1,5 @@
 <?php
-class UserEdit_Core_Form extends Form {
+class UserEdit_Form_Core extends Form {
 
 	public function validated() {
 		if (!parent::validated())

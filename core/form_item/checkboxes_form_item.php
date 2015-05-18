@@ -1,5 +1,5 @@
 <?php
-class Checkboxes_FormItem extends FormItem {
+class Checkboxes_FormItem_Core extends FormItem {
 	
 	public function getAttributes() {
 		$attr = parent::getAttributes();

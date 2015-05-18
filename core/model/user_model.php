@@ -1,5 +1,5 @@
 <?php
-class User_Core_Model extends Model {
+class User_Model_Core extends Model {
 	
 	public function getEditPage() {
 		$User = $this->getEntity("User");

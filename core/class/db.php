@@ -1,5 +1,5 @@
 <?php
-class Db {
+class Db_Core {
 
 	public $debug = false;
 

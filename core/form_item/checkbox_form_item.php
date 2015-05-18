@@ -1,5 +1,5 @@
 <?php
-class Checkbox_FormItem extends FormItem {
+class Checkbox_FormItem_Core extends FormItem {
 	
 	protected function itemValue() {
 		$value = parent::itemValue();

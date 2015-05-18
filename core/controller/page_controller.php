@@ -1,5 +1,5 @@
 <?php
-class Page_Core_Controller extends Controller {
+class Page_Controller_Core extends Controller {
 
 	public function index() {
 		return $this->view("index");

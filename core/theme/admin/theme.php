@@ -1,5 +1,5 @@
 <?php
-class Admin_Theme extends Theme {
+class Admin_Theme_Core extends Theme {
 	
 	public function __construct($Db) {
 		parent::__construct($Db);
