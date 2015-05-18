@@ -17,7 +17,12 @@ class User_Controller_Core extends Controller {
 
 	}
 
-	public function reset($args = []) {
+	public function register() {
+		$vars = $this->Model->getRegisterPage();
+		return $this->view("register", $vars);
+	}
+
+	public function reset() {
 
 	}
 	

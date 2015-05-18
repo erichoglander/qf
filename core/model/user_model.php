@@ -1,5 +1,21 @@
 <?php
 class User_Model_Core extends Model {
+
+	public function getRegisterPage() {
+		$Form = $this->getRegisterForm();
+		if ($Form->submitted()) {
+			$values = $Form->values();
+			pr($values);
+		}
+		return [
+			"form" => $Form->render()
+		];
+	}
+	public function getRegisterForm() {
+		$Form = $this->getForm("UserRegister");
+		$Form->loadStructure();
+		return $Form;
+	}
 	
 	public function getEditPage() {
 		$User = $this->getEntity("User");

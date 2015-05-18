@@ -67,7 +67,7 @@ class Controller {
 
 	protected function getModel() {
 		$cname = ucwords($this->name)."_Model";
-		return newClass($cname, $this->Db);
+		return newClass($cname, $this->Db, $this->Io, $this->User);
 	}
 
 	protected function getUser() {
