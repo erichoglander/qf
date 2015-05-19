@@ -20,7 +20,9 @@ class Model {
 	}
 
 	protected function sendMail($name, $to, $vars = []) {
-		$Mail = newClass($name."_Mail");
+		$Mail = newClass($name."_Mail", $this->Db);
+		if (!$Mail)
+			throw new Exception("Can't find email message ".$name);
 		return $Mail->send($to, $vars);
 	}
 	

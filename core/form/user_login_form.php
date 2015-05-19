@@ -1,5 +1,15 @@
 <?php
 class UserLogin_Form extends Form {
+
+	public function validated() {
+		$User = newClass("User_Entity", $this->Db);
+		if (!$User->loadByName($values['name']) || !$User->authorize($values['password'])) {
+			$this->setError(t("Incorrect username or password"));
+			return false;
+		}
+		return true;
+	}
+
 	
 	protected function structure() {
 		return [

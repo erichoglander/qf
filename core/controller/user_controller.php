@@ -27,20 +27,21 @@ class User_Controller_Core extends Controller {
 	}
 
 	public function reset() {
-
+		$vars = $this->Model->getResetPage();
+		return $this->view("reset", $vars);
 	}
 
 	public function change_password($args = []) {
 		if (count($args) != 2)
 			return $this->notFound();
-		$vars = $this->verifyReset($args[0], $args[1]);
+		$vars = $this->Model->getChangePasswordPage($args[0], $args[1]);
 		return $this->view("change_password", $vars);
 	}
 
 	public function confirm_email($args = []) {
 		if (count($args) != 2)
 			return $this->notFound();
-		$vars = $this->verifyEmailConfirmation($args[0], $args[1]);
+		$vars = $this->Model->getEmailConfirmationPage($args[0], $args[1]);
 		return $this->view("confirm_email", $vars);
 	}
 	

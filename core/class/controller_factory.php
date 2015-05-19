@@ -9,7 +9,7 @@ class ControllerFactory_Core {
 		// TODO: Url alias
 		$params = explode("/", $uri);
 		$controller = (empty($params[0]) ? "page" : strtolower($params[0]));
-		$action = (empty($params[1]) ? "index" : strtolower($params[1]));
+		$action = (empty($params[1]) ? "index" : str_replace("-", "_", strtolower($params[1])));
 		$args = array_slice($params, 2);
 		return $this->executeControllerAction($controller, $action, $args);
 	}

@@ -6,6 +6,7 @@ class MailMessage {
 
 	public function __construct($Db) {
 		$this->Db = &$Db;
+		$this->Config = newClass("Config");
 		$this->Mail = newClass("Mail");
 	}
 

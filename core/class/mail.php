@@ -16,7 +16,7 @@ class Mail_Core {
 	}
 
 	public function signature() {
-		return '<p>'.SITE_URL.'</p>';
+		return '<hr><p>'.SITE_URL.'</p>';
 	}
 
 	public function send() {
@@ -38,14 +38,14 @@ class Mail_Core {
 
 		$this->prepareAttachments();
 
-		$subject = "=?UTF-8?B?".base64_encode($this->subject.$this->title_suffix)."?=";
-		$message = $this->message.$this->signature;
+		$subject = "=?UTF-8?B?".base64_encode($this->subject)."?=";
+		$message = $this->message.$this->signature();
 		$headers = "";
 
 		foreach ($this->headers as $key => $val)
 			$headers.= $key.": ".$val."\r\n";
 
-		if (!mail($this->to, $subject, $message, $headers)) {
+		if (!$this->mail($this->to, $subject, $message, $headers)) {
 			addlog("mail", "Mail failed ".$this->to." (".$this->subject.")", $data);
 			return false;
 		}
@@ -54,7 +54,6 @@ class Mail_Core {
 			return true;
 		}
 	}
-
 
 	public function setDefaultHeaders() {
 		$this->setHeaders($this->defaultHeaders());
@@ -81,7 +80,13 @@ class Mail_Core {
 		$this->attachments[] = $file;
 	}
 
-	public function prepareAttachments() {
+
+	protected function mail($to, $subject, $message, $headers) {
+		// return mail($this->to, $subject, $message, $headers);
+		setmsg($message);
+		return true;
+	}
+	protected function prepareAttachments() {
 		if (!empty($this->attachments)) {
 			$hash = md5(time().microtime());
 			$tag = "PHP-mail=".$hash;
@@ -109,7 +114,5 @@ class Mail_Core {
 			$this->message = $pre.$this->message.$str.$post;
 		}
 	}
-
-
 
 }

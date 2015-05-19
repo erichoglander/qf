@@ -1,5 +1,5 @@
 <?php if (!empty($msgs)) { ?>
-<div id="system-messages" onclick="this.parentNode.removeChild(this);">
+<div id="system-messages">
 	<?php foreach ($msgs as $type => $ul) { ?>
 	<ul class="system-messages system-messages-<?=$type?>">
 		<?php foreach ($ul as $li) { ?>

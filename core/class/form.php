@@ -103,6 +103,8 @@ class Form {
 			return false;
 		if ($validate && !$this->validated())
 			return false;
+		if ($validate && is_callable([$this, "onSubmit"]))
+			$this->onSubmit();
 		return true;
 	}
 

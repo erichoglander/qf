@@ -52,6 +52,13 @@ class User_Entity_Core extends Entity {
 		else
 			return false;
 	}
+	public function loadByEmail($email) {
+		$row = $this->Db->getRow("SELECT id FROM `user` WHERE `email` = :email", [":email" => $email]);
+		if ($row)
+			return $this->load($row->id);
+		else
+			return false;
+	}
 
 	public function logout() {
 		unset($_SESSION['user_id']);
@@ -76,6 +83,9 @@ class User_Entity_Core extends Entity {
 	}
 
 	public function verifyResetLink($link) {
+		// setmsg($link);
+		// setmsg($this->hash($link, "qfresetlink"));
+		// setmsg($this->get("reset"));
 		if (REQUEST_TIME - $this->get("reset_time") < 60*60*24 && 
 				$this->get("reset") === $this->hash($link, "qfresetlink"))
 			return true;
