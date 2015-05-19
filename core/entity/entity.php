@@ -23,6 +23,8 @@ class Entity {
 		if (!array_key_exists($field, $this->fields))
 			return $def;
 		$value = $this->$fields[$field];
+		if ($this->schema[$field]['type'] == "int" || $this->schema[$field]['type'] == "uint")
+			$value = (int) $value;
 		if (!empty($this->schema[$field]['serialize']))
 			$value = unserialize($value);
 		if (!empty($this->schema[$field]['json']))

@@ -56,28 +56,44 @@ class User_Entity_Core extends Entity {
 	}
 
 	public function authorize($pass) {
-		return $this->hash($pass, $this->get("salt")) === $this->get("pass");
+		return $this->allowLogin() && $this->hash($pass, $this->get("salt")) === $this->get("pass");
+	}
+
+	public function allowLogin() {
+		if ($this->get("status") != 1)
+			return false;
+		if ($this->get("email_confirmation") && REQUEST_TIME - $this->get("created") > 60*60*24)
+			return false;
+		return true;
 	}
 
 	public function verifyResetLink($link) {
-		return $link === $this->hash($this->get("reset"), "qfresetlink");
+		if (REQUEST_TIME - $this->get("reset_time") < 60*60*24 && 
+				$link === $this->hash($this->get("reset"), "qfresetlink"))
+			return true;
+		return false;
 	}
 
 	public function generateResetLink() {
 		$hash = hash("sha512", microtime(true)."qfreset".rand(10001, 20000));
 		$link = $this->hash($hash, "qfresetlink");
 		$this->set("reset", $hash);
+		$this->set("reset_time", REQUEST_TIME);
 		return $link;
 	}
 
 	public function verifyEmailConfirmationLink($link) {
-		return $link === $this->hash($this->get("email_confirmation"), "qfemailconfirmationlink");
+		if (REQUEST_TIME - $this->get("email_confirmation_time") < 60*60*24 &&
+				$this->$link === $this->hash($this->get("email_confirmation"), "qfemailconfirmationlink"))
+			return true;
+		return false;
 	}
 
 	public function generateEmailConfirmationLink() {
 		$hash = hash("sha512", "qfconfirm".microtime(true).rand(20001, 30000));
 		$link = $this->hash($hash, "qfemailconfirmationlink");
 		$this->set("email_confirmation", $hash);
+		$this->set("email_confirmation_time", REQUEST_TIME);
 		return $link;
 	}
 
@@ -110,6 +126,15 @@ class User_Entity_Core extends Entity {
 		];
 		$schema['fields']['reset'] = [
 			"type" => "varchar",
+		];
+		$schema['fields']['reset_time'] = [
+			"type" => "uint",
+		];
+		$schema['fields']['email_confirmation'] = [
+			"type" => "varchar",
+		];
+		$schema['fields']['email_confirmation_time'] = [
+			"type" => "uint",
 		];
 	}
 
