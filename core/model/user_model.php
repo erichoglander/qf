@@ -125,9 +125,8 @@ class User_Model_Core extends Model {
 			$User->set("reset", "");
 			$User->set("reset_time", 0);
 			if ($User->save()) {
-				$User->login();
-				setmsg(t("Your account password has been changed and you have been automatically signed in."));
-				redirect();
+				setmsg(t("Your account password has been changed. You can use your new password to sign in."));
+				redirect("user");
 			}
 			else {
 				setmsg(t("An error occurred", "error"));
