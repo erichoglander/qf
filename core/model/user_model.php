@@ -4,10 +4,8 @@ class User_Model_Core extends Model {
 	public function getLoginPage() {
 		$vars = [];
 		if ($this->User->id()) {
-			if ($this->Config->getUserRegistration() == "closed")
-				redirect();
-			else
-				redirect("user/register");
+			setmsg(t("You are already signed in."));
+			redirect();
 		}
 		$Form = $this->getLoginForm();
 		if ($Form->submitted()) {
