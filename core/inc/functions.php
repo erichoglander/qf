@@ -1,7 +1,7 @@
 <?php
 function classAutoload($class) {
 	$fname = classToFile($class);
-	$suffixes = ["controller", "model", "entity", "form_item", "form"];
+	$suffixes = ["controller", "model", "entity", "form_item", "form", "mail"];
 	foreach ($suffixes as $suffix) {
 		$csuffix = "";
 		foreach (explode("_", $suffix) as $sfx)
@@ -119,4 +119,8 @@ function setmsg($msg, $type = "normal") {
 	if (!isset($_SESSION["sysmsg"][$type]))
 		$_SESSION["sysmsg"][$type] = [];
 	$_SESSION["sysmsg"][$type][] = $msg;
+}
+
+function addlog($category, $subject, $data = null) {
+	// TODO: Logging
 }

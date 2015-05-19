@@ -1,12 +1,16 @@
 <?php
 class Config_Core {
 	
+	protected $site_name;
 	protected $database;
 	protected $subdomain, $https;
 	protected $menu = [];
 	protected $debug = false;
+	protected $user_registration = "email_confirmation";
+
 
 	public function __construct() {
+		$this->site_name = BASE_DOMAIN;
 		$this->menu = [
 			"admin" => [
 				"body_class" => "admin-menu",
@@ -20,6 +24,9 @@ class Config_Core {
 		];
 	}
 
+	public function getSiteName() {
+		return $this->site_name;
+	}
 	public function getDatabase() {
 		return $this->database;
 	}
@@ -34,6 +41,9 @@ class Config_Core {
 	}
 	public function getDebug() {
 		return $this->debug;
+	}
+	public function getUserRegistration() {
+		return $this->user_registration;
 	}
 
 };

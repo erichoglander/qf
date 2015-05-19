@@ -5,7 +5,24 @@ class User_Model_Core extends Model {
 		$Form = $this->getRegisterForm();
 		if ($Form->submitted()) {
 			$values = $Form->values();
-			pr($values);
+			$User = $this->getEntity("User");
+			$User->name = $values['email'];
+			$User->email = $values['email'];
+			$User->pass = $values['pass'];
+			$User->status = 1;
+			if ($this->Config->getUserRegistration() == "email_confirmation") {
+				$link = $User->generateEmailConfirmationLink();
+				$User->save();
+				$this->sendMail("UserEmailConfirmation", ["id" => $User->id(), "link" => $link]);
+			}
+			else if ($this->Config->getUserRegistration() == "admin_approval") {
+				$User->status = 0;
+				$User->save();
+				// TODO: Approval mail
+			}
+			else {
+				$User->save();
+			}
 		}
 		return [
 			"form" => $Form->render()

@@ -1,7 +1,7 @@
 <?php
 class User_Controller_Core extends Controller {
 
-	public function access($action, $args = []) {
+	public function accessControl($action, $args = []) {
 		return true; // TODO: Check access
 	}
 
@@ -18,6 +18,8 @@ class User_Controller_Core extends Controller {
 	}
 
 	public function register() {
+		if ($this->Config->getUserRegistration() == "closed")
+			return $this->notFound();
 		$vars = $this->Model->getRegisterPage();
 		return $this->view("register", $vars);
 	}

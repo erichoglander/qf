@@ -64,9 +64,20 @@ class User_Entity_Core extends Entity {
 	}
 
 	public function generateResetLink() {
-		$reset = hash("sha512", microtime(true)."qfreset".rand(10001, 20000));
-		$link = $this->hash($reset, "qfresetlink");
-		$this->set("reset", $reset);
+		$hash = hash("sha512", microtime(true)."qfreset".rand(10001, 20000));
+		$link = $this->hash($hash, "qfresetlink");
+		$this->set("reset", $hash);
+		return $link;
+	}
+
+	public function verifyEmailConfirmationLink($link) {
+		return $link === $this->hash($this->get("email_confirmation"), "qfemailconfirmationlink");
+	}
+
+	public function generateEmailConfirmationLink() {
+		$hash = hash("sha512", "qfconfirm".microtime(true).rand(20001, 30000));
+		$link = $this->hash($hash, "qfemailconfirmationlink");
+		$this->set("email_confirmation", $hash);
 		return $link;
 	}
 

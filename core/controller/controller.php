@@ -24,7 +24,7 @@ class Controller {
 	public function callAction($action, $args = []) {
 		if (!$this->connected)
 			return $this->databaseFail();
-		if (!$this->access($action, $args))
+		if (!$this->accessControl($action, $args))
 			return $this->accessDenied();
 		if (!method_exists($this, $action)) 
 			return $this->notFound();
@@ -54,7 +54,7 @@ class Controller {
 		return $this->viewDefault("403");
 	}
 
-	protected function access($action, $args = []) {
+	protected function accessControl($action, $args = []) {
 		return true;
 	}
 
@@ -67,7 +67,7 @@ class Controller {
 
 	protected function getModel() {
 		$cname = ucwords($this->name)."_Model";
-		return newClass($cname, $this->Db, $this->Io, $this->User);
+		return newClass($cname, $this->Config, $this->Db, $this->Io, $this->User);
 	}
 
 	protected function getUser() {

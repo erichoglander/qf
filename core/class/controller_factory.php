@@ -9,8 +9,8 @@ class ControllerFactory_Core {
 		// TODO: Url alias
 		$params = explode("/", $uri);
 		$n = count($params);
-		$controller = (empty($params[0]) ? "page" : $params[0]);
-		$action = ($n < 2 ? "index" : $params[1]);
+		$controller = (empty($params[0]) ? "page" : strtolower($params[0]));
+		$action = ($n < 2 ? "index" : strtolower($params[1]));
 		$args = array_slice($params, 2);
 		return $this->executeControllerAction($controller, $action, $args);
 	}

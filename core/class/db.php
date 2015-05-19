@@ -89,7 +89,7 @@ class Db_Core {
 			$this->errors[] = $err;
 			$debug = print_r(debug_backtrace(), true);
 			$debug.= print_r($err, true);
-			// addlog("database", "error ".$err[0], $debug);
+			addlog("database", "error ".$err[0], $debug);
 			if ($this->debug)
 				pr($debug);
 			die("Ett fel uppstod med en fråga till databasen. (mysql error)");
