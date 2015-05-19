@@ -77,14 +77,14 @@ class User_Entity_Core extends Entity {
 
 	public function verifyResetLink($link) {
 		if (REQUEST_TIME - $this->get("reset_time") < 60*60*24 && 
-				$link === $this->hash($this->get("reset"), "qfresetlink"))
+				$this->get("reset") === $this->hash($link, "qfresetlink"))
 			return true;
 		return false;
 	}
 
 	public function generateResetLink() {
-		$hash = hash("sha512", microtime(true)."qfreset".rand(10001, 20000));
-		$link = $this->hash($hash, "qfresetlink");
+		$link = hash("sha512", microtime(true)."qfreset".rand(10001, 20000));
+		$hash = $this->hash($link, "qfresetlink");
 		$this->set("reset", $hash);
 		$this->set("reset_time", REQUEST_TIME);
 		return $link;
@@ -92,14 +92,14 @@ class User_Entity_Core extends Entity {
 
 	public function verifyEmailConfirmationLink($link) {
 		if (REQUEST_TIME - $this->get("email_confirmation_time") < 60*60*24 &&
-				$this->$link === $this->hash($this->get("email_confirmation"), "qfemailconfirmationlink"))
+				$this->get("email_confirmation") === $this->hash($link, "qfemailconfirmationlink"))
 			return true;
 		return false;
 	}
 
 	public function generateEmailConfirmationLink() {
-		$hash = hash("sha512", "qfconfirm".microtime(true).rand(20001, 30000));
-		$link = $this->hash($hash, "qfemailconfirmationlink");
+		$link = hash("sha512", "qfconfirm".microtime(true).rand(20001, 30000));
+		$hash = $this->hash($link, "qfemailconfirmationlink");
 		$this->set("email_confirmation", $hash);
 		$this->set("email_confirmation_time", REQUEST_TIME);
 		return $link;
