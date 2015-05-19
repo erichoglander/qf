@@ -3,8 +3,8 @@ class User_Entity_Core extends Entity {
 
 	public function save() {
 		if (substr($this->get("pass"), 0, 2) !== "1#") {
-			$this->fields['salt'] = $this->generateSalt();
-			$this->fields['pass'] = $this->hash($this->get("pass"), $this->get("salt"));
+			$this->set("salt", $this->generateSalt());
+			$this->set("pass", $this->hashPassword($this->get("pass"), $this->get("salt")));
 		}
 		if (!parent::save())
 			return false;
@@ -45,6 +45,14 @@ class User_Entity_Core extends Entity {
 		return false;
 	}
 
+	public function loadByName($name) {
+		$row = $this->Db->getRow("SELECT id FROM `user` WHERE `name` = :name", [":name" => $name]);
+		if ($row)
+			return $this->load($row->id);
+		else
+			return false;
+	}
+
 	public function logout() {
 		unset($_SESSION['user_id']);
 	}
@@ -56,7 +64,7 @@ class User_Entity_Core extends Entity {
 	}
 
 	public function authorize($pass) {
-		return $this->allowLogin() && $this->hash($pass, $this->get("salt")) === $this->get("pass");
+		return $this->allowLogin() && $this->hashPassword($pass, $this->get("salt")) === $this->get("pass");
 	}
 
 	public function allowLogin() {
@@ -97,10 +105,14 @@ class User_Entity_Core extends Entity {
 		return $link;
 	}
 
-
-	protected function hash($pass, $salt) {
-		return "1#".hash("sha512", $salt.hash("sha512", $pass).hash("sha512", $salt."qfpass"));
+	public function hash($str, $salt) {
+		return hash("sha512", $salt.hash("sha512", $str).hash("sha512", $salt."qfpass"));
 	}
+
+	public function hashPassword($pass, $salt) {
+		return "1#".$this->hash($pass, $salt);
+	}
+
 
 	protected function generateSalt() {
 		return hash("sha512", microtime(true).rand(1, 10000)."qfsalt");
@@ -136,6 +148,7 @@ class User_Entity_Core extends Entity {
 		$schema['fields']['email_confirmation_time'] = [
 			"type" => "uint",
 		];
+		return $schema;
 	}
 
 };

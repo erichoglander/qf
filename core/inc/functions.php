@@ -120,7 +120,31 @@ function setmsg($msg, $type = "normal") {
 		$_SESSION["sysmsg"][$type] = [];
 	$_SESSION["sysmsg"][$type][] = $msg;
 }
+function getmsgs($type = null) {
+	if ($type)
+		return (isset($_SESSION["sysmsg"][$type]) ? $_SESSION["sysmsg"][$type] : null);
+	return (isset($_SESSION["sysmsg"]) ? $_SESSION["sysmsg"] : null);
+}
+function clearmsgs($type = null) {
+	if ($type)
+		unset($_SESSION["sysmsg"][$type]);
+	else
+		unset($_SESSION["sysmsg"]);
+}
 
 function addlog($category, $subject, $data = null) {
 	// TODO: Logging
+}
+
+function redirect($url = "", $redir = true) {
+	if ($redir && array_key_exists("redir", $_GET))
+		$url = $_GET['redir'];
+	if (strpos($url, "http") !== 0)
+		$url = "/".$url;
+	header("Location: ".$url);
+	exit;
+}
+function refresh() {
+	$url = substr($_SERVER['REQUEST_URI'], 1);
+	redirect($url);
 }

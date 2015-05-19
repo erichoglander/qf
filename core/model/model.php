@@ -11,19 +11,6 @@ class Model {
 	}
 
 
-	protected function redirect($url = "", $redir = true) {
-		if ($redir && array_key_exists("redir", $_GET))
-			$url = $_GET['redir'];
-		if (strpos($url, "http") !== 0)
-			$url = "/".$url;
-		header("Location: ".$url);
-		exit;
-	}
-	protected function refresh() {
-		$url = substr($_SERVER['REQUEST_URI'], 1);
-		$this->redirect($url);
-	}
-
 	protected function getForm($name) {
 		return newClass($name."_Form", $this->Db, $this->Io);
 	}

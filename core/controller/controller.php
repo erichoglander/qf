@@ -13,8 +13,8 @@ class Controller {
 		$this->name = $this->getName();
 		if ($this->connect()) {
 			$this->connected = true;
-			$this->Model = $this->getModel();
 			$this->User = $this->getUser();
+			$this->Model = $this->getModel();
 		}
 		else {
 			$this->connected = false;

@@ -9,9 +9,9 @@ class UserRegister_Form extends Form {
 			$this->setError(t("Passwords mismatch"), "password");
 			return false;
 		}
-		$row = $this->Db->getRow("SELECT id FROM `user` WHERE name = :name", [":name" => $values['email']]);
+		$row = $this->Db->getRow("SELECT id FROM `user` WHERE name = :name", [":name" => $values['name']]);
 		if ($row) {
-			$this->setError(t("E-mail is already taken"), "email");
+			$this->setError(t("Username is already taken"), "name");
 			return false;
 		}
 		$row = $this->Db->getRow("SELECT id FROM `user` WHERE email = :email", [":email" => $values['email']]);
@@ -26,6 +26,11 @@ class UserRegister_Form extends Form {
 		return [
 			"name" => "user_register",
 			"items" => [
+				"name" => [
+					"type" => "text",
+					"label" => t("Username"),
+					"required" => true,
+				],
 				"email" => [
 					"type" => "email",
 					"label" => t("E-mail"),

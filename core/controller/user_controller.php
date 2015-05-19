@@ -10,16 +10,18 @@ class User_Controller_Core extends Controller {
 	}
 
 	public function login() {
-
+		$vars = $this->Model->getLoginPage();
+		return $this->view("login", $vars);
 	}
 
 	public function logout() {
-
+		if ($this->User->id())
+			setmsg(t("You have been signed out"));
+		$this->User->logout();
+		redirect();
 	}
 
 	public function register() {
-		if ($this->Config->getUserRegistration() == "closed")
-			return $this->notFound();
 		$vars = $this->Model->getRegisterPage();
 		return $this->view("register", $vars);
 	}

@@ -1,20 +1,56 @@
 <?php
 class User_Model_Core extends Model {
 
+	public function getLoginPage() {
+		$vars = [];
+		if ($this->User->id()) {
+			if ($this->Config->getUserRegistration() == "closed")
+				redirect();
+			else
+				redirect("user/register");
+		}
+		$Form = $this->getLoginForm();
+		if ($Form->submitted()) {
+			$values = $Form->values();
+			$User = $this->getEntity("User");
+			if (!$User->loadByName($values['name']) || !$User->authorize($values['password']))
+				$Form->setError(t("Incorrect username or password"));
+			else {
+				setmsg(t("You have been signed in"));
+				$User->login();
+				redirect();
+			}
+		}
+		return [
+			"form" => $Form->render(),
+		];
+	}
+	public function getLoginForm() {
+		$Form = $this->getForm("UserLogin");
+		$Form->loadStructure();
+		return $Form;
+	}
+
 	public function getRegisterPage() {
+		$vars = [];
+		$vars["status"] = $this->Config->getUserRegistration();
+		$num_users = $this->Db->numRows("SELECT id FROM `user`");
+		if ($num_users === 0)
+			$vars["status"] = "open";
+		if ($vars["status"] == "closed")
+			return $vars;
 		$Form = $this->getRegisterForm();
 		if ($Form->submitted()) {
 			$values = $Form->values();
 			$User = $this->getEntity("User");
-			$User->name = $values['email'];
-			$User->email = $values['email'];
-			$User->pass = $values['pass'];
-			$User->status = 1;
-			if ($this->Db->numRows("SELECT id FROM `user`") === 0) {
-				$User->name = "admin";
+			$User->set("name", $values['name']);
+			$User->set("email", $values['email']);
+			$User->set("pass", $values['password']);
+			$User->set("status", 1);
+			if ($num_users === 0) {
 				$User->save();
 				$User->login();
-				$this->redirect();
+				redirect();
 			}
 			else {
 				if ($this->Config->getUserRegistration() == "email_confirmation") {
@@ -24,17 +60,17 @@ class User_Model_Core extends Model {
 					else {
 						$User->login();
 						setmsg(t("You've been signed into your new account. You must confirm your e-mail address within 24 hours."));
-						$this->redirect();
+						redirect();
 					}
 				}
 				else if ($this->Config->getUserRegistration() == "admin_approval") {
-					$User->status = 0;
+					$User->set("status", 0);
 					// TODO: Approval mail
 					if (!$User->save())
 						setmsg(t("An error occurred", "error"));
 					else {
 						setmsg(t("Your account registration is now pending approval from the site administrators."));
-						$this->redirect();
+						redirect();
 					}
 				}
 				else {
@@ -43,14 +79,13 @@ class User_Model_Core extends Model {
 					else {
 						$User->login();
 						setmsg(t("Registration complete. You've been signed in to your new account."));
-						$this->redirect();
+						redirect();
 					}
 				}
 			}
 		}
-		return [
-			"form" => $Form->render()
-		];
+		$vars["form"] = $Form->render();
+		return $vars;
 	}
 	public function getRegisterForm() {
 		$Form = $this->getForm("UserRegister");

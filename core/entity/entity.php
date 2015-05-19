@@ -22,26 +22,26 @@ class Entity {
 	public function get($field, $def = null) {
 		if (!array_key_exists($field, $this->fields))
 			return $def;
-		$value = $this->$fields[$field];
-		if ($this->schema[$field]['type'] == "int" || $this->schema[$field]['type'] == "uint")
+		$value = $this->fields[$field];
+		if ($this->schema['fields'][$field]['type'] == "int" || $this->schema['fields'][$field]['type'] == "uint")
 			$value = (int) $value;
-		if (!empty($this->schema[$field]['serialize']))
+		if (!empty($this->schema['fields'][$field]['serialize']))
 			$value = unserialize($value);
-		if (!empty($this->schema[$field]['json']))
+		if (!empty($this->schema['fields'][$field]['json']))
 			$value = json_decode($value);
 		return $value;
 	}
 
 	public function set($field, $value) {
-		if (!array_key_exists($field, $this->schema))
+		if (!array_key_exists($field, $this->schema['fields']))
 			return null;
-		if (!empty($this->schema[$field]['serialize']))
+		if (!empty($this->schema['fields'][$field]['serialize']))
 			$value = serialize($value);
-		if (!empty($this->schema[$field]['json']))
+		if (!empty($this->schema['fields'][$field]['json']))
 			$value = json_encode($value);
-		if ($this->schema[$field]['type'] == "uint")
+		if ($this->schema['fields'][$field]['type'] == "uint")
 			$value = abs((int) $value);
-		else if ($this->schema[$field]['type'] == "int")
+		else if ($this->schema['fields'][$field]['type'] == "int")
 			$value = (int) $value;
 		$this->fields[$field] = $value;
 		return $value;
@@ -52,7 +52,7 @@ class Entity {
 		if (!$row)
 			return false;
 		foreach ($row as $key => $value) {
-			if (array_key_exists($key, $this->schema))
+			if ($key == "id" || array_key_exists($key, $this->schema['fields']))
 				$this->fields[$key] = $value;
 		}
 		return true;
@@ -68,21 +68,21 @@ class Entity {
 				$data[$key] = $this->get($key);
 		}
 		if ($this->id()) {
-			return $this->update($this->schema['table'], $data, ["id" => $this->id()]);
+			return $this->Db->update($this->schema['table'], $data, ["id" => $this->id()]);
 		}
 		else {
 			foreach ($this->schema['fields'] as $key => $field) {
 				if (!array_key_exists($key, $data) && array_key_exists("default", $field))
 					$data[$key] = $field['default'];
 			}
-			return $this->fields['id'] = $this->insert($this->schema['table'], $data);
+			return $this->fields['id'] = $this->Db->insert($this->schema['table'], $data);
 		}
 	}
 
 	public function delete() {
 		if (!$this->id())
 			return false;
-		return $this->delete($this->schema['table'], ["id" => $this->id()]);
+		return $this->Db->delete($this->schema['table'], ["id" => $this->id()]);
 	}
 
 

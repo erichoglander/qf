@@ -6,7 +6,7 @@ class Config_Core {
 	protected $subdomain, $https;
 	protected $menu = [];
 	protected $debug = false;
-	protected $user_registration = "email_confirmation";
+	protected $user_registration = "closed";
 
 
 	public function __construct() {

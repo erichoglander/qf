@@ -45,7 +45,9 @@ class Html_Core {
 			"pre_content" => $this->pre_content,
 			"post_content" => $this->post_content,
 			"content" => $this->content,
+			"msgs" => getmsgs(),
 		];
+		clearmsgs();
 		return $this->Theme->render("page", $vars);
 	}
 
