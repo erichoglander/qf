@@ -20,6 +20,7 @@ class Controller {
 		else {
 			$this->connected = false;
 		}
+		$this->loadLibraries();
 	}
 
 	public function callAction($action, $args = []) {
@@ -86,6 +87,20 @@ class Controller {
 		return newClass($name."_Form", $this->Db, $this->Io, $this->User, $vars);
 	}
 
+	protected function loadLibraries() {
+		foreach ($this->Config->getLibraries() as $lib) {
+			$Library = newClass($lib."_Library", $this->Db);
+			if (!$Library)
+				continue;
+			foreach ($Library->getIncludes() as $incl) {
+				$uri = "library/".classToDir($lib)."/".$incl;
+				$path = filePath($uri);
+				if ($path)
+					require_once($path);
+			}
+		}
+	}
+
 	protected function view($name) {
 		$View = newClass("View", $this->Db, $this->name, $name, $this->viewData);
 		try {
@@ -96,7 +111,6 @@ class Controller {
 			return $this->notFound();
 		}
 	}
-
 	protected function viewDefault($name) {
 		$View = newClass("View", $this->Db, "default", $name, $this->viewData);
 		try {
@@ -106,8 +120,6 @@ class Controller {
 			die($e->getMessage());
 		}
 	}
-
-	// Do not include html backbone
 	protected function viewBare($name) {
 		$View = newClass("View", null, "default", $name, $this->viewData);
 		try {

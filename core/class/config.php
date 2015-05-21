@@ -7,6 +7,7 @@ class Config_Core {
 	protected $menu = [];
 	protected $debug = false;
 	protected $user_registration = "closed";
+	protected $libraries = ["FontAwesome"];
 
 
 	public function __construct() {
@@ -44,6 +45,9 @@ class Config_Core {
 	}
 	public function getUserRegistration() {
 		return $this->user_registration;
+	}
+	public function getLibraries() {
+		return $this->libraries;
 	}
 
 };

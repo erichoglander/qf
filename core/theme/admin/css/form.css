@@ -1,0 +1,59 @@
+.form-item {
+	margin: 10px 0;
+	max-width: 400px;
+}
+.form-item:first-child {
+	margin-top: 0;
+}
+.form-item:last-child {
+	margin-bottom: 0;
+}
+
+.form-label {
+	display: block;
+	font-weight: normal;
+}
+
+.form-type-checkboxes .form-label,
+.form-type-checkbox .form-label {
+	cursor: pointer;
+}
+
+input {
+	font-family: inherit;
+	font-size: inherit;
+}
+.form-textarea,
+.form-password,
+.form-email,
+.form-text {
+	display: block;
+	box-sizing: border-box;
+	width: 100%;
+	height: 34px;
+	padding: 6px 8px;
+	color: #333;
+	background-color: #FFF;
+	background-image: none;
+	border: 1px solid #CCC;
+	border-radius: 4px;
+	box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset;
+	transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+}
+.form-textarea:focus,
+.form-password:focus,
+.form-email:focus,
+.form-text:focus {
+	border-color: #66AFE9;
+	outline: 0px none;
+	box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset, 0px 0px 8px rgba(102, 175, 233, 0.6);
+}
+.form-type-actions .form-item {
+	float: left;
+	margin: 0 10px 0 0;
+}
+.form-type-actions:after {
+	clear: both;
+	content: "";
+	display: block;
+}

@@ -10,7 +10,7 @@ else {
 	<div class="form-input">
 		<?=$input_prefix?>
 		<?php if (!empty($label)) { ?>
-			<label class="form-label" for="<?=$input_name?>"><?=$input?> <?=$label?></label>
+			<label class="form-label"><?=$input?> <?=$label?></label>
 		<?php } else { ?>
 			<?=$input?>
 		<?php } ?>

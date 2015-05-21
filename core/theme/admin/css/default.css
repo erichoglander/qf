@@ -1,0 +1,43 @@
+html {
+	margin: 0;
+	padding: 0;
+}
+body {
+	margin: 0;
+	padding: 0;
+	background: #222;
+	color: #333;
+	font-family: "Helvetica Neue", Helvetica, Source Sans Pro, Arial, sans-serif;
+	font-size: 14px;
+	line-height: 1.5;
+}
+
+*:focus {
+	ouline: 0;
+}
+
+a:link, a:visited {
+	text-decoration: none;
+	color: #337ab7;
+}
+a:hover, a:focus {
+	text-decoration: underline;
+	color: #23527c;
+}
+
+h1 {
+	font-size: 28px;
+	margin: 20px 0;
+	padding: 0;
+	font-weight: 500;
+	border-bottom: 1px solid #e5e5e5;
+}
+h1:first-child {
+	margin-top: 0;
+}
+h2 {
+	font-size: 18px;
+	margin: 15px 0;
+	padding: 0;
+	font-weight: 500;
+}

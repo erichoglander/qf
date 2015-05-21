@@ -2,6 +2,7 @@
 function classAutoload($class) {
 	$fname = classToFile($class);
 	$suffixes = ["controller", "model", "entity", "form_item", "form", "mail"];
+	$dirs = ["theme", "library"];
 	foreach ($suffixes as $suffix) {
 		$csuffix = "";
 		foreach (explode("_", $suffix) as $sfx)
@@ -16,23 +17,27 @@ function classAutoload($class) {
 			return;
 		}
 	}
-	if (strpos($class, "_Theme") !== false) {
-		$dir = str_replace(".php", "", $fname);
-		$cpath = DOC_ROOT."/core/theme/".$dir."/theme.php";
-		$epath = DOC_ROOT."/extend/theme/".$dir."/theme.php";
-		if (file_exists($cpath))
-			require_once($cpath);
-		if (file_exists($epath)) 
-			require_once($epath);
+	foreach ($dirs as $dir) {
+		$csuffix = "_";
+		foreach (explode("_", $dir) as $sfx)
+			$csuffix.= ucwords($sfx);
+		if (strpos($class, $csuffix) !== false) {
+			$fdir = str_replace(".php", "", $fname);
+			$cpath = DOC_ROOT."/core/".$dir."/".$fdir."/".$dir.".php";
+			$epath = DOC_ROOT."/extend/".$dir."/".$fdir."/".$dir.".php";
+			if (file_exists($cpath))
+				require_once($cpath);
+			if (file_exists($epath)) 
+				require_once($epath);
+			return;
+		}
 	}
-	else {
-		$cpath = DOC_ROOT."/core/class/".$fname;
-		$epath = DOC_ROOT."/extend/class/".$fname;
-		if (file_exists($cpath))
-			require_once($cpath);
-		if (file_exists($epath))
-			require_once($epath);
-	}
+	$cpath = DOC_ROOT."/core/class/".$fname;
+	$epath = DOC_ROOT."/extend/class/".$fname;
+	if (file_exists($cpath))
+		require_once($cpath);
+	if (file_exists($epath))
+		require_once($epath);
 }
 spl_autoload_register("classAutoload");
 
@@ -54,7 +59,10 @@ function newClass($cname) {
 
 function classToFile($class) {
 	// SomeClassName_Model_Core -> some_class_name_model.php
-	return str_replace(["_core", "_theme"], ["", ""], strtolower(preg_replace("/([a-z])([A-Z])/", "$1_$2", $class).".php"));
+	return str_replace(["_core", "_theme", "_library"], ["", ""], strtolower(preg_replace("/([a-z])([A-Z])/", "$1_$2", $class).".php"));
+}
+function classToDir($class) {
+	return strtolower(preg_replace("/([a-z])([A-Z])/", "$1_$2", $class));
 }
 
 

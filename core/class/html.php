@@ -14,14 +14,17 @@ class Html_Core {
 	public $breadcrumbs = [];
 	public $body_class = [];
 
+	public $libraries = ["FontAwesome"];
+
 	protected $Theme, $Db;
 
 	public function __construct($Db) {
 		$this->Db = &$Db;
-		$this->breadcrumbs[] = ["" => t("Home")];
+		$this->breadcrumbs[] = ["", t("Home")];
 	}
 
 	public function renderHtml() {
+		$this->loadLibraries();
 		$this->loadTheme();
 		$vars = [
 			"css" => $this->css,
@@ -34,6 +37,7 @@ class Html_Core {
 			"pre_page" => $this->pre_page,
 			"post_page" => $this->post_page,
 			"page" => $this->renderPage(),
+			"breadcrumbs" => $this->breadcrumbs,
 		];
 		return $this->Theme->render("html", $vars);
 	}
@@ -45,6 +49,7 @@ class Html_Core {
 			"pre_content" => $this->pre_content,
 			"post_content" => $this->post_content,
 			"content" => $this->content,
+			"breadcrumbs" => $this->breadcrumbs,
 			"msgs" => getmsgs(),
 		];
 		clearmsgs();
@@ -68,6 +73,16 @@ class Html_Core {
 			$this->Theme = $this->getTheme($this->theme);
 			if (!$this->Theme)
 				throw new Exception("Unable to load theme \"".$this->theme."\"");
+		}
+	}
+
+	protected function loadLibraries() {
+		foreach ($this->libraries as $lib) {
+			$Library = newClass($lib."_Library", $this->Db);
+			if (!$Library)
+				continue;
+			$this->css = array_merge($this->css, $Library->getCss());
+			$this->js = array_merge($this->css, $Library->getJs());
 		}
 	}
 
