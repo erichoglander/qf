@@ -40,7 +40,18 @@ class User_Controller_Core extends Controller {
 			redirect();
 		$Form = $this->getForm("UserRegister");
 		if ($Form->isSubmitted()) {
-			if ($this->Model->register($Form->values()))
+			$status = $this->Model->register($Form->values());
+			if ($status == "email_confirmation")
+				setmsg(t("You've been signed into your new account. You must confirm your e-mail address within 24 hours."));
+			else if ($status == "admin_approval")
+				setmsg(t("Your account registration is now pending approval from the site administrator."));
+			else if ($status == "admin_login")
+				setmsg(t("An admin account has been created and you have been signed in."));
+			else if ($status == "register_login")
+				setmsg(t("Registration complete. You've been signed in to your new account."));
+			else if (!$status)
+				setmsg(t("An error occurred", "error"));
+			if ($status)
 				redirect();
 		}
 		$this->viewData["form"] = $Form->render();

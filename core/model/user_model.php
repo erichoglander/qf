@@ -12,42 +12,25 @@ class User_Model_Core extends Model {
 		if ($num_users === 0) {
 			$User->save();
 			$User->login();
+			return "admin_login";
 		}
 		else {
 			if ($registration == "email_confirmation") {
 				$link = $User->generateEmailConfirmationLink();
 				if ($User->save() && $this->sendMail("UserEmailConfirmation", ["id" => $User->id(), "link" => $link])) {
 					$User->login();
-					setmsg(t("You've been signed into your new account. You must confirm your e-mail address within 24 hours."));
-					return true;
-				}
-				else {
-					setmsg(t("An error occurred", "error"));
-					return false;
+					return "email_confirmation";
 				}
 			}
 			else if ($registration == "admin_approval") {
 				$User->set("status", 0);
 				// TODO: Approval mail
-				if (!$User->save()) {
-					setmsg(t("An error occurred", "error"));
-					return false;
-				}
-				else {
-					setmsg(t("Your account registration is now pending approval from the site administrator."));
-					return true;
-				}
+				if ($User->save()) 
+					return "admin_approval";
 			}
 			else {
-				if (!$User->save()) {
-					setmsg(t("An error occurred", "error"));
-					return false;
-				}
-				else {
-					$User->login();
-					setmsg(t("Registration complete. You've been signed in to your new account."));
-					return true;
-				}
+				if ($User->save())
+					return "register_login";
 			}
 		}
 	}
