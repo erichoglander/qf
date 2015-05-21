@@ -91,9 +91,8 @@ class User_Controller_Core extends Controller {
 	
 	public function add() {
 		$Form = $this->getForm("userEdit");
-		$this->viewData["User"] = $this->getEntity("User");
 		$this->viewData["form"] = $Form->render();
-		return $this->view("edit");
+		return $this->view("add");
 	}
 
 };
