@@ -12,6 +12,8 @@ class User_Controller_Core extends Controller {
 	}
 
 	public function login() {
+		if ($this->User->id())
+			redirect();
 		$Form = $this->getForm("UserLogin");
 		if ($Form->isSubmitted()) {
 			$values = $Form->values();
@@ -26,9 +28,10 @@ class User_Controller_Core extends Controller {
 	}
 
 	public function logout() {
-		if ($this->User->id())
+		if ($this->User->id()) {
 			setmsg(t("You have been signed out"));
-		$this->User->logout();
+			$this->User->logout();
+		}
 		redirect();
 	}
 
@@ -79,11 +82,10 @@ class User_Controller_Core extends Controller {
 	public function confirm_email($args = []) {
 		if (count($args) != 2)
 			return $this->notFound();
-		$User = $this->getEntity("User", $id);
-		if (!$User->id() || !$User->verifyEmailConfirmationLink($link))
+		$User = $this->getEntity("User", $args[0]);
+		if (!$User->id() || !$User->verifyEmailConfirmationLink($args[1]))
 			return $this->view("confirm_email_invalid");
-		if (!$this->Model->emailConfirm($User))
-			setmsg(t("An error occurred", "error"));
+		$this->Model->emailConfirm($User);
 		return $this->view("confirm_email");
 	}
 	

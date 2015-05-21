@@ -77,7 +77,13 @@ class User_Model_Core extends Model {
 	public function emailConfirm($User) {
 		$User->set("email_confirmation", "");
 		$User->set("email_confirmation_time", 0);
-		return $User->save();
+		if ($User->save()) {
+			return true;
+		}
+		else {
+			setmsg(t("An error occurred", "error"));
+			return false;
+		}
 	}
 	
 	public function getEditPage() {
