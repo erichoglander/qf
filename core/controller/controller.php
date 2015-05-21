@@ -3,6 +3,7 @@ class Controller {
 
 	public $args = [];
 	public $connected;
+	protected $action, $viewData = [];
 	protected $Config, $Db, $Model, $User, $Io;
 
 	public function __construct() {
@@ -45,9 +46,9 @@ class Controller {
 		header("HTTP/1.1 503 Service unavailable");
 		return $this->viewBare("503");
 	}
-	protected function notFound($vars = []) {
+	protected function notFound() {
 		header("HTTP/1.1 404 Not found");
-		return $this->viewDefault("404", $vars);
+		return $this->viewDefault("404");
 	}
 	protected function accessDenied() {
 		header("HTTP/1.1 403 Forbidden");
@@ -81,18 +82,23 @@ class Controller {
 		return newClass($name."_Entity", $this->Db, $id);
 	}
 
-	protected function view($name, $variables = []) {
-		$View = newClass("View", $this->Db, $this->name, $name, $variables);
+	protected function getForm($name, $vars = []) {
+		return newClass($name."_Form", $this->Db, $this->Io, $this->User, $vars);
+	}
+
+	protected function view($name) {
+		$View = newClass("View", $this->Db, $this->name, $name, $this->viewData);
 		try {
 			return $View->render();
 		}
 		catch (Exception $e) {
-			return $this->notFound(["console" => $e->getMessage()]);
+			$this->viewData["console"] = $e->getMessage();
+			return $this->notFound();
 		}
 	}
 
-	protected function viewDefault($name, $variables = []) {
-		$View = newClass("View", $this->Db, "default", $name, $variables);
+	protected function viewDefault($name) {
+		$View = newClass("View", $this->Db, "default", $name, $this->viewData);
 		try {
 			return $View->render();
 		}
@@ -102,8 +108,8 @@ class Controller {
 	}
 
 	// Do not include html backbone
-	protected function viewBare($name, $variables = []) {
-		$View = newClass("View", null, "default", $name, $variables);
+	protected function viewBare($name) {
+		$View = newClass("View", null, "default", $name, $this->viewData);
 		try {
 			return $View->render();
 		}

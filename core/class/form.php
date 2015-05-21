@@ -21,22 +21,79 @@
 
 */
 class Form {
-	
+
 	protected $attributes = [
 		"method" => "POST",
 		"action" => "",
 		"class" => "form"
 	];
+	protected $vars;
 	protected $name;
 	protected $items;
 	protected $errors = [];
 	protected $prefix, $suffix;
-	protected $Db, $Io;
+	protected $Db, $Io, $User;
 
 
-	public function __construct(&$Db, &$Io) {
+	public function __construct(&$Db, &$Io, &$User, $vars = []) {
 		$this->Db = $Db;
 		$this->Io = $Io;
+		$this->User = $User;
+		$this->vars = $vars;
+		$this->loadStructure();
+	}
+
+	public function render() {
+		$path = $this->templatePath();
+		$vars = [
+			"items" => $this->renderItems(),
+			"errors" => $this->getErrors(),
+			"attributes" => $this->attributes(),
+			"token" => $this->token(),
+			"name" => $this->name,
+			"prefix" => $this->prefix,
+			"suffix" => $this->suffix,
+		];
+		return renderTemplate($path, $vars);
+	}
+
+	public function get($name, $def = null) {
+		if (array_key_exists($name, $this->vars))
+			return $def;
+		return $this->vars[$name];
+	}
+
+	public function values() {
+		$values = [];
+		foreach ($this->items as $name => $item) {
+			if ($item->submit_data)
+				$values[$name] = $item->value();
+		}
+		return $values;
+	}
+
+	public function isValidated() {
+		if (!empty($this->errors))
+			return false;
+		if (!$this->verifyToken()) {
+			$this->setError(t("Form token expired, please try to submit the form again."));
+			return false;
+		}
+		foreach ($this->items as $name => $item) {
+			if (!$item->validated())
+				return false;
+		}
+		if (!$this->validate($this->values()))
+			return false;
+		return true;
+	}
+
+	public function validate() {
+		return true;
+	}
+
+	public function isSubmitted($validate = true) {
+		return isset($_POST['form_'.$this->name]) && (!$validate || $this->isValidated());
 	}
 
 	public function setError($msg, $name = null) {
@@ -61,54 +118,19 @@ class Form {
 		return $this->errors;
 	}
 
-	public function values() {
-		$values = [];
-		foreach ($this->items as $name => $item) {
-			if ($item->submit_data)
-				$values[$name] = $item->value();
-		}
-		return $values;
-	}
 
-	public function render() {
-		$path = $this->templatePath();
-		$vars = [
-			"items" => $this->renderItems(),
-			"errors" => $this->getErrors(),
-			"attributes" => $this->attributes(),
-			"token" => $this->token(),
-			"name" => $this->name,
-			"prefix" => $this->prefix,
-			"suffix" => $this->suffix,
+	protected function structure() {
+		return [
+			"name" => "default_form",
+			"attributes" => [
+				"method" => "POST",
+				"action" => "",
+				"class" => "form",
+			],
 		];
-		return renderTemplate($path, $vars);
 	}
 
-	public function validated() {
-		if (!empty($this->errors))
-			return false;
-		if (!$this->verifyToken()) {
-			$this->setError(t("Form token expired, please try to submit the form again."));
-			return false;
-		}
-		foreach ($this->items as $name => $item) {
-			if (!$item->validated())
-				return false;
-		}
-		return true;
-	}
-
-	public function submitted($validate = true) {
-		if (!isset($_POST['form_'.$this->name]))
-			return false;
-		if ($validate && !$this->validated())
-			return false;
-		if ($validate && is_callable([$this, "onSubmit"]))
-			$this->onSubmit();
-		return true;
-	}
-
-	public function loadStructure() {
+	protected function loadStructure() {
 		$args = func_get_args();
 		if (empty($args))
 			$structure = $this->structure();
@@ -129,23 +151,11 @@ class Form {
 			$this->loadItem($name, $item);
 	}
 
-
-	protected function structure() {
-		return [
-			"name" => "default_form",
-			"attributes" => [
-				"method" => "POST",
-				"action" => "",
-				"class" => "form",
-			],
-		];
-	}
-
 	protected function loadItem($name, $item) {
 		if (empty($item['type']))
 			throw new Exception("No type given for form item ".$name);
 		$item['name'] = $name;
-		$item['submitted'] = $this->submitted(false);
+		$item['submitted'] = $this->isSubmitted(false);
 		$a = explode("_", $item['type']);
 		$cname = "";
 		foreach ($a as $b)

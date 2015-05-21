@@ -1,10 +1,7 @@
 <?php
 class UserRegister_Form extends Form {
 
-	public function validated() {
-		if (!parent::validated())
-			return false;
-		$values = $this->values();
+	public function validate($values) {
 		if ($values['password'] != $values['password_confirm']) {
 			$this->setError(t("Passwords mismatch"), "password");
 			return false;

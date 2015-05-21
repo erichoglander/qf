@@ -1,10 +1,7 @@
 <?php
 class UserEdit_Form_Core extends Form {
 
-	public function validated() {
-		if (!parent::validated())
-			return false;
-		$values = $this->values();
+	public function validate($values) {
 		if ($values['password'] != $values['password_confirm']) {
 			$this->setError(t("Passwords mismatch"), "password");
 			return false;
@@ -22,25 +19,21 @@ class UserEdit_Form_Core extends Form {
 		return true;
 	}
 	
-	public function structure($vars) {
+	public function structure() {
 		$structure = [
 			"name" => "user_edit",
 			"items" => [
-				"id" => [
-					"type" => "value",
-					"value" => $vars['id'],
-				],
 				"name" => [
 					"type" => "text",
 					"label" => t("Username"),
-					"value" => $vars['name'],
+					"value" => $this->get("name"),
 					"focus" => true,
 					"required" => true,
 				],
 				"email" => [
 					"type" => "email",
 					"label" => t("Email"),
-					"value" => $vars['email'],
+					"value" => $this->get("email"),
 					"required" => true,
 				],
 				"password" => [
@@ -54,7 +47,7 @@ class UserEdit_Form_Core extends Form {
 				"status" => [
 					"type" => "checkbox",
 					"label" => t("Active"),
-					"value" => $vars['status'],
+					"value" => $this->get("status", 1),
 				],
 				"actions" => [
 					"type" => "actions",

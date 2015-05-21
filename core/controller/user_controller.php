@@ -2,7 +2,9 @@
 class User_Controller_Core extends Controller {
 
 	public function accessControl($action, $args = []) {
-		return true; // TODO: Check access
+		if ($action == "add" || $action == "edit")
+			return $this->User->id() == 1;
+		return true;
 	}
 
 	public function index() {
@@ -10,8 +12,17 @@ class User_Controller_Core extends Controller {
 	}
 
 	public function login() {
-		$vars = $this->Model->getLoginPage();
-		return $this->view("login", $vars);
+		$Form = $this->getForm("UserLogin");
+		if ($Form->isSubmitted()) {
+			$values = $Form->values();
+			$User = $this->getEntity("User");
+			$User->loadByName($values["name"]);
+			$User->login();
+			setmsg(t("You have been signed in"));
+			redirect();
+		}
+		$this->viewData["form"] = $Form->render();
+		return $this->view("login");
 	}
 
 	public function logout() {
@@ -22,32 +33,65 @@ class User_Controller_Core extends Controller {
 	}
 
 	public function register() {
-		$vars = $this->Model->getRegisterPage();
-		return $this->view("register", $vars);
+		if ($this->User->id())
+			redirect();
+		$Form = $this->getForm("UserRegister");
+		if ($Form->isSubmitted()) {
+			if ($this->Model->register($Form->values()))
+				redirect();
+		}
+		$this->viewData["form"] = $Form->render();
+		return $this->view("register");
 	}
 
 	public function reset() {
-		$vars = $this->Model->getResetPage();
-		return $this->view("reset", $vars);
+		if ($this->User->id())
+			redirect();
+		$Form = $this->getForm("reset");
+		if ($Form->isSubmitted()) {
+			$values = $Form->values();
+			$User = $this->getEntity();
+			$User->loadByEmail($values["email"]);
+			if ($this->Model->reset($User)) 
+				redirect();
+		}
+		$this->viewData['form'] = $Form->render();
+		return $this->view("reset");
 	}
 
 	public function change_password($args = []) {
 		if (count($args) != 2)
 			return $this->notFound();
-		$vars = $this->Model->getChangePasswordPage($args[0], $args[1]);
-		return $this->view("change_password", $vars);
+		$User = $this->getEntity("UserChangePassword", $args[0]);
+		if (!$User->id() || !$User->verifyResetLink($args[1]))
+			return $this->view("reset_invalid");
+		$Form = $this->getForm("UserChangePassword");
+		if ($Form->isSubmitted()) {
+			$values = $Form->values();
+			if ($this->Model->change_password($User, $values["password"])) 
+				redirect();
+		}
+		$this->viewData["name"] = $User->get("name");
+		$this->viewData["form"] = $Form->render();
+		return $this->view("change_password");
 	}
 
 	public function confirm_email($args = []) {
 		if (count($args) != 2)
 			return $this->notFound();
-		$vars = $this->Model->getEmailConfirmationPage($args[0], $args[1]);
-		return $this->view("confirm_email", $vars);
+		$User = $this->getEntity("User", $id);
+		if (!$User->id() || !$User->verifyEmailConfirmationLink($link))
+			return $this->view("confirm_email_invalid");
+		if (!$this->Model->emailConfirm($User))
+			setmsg(t("An error occurred", "error"));
+		return $this->view("confirm_email");
 	}
 	
 	public function add() {
-		$vars = $this->Model->getEditPage();
-		return $this->view("edit", $vars);
+		$Form = $this->getForm("userEdit");
+		$this->viewData["User"] = $this->getEntity("User");
+		$this->viewData["form"] = $Form->render();
+		return $this->view("edit");
 	}
 
 };

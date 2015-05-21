@@ -83,9 +83,6 @@ class User_Entity_Core extends Entity {
 	}
 
 	public function verifyResetLink($link) {
-		// setmsg($link);
-		// setmsg($this->hash($link, "qfresetlink"));
-		// setmsg($this->get("reset"));
 		if (REQUEST_TIME - $this->get("reset_time") < 60*60*24 && 
 				$this->get("reset") === $this->hash($link, "qfresetlink"))
 			return true;

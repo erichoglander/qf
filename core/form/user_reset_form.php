@@ -1,8 +1,7 @@
 <?php
 class UserReset_Form extends Form {
 
-	public function validated() {
-		$values = $this->values();
+	public function validate($values) {
 		$row = $this->Db->getRow("SELECT id FROM `user` WHERE email = :email", [":email" => $values["email"]]);
 		if (!$row) {
 			$this->setError(t("There is no registered user with that e-mail address"));
