@@ -108,8 +108,9 @@ function renderTemplate($path, $vars) {
 	return ob_get_clean();
 }
 
-function t($str) {
+function t($str, $lang = "en", $vars = []) {
 	// TODO: Translation
+	$str = str_replace(array_keys($vars), array_values($vars), $str);
 	return $str;
 }
 

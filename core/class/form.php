@@ -58,7 +58,7 @@ class Form {
 	}
 
 	public function get($name, $def = null) {
-		if (array_key_exists($name, $this->vars))
+		if (!array_key_exists($name, $this->vars))
 			return $def;
 		return $this->vars[$name];
 	}
