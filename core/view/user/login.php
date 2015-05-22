@@ -1,5 +1,4 @@
 <?php
-$this->Html->title = t("Sign in");
-$this->Html->h1 = $this->Html->title;
+$this->Html->h1 = $this->Html->title = t("Sign in");
 
 print $form;

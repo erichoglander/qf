@@ -63,11 +63,27 @@ class User_Model_Core extends Model {
 			return null;
 	}
 	
-	public function editUser($values) {
+	public function editUser($User, $values) {
 		$User = $this->getEntity("User");
 		foreach ($values as $key => $value)
 			$User->set($key, $value);
 		return $User->save();
+	}
+
+	public function deleteUser($User)  {
+		return $User->delete();
+	}
+
+	public function getUsers($vars = []) {
+		$vars+= [
+			"sort" => "name",
+			"order" => "asc",
+		];
+		$rows = $this->Db->getRows("SELECT id FROM `user` ORDER BY ".$vars["sort"]." ".$vars["order"]);
+		$users = [];
+		foreach ($rows as $row)
+			$users[] = $this->getEntity("User", $row->id);
+		return $users;
 	}
 	
 };

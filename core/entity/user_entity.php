@@ -18,7 +18,7 @@ class User_Entity_Core extends Entity {
 		if (!parent::load($id))
 			return false;
 		$this->roles = $this->Db->getRows(
-				"SELECT * FROM `role` 
+				"SELECT `role`.* FROM `role` 
 				INNER JOIN `user_role` ON 
 					`user_role`.role_id = `role`.id
 				WHERE 

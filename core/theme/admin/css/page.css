@@ -44,10 +44,47 @@ ul.breadcrumbs li + li:before {
 .btn:focus {
 	background: #333;
 	color: #fff;
+	text-decoration: none;
 }
 
 .btn-primary:hover,
 .btn-primary:focus {
 	background: #337ab7;
 	border-color: #337ab7;
+}
+
+
+table {
+	border-collapse: collapse;
+	width: 100%;
+	background: none;
+	box-sizing: border-box;
+	margin: 20px 0;
+}
+table th {
+	vertical-align: bottom;
+	border-bottom: 2px solid #DDD;
+	font-weight: 700;
+	text-align: left;
+}
+table th,
+table td {
+	padding: 8px;
+}
+table tbody tr {
+	border-top: 1px solid #ddd;
+}
+table.striped tbody tr:nth-child(2n+1) {
+	background: #f9f9f9;
+}
+tr .actions {
+	white-space: nowrap;
+	width: 1px;
+}
+tr .actions a {
+	display: inline-block;
+	margin-left: 6px;
+}
+tr .actions a:first-child {
+	margin-left: 0;
 }

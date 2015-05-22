@@ -1,10 +1,8 @@
 <?php
 if ($status == "closed") {
-	$this->Html->title = t("Registration closed");
-	$this->Html->h1 = $this->Html->title;
+	$this->Html->h1 = $this->Html->title = t("Registration closed");
 }
 else {
-	$this->Html->title = t("Create account");
-	$this->Html->h1 = $this->Html->title;
+	$this->Html->h1 = $this->Html->title = t("Create account");
 	print $form;
 }
