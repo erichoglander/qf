@@ -33,14 +33,16 @@ class Entity {
 	}
 
 	public function set($field, $value) {
-		if (!empty($this->schema['fields'][$field]['serialize']))
-			$value = serialize($value);
-		if (!empty($this->schema['fields'][$field]['json']))
-			$value = json_encode($value);
-		if ($this->schema['fields'][$field]['type'] == "uint")
-			$value = abs((int) $value);
-		else if ($this->schema['fields'][$field]['type'] == "int")
-			$value = (int) $value;
+		if (array_key_exists($field, $this->schema['fields'])) {
+			if (!empty($this->schema['fields'][$field]['serialize']))
+				$value = serialize($value);
+			if (!empty($this->schema['fields'][$field]['json']))
+				$value = json_encode($value);
+			if ($this->schema['fields'][$field]['type'] == "uint")
+				$value = abs((int) $value);
+			else if ($this->schema['fields'][$field]['type'] == "int")
+				$value = (int) $value;
+		}
 		$this->fields[$field] = $value;
 		return $value;
 	}

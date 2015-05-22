@@ -1,19 +1,19 @@
 <?php
 class User_Controller_Core extends Controller {
 
-	public function accessControl($action, $args = []) {
+	public function access($action, $args = []) {
 		if ($action == "add" || $action == "edit" || $action == "delete" || $action == "list" || $action == "signin")
 			return $this->User->id() == 1;
 		return true;
 	}
 
-	public function index() {
+	public function indexAction() {
 		if ($this->User->id())
-			redirect("user/listing");
+			redirect("user/list");
 		return $this->login();
 	}
 
-	public function login() {
+	public function loginAction() {
 		if ($this->User->id())
 			redirect();
 		$Form = $this->getForm("UserLogin");
@@ -29,7 +29,7 @@ class User_Controller_Core extends Controller {
 		return $this->view("login");
 	}
 
-	public function logout() {
+	public function logoutAction() {
 		if ($this->User->id()) {
 			setmsg(t("You have been signed out"));
 			$this->User->logout();
@@ -37,7 +37,7 @@ class User_Controller_Core extends Controller {
 		redirect();
 	}
 
-	public function register() {
+	public function registerAction() {
 		if ($this->User->id())
 			redirect();
 		$Form = $this->getForm("UserRegister");
@@ -60,7 +60,7 @@ class User_Controller_Core extends Controller {
 		return $this->view("register");
 	}
 
-	public function reset() {
+	public function resetAction() {
 		if ($this->User->id())
 			redirect();
 		$Form = $this->getForm("reset");
@@ -80,7 +80,7 @@ class User_Controller_Core extends Controller {
 		return $this->view("reset");
 	}
 
-	public function change_password($args = []) {
+	public function change_passwordAction($args = []) {
 		if (count($args) != 2)
 			return $this->notFound();
 		$User = $this->getEntity("UserChangePassword", $args[0]);
@@ -102,7 +102,7 @@ class User_Controller_Core extends Controller {
 		return $this->view("change_password");
 	}
 
-	public function confirm_email($args = []) {
+	public function confirm_emailAction($args = []) {
 		if (count($args) != 2)
 			return $this->notFound();
 		$User = $this->getEntity("User", $args[0]);
@@ -113,13 +113,13 @@ class User_Controller_Core extends Controller {
 		return $this->view("confirm_email");
 	}
 	
-	public function add() {
+	public function addAction() {
 		$Form = $this->getForm("userEdit");
 		if ($Form->isSubmitted()) {
 			$User = $this->Model->addUser($Form->values());
 			if ($User) {
 				setmsg(t("User :user added", "en", [":user" => $User->name()]));
-				redirect("user/listing");
+				redirect("user/list");
 			}
 			else {
 				setmsg(t("An error occurred", "error"));
@@ -129,7 +129,7 @@ class User_Controller_Core extends Controller {
 		return $this->view("add");
 	}
 	
-	public function edit($args = []) {
+	public function editAction($args = []) {
 		if (empty($args[0]))
 			return $this->notFound();
 		$User = $this->getEntity("User", $args[0]);
@@ -148,7 +148,7 @@ class User_Controller_Core extends Controller {
 		if ($Form->isSubmitted()) {
 			if ($this->Model->editUser($User, $Form->values())) {
 				setmsg(t("User :user saved", "en", [":user" => $User->name()]));
-				redirect("user/listing");
+				redirect("user/list");
 			}
 			else {
 				setmsg(t("An error occurred", "error"));
@@ -158,7 +158,7 @@ class User_Controller_Core extends Controller {
 		return $this->view("edit");
 	}
 
-	public function delete($args = []) {
+	public function deleteAction($args = []) {
 		$User = $this->getEntity("User", $args[0]);
 		if (!$User->id())
 			return $this->notFound();
@@ -168,7 +168,7 @@ class User_Controller_Core extends Controller {
 		if ($Form->isSubmitted()) {
 			if ($this->Model->deleteUser($User)) {
 				setmsg(t("User :user deleted", "en", [":user" => $User->name()]));
-				redirect("user/listing");
+				redirect("user/list");
 			}
 			else {
 				setmsg(t("An error occurred", "error"));
@@ -178,18 +178,18 @@ class User_Controller_Core extends Controller {
 		return $this->view("delete");
 	}
 
-	public function signin($args = []) {
+	public function signinAction($args = []) {
 		$User = $this->getEntity("User", $args[0]);
 		if (!$User->id())
 			return $this->notFound();
 		$User->login();
 		setmsg(t("Now logged in as :user", "en", [":user" => $User->get("name")]));
-		redirect("user/listing");
+		redirect("user/list");
 	}
 
-	public function listing() {
+	public function listAction() {
 		$this->viewData["users"] = $this->Model->getUsers();
-		return $this->view("listing");
+		return $this->view("list");
 	}
 
 };

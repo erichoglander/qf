@@ -24,41 +24,42 @@ class Controller {
 	}
 
 	public function callAction($action, $args = []) {
+		$action.= "Action";
 		if (!$this->connected)
 			return $this->databaseFail();
-		if (!$this->accessControl($action, $args))
+		if (!$this->access($action, $args))
 			return $this->accessDenied();
 		if (!method_exists($this, $action)) 
 			return $this->notFound();
 		return $this->$action($args);
 	}
 
-	
-	protected function internalError() {
+	public function access($action, $args = []) {
+		return true;
+	}
+
+	public function internalError() {
 		header("HTTP/1.1 500 Internal error");
 		return $this->viewBare("500");
 	}
-	protected function databaseFail() {
+	public function databaseFail() {
 		if ($this->Config->getDebug())
 			die(pr($this->Db->getErrors(), 1));
 		return $this->serverBusy();
 	}
-	protected function serverBusy() {
+	public function serverBusy() {
 		header("HTTP/1.1 503 Service unavailable");
 		return $this->viewBare("503");
 	}
-	protected function notFound() {
+	public function notFound() {
 		header("HTTP/1.1 404 Not found");
 		return $this->viewDefault("404");
 	}
-	protected function accessDenied() {
+	public function accessDenied() {
 		header("HTTP/1.1 403 Forbidden");
 		return $this->viewDefault("403");
 	}
 
-	protected function accessControl($action, $args = []) {
-		return true;
-	}
 
 	protected function getName() {
 		$class = get_class($this);
