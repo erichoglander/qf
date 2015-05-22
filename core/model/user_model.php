@@ -67,6 +67,8 @@ class User_Model_Core extends Model {
 		$User = $this->getEntity("User");
 		foreach ($values as $key => $value)
 			$User->set($key, $value);
+		if ($User->id() == 1)
+			$User->set("id", 1); # admin account cannot be deactivated
 		return $User->save();
 	}
 
