@@ -23,7 +23,7 @@ class Controller {
 		$this->loadLibraries();
 	}
 
-	public function callAction($action, $args = []) {
+	public function action($action, $args = []) {
 		$action.= "Action";
 		if (!$this->connected)
 			return $this->databaseFail();

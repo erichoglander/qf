@@ -18,7 +18,7 @@ class ControllerFactory_Core {
 		$Controller = $this->getController($controller);
 		if (!is_callable([$Controller, $action."Action"]) )
 			return $Controller->notFound();
-		return $Controller->callAction($action, $args);
+		return $Controller->action($action, $args);
 	}
 
 	public function getController($controller) {
