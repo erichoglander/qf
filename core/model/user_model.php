@@ -37,36 +37,20 @@ class User_Model_Core extends Model {
 
 	public function reset($User) {
 		$link = $User->generateResetLink();
-		if ($User->save() && $this->sendMail("UserReset", $User->get("email"), ["id" => $User->id(), "link" => $link])) {
-			setmsg(t("An e-mail has been sent with further instructions."));
-			return true;
-		}
-		return false;
+		return $User->save() && $this->sendMail("UserReset", $User->get("email"), ["id" => $User->id(), "link" => $link]);
 	}
 
 	public function changePassword($User, $password) {
 		$User->set("pass", $password);
 		$User->set("reset", "");
 		$User->set("reset_time", 0);
-		if ($User->save()) {
-			setmsg(t("Your account password has been changed. You can use your new password to sign in."));
-			return true;
-		}
-		else {
-			return false;
-		}
+		 return $User->save();
 	}
 
-	public function emailConfirm($User) {
+	public function confirmEmail($User) {
 		$User->set("email_confirmation", "");
 		$User->set("email_confirmation_time", 0);
-		if ($User->save()) {
-			return true;
-		}
-		else {
-			setmsg(t("An error occurred", "error"));
-			return false;
-		}
+		return $User->save();
 	}
 	
 	public function addUser($values) {

@@ -66,8 +66,13 @@ class User_Controller_Core extends Controller {
 			$values = $Form->values();
 			$User = $this->getEntity();
 			$User->loadByEmail($values["email"]);
-			if ($this->Model->reset($User)) 
+			if ($this->Model->reset($User)) {
+				setmsg(t("An e-mail has been sent with further instructions."));
 				redirect();
+			}
+			else {
+				setmsg(t("An error occurred"), "error");
+			}
 		}
 		$this->viewData['form'] = $Form->render();
 		return $this->view("reset");
@@ -82,8 +87,13 @@ class User_Controller_Core extends Controller {
 		$Form = $this->getForm("UserChangePassword");
 		if ($Form->isSubmitted()) {
 			$values = $Form->values();
-			if ($this->Model->change_password($User, $values["password"])) 
+			if ($this->Model->change_password($User, $values["password"])) {
+				setmsg(t("Your account password has been changed. You can use your new password to sign in."));
 				redirect();
+			}
+			else {
+				setmsg(t("An error occurred"), "error");
+			}
 		}
 		$this->viewData["name"] = $User->get("name");
 		$this->viewData["form"] = $Form->render();
@@ -96,7 +106,8 @@ class User_Controller_Core extends Controller {
 		$User = $this->getEntity("User", $args[0]);
 		if (!$User->id() || !$User->verifyEmailConfirmationLink($args[1]))
 			return $this->view("confirm_email_invalid");
-		$this->Model->emailConfirm($User);
+		if (!$this->Model->confirmEmail($User))
+			setmsg(t("An error occurred", "error"));
 		return $this->view("confirm_email");
 	}
 	
@@ -104,12 +115,12 @@ class User_Controller_Core extends Controller {
 		$Form = $this->getForm("userEdit");
 		if ($Form->isSubmitted()) {
 			$User = $this->Model->addUser($Form->values());
-			if (!$User) {
-				setmsg(t("An error occurred", "error"));
-			}
-			else {
+			if ($User) {
 				setmsg(t("User :user added", "en", [":user" => $User->name()]));
 				redirect();
+			}
+			else {
+				setmsg(t("An error occurred", "error"));
 			}
 		}
 		$this->viewData["form"] = $Form->render();
@@ -130,12 +141,12 @@ class User_Controller_Core extends Controller {
 		]);
 		if ($Form->isSubmitted()) {
 			$User = $this->Model->editUser($Form->values());
-			if (!$User) {
-				setmsg(t("An error occurred", "error"));
-			}
-			else {
+			if (!User) {
 				setmsg(t("User :user saved", "en", [":user" => $User->name()]));
 				redirect();
+			}
+			else {
+				setmsg(t("An error occurred", "error"));
 			}
 		}
 		$this->viewData["form"] = $Form->render();
