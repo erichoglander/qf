@@ -17,16 +17,13 @@ class Db_Core {
 			$this->errors[] = $e->getMessage();
 			return false;
 		}
-		$this->database = $db;
-		$this->user = $user;
-		$this->pass = $pass;
 		$this->db->query("SET NAMES UTF8");
 		$this->db->query("SET COLLATION_CONNECTION=UTF8_SWEDISH_CI");
 		return true;
 	}
 	
-	public function dump($file) {
-		exec("mysqldump ".$this->database." --password=".$this->pass." --user=".$this->user." --single-transaction > ".$file);
+	public function dump($file, $database, $user, $pass) {
+		exec("mysqldump ".$database." --password=".$pass." --user=".$user." --single-transaction > ".$file);
 		return true;
 	}
 

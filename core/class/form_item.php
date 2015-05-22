@@ -246,8 +246,6 @@ class FormItem {
 
 	protected function itemClass() {
 		$class = "form-item ".cssClass("form-type-".$this->type)." ".cssClass("form-name-".$this->name);
-		if ($this->type != $this->inputType())
-			$class.= " ".cssClass("form-type-".$this->inputType());
 		if ($this->required)
 			$class.= " form-item-required";
 		if ($this->error)
@@ -287,8 +285,6 @@ class FormItem {
 			$names[] = $prefix.$d.$this->template;
 		}
 		$names[] = $prefix.$d.$this->type;
-		if ($this->type != $this->inputType())
-			$names[] = $prefix.$d.$this->inputType();
 		$names[] = $prefix;
 		foreach ($names as $name) {
 			$path = DOC_ROOT."/extend/template/form/".$name.".php";

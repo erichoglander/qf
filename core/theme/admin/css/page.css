@@ -23,6 +23,7 @@ ul.breadcrumbs li + li:before {
 	content: "/ ";
 }
 
+a.btn,
 .btn {
 	background: none;
 	color: #333;

@@ -20,6 +20,10 @@ class UserEdit_Form_Core extends Form {
 	}
 	
 	public function structure() {
+		$role_rows = $this->Db->getRows("SELECT * FROM `role` ORDER BY title ASC");
+		$roles = [];
+		foreach ($role_rows as $row)
+			$roles[$row->id] = t($row->title);
 		$structure = [
 			"name" => "user_edit",
 			"items" => [
@@ -43,6 +47,12 @@ class UserEdit_Form_Core extends Form {
 				"password_confirm" => [
 					"type" => "password",
 					"label" => t("Confirm password"),
+				],
+				"roles" => [
+					"type" => "checkboxes",
+					"label" => t("Roles"),
+					"options" => $roles,
+					"value" => $this->get("roles"),
 				],
 				"status" => [
 					"type" => "checkbox",

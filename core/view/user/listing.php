@@ -3,7 +3,7 @@ $this->Html->h1 = $this->Html->title = t("Users");
 $this->Html->breadcrumbs[] = t("Users");
 ?>
 
-<a class="btn" href="/user/add">Add user</a>
+<a class="btn btn-primary" href="/user/add">Add user</a>
 
 <table class="striped">
 	<thead>
@@ -24,10 +24,10 @@ $this->Html->breadcrumbs[] = t("Users");
 			<td><?=$User->get("email")?></td>
 			<td><?=($User->get("status") ? t("Yes") : t("No"))?></td>
 			<td><?php 
-			foreach ($User->roles as $i => $role) { 
+			foreach ($User->get("roles") as $i => $role) { 
 				if ($i != 0)
 					print ", ";
-				print $role->name; 
+				print t($role->title);
 			} 
 			?></td>
 			<td class="actions">

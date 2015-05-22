@@ -17,13 +17,13 @@ class User_Entity_Core extends Entity {
 	public function load($id) {
 		if (!parent::load($id))
 			return false;
-		$this->roles = $this->Db->getRows(
+		$this->set("roles", $this->Db->getRows(
 				"SELECT `role`.* FROM `role` 
 				INNER JOIN `user_role` ON 
 					`user_role`.role_id = `role`.id
 				WHERE 
 					`user_role`.user_id = :id", 
-				[":id" => $this->id()]);
+				[":id" => $this->id()]));
 		return true;
 	}
 

@@ -1,3 +1,3 @@
 <?php foreach ($options as $key => $val) { ?>
-	<label class="form-label checkbox-label"><input <?=$attributes?> value="<?=$key?>"<?=($key == $value && strlen($key) == strlen($value) ? " checked" : "")?> <?=$val?></label>
+	<label class="form-label checkbox-label"><input <?=$attributes?> value="<?=$key?>"<?=(in_array($key, $value) ? " checked" : "")?>> <?=$val?></label>
 <?php } ?>

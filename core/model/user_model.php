@@ -64,7 +64,12 @@ class User_Model_Core extends Model {
 	}
 	
 	public function editUser($User, $values) {
-		$User = $this->getEntity("User");
+		if (!empty($values["roles"])) {
+			foreach ($values["roles"] as &$role) {
+				if (!is_object($role))
+					$role = (object) ["id" => $role];
+			}
+		}
 		foreach ($values as $key => $value)
 			$User->set($key, $value);
 		if ($User->id() == 1)

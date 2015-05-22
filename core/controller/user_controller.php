@@ -135,11 +135,15 @@ class User_Controller_Core extends Controller {
 		$User = $this->getEntity("User", $args[0]);
 		if (!$User->id())
 			return $this->notFound();
+		$roles = [];
+		foreach ($User->get("roles") as $role)
+			$roles[] = $role->id;
 		$Form = $this->getForm("userEdit", [
 			"id" => $User->id(),
 			"name" => $User->get("name"),
 			"email" => $User->get("email"),
 			"status" => $User->get("status"),
+			"roles" => $roles,
 		]);
 		if ($Form->isSubmitted()) {
 			if ($this->Model->editUser($User, $Form->values())) {

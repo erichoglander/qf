@@ -33,8 +33,6 @@ class Entity {
 	}
 
 	public function set($field, $value) {
-		if (!array_key_exists($field, $this->schema['fields']))
-			return null;
 		if (!empty($this->schema['fields'][$field]['serialize']))
 			$value = serialize($value);
 		if (!empty($this->schema['fields'][$field]['json']))
