@@ -16,4 +16,10 @@ if (file_exists(DOC_ROOT."/extend/inc/constants.php"))
 if (file_exists(DOC_ROOT."/extend/inc/functions.php"))
 	require_once(DOC_ROOT."/extend/inc/functions.php");
 
-$ControllerFactory = newClass("ControllerFactory");
+$Config = newClass("Config");
+$Db = newClass("Db");
+$Db->debug = $Config->getDebug();
+$dbc = $Config->getDatabase();
+$Db->connect($dbc['user'], $dbc['pass'], $dbc['db'], $dbc['host']);
+
+$ControllerFactory = newClass("ControllerFactory", $Config, $Db);

@@ -5,27 +5,37 @@ class Controller {
 	protected $action, $viewData = [];
 	protected $Config, $Db, $Model, $User, $Io;
 
-	public function __construct($Config, $Db) {
+	public function __construct($Config, $Db, $init = true) {
 		$this->Config = &$Config;
 		$this->Db = &$Db;
 		$this->Io = newClass("Io");
 		$this->name = $this->getName();
-		$this->User = $this->getUser();
-		$this->Model = $this->getModel();
-		$this->loadLibraries();
+		if ($this->Db->connected) {
+			$this->Acl = newClass("Acl", $this->Db);
+			$this->User = $this->getUser();
+			$this->Model = $this->getModel();
+			if ($init) {
+				$this->defaultViewData();
+				$this->loadLibraries();
+				$this->loadMenus();
+			}
+		}
+		else {
+			return $this->databaseFail();
+		}
 	}
 
 	public function action($action, $args = []) {
 		$action.= "Action";
-		if (!$this->access($action, $args))
+		if (!$this->Acl->access($this->User, $this->acl($action, $args), $args))
 			return $this->accessDenied();
 		if (!method_exists($this, $action)) 
 			return $this->notFound();
 		return $this->$action($args);
 	}
 
-	public function access($action, $args = []) {
-		return true;
+	public function acl($action, $args = []) {
+		return null;
 	}
 
 	public function internalError() {
@@ -53,6 +63,14 @@ class Controller {
 		setmsg(t("An error occurred"), "error");
 	}
 
+
+	protected function uriAccess($uri) {
+		$CF = newClass("ControllerFactory", $this->Config, $this->Db);
+		$request = $CF->parseUri($uri);
+		$Controller = $CF->getController($request["controller"], false);
+		$acl = $Controller->acl($request["action"], $request["args"]);
+		return $this->Acl->access($this->User, $acl, $request["args"]);
+	}
 
 	protected function getName() {
 		$class = get_class($this);
@@ -92,7 +110,47 @@ class Controller {
 				if ($path)
 					require_once($path);
 			}
+			$this->viewData["html"]["css"] = array_merge($this->viewData["html"]["css"], $Library->getCss());
+			$this->viewData["html"]["js"] = array_merge($this->viewData["html"]["js"], $Library->getJs());
 		}
+	}
+
+	protected function loadMenus() {
+		foreach ($this->Config->getMenus() as $key => $menu) {
+			if (!empty($menu["acl"]) && !$this->Acl->access($this->User, $menu["acl"]))
+				continue;
+			$this->viewData["html"]["menu"][$key] = $this->menuAccess($menu);
+			if (!empty($menu["body_class"]))
+				$this->viewData["html"]["body_class"][] = cssClass($menu["body_class"]);
+		}
+	}
+
+	protected function menuAccess($menu) {
+		if (array_key_exists("href", $menu)) {
+			if (!$this->uriAccess($menu["href"]))
+				unset($menu["href"]);
+		}
+		if (!empty($menu["links"])) {
+			foreach ($menu["links"] as $key => $link) {
+				$re = $this->menuAccess($link);
+				if (!$re)
+					unset($menu["links"][$key]);
+				else
+					$menu["links"][$key] = $re;
+			}
+		}
+		if (!array_key_exists("href", $menu) && empty($menu["links"]))
+			return [];
+		return $menu;
+	}
+
+	protected function defaultViewData() {
+		$this->viewData["html"] = [
+			"menu" => [],
+			"body_class" => [],
+			"css" => [],
+			"js" => [],
+		];
 	}
 
 	protected function view($name) {

@@ -13,23 +13,21 @@ class Html_Core {
 	public $js = [];
 	public $breadcrumbs = [];
 	public $body_class = [];
-	public $menus = [];
+	public $menu = [];
 
 	public $libraries = ["FontAwesome"];
 
 	protected $Theme, $Db;
 
-	public function __construct($Db, $User) {
+	public function __construct($Db) {
 		$this->Config = newClass("Config");
 		$this->Db = &$Db;
-		$this->User = &$User;
 		$this->breadcrumbs[] = ["", t("Home")];
 	}
 
 	public function renderHtml() {
-		$this->loadLibraries();
 		$this->loadTheme();
-		$this->loadMenus();
+		$this->preRenderHtml();
 		$vars = [
 			"css" => $this->css,
 			"js" => $this->js,
@@ -41,7 +39,7 @@ class Html_Core {
 			"pre_page" => $this->pre_page,
 			"post_page" => $this->post_page,
 			"page" => $this->renderPage(),
-			"menus" => $this->menus(),
+			"menu" => $this->menus(),
 			"breadcrumbs" => $this->breadcrumbs,
 		];
 		return $this->Theme->render("html", $vars);
@@ -49,7 +47,7 @@ class Html_Core {
 
 	public function renderPage() {
 		$this->loadTheme();
-		$this->loadMenus();
+		$this->preRenderPage();
 		$vars = [
 			"h1" => $this->h1,
 			"pre_content" => $this->pre_content,
@@ -88,7 +86,7 @@ class Html_Core {
 					<li class="menu-item menu-item-'.$key.'">';
 				if (array_key_exists("href", $link)) {
 					$url = $link["href"];
-					if ($url == REQUEST_PATH || $url == REQUEST_ALIAS)
+					if (!empty($link["active"]))
 						$class.= " active";
 					if (strpos($url, "http") !== 0 && strpos($url, "#") !== 0)
 						$url = "/".$url;
@@ -109,15 +107,15 @@ class Html_Core {
 		return $html;	
 	}
 
-	public function menuAccess($key) {
-		if ($key == "admin")
-			return $this->User->id() == 1;
-		return true;
+
+	protected function preRenderHtml() {
+	}
+	protected function preRenderPage() {
 	}
 
 	protected function menus() {
 		$menus = [];
-		foreach ($this->menus as $key => $menu) 
+		foreach ($this->menu as $key => $menu) 
 			$menus[$key] = $this->renderMenu($key, $menu);
 		return $menus;
 	}
@@ -138,24 +136,6 @@ class Html_Core {
 			$this->Theme = $this->getTheme($this->theme);
 			if (!$this->Theme)
 				throw new Exception("Unable to load theme \"".$this->theme."\"");
-		}
-	}
-
-	protected function loadLibraries() {
-		foreach ($this->libraries as $lib) {
-			$Library = newClass($lib."_Library", $this->Db);
-			if (!$Library)
-				continue;
-			$this->css = array_merge($this->css, $Library->getCss());
-			$this->js = array_merge($this->css, $Library->getJs());
-		}
-	}
-
-	protected function loadMenus() {
-		foreach ($this->Config->getMenus() as $key => $menu) {
-			$this->menus[$key] = $menu;
-			if (!empty($menu["body_class"]))
-				$this->body_class[] = $menu["body_class"];
 		}
 	}
 

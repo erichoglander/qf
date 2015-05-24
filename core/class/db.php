@@ -2,6 +2,7 @@
 class Db_Core {
 
 	public $debug = false;
+	public $connected = false;
 
 	protected $errors = [];
 
@@ -19,6 +20,7 @@ class Db_Core {
 		}
 		$this->db->query("SET NAMES UTF8");
 		$this->db->query("SET COLLATION_CONNECTION=UTF8_SWEDISH_CI");
+		$this->connected = true;
 		return true;
 	}
 	

@@ -1,10 +1,16 @@
 <?php
 class User_Controller_Core extends Controller {
 
-	public function access($action, $args = []) {
-		if ($action == "add" || $action == "edit" || $action == "delete" || $action == "list" || $action == "signin")
-			return $this->User->id() == 1;
-		return true;
+	public function acl($action, $args = []) {
+		if ($action == "add" || $action == "edit")
+			return ["userAdmin", "userEdit"];
+		if ($action == "delete")
+			return ["userAdmin", "userDelete"];
+		if ($action == "list")
+			return ["userAdmin", "userList"];
+		if ($action == "signin")
+			return ["userAdmin", "userSignin"];
+		return null;
 	}
 
 	public function indexAction() {

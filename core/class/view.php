@@ -3,14 +3,17 @@ class View_Core {
 	
 	protected $controller_name;
 	protected $name;
+	protected $Acl;
 	protected $Html;
 
-	public function __construct($Db, $User, $controller_name, $name, $variables = []) {
+
+	public function __construct($Db, $Acl, $controller_name, $name, $variables = []) {
+		$this->Acl = &$Acl;
 		$this->controller_name = $controller_name;
 		$this->name = $name;
 		$this->variables = $variables;
 		if ($Db) {
-			$this->Html = newClass("Html", $Db, $User);
+			$this->Html = newClass("Html", $Db);
 			$this->Html->title = ucwords($controller_name)." ".$name;
 			$this->Html->body_class[] = cssClass("page-".$controller_name."-".$name);
 			$this->Html->body_class[] = cssClass("controller-".$controller_name);
@@ -19,6 +22,11 @@ class View_Core {
 	}
 
 	public function render() {
+		if (!empty($this->variables["html"])) {
+			foreach ($this->variables["html"] as $key => $var)
+				$this->Html->{$key} = $var;
+			unset($this->variables["html"]);
+		}
 		$path = $this->path();
 		extract($this->variables);
 		ob_start();
@@ -30,6 +38,7 @@ class View_Core {
 		}
 		return $output;
 	}
+
 
 	protected function path() {
 		$path = filePath("view/".$this->controller_name."/".$this->name.".php");

@@ -1,8 +1,8 @@
 <?php
 class Alias_Controller_Core extends Controller {
 
-	public function access($action, $args = []) {
-		return $this->User->id() == 1;
+	public function acl($action, $args = []) {
+		return "aliasAdmin";
 	}
 
 	public function indexAction() {

@@ -22,7 +22,7 @@
 	<!-- PRE PAGE -->
 	<?=$pre_page?>
 
-	<?php if (!empty($menus["admin"])) print $menus["admin"]; ?>
+	<?php if (!empty($menu["admin"])) print $menu["admin"]; ?>
 
 	<!-- PAGE -->
 	<div id="page">

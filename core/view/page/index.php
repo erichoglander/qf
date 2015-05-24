@@ -1,6 +1,4 @@
 <?php
-$this->Html->title = "Front page view";
-$this->Html->h1 = "Front page h1";
+$this->Html->h1 = $this->Html->title = "Quick Framework";
 ?>
-
-Woopdi doo
+<p>This is the default front page.</p>

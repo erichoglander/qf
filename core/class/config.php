@@ -15,6 +15,7 @@ class Config_Core {
 		$this->menus = [
 			"admin" => [
 				"body_class" => "admin-menu",
+				"acl" => "menuAdmin",
 				"links" => [
 					"home" => [
 						"faicon" => "home",

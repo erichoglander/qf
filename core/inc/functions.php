@@ -49,8 +49,11 @@ function newClass($cname) {
 	}
 	$args = func_get_args();
 	array_shift($args); // Remove the class name from argument list
-	if (empty($args))
+	if (empty($args)) {
+		if ($cname == "ControllerFactory_Core")
+			pr(debug_backtrace());
 		return new $cname();
+	}
 	else {
 		$r = new ReflectionClass($cname);
 		return $r->newInstanceArgs($args);

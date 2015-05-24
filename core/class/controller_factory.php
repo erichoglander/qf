@@ -4,31 +4,17 @@ class ControllerFactory_Core {
 	protected $Config, $Db;
 
 
-	public function __construct() {
-		$this->Config = newClass("Config");
-		$this->Db = newClass("Db");
-		$this->Db->debug = $this->Config->getDebug();
-		if (!$this->connect()) {
-			$Controller = new Controller($this->Config, $this->Db);
-			return $Controller->databaseFail();
-		}
+	public function __construct($Config, $Db) {
+		$this->Config = &$Config;
+		$this->Db = &$Db;
 	}
 
 	# uri: /controller/action/arg0/arg1/arg2/...
 	public function executeUri($uri) {
-		$uri = strtolower($uri);
-		if (strpos($uri, "/") === 0)
-			$uri = substr($uri, 1);
-		define("REQUEST_ALIAS", $uri);
-		$row = $this->Db->getRow("SELECT * FROM `alias` WHERE status = 1 && alias = :alias", [":alias" => $uri]);
-		if ($row) 
-			$uri = $row->path;
-		define("REQUEST_PATH", $uri);
-		$params = explode("/", $uri);
-		$controller = (empty($params[0]) ? "page" : strtolower($params[0]));
-		$action = (empty($params[1]) ? "index" : str_replace("-", "_", strtolower($params[1])));
-		$args = array_slice($params, 2);
-		return $this->executeControllerAction($controller, $action, $args);
+		$request = $this->parseUri($uri);
+		define("REQUEST_ALIAS", $request["alias"]);
+		define("REQUEST_PATH", $request["path"]);
+		return $this->executeControllerAction($request["controller"], $request["action"], $request["args"]);
 	}
 
 	public function executeControllerAction($controller, $action, $args = []) {
@@ -38,17 +24,28 @@ class ControllerFactory_Core {
 		return $Controller->action($action, $args);
 	}
 
-	public function getController($controller) {
-		$class = newClass($controller."_Controller", $this->Config, $this->Db);
+	public function getController($controller, $init = true) {
+		$class = newClass($controller."_Controller", $this->Config, $this->Db, $init);
 		if (!$class)
 			$class = new Controller($this->Config, $this->Db);
 		return $class;
 	}
 
-
-	protected function connect() {
-		$dbc = $this->Config->getDatabase();
-		return $this->Db->connect($dbc['user'], $dbc['pass'], $dbc['db'], $dbc['host']);
+	public function parseUri($uri) {
+		$request = [];
+		$uri = strtolower($uri);
+		if (strpos($uri, "/") === 0)
+			$uri = substr($uri, 1);
+		$request["alias"] = $uri;
+		$row = $this->Db->getRow("SELECT * FROM `alias` WHERE status = 1 && alias = :alias", [":alias" => $uri]);
+		if ($row) 
+			$uri = $row->path;
+		$request["path"] = $uri;
+		$params = explode("/", $uri);
+		$request["controller"] = (empty($params[0]) ? "page" : strtolower($params[0]));
+		$request["action"] = (empty($params[1]) ? "index" : str_replace("-", "_", strtolower($params[1])));
+		$request["args"] = array_slice($params, 2);
+		return $request;
 	}
 
 };
