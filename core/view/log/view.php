@@ -1,5 +1,5 @@
 <?php
-$this->Html->h1 = $this->Html->title = t("#:id", "en", [":id" => $Log->id()]);
+$this->Html->h1 = $this->Html->title = t("Log entry #:id", "en", [":id" => $Log->id()]);
 $this->Html->breadcrumbs[] = ["log/list", t("Logs")];
 $this->Html->breadcrumbs[] = $this->Html->title;
 ?>

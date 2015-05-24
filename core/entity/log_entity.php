@@ -1,7 +1,7 @@
 <?php
 class Log_Entity_Core extends Entity {
 	
-	public function schema() {
+	protected function schema() {
 		return [
 			"table" => "log",
 			"fields" => [
