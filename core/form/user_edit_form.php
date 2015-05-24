@@ -40,7 +40,7 @@ class UserEdit_Form_Core extends Form {
 					"value" => ($User ? $User->get("name") : null),
 					"validation" => "username",
 					"icon" => "user",
-					"focus" => true,
+					"focus" => ($User ? false : true),
 					"required" => true,
 				],
 				"email" => [

@@ -39,6 +39,7 @@ input {
 	font-family: inherit;
 	font-size: inherit;
 }
+.form-select,
 .form-textfield {
 	display: block;
 	box-sizing: border-box;
@@ -53,6 +54,7 @@ input {
 	box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset;
 	transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
 }
+.form-select:focus,
 .form-textfield:focus {
 	border-color: #66AFE9;
 	outline: 0px none;

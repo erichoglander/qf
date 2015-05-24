@@ -21,6 +21,7 @@ class UserLogin_Form extends Form {
 					"label" => t("Username"),
 					"icon" => "user",
 					"required" => true,
+					"focus" => true,
 				],
 				"password" => [
 					"type" => "password",
