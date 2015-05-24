@@ -48,4 +48,9 @@ class Acl_Core {
 		return $User->id() == 1;
 	}
 
+	/* REDIRECT ACCESS */
+	protected function redirectAdminAccess($User) {
+		return $User->id() == 1;
+	}
+
 }

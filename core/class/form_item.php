@@ -228,7 +228,7 @@ class FormItem {
 			return null;
 		$options = $this->options;
 		if ($this->empty_option)
-			$options = array_merge(["" => $this->empty_option], $options);
+			$options = ["" => $this->empty_option]+$options;
 		return $options;
 	}
 

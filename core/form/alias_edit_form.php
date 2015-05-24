@@ -12,6 +12,7 @@ class AliasEdit_Form_Core extends Form {
 	}
 
 	public function structure() {
+		$Alias = $this->get("Alias");
 		return [
 			"name" => "alias_edit",
 			"items" => [
@@ -27,6 +28,11 @@ class AliasEdit_Form_Core extends Form {
 					"label" => t("Alias"),
 					"required" => true,
 					"value" => ($Alias ? $Alias->get("alias") : null),
+				],
+				"status" => [
+					"type" => "checkbox",
+					"label" => t("Active"),
+					"value" => ($Alias ? $Alias->get("status") : true),
 				],
 				"actions" => $this->defaultActions(),
 			]

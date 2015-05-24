@@ -49,6 +49,16 @@ class Config_Core {
 							],
 						],
 					],
+					"redirect" => [
+						"title" => "Redirects",
+						"href" => "redirect/list",
+						"links" => [
+							"redirect-add" => [
+								"title" => "Add redirect",
+								"href" => "redirect/add",
+							],
+						],
+					],
 				],
 			],
 		];

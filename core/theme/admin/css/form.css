@@ -19,10 +19,12 @@
 	cursor: pointer;
 }
 
+select,
 input {
 	font-family: inherit;
 	font-size: inherit;
 }
+.form-select,
 .form-textarea,
 .form-password,
 .form-email,
