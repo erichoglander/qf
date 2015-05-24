@@ -7,7 +7,7 @@ class FormItem {
 	public $submit_data = true;
 
 	protected $type;
-	protected $label, $description;
+	protected $label, $description, $icon;
 	protected $dragable;
 	protected $add_button = "Add item";
 	protected $delete_button = "Delete item";
@@ -123,6 +123,7 @@ class FormItem {
 			"input" => $this->renderInput(),
 			"add_button" => $this->renderAddButton(),
 			"delete_button" => $this->renderDeleteButton(),
+			"icon" => $this->icon,
 			"error" => $this->getError(),
 		];
 		return renderTemplate($path, $vars);
@@ -232,11 +233,19 @@ class FormItem {
 		return $options;
 	}
 
+	protected function isTextfield() {
+		$arr = ["text", "password", "tel", "url", "email", "search", "number"];
+		return in_array($this->inputType(), $arr);
+	}
+
 	protected function inputType() {
 		return $this->type;
 	}
 	protected function inputClass() {
-		return cssClass("form-".$this->inputType());
+		$class = cssClass("form-".$this->inputType());
+		if ($this->isTextfield())
+			$class.= " form-textfield";
+		return $class;
 	}
 	protected function inputName() {
 		if (!$this->tree)
@@ -246,6 +255,10 @@ class FormItem {
 
 	protected function itemClass() {
 		$class = "form-item ".cssClass("form-type-".$this->type)." ".cssClass("form-name-".$this->name);
+		if ($this->icon)
+			$class.= " form-item-icon";
+		if ($this->isTextfield())
+			$class.= " form-item-textfield";
 		if ($this->required)
 			$class.= " form-item-required";
 		if ($this->error)

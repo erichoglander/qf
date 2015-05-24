@@ -16,8 +16,8 @@ $this->Html->breadcrumbs[] = $this->Html->title;
 	<tbody>
 	<?php foreach ($aliases as $Alias) { ?>
 		<tr>
-			<td><?=$Alias->get("path")?></td>
-			<td><?=$Alias->get("alias")?></td>
+			<td><?=xss($Alias->get("path"))?></td>
+			<td><?=xss($Alias->get("alias"))?></td>
 			<td><?=($Alias->get("status") ? t("Yes") : t("No"))?></td>
 			<td class="actions">
 				<a href="/alias/edit/<?=$Alias->id()?>"><?=t("Edit")?></a>

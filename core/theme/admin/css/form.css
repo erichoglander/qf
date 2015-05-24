@@ -1,6 +1,17 @@
+.form-error {
+	color: #A94442;
+	background-color: #F2DEDE;
+	border-color: #EBCCD1;
+	padding: 15px;
+	margin-bottom: 15px;
+	border: 1px solid transparent;
+	border-radius: 4px;
+}
+
 .form-item {
 	margin: 10px 0;
-	max-width: 400px;
+	max-width: 100%;
+	width: 400px;
 }
 .form-item:first-child {
 	margin-top: 0;
@@ -14,6 +25,10 @@
 	font-weight: normal;
 }
 
+.form-input {
+	position: relative;
+}
+
 .form-type-checkboxes .form-label,
 .form-type-checkbox .form-label {
 	cursor: pointer;
@@ -24,11 +39,7 @@ input {
 	font-family: inherit;
 	font-size: inherit;
 }
-.form-select,
-.form-textarea,
-.form-password,
-.form-email,
-.form-text {
+.form-textfield {
 	display: block;
 	box-sizing: border-box;
 	width: 100%;
@@ -42,10 +53,7 @@ input {
 	box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset;
 	transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
 }
-.form-textarea:focus,
-.form-password:focus,
-.form-email:focus,
-.form-text:focus {
+.form-textfield:focus {
 	border-color: #66AFE9;
 	outline: 0px none;
 	box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset, 0px 0px 8px rgba(102, 175, 233, 0.6);
@@ -53,9 +61,62 @@ input {
 .form-type-actions .form-item {
 	float: left;
 	margin: 0 10px 0 0;
+	width: auto;
 }
 .form-type-actions:after {
 	clear: both;
 	content: "";
 	display: block;
+}
+
+.form-item-error .form-label {
+	color: #A94442;
+}
+.form-item-error .form-textfield {
+	border-color: #A94442;
+	box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset;
+}
+.form-item-error .form-textfield:focus {
+	border-color: #843534;
+	box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset, 0px 0px 6px #CE8483;
+}
+
+.form-input-error {
+	color: #A94442;
+}
+
+.form-item-icon .form-input {
+	display: table;
+	width: 100%;
+}
+.form-item-icon .form-textfield {
+	display: table-cell;
+	border-radius: 0 4px 4px 0;
+	width: 100%;
+}
+.form-icon-addon {
+	display: table-cell;
+	width: 1%;
+	vertical-align: middle;
+	font-size: 16px;
+	padding: 0 12px;
+	line-height: 14px;
+	color: #555;
+	text-align: center;
+	background-color: #EEE;
+	border: 1px solid #CCC;
+	border-radius: 4px 0 0 4px;
+	border-right: 0;
+	box-sizing: border-box;
+}
+
+.form-icon-feedback {
+	position: absolute;
+	right: 10px;
+	top: 0;
+	font-size: 18px;
+	line-height: 34px;
+}
+.form-icon-error {
+	color: #A94442;
 }

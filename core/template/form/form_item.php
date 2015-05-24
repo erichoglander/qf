@@ -12,12 +12,18 @@ else {
 ?>
 	<div class="form-input">
 		<?=$input_prefix?>
+		<?php if (!empty($icon)) { ?>
+			<?=FontAwesome\Icon($icon, "form-icon-addon")?>
+		<?php } ?>
 		<?=$input?>
 		<?php if (!empty($error)) { ?>
-			<div class="form-input-error"><?=$error?></div>
+			<?=FontAwesome\Icon("times", "form-icon-feedback form-icon-error")?>
 		<?php } ?>
 		<?=$input_suffix?>
 	</div>
+	<?php if (!empty($error)) { ?>
+		<div class="form-input-error"><?=$error?></div>
+	<?php } ?>
 <?php
 }
 ?>

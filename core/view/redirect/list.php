@@ -17,8 +17,8 @@ $this->Html->breadcrumbs[] = $this->Html->title;
 	<tbody>
 	<?php foreach ($redirects as $Redirect) { ?>
 		<tr>
-			<td><?=$Redirect->get("source")?></td>
-			<td><?=$Redirect->get("target")?></td>
+			<td><?=xss($Redirect->get("source"))?></td>
+			<td><?=xss($Redirect->get("target"))?></td>
 			<td><?=$Redirect->get("code")?></td>
 			<td><?=($Redirect->get("status") ? t("Yes") : t("No"))?></td>
 			<td class="actions">

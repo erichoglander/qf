@@ -38,6 +38,8 @@ class UserEdit_Form_Core extends Form {
 					"type" => "text",
 					"label" => t("Username"),
 					"value" => ($User ? $User->get("name") : null),
+					"validation" => "username",
+					"icon" => "user",
 					"focus" => true,
 					"required" => true,
 				],
@@ -50,10 +52,12 @@ class UserEdit_Form_Core extends Form {
 				"pass" => [
 					"type" => "password",
 					"label" => t("Password"),
+					"icon" => "key",
 				],
 				"pass_confirm" => [
 					"type" => "password",
 					"label" => t("Confirm password"),
+					"icon" => "key",
 				],
 				"roles" => [
 					"type" => "checkboxes",
