@@ -5,6 +5,7 @@
 	margin: 100px auto;
 }
 
+
 ul.breadcrumbs {
 	padding: 0;
 	margin: 0 0 20px;
@@ -22,6 +23,7 @@ ul.breadcrumbs li + li:before {
 	color: #ccc;
 	content: "/ ";
 }
+
 
 ul.system-messages {
 	padding: 0;
@@ -58,6 +60,7 @@ li.system-message-error {
 	background-color: #F2DEDE;
 	border-color: #EBCCD1;
 }
+
 
 a.btn,
 .btn {

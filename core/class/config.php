@@ -4,7 +4,7 @@ class Config_Core {
 	protected $site_name;
 	protected $database;
 	protected $subdomain, $https;
-	protected $menu = [];
+	protected $menus = [];
 	protected $debug = false;
 	protected $user_registration = "closed";
 	protected $libraries = ["FontAwesome"];
@@ -12,13 +12,37 @@ class Config_Core {
 
 	public function __construct() {
 		$this->site_name = BASE_DOMAIN;
-		$this->menu = [
+		$this->menus = [
 			"admin" => [
 				"body_class" => "admin-menu",
 				"links" => [
 					"home" => [
-						"title" => "Home",
+						"faicon" => "home",
 						"href" => "",
+					],
+					"logout" => [
+						"faicon" => "sign-out",
+						"href" => "user/logout",
+					],
+					"user" => [
+						"title" => "Users",
+						"href" => "user/list",
+						"links" => [
+							"user-add" => [
+								"title" => "Add user",
+								"href" => "user/add",
+							],
+						],
+					],
+					"alias" => [
+						"title" => "Aliases",
+						"href" => "alias/list",
+						"links" => [
+							"alias-add" => [
+								"title" => "Add alias",
+								"href" => "alias/add",
+							],
+						],
 					],
 				],
 			],
@@ -37,8 +61,8 @@ class Config_Core {
 	public function getHttps() {
 		return $this->https;
 	}
-	public function getMenu() {
-		return $this->menu;
+	public function getMenus() {
+		return $this->menus;
 	}
 	public function getDebug() {
 		return $this->debug;

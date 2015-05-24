@@ -17,8 +17,12 @@
 </head>
 <body class="<?=implode(" ", $body_class)?>">
 
+	<!-- This website uses Font Awesome by Dave Gandy - http://fontawesome.io -->
+
 	<!-- PRE PAGE -->
 	<?=$pre_page?>
+
+	<?php if (!empty($menus["admin"])) print $menus["admin"]; ?>
 
 	<!-- PAGE -->
 	<div id="page">

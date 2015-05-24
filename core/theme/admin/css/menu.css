@@ -1,0 +1,74 @@
+ul.menu {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+ul.menu li {
+	padding: 0;
+	margin: 0;
+}
+ul.menu:after {
+	clear: both;
+	content: "";
+	display: block;
+}
+li.menu-item .fa {
+	line-height: inherit;
+}
+
+#menu-admin {
+	z-index: 1001;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+}
+#menu-admin ul.menu {
+	background: #111;
+}
+#menu-admin ul.menu li {
+	list-style-type: none;
+	margin: 0;
+}
+#menu-admin ul.menu li.menu-item-logout {
+	float: right;
+}
+#menu-admin ul.menu-depth-1 {
+	width: 100%;
+}
+#menu-admin ul.menu-depth-1 li {
+	float: left;
+	position: relative;
+}
+#menu-admin ul.menu li .menu-link {
+	color: #fff;
+	padding: 4px 10px;
+	font-size: 12px;
+	font-weight: normal;
+	line-height: 22px;
+	display: block;
+	text-decoration: none;
+}
+#menu-admin ul.menu li span.menu-link {
+	cursor: default;
+}
+#menu-admin ul.menu li .menu-link:hover {
+	background: #337ab7;
+}
+#menu-admin ul.menu ul.menu {
+	display: none;
+	position: absolute;
+	top: 30px;
+	left: 0;
+	width: 150px;
+}
+#menu-admin ul.menu li:hover > ul.menu {
+	display: block;
+}
+#menu-admin ul.menu ul.menu li {
+	width: 100%;
+}
+#menu-admin ul.menu ul.menu ul.menu {
+	top: 0;
+	left: 150px;
+}
