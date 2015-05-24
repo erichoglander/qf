@@ -59,22 +59,7 @@ class UserEdit_Form_Core extends Form {
 					"label" => t("Active"),
 					"value" => $this->get("status", 1),
 				],
-				"actions" => [
-					"type" => "actions",
-					"items" => [
-						"submit" => [
-							"type" => "submit",
-							"value" => t("Save"),
-						],
-						"cancel" => [
-							"type" => "button",
-							"value" => t("Cancel"),
-							"attributes" => [
-								"onclick" => "window.history.go(-1)",
-							],
-						],
-					],
-				],
+				"actions" => $this->defaultActions(),
 			],
 		];
 		return $structure;

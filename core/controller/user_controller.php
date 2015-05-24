@@ -10,7 +10,7 @@ class User_Controller_Core extends Controller {
 	public function indexAction() {
 		if ($this->User->id())
 			redirect("user/list");
-		return $this->login();
+		return $this->loginAction();
 	}
 
 	public function loginAction() {
@@ -52,7 +52,7 @@ class User_Controller_Core extends Controller {
 			else if ($status == "register_login")
 				setmsg(t("Registration complete. You've been signed in to your new account."));
 			else if (!$status)
-				setmsg(t("An error occurred", "error"));
+				$this->defaultError();
 			if ($status)
 				redirect();
 		}
@@ -73,7 +73,7 @@ class User_Controller_Core extends Controller {
 				redirect();
 			}
 			else {
-				setmsg(t("An error occurred"), "error");
+				$this->defaultError();
 			}
 		}
 		$this->viewData['form'] = $Form->render();
@@ -94,7 +94,7 @@ class User_Controller_Core extends Controller {
 				redirect();
 			}
 			else {
-				setmsg(t("An error occurred"), "error");
+				$this->defaultError();
 			}
 		}
 		$this->viewData["name"] = $User->get("name");
@@ -109,7 +109,7 @@ class User_Controller_Core extends Controller {
 		if (!$User->id() || !$User->verifyEmailConfirmationLink($args[1]))
 			return $this->view("confirm_email_invalid");
 		if (!$this->Model->confirmEmail($User))
-			setmsg(t("An error occurred", "error"));
+			$this->defaultError();
 		return $this->view("confirm_email");
 	}
 	
@@ -151,7 +151,7 @@ class User_Controller_Core extends Controller {
 				redirect("user/list");
 			}
 			else {
-				setmsg(t("An error occurred", "error"));
+				$this->defaultError();
 			}
 		}
 		$this->viewData["form"] = $Form->render();
@@ -171,7 +171,7 @@ class User_Controller_Core extends Controller {
 				redirect("user/list");
 			}
 			else {
-				setmsg(t("An error occurred", "error"));
+				$this->defaultError();
 			}
 		}
 		$this->viewData["form"] = $Form->render();

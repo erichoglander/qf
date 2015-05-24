@@ -167,6 +167,29 @@ class Form {
 		$this->items[$name] = $class;
 	}
 
+	protected function defaultActions($submit = null, $cancel = null) {
+		if (!$submit)
+			$submit = t("Save");
+		if (!$cancel)
+			$cancel = t("Cancel");
+		return [
+			"type" => "actions",
+			"items" => [
+				"submit" => [
+					"type" => "submit",
+					"value" => $submit,
+				],
+				"cancel" => [
+					"type" => "button",
+					"value" => $cancel,
+					"attributes" => [
+						"onclick" => "window.history.go(-1)",
+					],
+				],
+			],
+		];
+	}
+
 	protected function verifyToken() {
 		return $_POST['form_token'] === $this->token();
 	}

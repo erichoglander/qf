@@ -3,7 +3,7 @@ $this->Html->h1 = $this->Html->title = t("Users");
 $this->Html->breadcrumbs[] = t("Users");
 ?>
 
-<a class="btn btn-primary" href="/user/add">Add user</a>
+<a class="btn btn-primary" href="/user/add"><?=t("Add user")?></a>
 
 <table class="striped">
 	<thead>
@@ -13,6 +13,8 @@ $this->Html->breadcrumbs[] = t("Users");
 			<th><?=t("E-mail")?></th>
 			<th><?=t("Active")?></th>
 			<th><?=t("Roles")?></th>
+			<th><?=t("Created")?></th>
+			<th><?=t("Last login")?></th>
 			<th class="actions"><?=t("Actions")?></th>
 		</tr>
 	</thead>
@@ -30,6 +32,8 @@ $this->Html->breadcrumbs[] = t("Users");
 				print t($role->title);
 			} 
 			?></td>
+			<td><?=date("Y-m-d H:i:s", $User->get("created"))?></td>
+			<td><?=date("Y-m-d H:i:s", $User->get("login"))?></td>
 			<td class="actions">
 				<a href="/user/edit/<?=$User->id()?>"><?=t("Edit")?></a>
 				<?php if ($User->id() != 1) { ?>

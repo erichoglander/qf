@@ -2,31 +2,21 @@
 class Controller {
 
 	public $args = [];
-	public $connected;
 	protected $action, $viewData = [];
 	protected $Config, $Db, $Model, $User, $Io;
 
-	public function __construct() {
-		$this->Config = newClass("Config");
-		$this->Db = newClass("Db");
-		$this->Db->debug = $this->Config->getDebug();
+	public function __construct($Config, $Db) {
+		$this->Config = &$Config;
+		$this->Db = &$Db;
 		$this->Io = newClass("Io");
 		$this->name = $this->getName();
-		if ($this->connect()) {
-			$this->connected = true;
-			$this->User = $this->getUser();
-			$this->Model = $this->getModel();
-		}
-		else {
-			$this->connected = false;
-		}
+		$this->User = $this->getUser();
+		$this->Model = $this->getModel();
 		$this->loadLibraries();
 	}
 
 	public function action($action, $args = []) {
 		$action.= "Action";
-		if (!$this->connected)
-			return $this->databaseFail();
 		if (!$this->access($action, $args))
 			return $this->accessDenied();
 		if (!method_exists($this, $action)) 
@@ -58,6 +48,9 @@ class Controller {
 	public function accessDenied() {
 		header("HTTP/1.1 403 Forbidden");
 		return $this->viewDefault("403");
+	}
+	public function defaultError() {
+		setmsg(t("An error occurred"), "error");
 	}
 
 
@@ -130,11 +123,6 @@ class Controller {
 			die($e->getMessage());
 			return $this->internalError();
 		}
-	}
-
-	protected function connect() {
-		$dbc = $this->Config->getDatabase();
-		return $this->Db->connect($dbc['user'], $dbc['pass'], $dbc['db'], $dbc['host']);
 	}
 
 };
