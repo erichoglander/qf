@@ -79,7 +79,7 @@ class User_Entity_Core extends Entity {
 	public function allowLogin() {
 		if ($this->get("status") != 1)
 			return false;
-		if ($this->get("email_confirmation") && REQUEST_TIME - $this->get("created") > 60*60*24)
+		if ($this->get("email_confirmation") && REQUEST_TIME - $this->get("email_confirmation_time") > 60*60*24)
 			return false;
 		return true;
 	}
