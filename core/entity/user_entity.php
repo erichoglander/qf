@@ -1,6 +1,9 @@
 <?php
 class User_Entity_Core extends Entity {
 
+	public $login_error;
+
+
 	public function save() {
 		if (!$this->get("pass"))
 			unset($this->fields["pass"]); # Don't set an empty password
@@ -72,8 +75,57 @@ class User_Entity_Core extends Entity {
 		$this->save();
 	}
 
-	public function authorize($pass) {
-		return $this->allowLogin() && $this->hashPassword($pass, $this->get("salt")) === $this->get("pass");
+	public function authorize($name, $pass) {
+		if ($this->ipFloodProtection()) {
+			$this->login_error = "flood";
+			return false;
+		}
+		if (!$this->loadByName($name)) {
+			$this->login_error = "invalid_user";
+			return false;
+		}
+		if (!$this->allowLogin()) {
+			$this->login_error = "inactive";
+			return false;
+		}
+		if ($this->userFloodProtection()) {
+			$this->login_error = "flood";
+			return false;
+		}
+		if (!$this->hashPassword($pass, $this->get("salt")) === $this->get("pass")) {
+			$this->login_error = "invalid_pass";
+			return false;
+		}
+		return true;
+	}
+
+	public function ipFloodProtection() {
+		$n = $this->Db->numRows("
+			SELECT id FROM `login_attempt` 
+			WHERE 
+				ip = :ip &&
+				created > :time", 
+			[
+				":ip" => $_SERVER["REMOTE_ADDR"],
+				":time" => REQUEST_TIME - 60*60*12
+			]);
+		if ($n > 3)
+			return true;
+		return false;
+	}
+	public function userFloodProtection() {
+		$n = $this->Db->numRows("
+			SELECT id FROM `login_attempt` 
+			WHERE 
+				user_id = :id &&
+				created > :time", 
+			[
+				":id" => $this->id(),
+				":time" => REQUEST_TIME - 60*60*12
+			]);
+		if ($n > 5)
+			return true;
+		return false;
 	}
 
 	public function allowLogin() {

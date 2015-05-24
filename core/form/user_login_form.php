@@ -4,8 +4,18 @@ class UserLogin_Form extends Form {
 
 	public function validate($values) {
 		$User = newClass("User_Entity", $this->Db);
-		if (!$User->loadByName($values['name']) || !$User->authorize($values['password'])) {
-			$this->setError(t("Incorrect username or password"));
+		if (!$User->authorize($values["name"], $values['password'])) {
+			$this->Db->insert("login_attempt", [
+				"created" => REQUEST_TIME,
+				"ip" => $_SERVER["REMOTE_ADDR"],
+				"user_id" => (int) $User->id(),
+			]);
+			if ($User->login_error == "flood")
+				$this->setError(t("You have attempted to sign in too many times."));
+			else if ($User->login_error == "inactive")
+				$this->setError(t("Account is inactive."));
+			else
+				$this->setError(t("Wrong username or password."));
 			return false;
 		}
 		return true;
