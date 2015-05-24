@@ -2,6 +2,8 @@
 class User_Entity_Core extends Entity {
 
 	public function save() {
+		if (!$this->get("pass"))
+			unset($this->fields["pass"]); # Don't set an empty password
 		if (substr($this->get("pass"), 0, 2) !== "1#") {
 			$this->set("salt", $this->generateSalt());
 			$this->set("pass", $this->hashPassword($this->get("pass"), $this->get("salt")));

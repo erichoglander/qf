@@ -49,8 +49,10 @@ class User_Controller_Core extends Controller {
 		$Form = $this->getForm("UserRegister");
 		if ($Form->isSubmitted()) {
 			$status = $this->Model->register($Form->values());
-			if ($status == "email_confirmation")
-				setmsg(t("You've been signed into your new account. You must confirm your e-mail address within 24 hours."), "success");
+			if ($status == "email_confirmation") {
+				setmsg(t("You've been registered and signed into your new account. "), "success");
+				setmsg(t("You must confirm your e-mail address within 24 hours."), "warning");
+			}
 			else if ($status == "admin_approval")
 				setmsg(t("Your account registration is now pending approval from the site administrator."), "success");
 			else if ($status == "admin_login")
@@ -120,10 +122,10 @@ class User_Controller_Core extends Controller {
 	}
 	
 	public function addAction() {
-		$User = $this->getEntity("User");
 		$Form = $this->getForm("userEdit");
 		if ($Form->isSubmitted()) {
-			if ($this->Model->addUser($User, $Form->values())) {
+			$User = $this->Model->addUser($Form->values());
+			if ($User) {
 				setmsg(t("User :user added", "en", [":user" => $User->name()]), "success");
 				redirect("user/list");
 			}
@@ -160,8 +162,19 @@ class User_Controller_Core extends Controller {
 			redirect("user/login");
 		$Form = $this->getForm("userSettings", ["User" => $this->User]);
 		if ($Form->isSubmitted()) {
-
+			$re = $this->Model->saveSettings($this->User, $Form->values());
+			if (empty($re)) {
+				$this->defaultError();
+			}
+			else {
+				setmsg(t("Settings saved!"), "success");
+				if ($re === "email_confirmation")
+					setmsg(t("You must confirm your e-mail within 24 hours."), "warning");
+				refresh();
+			}
 		}
+		$this->viewData["form"] = $Form->render();
+		return $this->view("settings");
 	}
 
 	public function deleteAction($args = []) {

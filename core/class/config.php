@@ -25,6 +25,10 @@ class Config_Core {
 						"faicon" => "sign-out",
 						"href" => "user/logout",
 					],
+					"settings" => [
+						"faicon" => "cog",
+						"href" => "user/settings",
+					],
 					"user" => [
 						"title" => "Users",
 						"href" => "user/list",

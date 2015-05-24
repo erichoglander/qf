@@ -3,8 +3,8 @@ class UserEdit_Form_Core extends Form {
 
 	public function validate($values) {
 		$User = $this->get("User");
-		if ($values['password'] != $values["password_confirm"]) {
-			$this->setError(t("Passwords mismatch"), "password");
+		if ($values["pass"] != $values["pass_confirm"]) {
+			$this->setError(t("Passwords mismatch"), "pass");
 			return false;
 		}
 		$row = $this->Db->getRow("SELECT id FROM `user` WHERE name = :name", [":name" => $values["name"]]);
@@ -47,11 +47,11 @@ class UserEdit_Form_Core extends Form {
 					"value" => ($User ? $User->get("email") : null),
 					"required" => true,
 				],
-				"password" => [
+				"pass" => [
 					"type" => "password",
 					"label" => t("Password"),
 				],
-				"password_confirm" => [
+				"pass_confirm" => [
 					"type" => "password",
 					"label" => t("Confirm password"),
 				],

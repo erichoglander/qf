@@ -30,6 +30,7 @@ li.menu-item .fa {
 	list-style-type: none;
 	margin: 0;
 }
+#menu-admin ul.menu li.menu-item-settings,
 #menu-admin ul.menu li.menu-item-logout {
 	float: right;
 }

@@ -16,8 +16,7 @@ class User_Model_Core extends Model {
 		}
 		else {
 			if ($registration == "email_confirmation") {
-				$link = $User->generateEmailConfirmationLink();
-				if ($User->save() && $this->sendMail("UserEmailConfirmation", ["id" => $User->id(), "link" => $link])) {
+				if ($this->sendEmailConfirmation($User)) {
 					$User->login();
 					return "email_confirmation";
 				}
@@ -33,6 +32,12 @@ class User_Model_Core extends Model {
 					return "register_login";
 			}
 		}
+		return null;
+	}
+
+	public function sendEmailConfirmation($User) {
+		$link = $User->generateEmailConfirmationLink();
+		return $User->save() && $this->sendMail("UserEmailConfirmation", $User->get("email"), ["id" => $User->id(), "link" => $link]);
 	}
 
 	public function reset($User) {
@@ -53,8 +58,12 @@ class User_Model_Core extends Model {
 		return $User->save();
 	}
 	
-	public function addUser($User, $values) {
-		return $this->editUser($User, $values);
+	public function addUser($values) {
+		$User = $this->getEntity("User");
+		if ($this->editUser($User, $values))
+			return $User;
+		else
+			return null;
 	}
 	
 	public function editUser($User, $values) {
@@ -69,6 +78,22 @@ class User_Model_Core extends Model {
 		if ($User->id() == 1)
 			$User->set("id", 1); # admin account cannot be deactivated
 		return $User->save();
+	}
+
+	public function saveSettings($User, $values) {
+		$change_email = $values["email"] != $User->get("email");
+		foreach ($values as $key => $value)
+			$User->set($key, $value);
+		if ($change_email) {
+			if ($this->sendEmailConfirmation($User))
+				return "email_confirmation";
+			else
+				return false;
+		}
+		if ($User->save())
+			return true;
+		else
+			return false;
 	}
 
 	public function deleteUser($User)  {
