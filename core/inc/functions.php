@@ -140,8 +140,26 @@ function clearmsgs() {
 	unset($_SESSION["sysmsg"]);
 }
 
-function addlog($category, $subject, $data = null) {
-	// TODO: Logging
+function addlog($Db, $category, $text, $data = null, $type = "info") {
+	$data = [
+		"user_id" => (!empty($_SESSION["user_id"]) ? $_SESSION["user_id"] : 0),
+		"ip" => (!empty($_SERVER["REMOTE_ADDR"]) ? $_SERVER["REMOTE_ADDR"] : null),
+		"created" => REQUEST_TIME,
+		"type" => $type,
+		"category" => $category,
+		"text" => $text,
+	];
+	try {
+		$data["data"] = serialize($data);
+	}
+	catch (Exception $e) {
+		addlog($Db, "log", t("Failed to serialize data"), print_r($data,1), "error");
+		$data["data"] = null;
+	}
+	$Db->insert("log", $data);
+	$row = $Db->getRow("SELECT COUNT(id) as num FROM `log`");
+	if ($row->num > MAX_LOGS)
+		$Db->query("DELETE FROM `log` ORDER BY id ASC LIMIT 1");
 }
 
 function redirect($url = "", $redir = true) {

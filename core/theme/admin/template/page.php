@@ -14,9 +14,9 @@
 	foreach ($breadcrumbs as $i => $crumb) {
 		print '<li class="breadcrumb">';
 		if (is_array($crumb))
-			print '<a href="/'.$crumb[0].'">'.$crumb[1].'</a>';
+			print '<a href="/'.xss($crumb[0]).'">'.xss($crumb[1]).'</a>';
 		else
-			print '<span>'.$crumb.'</span>';
+			print '<span>'.xss($crumb).'</span>';
 		print '</li>';
 	} 
 	?>

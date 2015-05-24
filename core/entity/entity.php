@@ -23,12 +23,14 @@ class Entity {
 		if (!array_key_exists($field, $this->fields))
 			return $def;
 		$value = $this->fields[$field];
-		if ($this->schema["fields"][$field]["type"] == "int" || $this->schema["fields"][$field]["type"] == "uint")
-			$value = (int) $value;
-		if (!empty($this->schema["fields"][$field]["serialize"]))
-			$value = unserialize($value);
-		if (!empty($this->schema["fields"][$field]["json"]))
-			$value = json_decode($value);
+		if (array_key_exists($field, $this->schema["fields"])) {
+			if ($this->schema["fields"][$field]["type"] == "int" || $this->schema["fields"][$field]["type"] == "uint")
+				$value = (int) $value;
+			if (!empty($this->schema["fields"][$field]["serialize"]))
+				$value = unserialize($value);
+			if (!empty($this->schema["fields"][$field]["json"]))
+				$value = json_decode($value);
+		}
 		return $value;
 	}
 

@@ -48,6 +48,14 @@ class ControllerFactory_Core {
 		$uri = strtolower($uri);
 		if (strpos($uri, "/") === 0)
 			$uri = substr($uri, 1);
+		$x = strpos($uri, "?");
+		if ($x !== false) {
+			$request["query"] = substr($uri, $x+1);
+			$uri = substr($uri, 0, $x);
+		}
+		else {
+			$request["query"] = null;
+		}
 		$request["alias"] = $uri;
 		$alias = $this->Db->getRow("SELECT * FROM `alias` WHERE status = 1 && alias = :alias", [":alias" => $uri]);
 		if ($alias) 

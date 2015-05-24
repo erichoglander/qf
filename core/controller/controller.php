@@ -26,9 +26,9 @@ class Controller {
 	}
 
 	public function action($action, $args = []) {
-		$action.= "Action";
 		if (!$this->Acl->access($this->User, $this->acl($action, $args), $args))
 			return $this->accessDenied();
+		$action.= "Action";
 		if (!method_exists($this, $action)) 
 			return $this->notFound();
 		return $this->$action($args);
@@ -56,6 +56,8 @@ class Controller {
 		return $this->viewDefault("404");
 	}
 	public function accessDenied() {
+		if (!$this->User->id()) 
+			redirect("user/login?redir=".REQUEST_ALIAS);
 		header("HTTP/1.1 403 Forbidden");
 		return $this->viewDefault("403");
 	}

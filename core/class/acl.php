@@ -53,4 +53,10 @@ class Acl_Core {
 		return $User->id() == 1;
 	}
 
+
+	/* LOG ACCESS */
+	protected function logAdminAccess($User) {
+		return $User->id() == 1;
+	}
+
 }

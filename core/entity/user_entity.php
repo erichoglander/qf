@@ -73,6 +73,12 @@ class User_Entity_Core extends Entity {
 		$_SESSION['user_id'] = $this->id();
 		$this->set("login", REQUEST_TIME);
 		$this->save();
+		addlog(
+				$this->Db, 
+				"user", 
+				t("User session started for :user", "en", [":user" => $this->name()]), 
+				["id" => $this->id(), "name" => $this->get("name")],
+				"success");
 	}
 
 	public function authorize($name, $pass) {

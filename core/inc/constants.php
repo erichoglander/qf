@@ -8,3 +8,4 @@ define("IS_CLI", !empty($_SERVER['argc']));
 define("HTTP_PROTOCOL", (empty($_SERVER['HTTPS']) ? "http" : "https"));
 define("BASE_DOMAIN", str_replace("www.", "", $_SERVER['SERVER_NAME']));
 define("SITE_URL", HTTP_PROTOCOL."://".$_SERVER['HTTP_HOST']);
+define("MAX_LOGS", 100000);

@@ -39,15 +39,15 @@ li.system-message {
 li.system-message:first-child {
 	margin-top: 0;
 }
-li.system-message-success {
-	color: #3C763D;
-	background-color: #DFF0D8;
-	border-color: #D6E9C6;
-}
 li.system-message-info {
 	color: #31708F;
 	background-color: #D9EDF7;
 	border-color: #BCE8F1;
+}
+li.system-message-success {
+	color: #3C763D;
+	background-color: #DFF0D8;
+	border-color: #D6E9C6;
 }
 li.system-message-debug,
 li.system-message-warning {
@@ -127,4 +127,24 @@ tr .actions a {
 }
 tr .actions a:first-child {
 	margin-left: 0;
+}
+tr.status-info {
+	color: #31708F;
+	background-color: #D9EDF7;
+	border-color: #BCE8F1;
+}
+tr.status-success {
+	color: #3C763D;
+	background-color: #DFF0D8;
+	border-color: #D6E9C6;
+}
+tr.status-warning {
+	color: #8A6D3B;
+	background-color: #FCF8E3;
+	border-color: #FAEBCC;
+}
+tr.status-error {
+	color: #A94442;
+	background-color: #F2DEDE;
+	border-color: #EBCCD1;
 }

@@ -9,7 +9,8 @@ class Mail_Core {
 	protected $Config;
 
 
-	public function __construct() {
+	public function __construct($Db) {
+		$this->Db = &$Db;
 		$this->from = "info@".BASE_DOMAIN;
 		$this->Config = newClass("Config");
 		$this->setDefaultHeaders();
@@ -46,11 +47,11 @@ class Mail_Core {
 			$headers.= $key.": ".$val."\r\n";
 
 		if (!$this->mail($this->to, $subject, $message, $headers)) {
-			addlog("mail", "Mail failed ".$this->to." (".$this->subject.")", $data);
+			addlog($this->Db, "mail", "Mail failed ".$this->to." (".$this->subject.")", $data, "error");
 			return false;
 		}
 		else {
-			addlog("mail", "Mail sent to ".$this->to." (".$this->subject.")", $data);
+			addlog($this->Db, "mail", "Mail sent to ".$this->to." (".$this->subject.")", $data, "success");
 			return true;
 		}
 	}

@@ -59,6 +59,10 @@ class Config_Core {
 							],
 						],
 					],
+					"log" => [
+						"title" => "Logs",
+						"href" => "log/list",
+					],
 				],
 			],
 		];
