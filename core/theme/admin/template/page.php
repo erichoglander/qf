@@ -1,12 +1,10 @@
 <?php if (!empty($msgs)) { ?>
 <div id="system-messages">
-	<?php foreach ($msgs as $type => $ul) { ?>
-	<ul class="system-messages system-messages-<?=$type?>">
-		<?php foreach ($ul as $li) { ?>
-		<li class="system-message"><?=xss($li)?></li>
+	<ul class="system-messages">
+		<?php foreach ($msgs as $msg) { ?>
+		<li class="system-message system-message-<?=$msg["type"]?>"><?=xss($msg["message"])?></li>
 		<?php } ?>
 	</ul>
-	<?php } ?>
 </div>
 <?php } ?>
 

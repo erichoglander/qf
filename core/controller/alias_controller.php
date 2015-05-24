@@ -13,7 +13,7 @@ class Alias_Controller_Core extends Controller {
 		$Form = $this->getForm("AliasEdit");
 		if ($Form->isSubmitted()) {
 			if ($this->Model->addAlias($Form->values())) {
-				setmsg(t("Alias added"));
+				setmsg(t("Alias added"), "success");
 				redirect("alias/list");
 			}
 			else {
@@ -37,7 +37,7 @@ class Alias_Controller_Core extends Controller {
 		]);
 		if ($Form->isSubmitted()) {
 			if ($this->Model->editAlias($Alias, $Form->values())) {
-				setmsg(t("Alias saved"));
+				setmsg(t("Alias saved"), "success");
 				redirect("alias/list");
 			}
 			else {
@@ -59,7 +59,7 @@ class Alias_Controller_Core extends Controller {
 		]);
 		if ($Form->isSubmitted()) {
 			if ($this->Model->deleteAlias($Alias)) {
-				setmsg(t("Alias deleted"));
+				setmsg(t("Alias deleted"), "success");
 				redirect("alias/list");
 			}
 			else {

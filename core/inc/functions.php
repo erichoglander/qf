@@ -122,23 +122,19 @@ function t($str, $lang = "en", $vars = []) {
 	return $str;
 }
 
-function setmsg($msg, $type = "normal") {
+function setmsg($msg, $type = "info") {
 	if (!isset($_SESSION["sysmsg"]))
 		$_SESSION["sysmsg"] = [];
-	if (!isset($_SESSION["sysmsg"][$type]))
-		$_SESSION["sysmsg"][$type] = [];
-	$_SESSION["sysmsg"][$type][] = $msg;
+	$_SESSION["sysmsg"][] = [
+		"type" => $type,
+		"message" => $msg,
+	];
 }
-function getmsgs($type = null) {
-	if ($type)
-		return (isset($_SESSION["sysmsg"][$type]) ? $_SESSION["sysmsg"][$type] : null);
+function getmsgs() {
 	return (isset($_SESSION["sysmsg"]) ? $_SESSION["sysmsg"] : null);
 }
-function clearmsgs($type = null) {
-	if ($type)
-		unset($_SESSION["sysmsg"][$type]);
-	else
-		unset($_SESSION["sysmsg"]);
+function clearmsgs() {
+	unset($_SESSION["sysmsg"]);
 }
 
 function addlog($category, $subject, $data = null) {

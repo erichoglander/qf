@@ -22,7 +22,7 @@ class User_Controller_Core extends Controller {
 			$User = $this->getEntity("User");
 			$User->loadByName($values["name"]);
 			$User->login();
-			setmsg(t("You have been signed in"));
+			setmsg(t("You have been signed in"), "success");
 			redirect();
 		}
 		$this->viewData["form"] = $Form->render();
@@ -31,7 +31,7 @@ class User_Controller_Core extends Controller {
 
 	public function logoutAction() {
 		if ($this->User->id()) {
-			setmsg(t("You have been signed out"));
+			setmsg(t("You have been signed out"), "success");
 			$this->User->logout();
 		}
 		redirect();
@@ -44,13 +44,13 @@ class User_Controller_Core extends Controller {
 		if ($Form->isSubmitted()) {
 			$status = $this->Model->register($Form->values());
 			if ($status == "email_confirmation")
-				setmsg(t("You've been signed into your new account. You must confirm your e-mail address within 24 hours."));
+				setmsg(t("You've been signed into your new account. You must confirm your e-mail address within 24 hours."), "success");
 			else if ($status == "admin_approval")
-				setmsg(t("Your account registration is now pending approval from the site administrator."));
+				setmsg(t("Your account registration is now pending approval from the site administrator."), "success");
 			else if ($status == "admin_login")
-				setmsg(t("An admin account has been created and you have been signed in."));
+				setmsg(t("An admin account has been created and you have been signed in."), "success");
 			else if ($status == "register_login")
-				setmsg(t("Registration complete. You've been signed in to your new account."));
+				setmsg(t("<b>Registration complete.</b> You've been signed in to your new account."), "success");
 			else if (!$status)
 				$this->defaultError();
 			if ($status)
@@ -69,7 +69,7 @@ class User_Controller_Core extends Controller {
 			$User = $this->getEntity();
 			$User->loadByEmail($values["email"]);
 			if ($this->Model->reset($User)) {
-				setmsg(t("An e-mail has been sent with further instructions."));
+				setmsg(t("An e-mail has been sent with further instructions."), "success");
 				redirect();
 			}
 			else {
@@ -90,7 +90,7 @@ class User_Controller_Core extends Controller {
 		if ($Form->isSubmitted()) {
 			$values = $Form->values();
 			if ($this->Model->change_password($User, $values["password"])) {
-				setmsg(t("Your account password has been changed. You can use your new password to sign in."));
+				setmsg(t("<b>Your account password has been changed.</b> You can use your new password to sign in."), "success");
 				redirect();
 			}
 			else {
@@ -118,11 +118,11 @@ class User_Controller_Core extends Controller {
 		if ($Form->isSubmitted()) {
 			$User = $this->Model->addUser($Form->values());
 			if ($User) {
-				setmsg(t("User :user added", "en", [":user" => $User->name()]));
+				setmsg(t("User :user added", "en", [":user" => $User->name()]), "success");
 				redirect("user/list");
 			}
 			else {
-				setmsg(t("An error occurred", "error"));
+				$this->defaultError();
 			}
 		}
 		$this->viewData["form"] = $Form->render();
@@ -147,7 +147,7 @@ class User_Controller_Core extends Controller {
 		]);
 		if ($Form->isSubmitted()) {
 			if ($this->Model->editUser($User, $Form->values())) {
-				setmsg(t("User :user saved", "en", [":user" => $User->name()]));
+				setmsg(t("User :user saved", "en", [":user" => $User->name()]), "success");
 				redirect("user/list");
 			}
 			else {
@@ -167,7 +167,7 @@ class User_Controller_Core extends Controller {
 		]);
 		if ($Form->isSubmitted()) {
 			if ($this->Model->deleteUser($User)) {
-				setmsg(t("User :user deleted", "en", [":user" => $User->name()]));
+				setmsg(t("User :user deleted", "en", [":user" => $User->name()]), "success");
 				redirect("user/list");
 			}
 			else {
@@ -183,7 +183,7 @@ class User_Controller_Core extends Controller {
 		if (!$User->id())
 			return $this->notFound();
 		$User->login();
-		setmsg(t("Now logged in as :user", "en", [":user" => $User->get("name")]));
+		setmsg(t("Now logged in as :user", "en", [":user" => $User->get("name")]), "success");
 		redirect("user/list");
 	}
 
