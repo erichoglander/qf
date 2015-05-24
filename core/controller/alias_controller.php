@@ -30,11 +30,7 @@ class Alias_Controller_Core extends Controller {
 		$Alias = $this->getEntity("Alias", $args[0]);
 		if (!$Alias->id())
 			return $this->notFound();
-		$Form = $this->getForm("AliasEdit", [
-			"id" => $Alias->id(),
-			"path" => $Alias->get("path"),
-			"alias" => $Alias->get("alias"),
-		]);
+		$Form = $this->getForm("AliasEdit", ["Alias" => $Alias]);
 		if ($Form->isSubmitted()) {
 			if ($this->Model->editAlias($Alias, $Form->values())) {
 				setmsg(t("Alias saved"), "success");

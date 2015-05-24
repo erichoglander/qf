@@ -53,14 +53,8 @@ class User_Model_Core extends Model {
 		return $User->save();
 	}
 	
-	public function addUser($values) {
-		$User = $this->getEntity("User");
-		foreach ($values as $key => $value)
-			$User->set($key, $value);
-		if ($User->save())
-			return $User;
-		else
-			return null;
+	public function addUser($User, $values) {
+		return $this->editUser($User, $values);
 	}
 	
 	public function editUser($User, $values) {

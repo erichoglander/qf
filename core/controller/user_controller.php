@@ -120,10 +120,10 @@ class User_Controller_Core extends Controller {
 	}
 	
 	public function addAction() {
+		$User = $this->getEntity("User");
 		$Form = $this->getForm("userEdit");
 		if ($Form->isSubmitted()) {
-			$User = $this->Model->addUser($Form->values());
-			if ($User) {
+			if ($this->Model->addUser($User, $Form->values())) {
 				setmsg(t("User :user added", "en", [":user" => $User->name()]), "success");
 				redirect("user/list");
 			}
@@ -141,16 +141,7 @@ class User_Controller_Core extends Controller {
 		$User = $this->getEntity("User", $args[0]);
 		if (!$User->id())
 			return $this->notFound();
-		$roles = [];
-		foreach ($User->get("roles") as $role)
-			$roles[] = $role->id;
-		$Form = $this->getForm("userEdit", [
-			"id" => $User->id(),
-			"name" => $User->get("name"),
-			"email" => $User->get("email"),
-			"status" => $User->get("status"),
-			"roles" => $roles,
-		]);
+		$Form = $this->getForm("userEdit", ["User" => $User]);
 		if ($Form->isSubmitted()) {
 			if ($this->Model->editUser($User, $Form->values())) {
 				setmsg(t("User :user saved", "en", [":user" => $User->name()]), "success");
@@ -162,6 +153,15 @@ class User_Controller_Core extends Controller {
 		}
 		$this->viewData["form"] = $Form->render();
 		return $this->view("edit");
+	}
+
+	public function settingsAction() {
+		if (!$this->User->id())
+			redirect("user/login");
+		$Form = $this->getForm("userSettings", ["User" => $this->User]);
+		if ($Form->isSubmitted()) {
+
+		}
 	}
 
 	public function deleteAction($args = []) {

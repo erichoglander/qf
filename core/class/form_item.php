@@ -57,7 +57,7 @@ class FormItem {
 		}
 		else {
 			$value = $this->itemValue();
-			if ($this->filter)
+			if ($this->filter && $this->options === null)
 				$value = $this->filter($value, $this->filter);
 		}
 		return $value;
@@ -97,7 +97,7 @@ class FormItem {
 				if (!is_array($value))
 					$value = [$value];
 				foreach ($value as $val) {
-					if (is_array($val) || !array_key_exists($val, $this->options())) {
+					if ($val !== null && (is_array($val) || !array_key_exists($val, $this->options()))) {
 						$this->setError(t("Invalid option"));
 						return false;
 					}

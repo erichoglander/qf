@@ -2,17 +2,18 @@
 class UserEdit_Form_Core extends Form {
 
 	public function validate($values) {
+		$User = $this->get("User");
 		if ($values['password'] != $values["password_confirm"]) {
 			$this->setError(t("Passwords mismatch"), "password");
 			return false;
 		}
 		$row = $this->Db->getRow("SELECT id FROM `user` WHERE name = :name", [":name" => $values["name"]]);
-		if ($row && $row->id != $this->get("id")) {
+		if ($row && (!$User || $row->id != $User->id())) {
 			$this->setError(t("Username unavailable"), "name");
 			return false;
 		}
 		$row = $this->Db->getRow("SELECT id FROM `user` WHERE email = :email", [":email" => $values["email"]]);
-		if ($row && $row->id != $this->get("id")) {
+		if ($row && (!$User || $row->id != $User->id())) {
 			$this->setError(t("E-mail unavailable"), "email");
 			return false;
 		}
@@ -20,24 +21,30 @@ class UserEdit_Form_Core extends Form {
 	}
 	
 	public function structure() {
+		$User = $this->get("User");
 		$role_rows = $this->Db->getRows("SELECT * FROM `role` ORDER BY title ASC");
-		$roles = [];
+		$rolesop = [];
 		foreach ($role_rows as $row)
-			$roles[$row->id] = t($row->title);
+			$rolesop[$row->id] = t($row->title);
+		$roles = [];
+		if ($User) {
+			foreach ($User->get("roles") as $role)
+				$roles[] = $role->id;
+		}
 		$structure = [
 			"name" => "user_edit",
 			"items" => [
 				"name" => [
 					"type" => "text",
 					"label" => t("Username"),
-					"value" => $this->get("name"),
+					"value" => ($User ? $User->get("name") : null),
 					"focus" => true,
 					"required" => true,
 				],
 				"email" => [
 					"type" => "email",
 					"label" => t("Email"),
-					"value" => $this->get("email"),
+					"value" => ($User ? $User->get("email") : null),
 					"required" => true,
 				],
 				"password" => [
@@ -51,13 +58,13 @@ class UserEdit_Form_Core extends Form {
 				"roles" => [
 					"type" => "checkboxes",
 					"label" => t("Roles"),
-					"options" => $roles,
-					"value" => $this->get("roles"),
+					"options" => $rolesop,
+					"value" => $roles,
 				],
 				"status" => [
 					"type" => "checkbox",
 					"label" => t("Active"),
-					"value" => $this->get("status", 1),
+					"value" => ($User ? $User->get("status") : 1),
 				],
 				"actions" => $this->defaultActions(),
 			],

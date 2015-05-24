@@ -2,8 +2,9 @@
 class AliasEdit_Form_Core extends Form {
 	
 	public function validate($values) {
+		$Alias = $this->get("Alias");
 		$row = $this->Db->getRow("SELECT * FROM `alias` WHERE alias = :alias", [":alias" => $values["alias"]]);
-		if ($row && $row->id != $this->get("id")) {
+		if ($row && (!$Alias || $row->id != $Alias->id())) {
 			$this->setError(t("Alias already exists"), "alias");
 			return false;
 		}
@@ -18,14 +19,14 @@ class AliasEdit_Form_Core extends Form {
 					"type" => "text",
 					"label" => t("Path"),
 					"required" => true,
-					"value" => $this->get("path"),
+					"value" => ($Alias ? $Alias->get("path") : null),
 					"focus" => true,
 				],
 				"alias" => [
 					"type" => "text",
 					"label" => t("Alias"),
 					"required" => true,
-					"value" => $this->get("alias"),
+					"value" => ($Alias ? $Alias->get("alias") : null),
 				],
 				"actions" => $this->defaultActions(),
 			]
