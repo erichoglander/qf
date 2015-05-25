@@ -12,6 +12,7 @@ class Controller {
 		$this->name = $this->getName();
 		if ($this->Db->connected) {
 			$this->Acl = newClass("Acl", $this->Db);
+			$this->Cache = newClass("Cache", $this->Db);
 			$this->User = $this->getUser();
 			$this->Model = $this->getModel();
 			if ($init) {
@@ -83,7 +84,7 @@ class Controller {
 
 	protected function getModel() {
 		$cname = ucwords($this->name)."_Model";
-		return newClass($cname, $this->Config, $this->Db, $this->Io, $this->User);
+		return newClass($cname, $this->Config, $this->Db, $this->Io, $this->Cache, $this->User);
 	}
 
 	protected function getUser() {
@@ -131,6 +132,12 @@ class Controller {
 		if (array_key_exists("href", $menu)) {
 			if (!$this->uriAccess($menu["href"]))
 				unset($menu["href"]);
+			else {
+				if (!empty($menu["return"])) {
+					$d = (strpos($menu["href"], "?") === false ? "?" : "&");
+					$menu["href"].= $d."redir=".REQUEST_ALIAS;
+				}
+			}
 		}
 		if (!empty($menu["links"])) {
 			foreach ($menu["links"] as $key => $link) {

@@ -24,6 +24,7 @@ class Config_Core {
 					"logout" => [
 						"faicon" => "sign-out",
 						"href" => "user/logout",
+						"return" => true,
 					],
 					"settings" => [
 						"faicon" => "cog",
@@ -62,6 +63,26 @@ class Config_Core {
 					"log" => [
 						"title" => "Logs",
 						"href" => "log/list",
+					],
+					"cache" => [
+						"title" => "Cache",
+						"links" => [
+							"cache-clear" => [
+								"title" => "Clear cache",
+								"href" => "cache/clear",
+								"return" => true,
+							],
+						],
+					],
+					"cron" => [
+						"title" => "Cron",
+						"links" => [
+							"cron-run" => [
+								"title" => "Run cron",
+								"href" => "cron",
+								"return" => true,
+							],
+						],
 					],
 				],
 			],

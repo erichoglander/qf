@@ -53,9 +53,18 @@ class Acl_Core {
 		return $User->id() == 1;
 	}
 
-
 	/* LOG ACCESS */
 	protected function logAdminAccess($User) {
+		return $User->id() == 1;
+	}
+
+	/* CRON ACCESS */
+	protected function cronRunAccess($User) {
+		return $User->id() == 1 || IS_CLI;
+	}
+
+	/* CACHE ACCESS */
+	protected function cacheClearAccess($User) {
 		return $User->id() == 1;
 	}
 

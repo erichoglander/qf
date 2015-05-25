@@ -1,12 +1,13 @@
 <?php
 class Model {
 
-	protected $Config, $Db, $Io, $User;
+	protected $Config, $Db, $Io, $Cache, $User;
 
-	public function __construct($Config, $Db, $Io, $User) {
+	public function __construct($Config, $Db, $Io, $Cache, $User) {
 		$this->Config = &$Config;
 		$this->Db = &$Db;
 		$this->Io = &$Io;
+		$this->Cache = &$Cache;
 		$this->User = &$User;
 	}
 
