@@ -13,9 +13,11 @@ class Controller {
 		if ($this->Db->connected) {
 			$this->Acl = newClass("Acl", $this->Db);
 			$this->Cache = newClass("Cache", $this->Db);
+			$this->Variable = newClass("Variable", $this->Db);
 			$this->User = $this->getUser();
 			$this->Model = $this->getModel();
 			if ($init) {
+				$this->automaticCron();
 				$this->defaultViewData();
 				$this->loadLibraries();
 				$this->loadMenus();
@@ -84,7 +86,7 @@ class Controller {
 
 	protected function getModel() {
 		$cname = ucwords($this->name)."_Model";
-		return newClass($cname, $this->Config, $this->Db, $this->Io, $this->Cache, $this->User);
+		return newClass($cname, $this->Config, $this->Db, $this->Io, $this->Cache, $this->Variable, $this->User);
 	}
 
 	protected function getUser() {
@@ -100,6 +102,16 @@ class Controller {
 
 	protected function getForm($name, $vars = []) {
 		return newClass($name."_Form", $this->Db, $this->Io, $this->User, $vars);
+	}
+
+	protected function automaticCron() {
+		$last = $this->Variable->get("cron", 0);
+		if (date("Y-m-d", $last) != date("Y-m-d", REQUEST_TIME)) {
+			$Cron = newClass("Cron", $this->Db);
+			$Cron->run();
+			$this->Variable->set("cron", REQUEST_TIME);
+			addlog($this->Db, "cron", t("Cron completed in :sec seconds", "en", [":sec" => $time]));
+		}
 	}
 
 	protected function loadLibraries() {

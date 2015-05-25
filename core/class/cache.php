@@ -10,6 +10,8 @@ class Cache_Core {
 	
 	public function get($name, $def = null) {
 		$row = $this->Db->getRow("SELECT * FROM `cache` WHERE name = :name", [":name" => $name]);
+		if (!$row)
+			return $def;
 		if ($row->expire < REQUEST_TIME) {
 			$this->Db->delete("cache", ["name" => $name]);
 			return $def;

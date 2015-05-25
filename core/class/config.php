@@ -8,6 +8,7 @@ class Config_Core {
 	protected $debug = false;
 	protected $user_registration = "closed";
 	protected $libraries = ["FontAwesome"];
+	protected $automatic_cron = true;
 
 
 	public function __construct() {
@@ -112,6 +113,9 @@ class Config_Core {
 	}
 	public function getLibraries() {
 		return $this->libraries;
+	}
+	public function getAutomaticCron() {
+		return $this->automatic_cron;
 	}
 
 };
