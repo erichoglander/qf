@@ -2,16 +2,16 @@
 class UserRegister_Form extends Form {
 
 	public function validate($values) {
-		if ($values['password'] != $values['password_confirm']) {
+		if ($values["password"] != $values["password_confirm"]) {
 			$this->setError(t("Passwords mismatch"), "password");
 			return false;
 		}
-		$row = $this->Db->getRow("SELECT id FROM `user` WHERE name = :name", [":name" => $values['name']]);
+		$row = $this->Db->getRow("SELECT id FROM `user` WHERE name = :name", [":name" => $values["name"]]);
 		if ($row) {
 			$this->setError(t("Username is already taken"), "name");
 			return false;
 		}
-		$row = $this->Db->getRow("SELECT id FROM `user` WHERE email = :email", [":email" => $values['email']]);
+		$row = $this->Db->getRow("SELECT id FROM `user` WHERE email = :email", [":email" => $values["email"]]);
 		if ($row) {
 			$this->setError(t("E-mail is already taken"), "email");
 			return false;

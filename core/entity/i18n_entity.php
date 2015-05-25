@@ -18,7 +18,7 @@ class i18n_Entity extends Entity {
 
 	public function loadTranslation($id, $lang) {
 		$row = $this->Db->getRow(
-				"SELECT id FROM `".$this->schema['table']."`
+				"SELECT id FROM `".$this->schema["table"]."`
 				WHERE
 					(id = :id && sid = 0 || sid = :id) &&
 					lang = :lang",
@@ -36,14 +36,14 @@ class i18n_Entity extends Entity {
 		$list = [];
 		if ($sid) {
 			$rows = $this->Db->getRows(
-					"SELECT id, lang FROM `".$this->schema['table']."` 
+					"SELECT id, lang FROM `".$this->schema["table"]."` 
 					WHERE 
 						(sid = :sid || id = :sid) && lang = :lang", 
 					[":sid" => $sid]);
 		}
 		else {
 			$rows = $this->Db->getRows(
-					"SELECT id, lang FROM `".$this->schema['table']."` 
+					"SELECT id, lang FROM `".$this->schema["table"]."` 
 					WHERE 
 						sid = :sid && lang = :lang", 
 					[":sid" => $this->id()]);
@@ -63,13 +63,13 @@ class i18n_Entity extends Entity {
 		$sid = $this->get("sid");
 		if ($sid) {
 			$row = $this->Db->getRow(
-					"SELECT id FROM `".$this->schema['table']."` WHERE 
+					"SELECT id FROM `".$this->schema["table"]."` WHERE 
 					(sid = :sid || id = :sid) && lang = :lang", 
 					[":sid" => $sid, ":lang" => $lang]);
 		}
 		else {
 			$row = $this->Db->getRow(
-					"SELECT id FROM `".$this->schema['table']."` WHERE 
+					"SELECT id FROM `".$this->schema["table"]."` WHERE 
 					sid = :sid && lang = :lang", 
 					[":sid" => $this->id(), ":lang" => $lang]);
 		}
@@ -85,11 +85,11 @@ class i18n_Entity extends Entity {
 
 	protected function schema() {
 		$schema = parent::schema();
-		$schema['fields']['sid'] = [
+		$schema["fields"]["sid"] = [
 			"type" => "uint",
 			"default" => 0,
 		];
-		$schema['fields']['lang'] = [
+		$schema["fields"]["lang"] = [
 			"type" => "varchar",
 			"default" => $this->default_lang,
 		];

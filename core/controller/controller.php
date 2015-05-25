@@ -91,8 +91,8 @@ class Controller {
 
 	protected function getUser() {
 		$User = $this->getEntity("User");
-		if (!empty($_SESSION['user_id']))
-			$User->load($_SESSION['user_id']);
+		if (!empty($_SESSION["user_id"]))
+			$User->load($_SESSION["user_id"]);
 		return $User;
 	}
 

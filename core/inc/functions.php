@@ -164,13 +164,13 @@ function addlog($Db, $category, $text, $data = null, $type = "info") {
 
 function redirect($url = "", $redir = true) {
 	if ($redir && array_key_exists("redir", $_GET))
-		$url = $_GET['redir'];
+		$url = $_GET["redir"];
 	if (strpos($url, "http") !== 0)
 		$url = "/".$url;
 	header("Location: ".$url);
 	exit;
 }
 function refresh() {
-	$url = substr($_SERVER['REQUEST_URI'], 1);
+	$url = substr($_SERVER["REQUEST_URI"], 1);
 	redirect($url);
 }

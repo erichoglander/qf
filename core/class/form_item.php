@@ -132,13 +132,13 @@ class FormItem {
 
 	protected function loadStructure($structure) {
 		$this->structure = $structure;
-		if (!empty($structure['attributes'])) {
-			foreach ($structure['attributes'] as $key => $val)
+		if (!empty($structure["attributes"])) {
+			foreach ($structure["attributes"] as $key => $val)
 				$this->attributes[$key] = $val;
 		}
 		$properties = $structure;
-		unset($properties['attributes']);
-		unset($properties['items']);
+		unset($properties["attributes"]);
+		unset($properties["items"]);
 		foreach ($properties as $key => $val)
 			$this->{$key} = $val;
 		if ($this->multiple) {
@@ -147,28 +147,28 @@ class FormItem {
 				$value[] = null;
 			$this->items = [];
 			$st = $structure;
-			$st['parent_name'] = $this->inputName();
-			$st['multiple'] = false;
-			$st['parent_multiple'] = true;
-			unset($st['label']);
-			unset($st['description']);
-			unset($st['prefix']);
-			unset($st['suffix']);
+			$st["parent_name"] = $this->inputName();
+			$st["multiple"] = false;
+			$st["parent_multiple"] = true;
+			unset($st["label"]);
+			unset($st["description"]);
+			unset($st["prefix"]);
+			unset($st["suffix"]);
 			foreach ($value as $i => $val) {
-				if (!empty($structure['value']) && array_key_exists($structure['value'][$i]))
-					$st = $structure['value'][$i];
+				if (!empty($structure["value"]) && array_key_exists($structure["value"][$i]))
+					$st = $structure["value"][$i];
 				else
-					unset($st['value']);
-				unset($st['focus']);
+					unset($st["value"]);
+				unset($st["focus"]);
 				$this->loadItem($i, $st);
 			}
 		}
 		else {
-			if (isset($structure['items'])) {
-				foreach ($structure['items'] as $name => $item) {
-					if (!empty($structure['value']) && array_key_exists($structure['value'][$name]))
-						$item['value'] = $structure['value'][$name];
-					$item['parent_name'] = $this->inputName();
+			if (isset($structure["items"])) {
+				foreach ($structure["items"] as $name => $item) {
+					if (!empty($structure["value"]) && array_key_exists($structure["value"][$name]))
+						$item["value"] = $structure["value"][$name];
+					$item["parent_name"] = $this->inputName();
 					$this->loadItem($name, $item);
 				}
 			}
@@ -176,11 +176,11 @@ class FormItem {
 	}
 
 	protected function loadItem($name, $item) {
-		if (empty($item['type']))
+		if (empty($item["type"]))
 			throw new Exception("No type given for form item ".$name);
-		$item['name'] = $name;
-		$item['submitted'] = $this->submitted;
-		$a = explode("_", $item['type']);
+		$item["name"] = $name;
+		$item["submitted"] = $this->submitted;
+		$a = explode("_", $item["type"]);
 		$cname = "";
 		foreach ($a as $b)
 			$cname.= ucwords($b);
@@ -268,14 +268,14 @@ class FormItem {
 
 	protected	function getAttributes() {
 		$attr = [];
-		$attr['type'] = $this->inputType();
-		$attr['name'] = $this->inputName();
+		$attr["type"] = $this->inputType();
+		$attr["name"] = $this->inputName();
 		foreach ($this->attributes as $key => $val)
 			$attr[$key] = $val;
-		if (empty($attr['class']))
-			$attr['class'] = $this->inputClass();
+		if (empty($attr["class"]))
+			$attr["class"] = $this->inputClass();
 		else
-			$attr['class'].= " ".$this->inputClass();
+			$attr["class"].= " ".$this->inputClass();
 		return $attr;
 	}
 	protected function attributes() {
@@ -363,9 +363,9 @@ class FormItem {
 		if (!$this->multiple) 
 			return null;
 		$data = $this->structure;
-		unset($data['filter']);
-		unset($data['validation']);
-		unset($data['submitted']);
+		unset($data["filter"]);
+		unset($data["validation"]);
+		unset($data["submitted"]);
 		$json = htmlspecialchars(json_encode($data), ENT_QUOTES);
 		return '<input type="button" class="form-button" value="'.$this->add_button.'" onclick="formAddButton(this, '.$json.')">';
 	}

@@ -2,7 +2,7 @@
 class UserReset_Mail extends MailMessage {
 	
 	public function prepare($vars = []) {
-		$link = SITE_URL."/user/change-password/".$vars['id']."/".$vars['link'];
+		$link = SITE_URL."/user/change-password/".$vars["id"]."/".$vars["link"];
 		$this->Mail->subject = "Account password reset";
 		$this->Mail->message = 
 			'<p>A password reset has been requested for your account at '.$this->Config->getSiteName().'<p>'.

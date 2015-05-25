@@ -4,7 +4,7 @@ class UserLogin_Form extends Form {
 
 	public function validate($values) {
 		$User = newClass("User_Entity", $this->Db);
-		if (!$User->authorize($values["name"], $values['password'])) {
+		if (!$User->authorize($values["name"], $values["password"])) {
 			$this->Db->insert("login_attempt", [
 				"created" => REQUEST_TIME,
 				"ip" => $_SERVER["REMOTE_ADDR"],

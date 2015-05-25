@@ -84,7 +84,7 @@ class User_Controller_Core extends Controller {
 				$this->defaultError();
 			}
 		}
-		$this->viewData['form'] = $Form->render();
+		$this->viewData["form"] = $Form->render();
 		return $this->view("reset");
 	}
 

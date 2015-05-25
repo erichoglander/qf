@@ -23,11 +23,11 @@ class Theme {
 	protected function preRender($part, &$vars) {
 		if ($part == "html") {
 			foreach ($this->css as $css)
-				$vars['css'][] = fileUrl("theme/".$this->name."/css/".$css);
+				$vars["css"][] = fileUrl("theme/".$this->name."/css/".$css);
 			foreach ($this->js as $js)
-				$vars['js'][] = fileUrl("theme/".$this->name."/js/".$js);
-			$vars['favicon'] = $this->getFavicon();
-			$vars['meta'] = $this->getMeta();
+				$vars["js"][] = fileUrl("theme/".$this->name."/js/".$js);
+			$vars["favicon"] = $this->getFavicon();
+			$vars["meta"] = $this->getMeta();
 		}
 	}
 

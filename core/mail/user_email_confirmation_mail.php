@@ -2,7 +2,7 @@
 class UserEmailConfirmation_Mail extends MailMessage {
 	
 	public function prepare($vars = []) {
-		$link = SITE_URL."/user/confirm_email/".$vars['id']."/".$vars['link'];
+		$link = SITE_URL."/user/confirm_email/".$vars["id"]."/".$vars["link"];
 		$this->Mail->subject = "Account e-mail confirmation";
 		$this->Mail->message = 
 			'<p>Thank you for your registration at '.$this->Config->getSiteName().'<p>'.

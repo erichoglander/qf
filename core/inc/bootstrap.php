@@ -20,6 +20,6 @@ $Config = newClass("Config");
 $Db = newClass("Db");
 $Db->debug = $Config->getDebug();
 $dbc = $Config->getDatabase();
-$Db->connect($dbc['user'], $dbc['pass'], $dbc['db'], $dbc['host']);
+$Db->connect($dbc["user"], $dbc["pass"], $dbc["db"], $dbc["host"]);
 
 $ControllerFactory = newClass("ControllerFactory", $Config, $Db);

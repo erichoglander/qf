@@ -66,11 +66,11 @@ class User_Entity_Core extends Entity {
 	}
 
 	public function logout() {
-		unset($_SESSION['user_id']);
+		unset($_SESSION["user_id"]);
 	}
 
 	public function login() {
-		$_SESSION['user_id'] = $this->id();
+		$_SESSION["user_id"] = $this->id();
 		$this->set("login", REQUEST_TIME);
 		$this->save();
 		addlog(
@@ -192,32 +192,32 @@ class User_Entity_Core extends Entity {
 	
 	protected function schema() {
 		$schema = parent::schema();
-		$schema['table'] = "user";
-		$schema['fields']['name'] = [
+		$schema["table"] = "user";
+		$schema["fields"]["name"] = [
 			"type" => "varchar",
 		];
-		$schema['fields']['email'] = [
+		$schema["fields"]["email"] = [
 			"type" => "varchar",
 		];
-		$schema['fields']['login'] = [
+		$schema["fields"]["login"] = [
 			"type" => "uint",
 		];
-		$schema['fields']['salt'] = [
+		$schema["fields"]["salt"] = [
 			"type" => "varchar",
 		];
-		$schema['fields']['pass'] = [
+		$schema["fields"]["pass"] = [
 			"type" => "varchar",
 		];
-		$schema['fields']['reset'] = [
+		$schema["fields"]["reset"] = [
 			"type" => "varchar",
 		];
-		$schema['fields']['reset_time'] = [
+		$schema["fields"]["reset_time"] = [
 			"type" => "uint",
 		];
-		$schema['fields']['email_confirmation'] = [
+		$schema["fields"]["email_confirmation"] = [
 			"type" => "varchar",
 		];
-		$schema['fields']['email_confirmation_time'] = [
+		$schema["fields"]["email_confirmation_time"] = [
 			"type" => "uint",
 		];
 		return $schema;

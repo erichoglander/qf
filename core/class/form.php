@@ -93,7 +93,7 @@ class Form {
 	}
 
 	public function isSubmitted($validate = true) {
-		return isset($_POST['form_'.$this->name]) && (!$validate || $this->isValidated());
+		return isset($_POST["form_".$this->name]) && (!$validate || $this->isValidated());
 	}
 
 	public function setError($msg, $name = null) {
@@ -136,15 +136,15 @@ class Form {
 			$structure = $this->structure();
 		else
 			$structure = call_user_func_array([$this, "structure"], func_get_args());
-		if (empty($structure['name']))
+		if (empty($structure["name"]))
 			throw new Exception("No name given for form");
-		if (!empty($structure['attributes'])) {
-			foreach ($structure['attributes'] as $key => $val)
+		if (!empty($structure["attributes"])) {
+			foreach ($structure["attributes"] as $key => $val)
 				$this->attributes[$key] = $val;
-			unset($structure['attributes']);
+			unset($structure["attributes"]);
 		}
-		$items = $structure['items'];
-		unset($structure['items']);
+		$items = $structure["items"];
+		unset($structure["items"]);
 		foreach ($structure as $key => $val)
 			$this->{$key} = $val;
 		foreach ($items as $name => $item)
@@ -152,11 +152,11 @@ class Form {
 	}
 
 	protected function loadItem($name, $item) {
-		if (empty($item['type']))
+		if (empty($item["type"]))
 			throw new Exception("No type given for form item ".$name);
-		$item['name'] = $name;
-		$item['submitted'] = $this->isSubmitted(false);
-		$a = explode("_", $item['type']);
+		$item["name"] = $name;
+		$item["submitted"] = $this->isSubmitted(false);
+		$a = explode("_", $item["type"]);
 		$cname = "";
 		foreach ($a as $b)
 			$cname.= ucwords($b);
@@ -191,13 +191,13 @@ class Form {
 	}
 
 	protected function verifyToken() {
-		return $_POST['form_token'] === $this->token();
+		return $_POST["form_token"] === $this->token();
 	}
 
 	protected function token() {
-		if (!isset($_SESSION['form_token']))
-			$_SESSION['form_token'] = substr(hash("sha512", rand(1,1000).microtime(true)."qfformtoken"), 4, 32);
-		return $_SESSION['form_token'];
+		if (!isset($_SESSION["form_token"]))
+			$_SESSION["form_token"] = substr(hash("sha512", rand(1,1000).microtime(true)."qfformtoken"), 4, 32);
+		return $_SESSION["form_token"];
 	}
 
 	protected	function getAttributes() {
@@ -205,10 +205,10 @@ class Form {
 		foreach ($this->attributes as $key => $val)
 			$attr[$key] = $val;
 		$class = cssClass("form-".$this->name);
-		if (empty($attr['class']))
-			$attr['class'] = $class;
+		if (empty($attr["class"]))
+			$attr["class"] = $class;
 		else
-			$attr['class'].= " ".$class;
+			$attr["class"].= " ".$class;
 		return $attr;
 	}
 	protected function attributes($attributes = null) {

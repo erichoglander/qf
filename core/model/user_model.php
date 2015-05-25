@@ -5,9 +5,9 @@ class User_Model_Core extends Model {
 		$registration = $this->Config->getUserRegistration();
 		$num_users = $this->Db->numRows("SELECT id FROM `user`");
 		$User = $this->getEntity("User");
-		$User->set("name", $values['name']);
-		$User->set("email", $values['email']);
-		$User->set("pass", $values['password']);
+		$User->set("name", $values["name"]);
+		$User->set("email", $values["email"]);
+		$User->set("pass", $values["password"]);
 		$User->set("status", 1);
 		if ($num_users === 0) {
 			$User->save();
