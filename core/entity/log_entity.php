@@ -1,5 +1,10 @@
 <?php
 class Log_Entity_Core extends Entity {
+
+	protected function onLoad() {
+		$this->set("User", $this->getEntity("User", $this->get("user_id")));
+		return true;
+	}
 	
 	protected function schema() {
 		return [

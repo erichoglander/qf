@@ -12,10 +12,10 @@ class Log_Controller_Core extends Controller {
 	public function viewAction($args = []) {
 		if (empty($args[0]))
 			return $this->notFound();
-		$log = $this->Model->getLog((int) $args[0]);
-		if (!$log)
+		$Log = $this->getEntity("Log", (int) $args[0]);
+		if (!$Log->id())
 			return $this->notFound();
-		$this->viewData["Log"] = $log;
+		$this->viewData["Log"] = $Log;
 		return $this->view("view");
 	}
 

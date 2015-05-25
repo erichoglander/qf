@@ -61,6 +61,8 @@ class Entity {
 			if ($key == "id" || array_key_exists($key, $this->schema["fields"]))
 				$this->fields[$key] = $value;
 		}
+		if (is_callable([$this, "onLoad"]))
+			$this->onLoad();
 		return true;
 	}
 
@@ -114,6 +116,10 @@ class Entity {
 			];
 		}
 		return $schema;
+	}
+
+	protected function getEntity($name, $id = null) {
+		return newClass($name."_Entity", $this->Db, $id);
 	}
 
 };
