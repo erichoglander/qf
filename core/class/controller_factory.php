@@ -26,6 +26,7 @@ class ControllerFactory_Core {
 		}
 		define("REQUEST_ALIAS", $request["alias"]);
 		define("REQUEST_PATH", $request["path"]);
+		define("IS_FRONT_PAGE", $request["controller"] == "page" && $request["action"] == "index");
 		return $this->executeControllerAction($request["controller"], $request["action"], $request["args"]);
 	}
 

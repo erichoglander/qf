@@ -22,7 +22,9 @@ class Html_Core {
 	public function __construct($Db) {
 		$this->Config = newClass("Config");
 		$this->Db = &$Db;
-		$this->breadcrumbs[] = ["", t("Home")];
+		$this->breadcrumbs[] = (IS_FRONT_PAGE ? t("Home") : ["", t("Home")]);
+		if (!$this->title_suffix)
+			$this->title_suffix = " | ".$this->Config->getSiteName();
 	}
 
 	public function renderHtml() {
