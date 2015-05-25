@@ -9,7 +9,6 @@ class ControllerFactory_Core {
 		$this->Db = &$Db;
 	}
 
-	# uri: /controller/action/arg0/arg1/arg2/...
 	public function executeUri($uri) {
 		$request = $this->parseUri($uri);
 		if (!empty($request["redirect"])) {
@@ -21,8 +20,7 @@ class ControllerFactory_Core {
 				header("HTTP/1.1 302 See Other");
 			else if ($request["redirect"]->code == "307")
 				header("HTTP/1.1 302 Temporary Redirect");
-			header("Location: /".($request["redirect"]->target == "<front>" ? "" : $request["redirect"]->target));
-			exit;
+			redirect($request["redirect"]);
 		}
 		define("REQUEST_ALIAS", $request["alias"]);
 		define("REQUEST_PATH", $request["path"]);
@@ -44,6 +42,7 @@ class ControllerFactory_Core {
 		return $class;
 	}
 
+	# uri: /controller/action/arg0/arg1/arg2/...
 	public function parseUri($uri) {
 		$request = [];
 		$uri = strtolower($uri);
@@ -80,7 +79,7 @@ class ControllerFactory_Core {
 					$redir["host"] = preg_replace("/^[^\.]+/", $sub, $_SERVER["HTTP_HOST"]);
 			}
 		}
-		$redirect = $this->Db->getRow("SELECT id FROM `redirect` WHERE status = 1 && (source = :alias || source = :path)", 
+		$redirect = $this->Db->getRow("SELECT * FROM `redirect` WHERE status = 1 && (source = :alias || source = :path)", 
 				[":alias" => $request["alias"], ":path" => $request["path"]]);
 		if ($redirect) 
 			$redir["uri"] = $redirect->target;

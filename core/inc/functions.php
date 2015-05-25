@@ -165,8 +165,10 @@ function addlog($Db, $category, $text, $data = null, $type = "info") {
 function redirect($url = "", $redir = true) {
 	if ($redir && array_key_exists("redir", $_GET))
 		$url = $_GET["redir"];
-	if (strpos($url, "http") !== 0)
+	$pcl = strpos($url, "://");
+	if ($pcl === false || $pcl > 8)
 		$url = "/".$url;
+	$url = str_replace("<front>", "", $url);
 	header("Location: ".$url);
 	exit;
 }
