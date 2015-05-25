@@ -120,9 +120,9 @@ function renderTemplate($path, $vars) {
 }
 
 function t($str, $lang = "en", $vars = []) {
-	// TODO: Translation
-	$str = str_replace(array_keys($vars), array_values($vars), $str);
-	return $str;
+	global $Db;
+	$i18n = newClass("i18n", $Db);
+	return $i18n->translateString($str, $lang, $vars);
 }
 
 function setmsg($msg, $type = "info") {
