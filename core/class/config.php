@@ -61,23 +61,18 @@ class Config_Core {
 							],
 						],
 					],
-					"log" => [
-						"title" => "Logs",
-						"href" => "log/list",
-					],
-					"cache" => [
-						"title" => "Cache",
+					"system" => [
+						"title" => "System",
 						"links" => [
+							"logs" => [
+								"title" => "Logs",
+								"href" => "log/list",
+							],
 							"cache-clear" => [
 								"title" => "Clear cache",
 								"href" => "cache/clear",
 								"return" => true,
 							],
-						],
-					],
-					"cron" => [
-						"title" => "Cron",
-						"links" => [
 							"cron-run" => [
 								"title" => "Run cron",
 								"href" => "cron",
