@@ -23,12 +23,11 @@ class Controller {
 				$this->loadMenus();
 			}
 		}
-		else {
-			return $this->databaseFail();
-		}
 	}
 
 	public function action($action, $args = []) {
+		if (!$this->Db->connected)
+			return $this->databaseFail();
 		if (!$this->Acl->access($this->User, $this->acl($action, $args), $args))
 			return $this->accessDenied();
 		$action.= "Action";

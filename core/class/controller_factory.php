@@ -59,35 +59,37 @@ class ControllerFactory_Core {
 			$request["query"] = null;
 		}
 
-		// Alias
-		$request["alias"] = $uri;
-		$alias = $this->Db->getRow("SELECT * FROM `alias` WHERE status = 1 && alias = :alias", [":alias" => $uri]);
-		if ($alias) 
-			$uri = $alias->path;
-		$request["path"] = $uri;
+		if ($this->Db->connected) {
+			// Alias
+			$request["alias"] = $uri;
+			$alias = $this->Db->getRow("SELECT * FROM `alias` WHERE status = 1 && alias = :alias", [":alias" => $uri]);
+			if ($alias) 
+				$uri = $alias->path;
+			$request["path"] = $uri;
 
-		// Redirects
-		$redir = [];
-		if ($this->Config->getHttps() && HTTP_PROTOCOL != "https")
-			$redir["protocol"] = "https";
-		$sub = $this->Config->getSubdomain();
-		if ($sub) {
-			if (strpos($_SERVER["HTTP_HOST"], "://".$sub.".") === false) {
-				if (BASE_DOMAIN == $_SERVER["HTTP_HOST"])
-					$redir["host"] = $sub.".".BASE_DOMAIN;
-				else
-					$redir["host"] = preg_replace("/^[^\.]+/", $sub, $_SERVER["HTTP_HOST"]);
+			// Redirects
+			$redir = [];
+			if ($this->Config->getHttps() && HTTP_PROTOCOL != "https")
+				$redir["protocol"] = "https";
+			$sub = $this->Config->getSubdomain();
+			if ($sub) {
+				if (strpos($_SERVER["HTTP_HOST"], "://".$sub.".") === false) {
+					if (BASE_DOMAIN == $_SERVER["HTTP_HOST"])
+						$redir["host"] = $sub.".".BASE_DOMAIN;
+					else
+						$redir["host"] = preg_replace("/^[^\.]+/", $sub, $_SERVER["HTTP_HOST"]);
+				}
 			}
-		}
-		$redirect = $this->Db->getRow("SELECT * FROM `redirect` WHERE status = 1 && (source = :alias || source = :path)", 
-				[":alias" => $request["alias"], ":path" => $request["path"]]);
-		if ($redirect) 
-			$redir["uri"] = $redirect->target;
-		if (!empty($redir)) {
-			$request["redirect"] = 
-				(!empty($redir["protocol"]) ? $redir["protocol"] : HTTP_PROTOCOL)."://".
-				(!empty($redir["host"]) ? $redir["host"] : $_SERVER["HTTP_HOST"]).
-				(!empty($redir["uri"]) ? $redir["uri"] : $_SERVER["REQUEST_URI"]);
+			$redirect = $this->Db->getRow("SELECT * FROM `redirect` WHERE status = 1 && (source = :alias || source = :path)", 
+					[":alias" => $request["alias"], ":path" => $request["path"]]);
+			if ($redirect) 
+				$redir["uri"] = $redirect->target;
+			if (!empty($redir)) {
+				$request["redirect"] = 
+					(!empty($redir["protocol"]) ? $redir["protocol"] : HTTP_PROTOCOL)."://".
+					(!empty($redir["host"]) ? $redir["host"] : $_SERVER["HTTP_HOST"]).
+					(!empty($redir["uri"]) ? $redir["uri"] : $_SERVER["REQUEST_URI"]);
+			}
 		}
 
 		// Summarize
