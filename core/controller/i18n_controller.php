@@ -22,7 +22,7 @@ class i18n_Controller_Core extends Controller {
 	}
 
 	public function listAction() {
-
+		
 	}
 
 }
