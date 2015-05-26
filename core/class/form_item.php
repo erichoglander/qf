@@ -75,6 +75,16 @@ class FormItem {
 		return false;
 	}
 
+	public function hasFileItem() {
+		if (!empty($this->items)) {
+			foreach ($this->items as $item) {
+				if ($item->hasFileItem())
+					return true;
+			}
+		}
+		return false;
+	}
+
 	public function validated($req = true) {
 		if (!$this->submitted)
 			return false;
@@ -126,11 +136,15 @@ class FormItem {
 			"icon" => $this->icon,
 			"error" => $this->getError(),
 		];
+		if (is_callable([$this, "preRender"]))
+			$this->preRender($vars);
 		return renderTemplate($path, $vars);
 	}
 
 
 	protected function loadStructure($structure) {
+		if (is_callable([$this, "loadDefault"]))
+			$this->loadDefault();
 		$this->structure = $structure;
 		if (!empty($structure["attributes"])) {
 			foreach ($structure["attributes"] as $key => $val)
@@ -180,6 +194,7 @@ class FormItem {
 			throw new Exception("No type given for form item ".$name);
 		$item["name"] = $name;
 		$item["submitted"] = $this->submitted;
+		$item["form_name"] = $this->form_name;
 		$a = explode("_", $item["type"]);
 		$cname = "";
 		foreach ($a as $b)
@@ -357,6 +372,8 @@ class FormItem {
 			"options" => $this->options(),
 			"value" => $this->value(),
 		];
+		if (is_callable([$this, "preRenderInput"]))
+			$this->preRenderInput($vars);
 		return renderTemplate($path, $vars);
 	}
 	protected function renderAddButton() {

@@ -30,6 +30,9 @@ class File_Entity_Core extends Entity {
 		$schema["fields"]["uri"] = [
 			"type" => "varchar",
 		];
+		$schema["fields"]["extension"] = [
+			"type" => "varchar",
+		];
 		$schema["fields"]["dir"] = [
 			"type" => "enum",
 			"values" => ["public", "private"],

@@ -203,4 +203,11 @@ class Controller {
 		}
 	}
 
+	protected function json() {
+		return json_encode($this->viewData);
+	}
+	protected function jsone($msg, $code = null) {
+		return json_encode(["status" => "error", "error" => $msg, "error_code" => $code]);
+	}
+
 };

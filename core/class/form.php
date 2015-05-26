@@ -149,6 +149,8 @@ class Form {
 			$this->{$key} = $val;
 		foreach ($items as $name => $item)
 			$this->loadItem($name, $item);
+		if ($this->hasFileItem())
+			$this->attributes["enctype"] = "multipart/form-data";
 	}
 
 	protected function loadItem($name, $item) {
@@ -156,6 +158,7 @@ class Form {
 			throw new Exception("No type given for form item ".$name);
 		$item["name"] = $name;
 		$item["submitted"] = $this->isSubmitted(false);
+		$item["form_name"] = $this->name;
 		$a = explode("_", $item["type"]);
 		$cname = "";
 		foreach ($a as $b)
@@ -188,6 +191,16 @@ class Form {
 				],
 			],
 		];
+	}
+
+	protected function hasFileItem() {
+		if (!empty($this->items)) {
+			foreach ($this->items as $item) {
+				if ($item->hasFileItem())
+					return true;
+			}
+		}
+		return false;
 	}
 
 	protected function verifyToken() {

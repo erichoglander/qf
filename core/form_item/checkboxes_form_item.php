@@ -1,15 +1,15 @@
 <?php
 class Checkboxes_FormItem_Core extends FormItem {
 
-	public function options() {
+	protected function options() {
 		return $this->options;
 	}
 	
-	public function inputType() {
+	protected function inputType() {
 		return "checkbox";
 	}
 
-	public function getAttributes() {
+	protected function getAttributes() {
 		$attr = parent::getAttributes();
 		$attr["name"].= "[]";
 		return $attr;

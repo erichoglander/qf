@@ -114,7 +114,7 @@ class Io_Core {
 		return false;
 	}
 	protected function validateUsername($value) {
-		if ($this->regexBool("/^[a-z0-9\-\_\@\.\*\^\~]+$/i"))
+		if (preg_match("/^[a-z0-9\-\_\@\.\*\^\~]+$/i", $value))
 			return true;
 		$this->setError("Illegal username");
 		return false;

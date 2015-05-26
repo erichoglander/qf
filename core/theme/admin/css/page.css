@@ -77,20 +77,35 @@ a.btn,
 	cursor: pointer;
 	-moz-user-select: none;
 	background-image: none;
-	border: 1px solid #333;
+	border: 1px solid #ccc;
 	border-radius: 4px;;
 }
 .btn:hover,
 .btn:focus {
-	background: #333;
-	color: #fff;
+	background-color: #E6E6E6;
+	border-color: #ADADAD;
 	text-decoration: none;
 }
 
+.btn-primary {
+	color: #FFF;
+	background: #337AB7;
+	border-color: #337AB7;
+}
 .btn-primary:hover,
 .btn-primary:focus {
-	background: #337ab7;
-	border-color: #337ab7;
+	background: #286090;
+	border-color: #286090;
+}
+.btn-danger {
+	color: #FFF;
+	background: #D9534F;
+	border-color: #D43F3A;
+}
+.btn-danger:hover,
+.btn-danger:focus {
+	background: #C9302C;
+	border-color: #AC2925;
 }
 
 

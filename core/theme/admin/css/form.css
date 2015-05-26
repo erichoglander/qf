@@ -29,11 +29,6 @@
 	position: relative;
 }
 
-.form-type-checkboxes .form-label,
-.form-type-checkbox .form-label {
-	cursor: pointer;
-}
-
 select,
 input {
 	font-family: inherit;
@@ -59,16 +54,6 @@ input {
 	border-color: #66AFE9;
 	outline: 0px none;
 	box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset, 0px 0px 8px rgba(102, 175, 233, 0.6);
-}
-.form-type-actions .form-item {
-	float: left;
-	margin: 0 10px 0 0;
-	width: auto;
-}
-.form-type-actions:after {
-	clear: both;
-	content: "";
-	display: block;
 }
 
 .form-item-error .form-label {
@@ -121,4 +106,51 @@ input {
 }
 .form-icon-error {
 	color: #A94442;
+}
+
+
+.form-type-editor {
+	width: auto;
+}
+
+.form-type-actions .form-item {
+	float: left;
+	margin: 0 10px 0 0;
+	width: auto;
+}
+.form-type-actions:after {
+	clear: both;
+	content: "";
+	display: block;
+}
+
+.form-type-checkboxes .form-label,
+.form-type-checkbox .form-label {
+	cursor: pointer;
+}
+
+.form-file-upload,
+.form-type-file.has-value .form-file-preview {
+	display: block;
+}
+.form-type-file.has-value .form-file-upload,
+.form-file-preview {
+	display: none;
+}
+.form-file-upload-button {
+	position: relative;
+	display: inline-block;
+	overflow: hidden;
+}
+.form-file {
+	position: absolute;
+	top: 2px;
+	bottom: 2px;
+	right: 0;
+	margin: 0;
+	padding: 0;
+	font-size: 20px;
+	cursor: pointer;
+	opacity: 0;
+	filter: alpha(opacity=0);
 }
