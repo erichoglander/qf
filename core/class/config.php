@@ -93,7 +93,7 @@ class Config_Core {
 		return "closed";
 	}
 	public function getLibraries() {
-		return ["FontAwesome"];
+		return ["FontAwesome", "CKEditor"];
 	}
 	public function getAutomaticCron() {
 		return true;
