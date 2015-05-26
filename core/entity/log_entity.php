@@ -2,7 +2,7 @@
 class Log_Entity_Core extends Entity {
 
 	protected function onLoad() {
-		$this->set("User", $this->getEntity("User", $this->get("user_id")));
+		$this->set("User",$this->getEntity("User", $this->get("user_id")));
 		return true;
 	}
 	

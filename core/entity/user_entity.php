@@ -39,11 +39,11 @@ class User_Entity_Core extends Entity {
 			return "Anonymous";
 	}
 
-	public function hasRole($title) {
+	public function hasRole($key) {
 		$roles = $this->get("roles");
 		if (!empty($roles)) {
 			foreach ($roles as $role) {
-				if ($role->title === $title)
+				if ($role->key === $key)
 					return true;
 			}
 		}

@@ -3,6 +3,7 @@ class Entity {
 
 	protected $type = "default";
 	protected $fields = [];
+	protected $entities = [];
 	protected $schema;
 	protected $Db;
 
