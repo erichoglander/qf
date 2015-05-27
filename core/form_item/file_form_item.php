@@ -1,10 +1,14 @@
 <?php
 class File_FormItem extends FormItem {
 	
+	protected $upload = false;
+	protected $uploaded = null;
 	protected $upload_button, $remove_button;
+	protected $upload_folder;
 	protected $file_extensions, $file_dir, $file_max_size;
 	protected $upload_callback, $remove_callback;
 	protected $preview_template;
+
 
 	public function loadDefault() {
 		$this->upload_button = t("Upload file");
@@ -19,14 +23,83 @@ class File_FormItem extends FormItem {
 	public function value() {
 		if (!$this->submitted)
 			return $this->value;
-		$data = $this->postValue();
-		if (!empty($data["id"]))
-			return (int) $data["id"];
-		pr($_FILES);
-		pr($data);
-		exit;
+		if ($this->upload) {
+			$this->upload = false;
+			return $this->uploadFile();
+		}
+		else if ($this->uploaded !== null) {
+			return $this->uploaded;
+		}
+		else {
+			$data = $this->postValue();
+			if (!empty($data["id"]))
+				return (int) $data["id"];
+			else
+				return null;
+		}
 	}
 
+
+	protected function uploadFile() {
+		$keys = explode("[", str_replace("]", "", $this->inputName()));
+		$file = $_FILES[$keys[0]];
+		if (count($keys) > 1) {
+			array_shift($keys);
+			$keys[] = "file";
+			foreach (array_keys($file) as $field)
+				$file[$field] = $this->nestedValue($file[$field], $keys);
+		}
+		if (!empty($file["error"])) {
+			$errors = [
+				UPLOAD_ERR_INI_SIZE => t("File is too big (server file limit)"),
+				UPLOAD_ERR_FORM_SIZE => t("File is too big (server form limit)"),
+				UPLOAD_ERR_PARTIAL => t("The file was only partially upload, please try again"),
+				UPLOAD_ERR_NO_FILE => t("No file was uploaded"),
+				UPLOAD_ERR_NO_TMP_DIR => t("Missing temp folder, contact administrator"),
+				UPLOAD_ERR_CANT_WRITE => t("Can't write file to disk, contact administrator"),
+				UPLOAD_ERR_EXTENSION => t("Upload stopped by a php extension"),
+			];
+			if (isset($errors[$file["error"]]))
+				$this->setError($errors[$file["error"]]);
+			else
+				$this->setError(t("An error occurred while uploading file"));
+			return $this->value;
+		}
+		$info = pathinfo($file["name"]);
+		if (!empty($this->file_extensions) && !in_array($info["extension"], $this->file_extensions)) {
+			$this->setError(
+					t("Unallowed file extension. Only :ext", 
+						"en", 
+						[":ext" => implode(", ", $this->file_extensions)]));
+			return $this->value;
+		}
+		$path = ($this->upload_dir == "private" ? PRIVATE_PATH : PUBLIC_PATH)."/";
+		$uri = $this->upload_folder."/";
+		$name = $this->Io->filter($info["filename"], "filename");
+		$basename = $this->Io->filter($info["basename"], "filename");
+		for ($fname = $basename, $i = 0; file_exists($path.$uri.$fname); $fname = $basename."-".$i, $i++);
+		move_uploaded_file($file["tmp_name"], $path.$uri.$fname);
+		$File = newClass("File_Entity", $this->Db);
+		$File->set("dir", $this->upload_dir);
+		$File->set("name", $name);
+		$File->set("uri", $uri.$fname);
+		$File->set("extension", $info["extension"]);
+		$File->set("status", 0);
+		if (!$File->save()) {
+			$this->setError(t("An error occurred while saving file"));
+			return false;
+		}
+		$this->uploaded = $File->id();
+		return $File->id();
+	}
+
+	protected function nestedValue($arr, $keys) {
+		while (!empty($keys)) {
+			$arr = $arr[$keys[0]];
+			array_shift($keys);
+		}
+		return $arr;
+	}
 
 	protected function templatePreviewPath() {
 		$prefix = "form_file_preview";
@@ -52,7 +125,7 @@ class File_FormItem extends FormItem {
 		$file_id = $this->value();
 		if (!$file_id)
 			return null;
-		$File = newClass("File", $file_id);
+		$File = newClass("File_Entity", $file_id);
 		$path = $this->templatePreviewPath();
 		$vars = [
 			"size" => filesize($File->path()),
@@ -83,6 +156,7 @@ class File_FormItem extends FormItem {
 		$token = $this->fileToken();
 		$info = $this->structure;
 		$info["submitted"] = true;
+		$info["upload"] = true;
 		$_SESSION["file_upload"][$token] = $info;
 		return $token;
 	}

@@ -129,11 +129,14 @@ input {
 	cursor: pointer;
 }
 
+.form-type-file.uploading .form-file-loader,
 .form-file-upload,
 .form-type-file.has-value .form-file-preview {
 	display: block;
 }
+.form-file-loader,
 .form-type-file.has-value .form-file-upload,
+.form-type-file.uploading .form-file-upload,
 .form-file-preview {
 	display: none;
 }
@@ -153,4 +156,11 @@ input {
 	cursor: pointer;
 	opacity: 0;
 	filter: alpha(opacity=0);
+}
+.form-file-loader {
+	font-size: 24px;
+}
+.form-file-loader .fa-pulse {
+	animation-duration: 0.7s;
+	-webkit-animation-duration: 0.7s;
 }

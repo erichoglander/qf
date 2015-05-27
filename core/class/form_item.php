@@ -30,11 +30,12 @@ class FormItem {
 	protected $parent_name;
 	protected $error = [];
 
-	protected $Io;
+	protected $Db, $Io;
 
 
-	public function __construct(&$Io, $structure) {
-		$this->Io = $Io;
+	public function __construct($Db, $Io, $structure) {
+		$this->Db = &$Db;
+		$this->Io = &$Io;
 		$this->empty_option = t("- Choose -");
 		$this->loadStructure($structure);
 	}
@@ -200,9 +201,9 @@ class FormItem {
 		foreach ($a as $b)
 			$cname.= ucwords($b);
 		$cname.= "_FormItem";
-		$class = newClass($cname, $this->Io, $item);
+		$class = newClass($cname, $this->Db, $this->Io, $item);
 		if (!$class) 
-			$class = new FormItem($this->Io, $item);
+			$class = new FormItem($this->Db, $this->Io, $item);
 		$this->items[$name] = $class;
 	}
 

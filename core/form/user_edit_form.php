@@ -65,10 +65,25 @@ class UserEdit_Form_Core extends Form {
 					"options" => $rolesop,
 					"value" => $roles,
 				],
-				"avatar" => [
-					"type" => "file",
-					"label" => t("Avatar"),
-					"file_extensions" => ["txt", "png", "jpg"],
+				"myfiles" => [
+					"type" => "container",
+					"items"=> [
+						"avatar" => [
+							"type" => "file",
+							"label" => t("Avatar"),
+							"file_extensions" => ["txt", "png", "jpg"],
+						],
+					],
+				],
+				"myfiles2" => [
+					"type" => "container",
+					"items" => [
+						"profile" => [
+							"type" => "file",
+							"label" => t("Profile"),
+							"file_extensions" => ["txt", "png", "jpg"],
+						],
+					],
 				],
 				"status" => [
 					"type" => "checkbox",

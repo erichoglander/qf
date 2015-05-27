@@ -18,7 +18,7 @@ function formFileUpload(el, upload_callback) {
 	iframe.style.display = "none";
 	
 	// Set form options
-	el.form.action = path+"/"+name;
+	el.form.action = path+"/"+el.name;
 	el.form.onsubmit = "";
 	el.form.enctype = "multipart/form-data";
 	el.form.target = iframe.name;
@@ -57,8 +57,10 @@ function formFileUploadDone(el, upload_callback, iframe) {
 		return;
 	}
 	if (obj.dom) {
-		console.log(obj.dom[0]);
-		jsonToHtml(item, obj.dom[0], true);
+		var wrap = document.createElement("div");
+		jsonToHtml(wrap, obj.dom);
+		item.parentNode.insertBefore(wrap.childNodes[0], item);
+		item.parentNode.removeChild(item);
 	}
 
 	if (upload_callback)

@@ -15,3 +15,6 @@
 	<?=$preview?>
 	<div class="btn form-file-remove-button" onclick="formFileRemove(this, <?=$remove_callback?>)"><?=$remove_button?></div>
 </div>
+<div class="form-file-loader">
+	<?=FontAwesome\Icon("spinner", "fa-pulse")?>
+</div>

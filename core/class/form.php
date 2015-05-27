@@ -164,9 +164,9 @@ class Form {
 		foreach ($a as $b)
 			$cname.= ucwords($b);
 		$cname.= "_FormItem";
-		$class = newClass($cname, $this->Io, $item);
+		$class = newClass($cname, $this->Db, $this->Io, $item);
 		if (!$class) 
-			$class = new FormItem($this->Io, $item);
+			$class = new FormItem($this->Db, $this->Io, $item);
 		$this->items[$name] = $class;
 	}
 
