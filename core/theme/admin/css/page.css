@@ -87,6 +87,7 @@ a.btn,
 	text-decoration: none;
 }
 
+a.btn-primary,
 .btn-primary {
 	color: #FFF;
 	background: #337AB7;
@@ -97,6 +98,7 @@ a.btn,
 	background: #286090;
 	border-color: #286090;
 }
+a.btn-danger,
 .btn-danger {
 	color: #FFF;
 	background: #D9534F;
