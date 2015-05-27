@@ -13,6 +13,18 @@ class Config_Core {
 	public function getHttps() {
 		return false;
 	}
+	public function getDebug() {
+		return false;
+	}
+	public function getUserRegistration() {
+		return "closed";
+	}
+	public function getLibraries() {
+		return ["Default", "JsonToHtml", "FontAwesome", "CKEditor"];
+	}
+	public function getAutomaticCron() {
+		return true;
+	}
 	public function getMenus() {
 		$menu = [
 			"admin" => [
@@ -85,18 +97,6 @@ class Config_Core {
 			],
 		];
 		return $menu;
-	}
-	public function getDebug() {
-		return false;
-	}
-	public function getUserRegistration() {
-		return "closed";
-	}
-	public function getLibraries() {
-		return ["Default", "FontAwesome", "CKEditor"];
-	}
-	public function getAutomaticCron() {
-		return true;
 	}
 
 };

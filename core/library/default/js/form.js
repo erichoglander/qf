@@ -1,6 +1,6 @@
 function formFileUpload(el, upload_callback) {
 
-	var item = xformGetItem(el);
+	var item = formGetItem(el);
 	var simpleName = el.name.replace("[", "--").replace("]", "");
 	
 	// Save current values
@@ -8,7 +8,7 @@ function formFileUpload(el, upload_callback) {
 	var onsubmit = el.form.onsubmit;
 	var enctype = el.form.enctype;
 	var target = el.form.target;
-	var path = "/file/upload";
+	var path = "/file/upload/"+el.form.elements[el.name.substr(0, el.name.length-6)+"[token]"].value;
 	
 	// Create iframe
 	var iframe = document.createElement("iframe");
@@ -18,56 +18,51 @@ function formFileUpload(el, upload_callback) {
 	iframe.style.display = "none";
 	
 	// Set form options
-	form.action = path+"/"+name;
-	form.onsubmit = "";
-	form.enctype = "multipart/form-data";
-	form.target = iframe.name;
+	el.form.action = path+"/"+name;
+	el.form.onsubmit = "";
+	el.form.enctype = "multipart/form-data";
+	el.form.target = iframe.name;
 	
 	// Insert frame and add listener
 	el.parentNode.appendChild(iframe);
-	if (addEvent())
-		iframe.addEventListener("load", function(){ formFileUploadDone(el, upload_callback, iframe); }, false);
-	else
-		iframe.attachEvent("onload", function(){ formFileUploadDone(el, upload_callback, iframe); });
+	iframe.addEventListener("load", function(){ formFileUploadDone(el, upload_callback, iframe); }, false);
 	
 	// Send form
-	if (typeof(form.submit) == "function")
-		form.submit();
+	if (typeof(el.form.submit) == "function")
+		el.form.submit();
 	else
-		form.submit.click();
+		el.form.submit.click();
 	
 	item.addClass("uploading");
 	
 	// Reset form options
-	form.action = action;
-	form.onsubmit = onsubmit;
-	form.enctype = enctype;
-	form.target = target;
+	el.form.action = action;
+	el.form.onsubmit = onsubmit;
+	el.form.enctype = enctype;
+	el.form.target = target;
 }
 
 function formFileUploadDone(el, upload_callback, iframe) {
 
+	var re = iframe.contentDocument.body.innerHTML;
+	var obj = JSON.parse(re);
+	var item = formGetItem(el);
+
 	iframe.parentNode.removeChild(iframe);
 	el.value = "";
+	item.removeClass("uploading");
 	
-	var callback = function(obj) { 
-		
-		var item = formGetItem(el);
-		item.removeClass("uploading");
-		
-		if (obj.status == "success") {
-			// TODO: json to html library
-		}
-		if (upload_callback)
-			upload_callback(el, obj);
-		
-	};
-	
-	var ajax = new xajax();
-	ajax.send(
-		"/file/upload/"+form.elements[el.name.substr(0,-6)+"[token]"].value,
-		callback
-	);
+	if (obj.error) {
+		alert(obj.error);
+		return;
+	}
+	if (obj.dom) {
+		console.log(obj.dom[0]);
+		jsonToHtml(item, obj.dom[0], true);
+	}
+
+	if (upload_callback)
+		upload_callback(el, obj);
 
 }
 

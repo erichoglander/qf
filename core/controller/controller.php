@@ -204,6 +204,7 @@ class Controller {
 	}
 
 	protected function json() {
+		unset($this->viewData["html"]);
 		return json_encode($this->viewData);
 	}
 	protected function jsone($msg, $code = null) {
