@@ -26,6 +26,7 @@ class UserRegister_Form extends Form {
 				"name" => [
 					"type" => "text",
 					"label" => t("Username"),
+					"icon" => "user",
 					"required" => true,
 				],
 				"email" => [
