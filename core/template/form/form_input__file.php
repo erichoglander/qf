@@ -10,6 +10,11 @@
 		<?=t("Accepted file extensions")?>: <?=implode(", ", $file_extensions)?>
 	</div>
 	<?php } ?>
+	<?php if (!empty($file_extra_text)) { ?>
+	<div class="form-file-extra-text">
+		<?=$file_extra_text?>
+	</div>
+	<?php } ?>
 </div>
 <div class="form-file-preview">
 	<?=$preview?>

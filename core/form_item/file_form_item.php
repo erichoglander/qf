@@ -5,6 +5,7 @@ class File_FormItem extends FormItem {
 	protected $uploaded = null;
 	protected $upload_button, $remove_button;
 	protected $file_folder, $file_extensions, $file_dir, $file_max_size;
+	protected $file_blacklist = ["php", "phtml", ".htaccess"];
 	protected $upload_callback, $remove_callback;
 	protected $preview_template;
 	protected $filter = "uint";
@@ -90,7 +91,12 @@ class File_FormItem extends FormItem {
 				return false;
 			}
 			$info = pathinfo($file["name"]);
-			if (!empty($this->file_extensions) && !in_array($info["extension"], $this->file_extensions)) {
+			$ext = strtolower($this->Io->filter($info["extension"], "alphanum"));
+			if (!empty($this->file_blacklist) && in_array($ext, $this->file_blacklist)) {
+				$this->setError(t("Unallowed file extension"));
+				return false;
+			}
+			if (!empty($this->file_extensions) && !in_array($ext, $this->file_extensions)) {
 				$this->setError(
 						t("Unallowed file extension. Only :ext", 
 							"en", 
@@ -99,6 +105,11 @@ class File_FormItem extends FormItem {
 			}
 			if ($this->file_max_size && $this->file_max_size < filesize($file["tmp_name"])) {
 				$this->setError(t("File is too big. Max size is :size", "en", [":size" => formatBytes($this->file_max_size)]));
+				return false;
+			}
+			if (is_callable([$this, "fileUploadValidate"]) && !$this->fileUploadValidate($file)) {
+				if (empty($this->getError()))
+					$this->setError(t("Validation failed"));
 				return false;
 			}
 		}
@@ -207,6 +218,7 @@ class File_FormItem extends FormItem {
 			$_SESSION["file_upload"] = [];
 		$token = $this->fileToken();
 		$info = $this->structure;
+		$info["form_item_class"] = get_class($this);
 		$_SESSION["file_upload"][$token] = $info;
 		return $token;
 	}
@@ -230,6 +242,8 @@ class File_FormItem extends FormItem {
 
 	protected function itemClass() {
 		$class = parent::itemClass();
+		if (strpos($class, "form-type-file") === false)
+			$class.= " form-type-file";
 		if ($this->value())
 			$class.= " has-value";
 		return $class;

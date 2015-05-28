@@ -165,3 +165,9 @@ input {
 	animation-duration: 0.7s;
 	-webkit-animation-duration: 0.7s;
 }
+.form-file-preview-image {
+	height: auto;
+	width: auto;
+	max-width: 500px;
+	max-height: 350px;
+}

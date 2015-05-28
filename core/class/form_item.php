@@ -309,7 +309,7 @@ class FormItem {
 		$names = [];
 		if ($this->template) {
 			$names[] = $prefix.$d.$this->type.$d.$this->template;
-			if ($this->type != $this->inputType)
+			if ($this->type != $this->inputType())
 				$names[] = $prefix.$d.$this->inputType().$d.$this->template;
 			$names[] = $prefix.$d.$this->template;
 		}
@@ -333,7 +333,7 @@ class FormItem {
 		$names = [];
 		if ($this->template) {
 			$names[] = $prefix.$d.$this->type.$d.$this->template;
-			if ($this->type != $this->inputType)
+			if ($this->type != $this->inputType())
 				$names[] = $prefix.$d.$this->inputType().$d.$this->template;
 			$names[] = $prefix.$d.$this->template;
 		}
