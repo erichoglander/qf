@@ -147,6 +147,9 @@ class Io_Core {
 	protected function filterUdouble($value) {
 		return abs((double) $value);
 	}
+	protected function filterAlphanum($value) {
+		return preg_replace("/[^a-z0-9]/i", "", $value);
+	}
 	protected function filterFilename($value) {
 		$value = str_replace(" ", "-", $value);
 		$value = str_replace(["å", "ä", "ö", "Å", "Ä", "Ö"], ["a", "a", "o", "A", "A", "O"], $value);

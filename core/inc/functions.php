@@ -112,10 +112,10 @@ function fileUrl($path) {
 	return null;
 }
 
-function renderTemplate($path, $vars) {
+function renderTemplate($include_path, $vars) {
 	extract($vars);
 	ob_start();
-	include $path;
+	include $include_path;
 	return ob_get_clean();
 }
 

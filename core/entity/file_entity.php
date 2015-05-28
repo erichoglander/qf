@@ -14,6 +14,13 @@ class File_Entity_Core extends Entity {
 		else
 			return PUBLIC_PATH."/".$this->get("uri");
 	}
+	
+	public function filename() {
+		$filename = $this->get("name");
+		if ($this->get("extension"))
+			$filename.= ".".$this->get("extension");
+		return $filename;
+	}
 
 	public function delete() {
 		@unlink($this->path());
