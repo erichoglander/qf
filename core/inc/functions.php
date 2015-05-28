@@ -68,6 +68,13 @@ function classToDir($class) {
 	return strtolower(preg_replace("/([a-z])([A-Z])/", "$1_$2", $class));
 }
 
+function formatBytes($bytes) {
+	if (!$bytes) return "0B";
+	$units = Array("B", "kB", "MB", "GB", "TB");
+	$pow = floor(log($bytes)/log(1024));
+	$bytes/= pow(1024, $pow);
+	return round($bytes, 2).$units[$pow];
+}
 
 function pr($data, $ret = 0) {
 	$html = "<pre>".print_r($data,1)."</pre>";

@@ -153,7 +153,7 @@ class Io_Core {
 	protected function filterFilename($value) {
 		$value = str_replace(" ", "-", $value);
 		$value = str_replace(["å", "ä", "ö", "Å", "Ä", "Ö"], ["a", "a", "o", "A", "A", "O"], $value);
-		$value = preg_replace("/[^a-z0-9\-\_\.]/", "", $value);
+		$value = preg_replace("/[^a-z0-9\-\_\.]/i", "", $value);
 		return $value;
 	}
 
