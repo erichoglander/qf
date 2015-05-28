@@ -12,10 +12,6 @@ class Image_FormItem extends File_FormItem {
 		$this->remove_button = t("Remove image");
 	}
 
-	protected function inputType() {
-		return "file";
-	}
-
 	protected function fileUploadValidate($file) {
 		list($width, $height) = getimagesize($file["tmp_name"]);
 		$e = null;

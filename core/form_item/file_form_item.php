@@ -27,6 +27,10 @@ class File_FormItem extends FormItem {
 		return !empty($file["tmp_name"]) && $this->uploaded === null;
 	}
 
+	protected function inputType() {
+		return "file";
+	}
+
 	protected function itemValue() {
 		if (!$this->submitted)
 			return $this->value;
