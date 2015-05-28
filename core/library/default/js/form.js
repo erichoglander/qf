@@ -1,14 +1,15 @@
-function formFileUpload(el, upload_callback) {
+function formFileUpload(el, callback) {
 
 	var item = formGetItem(el);
 	var simpleName = el.name.replace("[", "--").replace("]", "");
+	var name = el.name.substr(0, el.name.length-6);
 	
 	// Save current values
 	var action = el.form.action;
 	var onsubmit = el.form.onsubmit;
 	var enctype = el.form.enctype;
 	var target = el.form.target;
-	var path = "/file/upload/"+el.form.elements[el.name.substr(0, el.name.length-6)+"[token]"].value;
+	var token = el.form.elements[name+"[token]"].value;
 	
 	// Create iframe
 	var iframe = document.createElement("iframe");
@@ -18,14 +19,14 @@ function formFileUpload(el, upload_callback) {
 	iframe.style.display = "none";
 	
 	// Set form options
-	el.form.action = path+"/"+el.name;
+	el.form.action = "/file/upload/"+token;
 	el.form.onsubmit = "";
 	el.form.enctype = "multipart/form-data";
 	el.form.target = iframe.name;
 	
 	// Insert frame and add listener
 	el.parentNode.appendChild(iframe);
-	iframe.addEventListener("load", function(){ formFileUploadDone(el, upload_callback, iframe); }, false);
+	iframe.addEventListener("load", function(){ formFileUploadDone(el, callback, iframe); }, false);
 	
 	// Send form
 	if (typeof(el.form.submit) == "function")
@@ -33,7 +34,7 @@ function formFileUpload(el, upload_callback) {
 	else
 		el.form.submit.click();
 	
-	item.addClass("uploading");
+	item.addClass("loading");
 	
 	// Reset form options
 	el.form.action = action;
@@ -42,7 +43,7 @@ function formFileUpload(el, upload_callback) {
 	el.form.target = target;
 }
 
-function formFileUploadDone(el, upload_callback, iframe) {
+function formFileUploadDone(el, callback, iframe) {
 
 	var re = iframe.contentDocument.body.innerHTML;
 	var obj = JSON.parse(re);
@@ -50,7 +51,7 @@ function formFileUploadDone(el, upload_callback, iframe) {
 
 	iframe.parentNode.removeChild(iframe);
 	el.value = "";
-	item.removeClass("uploading");
+	item.removeClass("loading");
 	
 	if (obj.error) {
 		alert(obj.error);
@@ -63,12 +64,41 @@ function formFileUploadDone(el, upload_callback, iframe) {
 		item.parentNode.removeChild(item);
 	}
 
-	if (upload_callback)
-		upload_callback(el, obj);
+	if (callback)
+		callback(el, obj);
 
+}
+
+function formFileRemove(button, name, callback) {
+	var form = formGetForm(button);
+	var id = form.elements[name+"[id]"].value;
+	var token = form.elements[name+"[token]"].value;
+	var item = formGetItem(button);
+	if (!id)
+		return;
+	var callback = function(r) {
+		item.removeClass("loading");
+		if (r.error) {
+			alert(r.error);
+			return;
+		}
+		if (r.dom) {
+			var wrap = document.createElement("div");
+			jsonToHtml(wrap, r.dom);
+			item.parentNode.insertBefore(wrap.childNodes[0], item);
+			item.parentNode.removeChild(item);
+		}
+	};
+	item.addClass("loading");
+	var ajax = new xajax();
+	ajax.send("/file/remove/"+token+"/"+id,	callback);
 }
 
 function formGetItem(el) {
 	for (el; el && !el.className.match("form-item"); el = el.parentNode);
+	return el;
+}
+function formGetForm(el) {
+	for (el; el && el.tagName != "FORM"; el = el.parentNode);
 	return el;
 }

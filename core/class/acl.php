@@ -25,6 +25,15 @@ class Acl_Core {
 	protected function menuAdminAccess($User) {
 		return $User->id() == 1;
 	}
+	
+	/* FILE ACCESS */
+	protected function fileRemoveAccess($User, $file_id) {
+		if ($User->id() == 1)
+			return true;
+		if (!empty($_SESSION["file_uploaded"]) && in_array($file_id, $_SESSION["file_uploaded"]))
+			return true;
+		return false;
+	}
 
 	/* USER ACCESS */
 	protected function userAdminAccess($User) {

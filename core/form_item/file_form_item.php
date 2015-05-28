@@ -2,6 +2,7 @@
 class File_FormItem extends FormItem {
 	
 	protected $upload = false;
+	protected $remove = false;
 	protected $uploaded = null;
 	protected $upload_button, $remove_button;
 	protected $upload_folder;
@@ -49,6 +50,8 @@ class File_FormItem extends FormItem {
 			foreach (array_keys($file) as $field)
 				$file[$field] = $this->nestedValue($file[$field], $keys);
 		}
+		if (empty($file["tmp_name"]))
+			return null;
 		if (!empty($file["error"])) {
 			$errors = [
 				UPLOAD_ERR_INI_SIZE => t("File is too big (server file limit)"),
@@ -89,6 +92,7 @@ class File_FormItem extends FormItem {
 			$this->setError(t("An error occurred while saving file"));
 			return false;
 		}
+		$_SESSION["file_uploaded"][] = $File->id();
 		$this->uploaded = $File->id();
 		return $File->id();
 	}
@@ -155,8 +159,6 @@ class File_FormItem extends FormItem {
 			$_SESSION["file_upload"] = [];
 		$token = $this->fileToken();
 		$info = $this->structure;
-		$info["submitted"] = true;
-		$info["upload"] = true;
 		$_SESSION["file_upload"][$token] = $info;
 		return $token;
 	}

@@ -129,14 +129,15 @@ input {
 	cursor: pointer;
 }
 
-.form-type-file.uploading .form-file-loader,
+.form-type-file.loading .form-file-loader,
 .form-file-upload,
 .form-type-file.has-value .form-file-preview {
 	display: block;
 }
 .form-file-loader,
 .form-type-file.has-value .form-file-upload,
-.form-type-file.uploading .form-file-upload,
+.form-type-file.loading .form-file-upload,
+.form-type-file.loading .form-file-preview,
 .form-file-preview {
 	display: none;
 }
