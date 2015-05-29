@@ -17,10 +17,9 @@ $updates = $Updater->getUpdates();
 $n = count($updates);
 if (!$n)
 	die("No updates required.\n");
-print $n." updates needed. Proceeding.\n";
 foreach ($updates as $update) {
 	print "Running update ".$update."\n";
 	if (!$Updater->runUpdate($update))
 		print "Update failed. Shutting down\n";
 }
-print "Updates completed.\n";
+print "Updates complete.\n";
