@@ -66,6 +66,7 @@ class User_Entity_Core extends Entity {
 	}
 
 	public function logout() {
+		unset($_SESSION["file_uploaded"]);
 		unset($_SESSION["file_upload"]);
 		unset($_SESSION["user_id"]);
 	}

@@ -212,6 +212,9 @@ class File_FormItem extends FormItem {
 	protected function removeCallback() {
 		return ($this->remove_callback ? $this->remove_callback : "null");
 	}
+	protected function parentMultiple() {
+		return ($this->parent_multiple ? $this->parent_multiple : "null");
+	}
 
 	protected function fileToken() {
 		return $this->form_name."--".str_replace("[", "-", str_replace("]", "", $this->inputName()));
@@ -235,12 +238,13 @@ class File_FormItem extends FormItem {
 		$vars["file_max_size"] = $this->file_max_size;
 		$vars["preview"] = $this->preview();
 		$vars["token"] = $this->fileSession();
+		$vars["file_remove"] = "formFileRemove(this, '".$this->inputName()."', ".$this->parentMultiple().", ".$this->removeCallback().")";
 	}
 
 	protected function getAttributes() {
 		$attr = parent::getAttributes();
 		$attr["name"].= "[file]";
-		$attr["onchange"] = "formFileUpload(this, ".$this->uploadCallback().")";
+		$attr["onchange"] = "formFileUpload(this, ".$this->parentMultiple().", ".$this->uploadCallback().")";
 		return $attr;
 	}
 

@@ -76,6 +76,16 @@ function formatBytes($bytes) {
 	return round($bytes, 2).$units[$pow];
 }
 
+function getjson($assoc = false) {
+	$post = @file_get_contents("php://input");
+	if (!$post)
+		return null;
+	$post = trim($post);
+	if (strpos($post, "{") === 0 || strpos($post, "[") === 0)
+		return @json_decode($post, $assoc);
+	return null;
+}
+
 function pr($data, $ret = 0) {
 	$html = "<pre>".print_r($data,1)."</pre>";
 	if ($ret)

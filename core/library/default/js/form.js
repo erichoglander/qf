@@ -1,4 +1,4 @@
-function formFileUpload(el, callback) {
+function formFileUpload(el, parent_multiple, callback) {
 
 	var item = formGetItem(el);
 	var simpleName = el.name.replace("[", "--").replace("]", "");
@@ -19,14 +19,14 @@ function formFileUpload(el, callback) {
 	iframe.style.display = "none";
 	
 	// Set form options
-	el.form.action = "/file/upload/"+token;
+	el.form.action = "/form/fileupload/"+token;
 	el.form.onsubmit = "";
 	el.form.enctype = "multipart/form-data";
 	el.form.target = iframe.name;
 	
 	// Insert frame and add listener
 	el.parentNode.appendChild(iframe);
-	iframe.addEventListener("load", function(){ formFileUploadDone(el, callback, iframe); }, false);
+	iframe.addEventListener("load", function(){ formFileUploadDone(el, parent_multiple, callback, iframe); }, false);
 	
 	// Send form
 	if (typeof(el.form.submit) == "function")
@@ -43,7 +43,7 @@ function formFileUpload(el, callback) {
 	el.form.target = target;
 }
 
-function formFileUploadDone(el, callback, iframe) {
+function formFileUploadDone(el, parent_multiple, callback, iframe) {
 
 	var re = iframe.contentDocument.body.innerHTML;
 	var obj = JSON.parse(re);
@@ -58,10 +58,18 @@ function formFileUploadDone(el, callback, iframe) {
 		return;
 	}
 	if (obj.dom) {
+		if (parent_multiple) 
+			var parent = formGetItem(item.parentNode);
 		var wrap = document.createElement("div");
 		jsonToHtml(wrap, obj.dom);
 		item.parentNode.insertBefore(wrap.childNodes[0], item);
 		item.parentNode.removeChild(item);
+		if (parent_multiple) {
+			var btns = parent.getElementsByClassName("form-add-button");
+			if (btns.length) {
+				btns[btns.length-1].trigger("click");
+			}
+		}
 	}
 
 	if (callback)
@@ -69,7 +77,7 @@ function formFileUploadDone(el, callback, iframe) {
 
 }
 
-function formFileRemove(button, name, callback) {
+function formFileRemove(button, name, parent_multiple, callback) {
 	var form = formGetForm(button);
 	var id = form.elements[name+"[id]"].value;
 	var token = form.elements[name+"[token]"].value;
@@ -83,15 +91,60 @@ function formFileRemove(button, name, callback) {
 			return;
 		}
 		if (r.dom) {
-			var wrap = document.createElement("div");
-			jsonToHtml(wrap, r.dom);
-			item.parentNode.insertBefore(wrap.childNodes[0], item);
-			item.parentNode.removeChild(item);
+			if (parent_multiple) {
+				formDeleteButton(button);
+			}
+			else {
+				var wrap = document.createElement("div");
+				jsonToHtml(wrap, r.dom);
+				item.parentNode.insertBefore(wrap.childNodes[0], item);
+				item.parentNode.removeChild(item);
+			}
 		}
 	};
 	item.addClass("loading");
 	var ajax = new xajax();
-	ajax.send("/file/remove/"+token+"/"+id,	callback);
+	ajax.send("/form/fileremove/"+token+"/"+id,	callback);
+}
+
+function formDeleteButton(el) {
+	var item = formGetItem(el);
+	item.parentNode.removeChild(item);
+	var parent = formGetItem(el.parentNode);
+	if (parent.getElementsByClassName("form-item").length < 1) {
+		var adds = parent.getElementsByClassName("form-add-button");
+		if (adds.length) 
+			adds[adds.length-1].trigger("click");
+	}
+}
+
+var _formAdding = false;
+function formAddButton(el, structure) {
+	if (_formAdding)
+		return;
+	_formAdding = true;
+	var item = formGetItem(el);
+	item.addClass("loading");
+	var cname = el.previousElementSibling.className.match(/form\-name\-([0-9]+)/);
+	var n = parseInt(cname[1])+1;
+	var callback = function(r) {
+		_formAdding = false;
+		item.removeClass("loading");
+		if (r.dom) {
+			var wrap = document.createElement("div");
+			jsonToHtml(wrap, r.dom);
+			item.insertBefore(wrap.childNodes[0], el);
+		}
+	};
+	structure.name = n;
+	var data = {
+		method: "POST",
+		obj: {
+			structure: structure
+		}
+	};
+	var ajax = new xajax();
+	ajax.send("/form/additem", callback, data);
 }
 
 function formGetItem(el) {

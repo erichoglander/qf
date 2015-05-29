@@ -32,5 +32,8 @@ else {
 <?php } ?>
 	<?=$delete_button?>
 	<?=$add_button?>
+	<div class="form-item-loader">
+		<?=FontAwesome\Icon("spinner", "fa-pulse")?>
+	</div>
 </div>
 <?=$suffix?>

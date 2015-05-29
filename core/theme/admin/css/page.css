@@ -80,8 +80,7 @@ a.btn,
 	border: 1px solid #ccc;
 	border-radius: 4px;
 }
-.btn:hover,
-.btn:focus {
+.btn:hover {
 	background-color: #E6E6E6;
 	border-color: #ADADAD;
 	text-decoration: none;
@@ -93,8 +92,7 @@ a.btn-primary,
 	background: #337AB7;
 	border-color: #337AB7;
 }
-.btn-primary:hover,
-.btn-primary:focus {
+.btn-primary:hover {
 	background: #286090;
 	border-color: #286090;
 }
@@ -104,8 +102,7 @@ a.btn-danger,
 	background: #D9534F;
 	border-color: #D43F3A;
 }
-.btn-danger:hover,
-.btn-danger:focus {
+.btn-danger:hover {
 	background: #C9302C;
 	border-color: #AC2925;
 }

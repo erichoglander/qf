@@ -27,6 +27,7 @@ class FormItem {
 	protected $item_class;
 
 	protected $structure = [];
+	protected $item_structure = [];
 	protected $parent_name;
 	protected $error = [];
 
@@ -177,6 +178,12 @@ class FormItem {
 				unset($st["focus"]);
 				$this->loadItem($i, $st);
 			}
+			unset($st["filter"]);
+			unset($st["validation"]);
+			unset($st["submitted"]);
+			unset($st["value"]);
+			$st["form_item_class"] = get_class($this);
+			$this->item_structure = $st;
 		}
 		else {
 			if (isset($structure["items"])) {
@@ -380,17 +387,15 @@ class FormItem {
 	protected function renderAddButton() {
 		if (!$this->multiple) 
 			return null;
-		$data = $this->structure;
-		unset($data["filter"]);
-		unset($data["validation"]);
-		unset($data["submitted"]);
+		$values = 
+		$data = $this->item_structure;
 		$json = htmlspecialchars(json_encode($data), ENT_QUOTES);
-		return '<input type="button" class="form-button" value="'.$this->add_button.'" onclick="formAddButton(this, '.$json.')">';
+		return '<input type="button" class="form-button form-add-button btn" value="'.$this->add_button.'" onclick="formAddButton(this, '.$json.')">';
 	}
 	protected function renderDeleteButton() {
 		if (!$this->parent_multiple)
 			return null;
-		return '<input type="button" class="form-button" value="'.$this->delete_button.'" onclick="formDeleteButton(this)">';
+		return '<input type="button" class="form-button form-delete-button btn" value="'.$this->delete_button.'" onclick="formDeleteButton(this)">';
 	}
 
 };

@@ -26,8 +26,8 @@ class Acl_Core {
 		return $User->id() == 1;
 	}
 	
-	/* FILE ACCESS */
-	protected function fileRemoveAccess($User, $file_id) {
+	/* FORM ACCESS */
+	protected function formFileRemoveAccess($User, $file_id) {
 		if ($User->id() == 1)
 			return true;
 		if (!empty($_SESSION["file_uploaded"]) && in_array($file_id, $_SESSION["file_uploaded"]))

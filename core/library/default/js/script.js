@@ -19,11 +19,39 @@ Element.prototype.removeClass = function(cname) {
 			var a = this.className.split(" ");
 			var i = a.indexOf(cname);
 			if (i != -1) {
-				a.slice(i, 1);
+				a.splice(i, 1);
 				this.className = a.join(" ");
 			}
 		}
 	}
+}
+if (typeof(document.getElementsByClassName) != "function") {
+	HTMLDocument.prototype.getElementsByClassName = function(cname) {
+		var a = [];
+		var re = new RegExp('(^| )'+classname+'( |$)');
+		var els = node.getElementsByTagName("*");
+		for(var i=0,j=els.length; i<j; i++)
+				if(re.test(els[i].className))a.push(els[i]);
+		return a;
+	}
+	Element.prototype.getElementsByClassName = function(cname) {
+		var a = [];
+		var re = new RegExp('(^| )'+classname+'( |$)');
+		var els = node.getElementsByTagName("*");
+		for(var i=0,j=els.length; i<j; i++)
+				if(re.test(els[i].className))a.push(els[i]);
+		return a;
+	}
+}
+
+Element.prototype.trigger = function(type) {
+	if ("createEvent" in document) {
+    var evt = document.createEvent("HTMLEvents");
+    evt.initEvent(type, false, true);
+    this.dispatchEvent(evt);
+	}
+	else
+    this.fireEvent("on"+type);
 }
 
 if (typeof(window.addEventListener) != "function") {
