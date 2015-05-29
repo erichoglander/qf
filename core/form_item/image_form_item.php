@@ -3,8 +3,10 @@ class Image_FormItem extends File_FormItem {
 	
 	protected $file_extensions = ["jpeg", "jpg", "png", "gif"];
 	protected $image_exact_size, $image_min_size, $image_max_size;
+	protected $file_folder = "images";
 	protected $template = "file";
 	protected $preview_template = "image";
+	protected $image_style = "upload";
 
 
 	protected function loadDefault() {
@@ -30,6 +32,17 @@ class Image_FormItem extends File_FormItem {
 			return false;
 		}
 		return true;
+	}
+	
+	protected function preRenderPreview(&$vars) {
+		if ($this->image_style) {
+			$Imagestyle = newClass("Imagestyle", $vars["path"]);
+			if ($Imagestyle->styleExists($this->image_style)) {
+				$url = $Imagestyle->style($this->image_style);
+				if ($url)
+					$vars["url"] = $url;
+			}
+		}
 	}
 
 	protected function preRenderInput(&$vars) {

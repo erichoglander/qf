@@ -34,6 +34,24 @@ class Cache_Core {
 
 	public function clear() {
 		$this->Db->delete("cache");
+		$this->clearImagestyles();
+	}
+	
+	public function clearImageStyles() {
+		$this->rmr(PUBLIC_PATH."/images/styles");
+	}
+	
+	
+	protected function rmr($path) {
+		if (is_dir($path)) {
+			$files = array_diff(scandir($path), [".", ".."]);
+			foreach ($files as $file)
+				rmr($file);
+			rmdir($path);
+		}
+		else if (is_file($path)) {
+			unlink($rmr);
+		}
 	}
 
 }

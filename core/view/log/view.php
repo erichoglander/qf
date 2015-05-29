@@ -8,4 +8,6 @@ $this->Html->breadcrumbs[] = $this->Html->title;
 <p><b>IP:</b> <?=$Log->get("ip")?></p>
 <p><b>Date:</b> <?=date("Y-m-d H:i:s", $Log->get("created"))?></p>
 <p class="log-text"><?=nl2br(xss($Log->get("text")))?></p>
-<p class="log-data"><?=pr($Log->get("data"), 1)?></p>
+<?php if ($Log->get("data")) { ?>
+	<p class="log-data"><?=pr($Log->get("data"), 1)?></p>
+<?php } ?>

@@ -39,23 +39,8 @@ class Updater_Core {
 	
 	
 	/**
-	* CORE UPDATES
+	* CORE UPDATES BELOW
 	*/
-	protected function update_1() {
-		$num = $this->Db->numRows("SHOW TABLES LIKE 'image_style'");
-		if (!$num) {
-			$sql = "
-					CREATE TABLE IF NOT EXISTS `image_style` (
-						`key` varchar(64) COLLATE utf8_swedish_ci NOT NULL,
-						`title` varchar(128) COLLATE utf8_swedish_ci NOT NULL,
-						`type` varchar(64) COLLATE utf8_swedish_ci NOT NULL,
-						`width` int(10) unsigned NOT NULL,
-						`height` int(10) unsigned NOT NULL,
-						PRIMARY KEY (`key`)
-					) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci";
-			return $this->Db->query($sql);
-		}
-		return true;
-	}
+	
 	
 };

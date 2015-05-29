@@ -101,6 +101,12 @@ class Io_Core {
 		$this->setError("Invalid time (HH:MM or HH:MM:SS)");
 		return false;
 	}
+	protected function validateMachineName($value) {
+		if (preg_match("/^[a-z0-9\_]+$/", $value))
+			return true;
+		$this->setError("Invalid machine name (only a-z, 0-9, and _)");
+		return false;
+	}
 	protected function validateEmail($value) {
 		if (filter_var($value, FILTER_VALIDATE_EMAIL))
 			return true;

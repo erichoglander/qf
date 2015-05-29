@@ -124,6 +124,8 @@ class File_FormItem extends FormItem {
 		$keys = explode("[", str_replace("]", "", $this->inputName()));
 		$keys[] = "file";
 		$file = $_FILES[$keys[0]];
+		if (empty($file))
+			return null;
 		array_shift($keys);
 		foreach (array_keys($file) as $field)
 			$file[$field] = $this->nestedValue($file[$field], $keys);
@@ -135,12 +137,15 @@ class File_FormItem extends FormItem {
 		$info = pathinfo($file["name"]);
 		$path = ($this->file_dir == "private" ? PRIVATE_PATH : PUBLIC_PATH)."/";
 		$uri = ($this->file_folder ? $this->file_folder."/" : "");
+		$folder = substr($path.$uri, 0, -1);
+		if (!file_exists($folder))
+			mkdir($folder, 0774, true);
 		$name = $this->Io->filter($info["filename"], "filename");
 		$ext = strtolower($this->Io->filter($info["extension"], "alphanum"));
 		for ($fname = $name.".".$ext, $i = 0; file_exists($path.$uri.$fname); $fname = $name."-".$i.".".$ext, $i++);
 		if (!move_uploaded_file($file["tmp_name"], $path.$uri.$fname)) {
 			$this->setError(t("Insufficient directory permissions, contact administrator"));
-			$this->setError($path.$uri.$fname);
+			addlog($this->Db, "file", t("Insufficient directory permissions"), $path.$uri.$fname, "error");
 			return $this->value;
 		}
 		$File = newClass("File_Entity", $this->Db);
