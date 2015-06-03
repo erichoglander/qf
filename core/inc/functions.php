@@ -98,6 +98,16 @@ function xss($str) {
 	return htmlspecialchars($str, ENT_QUOTES);
 }
 
+function shorten($str, $len) {
+	if (strlen($str) > $len) {
+		$x = strrpos($str, " ");
+		if ($x > $len-3)
+			return shorten(substr($str, 0, $x));
+		$str = substr($str, 0, $x)."...";
+	}
+	return $str;
+}
+
 function cssClass($str) {
 	$str = strtolower($str);
 	$str = preg_replace("/[\ \_]/", "-", $str);

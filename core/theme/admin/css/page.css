@@ -162,3 +162,36 @@ tr.status-error {
 	background-color: #F2DEDE;
 	border-color: #EBCCD1;
 }
+
+
+
+.pager {
+	margin: 30px 0 0;
+	text-align: center;
+}
+.page {
+	display: inline-block;
+	padding: 6px 12px;
+	margin-left: -1px;
+	color: #337AB7;
+	text-decoration: none;
+	background: #FFF;
+	border: 1px solid #DDD;
+}
+.page:hover {
+	color: #23527C;
+	background: #EEE;
+	border-color: #DDD;
+	text-decoration: none;
+}
+.page:first-child {
+	border-radius: 4px 0 0 4px;
+}
+.page:last-child {
+	border-radius: 0 4px 4px 0;
+}
+.page.page-current {
+	color: #FFF;
+	background: #337AB7;
+	border-color: #337AB7;
+}

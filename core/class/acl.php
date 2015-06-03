@@ -52,6 +52,11 @@ class Acl_Core {
 		return $User->id() == 1;
 	}
 
+	/* I18N ACCESS */
+	protected function i18nAdminAccess($User) {
+		return $User->id() == 1;
+	}
+
 	/* ALIAS ACCESS */
 	protected function aliasAdminAccess($User) {
 		return $User->id() == 1;

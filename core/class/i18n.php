@@ -1,7 +1,7 @@
 <?php
 class i18n_Core {
 
-	public $lang = "en";
+	public $lang = "sv";
 
 	protected $Db;
 
