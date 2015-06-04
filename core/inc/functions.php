@@ -180,7 +180,6 @@ function addlog($Db, $category, $text, $data = null, $type = "info") {
 		$obj["data"] = serialize($data);
 	}
 	catch (Exception $e) {
-		addlog($Db, "log", t("Failed to serialize data"), print_r($data,1), "error");
 		$obj["data"] = null;
 	}
 	$Db->insert("log", $obj);
