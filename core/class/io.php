@@ -8,7 +8,7 @@ class Io_Core {
 
 
 	public function getError() {
-		return t($this->error);
+		return $this->error;
 	}
 	public function setError($e) {
 		$this->error = $e;
@@ -62,67 +62,67 @@ class Io_Core {
 	protected function validateNumber($value) {
 		if (preg_match("/^\-?[0-9]+[\.|\,]?[0-9]*$/", $value))
 			return true;
-		$this->setError("Invalid number");
+		$this->setError(t("Invalid number"));
 		return false;
 	}
 	protected function validateInt($value) {
 		if (preg_match("/^\-?[0-9]+$/", $value))
 			return true;
-		$this->setError("Invalid integer");
+		$this->setError(t("Invalid integer"));
 		return false;
 	}
 	protected function validateUint($value) {
 		if (preg_match("/^[0-9]+$/", $value))
 			return true;
-		$this->setError("Invalid positive integer");
+		$this->setError(t("Invalid positive integer"));
 		return false;
 	}
 	protected function validateFloat($value) {
 		if (preg_match("/^\-?[0-9]+\.?[0-9]*$/", $value))
 			return true;
-		$this->setError("Invalid decimal number");
+		$this->setError(t("Invalid decimal number"));
 		return false;
 	}
 	protected function validateUfloat($value) {
 		if (preg_match("/^[0-9]+\.?[0-9]*$/", $value))
 			return true;
-		$this->setError("Invalid positive decimal number");
+		$this->setError(t("Invalid positive decimal number"));
 		return false;
 	}
 	protected function validateDate($value) {
 		if (preg_match("/^[0-9]{4}\-[0-9]{2}\-[0-9]{2}$/", $value))
 			return true;
-		$this->setError("Invalid date (YYYY-MM-DD)");
+		$this->setError(t("Invalid date (YYYY-MM-DD)"));
 		return false;
 	}
 	protected function validateTime($value) {
 		if (preg_match("/^([0-9]{2}\:){1,2}[0-9]{2}$/", $value)) 
 			return true;
-		$this->setError("Invalid time (HH:MM or HH:MM:SS)");
+		$this->setError(t("Invalid time (HH:MM or HH:MM:SS)"));
 		return false;
 	}
 	protected function validateMachineName($value) {
 		if (preg_match("/^[a-z0-9\_]+$/", $value))
 			return true;
-		$this->setError("Invalid machine name (only a-z, 0-9, and _)");
+		$this->setError(t("Invalid machine name (only a-z, 0-9, and _)"));
 		return false;
 	}
 	protected function validateEmail($value) {
 		if (filter_var($value, FILTER_VALIDATE_EMAIL))
 			return true;
-		$this->setError("Invalid e-mail address");
+		$this->setError(t("Invalid e-mail address"));
 		return false;
 	}
 	protected function validateIp($value) {
 		if (filter_var($value, FILTER_VALIDATE_IP))
 			return true;
-		$this->setError("Invalid IP-address");
+		$this->setError(t("Invalid IP-address"));
 		return false;
 	}
 	protected function validateUsername($value) {
 		if (preg_match("/^[a-z0-9\-\_\@\.\*\^\~]+$/i", $value))
 			return true;
-		$this->setError("Illegal username");
+		$this->setError(t("Illegal username"));
 		return false;
 	}
 

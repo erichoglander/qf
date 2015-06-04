@@ -257,7 +257,7 @@ class FormItem {
 	}
 
 	protected function isTextfield() {
-		$arr = ["text", "password", "tel", "url", "email", "search", "number"];
+		$arr = ["text", "textarea", "password", "tel", "url", "email", "search", "number"];
 		return in_array($this->inputType(), $arr);
 	}
 

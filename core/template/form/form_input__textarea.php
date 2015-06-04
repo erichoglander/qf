@@ -1,1 +1,1 @@
-<textarea <?=$attributes?>><?=$value?></textarea>
+<textarea <?=$attributes?><?=($focus ? " autofocus" : "")?>><?=$value?></textarea>

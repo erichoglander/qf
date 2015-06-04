@@ -77,6 +77,16 @@ class Config_Core {
 					"system" => [
 						"title" => "System",
 						"links" => [
+							"translations" => [
+								"title" => "Translations",
+								"href" => "i18n/list",
+								"links" => [
+									"scan" => [
+										"title" => "Scan code",
+										"href" => "i18n/scan",
+									],
+								],
+							],
 							"logs" => [
 								"title" => "Logs",
 								"href" => "log/list",

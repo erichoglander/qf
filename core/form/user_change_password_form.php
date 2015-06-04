@@ -3,7 +3,7 @@ class UserChangePassword_Form extends Form {
 
 	public function validate($values) { 
 		if ($values["password"] !== $values["password_confirm"]) {
-			$this->setError(t("Passwords miscmatch"), "password");
+			$this->setError(t("Passwords mismatch"), "password");
 			return false;
 		}
 		return true;

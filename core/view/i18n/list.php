@@ -3,6 +3,8 @@ $this->Html->h1 = $this->Html->title = t("Translations");
 $this->Html->breadcrumbs[] = $this->Html->title;
 ?>
 
+<?=$search?>
+
 <table class="striped">
 	<thead>
 		<tr>
@@ -17,7 +19,7 @@ $this->Html->breadcrumbs[] = $this->Html->title;
 	foreach ($translations as $translation) { 
 		$translation_languages = "";
 		foreach ($translation->translations as $tr)
-			$translations_languages.= $tr->lang." ";
+			$translation_languages.= $tr->lang." ";
 	?>
 		<tr>
 			<td><?=xss(shorten($translation->text, 100))?></td>
