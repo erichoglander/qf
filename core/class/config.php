@@ -89,6 +89,10 @@ class Config_Core {
 										"title" => "Export",
 										"href" => "l10n/export",
 									],
+									"import" => [
+										"title" => "Import",
+										"href" => "l10n/import",
+									],
 								],
 							],
 							"logs" => [

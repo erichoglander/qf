@@ -9,6 +9,25 @@ class l10n_Controller_Core extends Controller {
 		redirect("l10n/list");
 	}
 
+	public function importAction() {
+		$Form = $this->getForm("l10nStringImport");
+		if ($Form->isSubmitted()) {
+			$values = $Form->values();
+			$File = $this->getEntity("File", $values["file"]);
+			$json = @json_decode(file_get_contents($File->path()));
+			if ($json) {
+				$n = $this->Model->import($json);
+				setmsg(t(":n translations imported", "en", [":n" => $n]), "success");
+				refresh();
+			}
+			else {
+				$this->defaultError();
+			}
+		}
+		$this->viewData["form"] = $Form->render();
+		return $this->view("import");
+	}
+
 	public function exportAction() {
 		$languages = $this->Model->getActiveLanguages();
 		$Form = $this->getForm("l10nStringExport", ["languages" => $languages]);

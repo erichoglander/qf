@@ -9,6 +9,60 @@ class l10n_Model_Core extends Model {
 		return $languages;
 	}
 
+	public function import($l10n_strings = []) {
+		$n = 0;
+		foreach ($l10n_strings as $l10n_string) {
+			if (empty($l10n_string->string) || empty($l10n_string->lang))
+				continue;
+			$source = $this->Db->getRow("
+					SELECT id FROM `l10n_string` 
+					WHERE 
+						lang = :lang &&
+						string = :string &&
+						sid = 0",
+					[	":lang" => $l10n_string->lang,
+						":string" => $l10n_string->string]);
+			if ($source) {
+				$l10nString = $this->getEntity("l10nString", $source->id);
+				$l10nString->loadAll();
+			}
+			else {
+				$l10nString = $this->getEntity("l10nString");
+				$l10nString->set("lang", $l10n_string->lang);
+				$l10nString->set("sid", 0);
+				$l10nString->set("input_type", "import");
+				$l10nString->set("string", $l10n_string->string);
+				$l10nString->save();
+			}
+			if (!empty($l10n_string->translations)) {
+				foreach ($l10n_string->translations as $lang => $translation) {
+					if (empty($translation->string))
+						continue;
+					if ($source && isset($l10nString->translations[$lang])) {
+						if ($l10nString->translations[$lang]->get("string") == $translation->string) 
+							continue;
+						if ($l10nString->translations[$lang]->get("input_type") == "manual")
+							continue;
+						$l10nString->translations[$lang]->set("string", $translation->string);
+						$l10nString->translations[$lang]->set("input_type", "import");
+						$l10nString->translations[$lang]->save();
+						$n++;
+					}
+					else {
+						$l10nString->translations[$lang] = $this->getEntity("l10nString");
+						$l10nString->translations[$lang]->set("lang", $lang);
+						$l10nString->translations[$lang]->set("string", $translation->string);
+						$l10nString->translations[$lang]->set("sid", $l10nString->id());
+						$l10nString->translations[$lang]->set("input_type", "import");
+						$l10nString->translations[$lang]->save();
+						$n++;
+					}
+				}
+			}
+		}
+		return $n;
+	}
+
 	public function export($values) {
 		$l10n_strings = [];
 		$sql = "SELECT id, lang, string FROM `l10n_string` WHERE sid = 0";
@@ -46,7 +100,8 @@ class l10n_Model_Core extends Model {
 				$l10nString->translations[$lang]->set("lang", $lang);
 				$l10nString->translations[$lang]->set("input_type", "manual");
 				$l10nString->translations[$lang]->set("string", $string);
-				if (!$l10nString->translations->save())
+				$l10nString->translations[$lang]->set("sid", $l10nString->id());
+				if (!$l10nString->translations[$lang]->save())
 					return false;
 			}
 			else {
