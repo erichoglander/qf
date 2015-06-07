@@ -85,6 +85,10 @@ class Config_Core {
 										"title" => "Scan code",
 										"href" => "l10n/scan",
 									],
+									"export" => [
+										"title" => "Export",
+										"href" => "l10n/export",
+									],
 								],
 							],
 							"logs" => [

@@ -9,6 +9,15 @@ class l10n_Controller_Core extends Controller {
 		redirect("l10n/list");
 	}
 
+	public function exportAction() {
+		$Form = $this->getForm("l10nStringExport");
+		if ($Form->isSubmitted()) {
+			
+		}
+		$this->viewData["form"] = $Form->render();
+		return $this->view("export");
+	}
+
 	public function scanAction() {
 		$Form = $this->getForm("l10nStringScan");
 		if ($Form->isSubmitted()) {
