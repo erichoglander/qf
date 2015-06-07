@@ -1,16 +1,16 @@
 <?php
-class i18n_Controller_Core extends Controller {
+class l10n_Controller_Core extends Controller {
 	
 	public function acl($action) {
-		return ["i18nAdmin"];
+		return ["l10nAdmin"];
 	}
 
 	public function indexAction() {
-		redirect("i18n/list");
+		redirect("l10n/list");
 	}
 
 	public function scanAction() {
-		$Form = $this->getForm("TranslationScan");
+		$Form = $this->getForm("l10nStringScan");
 		if ($Form->isSubmitted()) {
 			$values = $Form->values();
 			if (!empty($values["parts"])) {
@@ -41,22 +41,18 @@ class i18n_Controller_Core extends Controller {
 	public function editAction($args = []) {
 		if (empty($args[0]))
 			return $this->notFound();
-		$translation = $this->Model->getTranslation($args[0]);
+		$l10nString = $this->getEntity("l10nString", $args[0]);
+		if (!$l10nString->id())
+			return $this->notFound();
+		$l10nString->loadAll();
 		$languages = $this->Model->getActiveLanguages();
-		$Form = $this->getForm("TranslationEdit", ["translation" => $translation, "languages" => $languages]);
+		$Form = $this->getForm("l10nStringEdit", ["l10nString" => $l10nString, "languages" => $languages]);
 		if ($Form->isSubmitted()) {
 			$values = $Form->values();
-			foreach ($languages as $language) {
-				if ($language->lang != $translation->lang) {
-					if (isset($translation->translations[$language->lang])) 
-						$translation->translations[$language->lang]->text = $values[$language->lang];
-					else 
-						$translation->translations[$language->lang] = (object) ["text" => $values[$language->lang]];
-				}
-			}
-			if ($this->Model->saveTranslation($translation)) {
+			unset($values["source"]);
+			if ($this->Model->editString($l10nString, $values)) {
 				setmsg(t("Translation saved"), "success");
-				redirect("i18n/list");
+				redirect("l10n/list");
 			}
 			else {
 				$this->defaultError();
@@ -69,24 +65,27 @@ class i18n_Controller_Core extends Controller {
 	public function deleteAction($args = []) {
 		if (empty($args[0]))
 			return $this->notFound();
-		if ($this->Model->deleteTranslation($args[0]))
+		$l10nString = $this->getEntity("l10nString", $args[0]);
+		if (!$l10nString->id())
+			return $this->notFound();
+		if ($this->Model->deleteString($l10nString))
 			setmsg(t("Translation deleted"), "success");
 		else
 			$this->defaultError();
-		redirect("i18n/list");
+		redirect("l10n/list");
 	}
 
 	public function listAction($args = []) {
-		$q = (array_key_exists("i18n_search", $_SESSION) ? $_SESSION["i18n_search"] : null);
+		$q = (array_key_exists("l10n_search", $_SESSION) ? $_SESSION["l10n_search"] : null);
 		$Form = $this->getForm("Search", ["q" => $q]);
 		if ($Form->isSubmitted()) {
 			$values = $Form->values();
-			$_SESSION["i18n_search"] = $values["q"];
+			$_SESSION["l10n_search"] = $values["q"];
 			refresh();
 		}
 		$Pager = newClass("Pager");
 		$Pager->setNum($this->Model->searchNum($q));
-		$this->viewData["translations"] = $this->Model->search($q, $Pager->start(), $Pager->ppp);
+		$this->viewData["l10n_strings"] = $this->Model->search($q, $Pager->start(), $Pager->ppp);
 		$this->viewData["pager"] = $Pager->render();
 		$this->viewData["search"] = $Form->render();
 		return $this->view("list");

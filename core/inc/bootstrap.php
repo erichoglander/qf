@@ -6,7 +6,7 @@ require_once(DOC_ROOT."/core/inc/constants.php");
 require_once(DOC_ROOT."/core/inc/functions.php");
 require_once(DOC_ROOT."/core/inc/country_list.php");
 require_once(DOC_ROOT."/core/entity/entity.php");
-require_once(DOC_ROOT."/core/entity/i18n_entity.php");
+require_once(DOC_ROOT."/core/entity/l10n_entity.php");
 require_once(DOC_ROOT."/core/controller/controller.php");
 require_once(DOC_ROOT."/core/model/model.php");
 require_once(DOC_ROOT."/core/class/mail_message.php");

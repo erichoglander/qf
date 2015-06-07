@@ -1,9 +1,9 @@
 <?php
-class TranslationScan_Form_Core extends Form {
+class l10nStringScan_Form_Core extends Form {
 	
 	protected function structure() {
 		return [
-			"name" => "translation_scan",
+			"name" => "l10n_string_scan",
 			"items" => [
 				"parts" => [
 					"type" => "checkboxes",

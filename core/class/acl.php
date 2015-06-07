@@ -52,8 +52,8 @@ class Acl_Core {
 		return $User->id() == 1;
 	}
 
-	/* I18N ACCESS */
-	protected function i18nAdminAccess($User) {
+	/* L10N ACCESS */
+	protected function l10nAdminAccess($User) {
 		return $User->id() == 1;
 	}
 

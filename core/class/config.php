@@ -77,13 +77,13 @@ class Config_Core {
 					"system" => [
 						"title" => "System",
 						"links" => [
-							"translations" => [
-								"title" => "Translations",
-								"href" => "i18n/list",
+							"l10n" => [
+								"title" => "Localization",
+								"href" => "l10n/list",
 								"links" => [
 									"scan" => [
 										"title" => "Scan code",
-										"href" => "i18n/scan",
+										"href" => "l10n/scan",
 									],
 								],
 							],

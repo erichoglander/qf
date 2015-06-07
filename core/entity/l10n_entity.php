@@ -1,7 +1,9 @@
 <?php
-class i18n_Entity extends Entity {
+class l10n_Entity extends Entity {
 
-	public $default_lang = "en";
+	public $default_lang = LANG;
+	public $translations;
+
 
 	public function __construct(&$Db, $id = null, $lang = null) {
 		parent::__construct($Db, null);
@@ -9,11 +11,55 @@ class i18n_Entity extends Entity {
 			$this->load($id, $lang);
 	}
 
+	public function saveAll() {
+		if (!$this->save())
+			return false;
+		if (!empty($this->translations)) {
+			foreach ($this->translations as $Entity) {
+				$Entity->set("sid", $this->id());
+				if (!$Entity->save())
+					return false;
+			}
+		}
+		return true;
+	}
+
+	public function loadAll() {
+		$this->translations = $this->getTranslations();
+	}
+
 	public function load($id, $lang = null) {
 		if ($lang)
 			$this->loadTranslation($id, $lang);
 		else
-			parent::load($id);
+			return parent::load($id);
+	}
+
+	public function deleteAll() {
+		if (!$this->delete())
+			return false;
+		if (!empty($this->translations)) {
+			foreach ($this->translations as $Entity) {
+				if (!$Entity->delete())
+					return false;
+			}
+		}
+		return true;
+	}
+
+	public function delete() {
+		if ($this->get("sid") === 0) {
+			$row = $this->Db->getRow("
+					SELECT * FROM `".$this->schema["table"]."`
+					WHERE sid = :id
+					ORDER BY id ASC",
+					[	":id" => $this->id()]);
+			if ($row)  {
+				$this->Db->update($this->schema["table"], ["sid" => $row->id], ["sid" => $this->id()]);
+				$this->Db->update($this->schema["table"], ["sid" => 0], ["id" => $row->id]);
+			}
+		}
+		return parent::delete();
 	}
 
 	public function loadTranslation($id, $lang) {
@@ -38,15 +84,15 @@ class i18n_Entity extends Entity {
 			$rows = $this->Db->getRows(
 					"SELECT id, lang FROM `".$this->schema["table"]."` 
 					WHERE 
-						(sid = :sid || id = :sid) && lang = :lang", 
-					[":sid" => $sid]);
+						(sid = :sid || id = :sid)", 
+					[	":sid" => $sid]);
 		}
 		else {
 			$rows = $this->Db->getRows(
 					"SELECT id, lang FROM `".$this->schema["table"]."` 
 					WHERE 
-						sid = :sid && lang = :lang", 
-					[":sid" => $this->id()]);
+						sid = :sid", 
+					[	":sid" => $this->id()]);
 		}
 		if (!empty($rows)) {
 			foreach ($rows as $row) {
