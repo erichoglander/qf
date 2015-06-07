@@ -74,27 +74,27 @@ class Config_Core {
 							],
 						],
 					],
+					"l10n" => [
+						"title" => "Localization",
+						"href" => "l10n/list",
+						"links" => [
+							"scan" => [
+								"title" => "Scan code",
+								"href" => "l10n/scan",
+							],
+							"export" => [
+								"title" => "Export",
+								"href" => "l10n/export",
+							],
+							"import" => [
+								"title" => "Import",
+								"href" => "l10n/import",
+							],
+						],
+					],
 					"system" => [
 						"title" => "System",
 						"links" => [
-							"l10n" => [
-								"title" => "Localization",
-								"href" => "l10n/list",
-								"links" => [
-									"scan" => [
-										"title" => "Scan code",
-										"href" => "l10n/scan",
-									],
-									"export" => [
-										"title" => "Export",
-										"href" => "l10n/export",
-									],
-									"import" => [
-										"title" => "Import",
-										"href" => "l10n/import",
-									],
-								],
-							],
 							"logs" => [
 								"title" => "Logs",
 								"href" => "log/list",
