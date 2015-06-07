@@ -11,18 +11,23 @@ class l10n_Model_Core extends Model {
 
 	public function export($values) {
 		$l10n_strings = [];
-		$sql = "SELECT * FROM `l10n_string` WHERE sid = 0";
+		$sql = "SELECT id, lang, string FROM `l10n_string` WHERE sid = 0";
 		$rows = $this->Db->getRows($sql);
 		if (!empty($rows)) {
-			$sql = "SELECT * FROM `l10n_string` WHERE sid = :id";
+			$sql = "SELECT lang, string, updated FROM `l10n_string` WHERE sid = :id";
 			if (!empty($values["input_type"])) 
 				$sql.= " && input_type IN ('".implode("','", $values["input_type"])."')";
 			if (!empty($values["language"]))
 				$sql.= " && lang IN ('".implode("','", $values["language"])."')";
 			foreach ($rows as $row) {
-				$row->translations = $this->Db->getRows($sql, [":id" => $row->id]);
-				if (!empty($row->translations))
+				$row->translations = [];
+				$translations = $this->Db->getRows($sql, [":id" => $row->id]);
+				if (!empty($translations)) {
+					unset($row->id);
+					foreach ($translations as $translation)
+						$row->translations[$translation->lang] = $translation;
 					$l10n_strings[] = $row;
+				}
 			}
 		}
 		if (empty($values["min"]))
