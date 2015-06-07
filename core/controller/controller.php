@@ -15,7 +15,7 @@ class Controller {
 			$this->Cache = newClass("Cache", $this->Db);
 			$this->Variable = newClass("Variable", $this->Db);
 			$this->User = $this->getUser();
-			$this->Model = $this->getModel();
+			$this->Model = $this->getModel($this->name);
 			if ($init) {
 				$this->automaticCron();
 				$this->defaultViewData();
@@ -83,8 +83,8 @@ class Controller {
 		return strtolower(str_replace("_Controller", "", str_replace("_Core", "", $class)));
 	}
 
-	protected function getModel() {
-		$cname = ucwords($this->name)."_Model";
+	protected function getModel($name) {
+		$cname = ucwords($name)."_Model";
 		return newClass($cname, $this->Config, $this->Db, $this->Io, $this->Cache, $this->Variable, $this->User);
 	}
 

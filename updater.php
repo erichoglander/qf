@@ -1,25 +1,12 @@
 <?php
-define("DOC_ROOT", str_replace("/core/inc", "", __DIR__));
-
-require_once(DOC_ROOT."/core/inc/constants.php");
-require_once(DOC_ROOT."/core/inc/functions.php");
+require_once("core/inc/bootstrap.php");
 
 if (!IS_CLI)
-	die("Updater must be run through CLI\n");
+	die("Must be run through cli");
 
-$Config = newClass("Config");
-$Db = newClass("Db");
-$dbc = $Config->getDatabase();
-$Db->connect($dbc["user"], $dbc["pass"], $dbc["db"], $dbc["host"]);
+if (!$Db->connected)
+	die("Could not connect to database\n");
 
-$Updater = newClass("Updater", $Db);
-$updates = $Updater->getUpdates();
-$n = count($updates);
-if (!$n)
-	die("No updates required.\n");
-foreach ($updates as $update) {
-	print "Running update ".$update."\n";
-	if (!$Updater->runUpdate($update))
-		print "Update failed. Shutting down\n";
-}
-print "Updates complete.\n";
+$request_uri = "updater/update";
+$doc = $ControllerFactory->executeUri($request_uri);
+print $doc.PHP_EOL;

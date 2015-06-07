@@ -25,6 +25,11 @@ class Acl_Core {
 	protected function menuAdminAccess($User) {
 		return $User->id() == 1;
 	}
+
+	/* UPDATER ACCESS */
+	protected function updateAccess($User) {
+		return IS_CLI;
+	}
 	
 	/* FORM ACCESS */
 	protected function formFileRemoveAccess($User, $file_id) {
