@@ -9,6 +9,29 @@ class l10n_Model_Core extends Model {
 		return $languages;
 	}
 
+	public function export($values) {
+		$l10n_strings = [];
+		$sql = "SELECT * FROM `l10n_string` WHERE sid = 0";
+		$rows = $this->Db->getRows($sql);
+		if (!empty($rows)) {
+			$sql = "SELECT * FROM `l10n_string` WHERE sid = :id";
+			if (!empty($values["input_type"])) 
+				$sql.= " && input_type IN ('".implode("','", $values["input_type"])."')";
+			if (!empty($values["language"]))
+				$sql.= " && lang IN ('".implode("','", $values["language"])."')";
+			foreach ($rows as $row) {
+				$row->translations = $this->Db->getRows($sql, [":id" => $row->id]);
+				if (!empty($row->translations))
+					$l10n_strings[] = $row;
+			}
+		}
+		if (empty($values["min"]))
+			$json = json_encode($l10n_strings, JSON_PRETTY_PRINT);
+		else
+			$json = json_encode($l10n_strings);
+		return $json;
+	}
+
 	public function editString($l10nString, $values) {
 		if (!$l10nString->id())
 			return false;
@@ -17,14 +40,20 @@ class l10n_Model_Core extends Model {
 				$l10nString->translations[$lang] = $this->getEntity("l10nString");
 				$l10nString->translations[$lang]->set("lang", $lang);
 				$l10nString->translations[$lang]->set("input_type", "manual");
+				$l10nString->translations[$lang]->set("string", $string);
+				if (!$l10nString->translations->save())
+					return false;
 			}
 			else {
-				if ($l10nString->translations[$lang]->get("string") != $string)
+				if ($l10nString->translations[$lang]->get("string") != $string) {
 					$l10nString->translations[$lang]->set("input_type", "manual");
+					$l10nString->translations[$lang]->set("string", $string);
+					if (!$l10nString->translations[$lang]->save())
+						return false;
+				}
 			}
-			$l10nString->translations[$lang]->set("string", $string);
 		}
-		return $l10nString->saveAll();
+		return true;
 	}
 
 	public function deleteString($l10nString) {

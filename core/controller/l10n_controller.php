@@ -10,9 +10,16 @@ class l10n_Controller_Core extends Controller {
 	}
 
 	public function exportAction() {
-		$Form = $this->getForm("l10nStringExport");
+		$languages = $this->Model->getActiveLanguages();
+		$Form = $this->getForm("l10nStringExport", ["languages" => $languages]);
 		if ($Form->isSubmitted()) {
-			
+			$values = $Form->values();
+			$json = $this->Model->export($values);
+			header_remove("Content-Type");
+			header("Content-Type: application/octet-stream");
+			header("Content-Disposition: filename=l10n_strings.json");
+			print $json;
+			exit;
 		}
 		$this->viewData["form"] = $Form->render();
 		return $this->view("export");

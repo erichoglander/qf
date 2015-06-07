@@ -2,6 +2,13 @@
 class l10nStringExport_Form_Core extends Form {
 	
 	protected function structure() {
+		$languages = $this->get("languages");
+		$languagesop = [];
+		$languagesval = [];
+		foreach ($languages as $lang => $language) {
+			$languagesop[$lang] = $language->title;
+			$languagesval[] = $lang;
+		}
 		return [
 			"name" => "l10n_string_export_form",
 			"items" => [
@@ -9,11 +16,22 @@ class l10nStringExport_Form_Core extends Form {
 					"type" => "checkboxes",
 					"label" => t("Input types"),
 					"options" => [
-						"code" => t("Code"),
 						"import" => t("Imported"),
 						"manual" => t("Manual"),
 					],
-					"value" => ["code", "import", "manual"]
+					"value" => ["import", "manual"]
+				],
+				"language" => [
+					"type" => "checkboxes",
+					"label" => t("Languages"),
+					"options"=> $languagesop,
+					"value" => $languagesval,
+					"required" => true,
+				],
+				"min" => [
+					"type" => "checkbox",
+					"label" => t("Minimized"),
+					"value" => true,
 				],
 				"actions" => $this->defaultActions(t("Export")),
 			],

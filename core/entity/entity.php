@@ -14,6 +14,15 @@ class Entity {
 			$this->load($id);
 	}
 
+	public function json() {
+		$json = [
+			"id" => $this->id(),
+		];
+		foreach ($this->schema["fields"] as $key => $field) 
+			$json[$key] = $this->get($key);
+		return $json;
+	}
+
 	public function id() {
 		if (empty($this->fields["id"]))
 			return null;

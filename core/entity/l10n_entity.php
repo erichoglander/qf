@@ -11,6 +11,17 @@ class l10n_Entity extends Entity {
 			$this->load($id, $lang);
 	}
 
+	public function json() {
+		$json = parent::json();
+		if (!empty($this->translations)) {
+			$json->translations = [];
+			foreach ($this->translations as $lang => $Entity) {
+				$json->translations[$lang] = $Entity->json();
+			}
+		}
+		return $json;
+	}
+
 	public function saveAll() {
 		if (!$this->save())
 			return false;
