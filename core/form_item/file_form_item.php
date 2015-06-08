@@ -133,6 +133,8 @@ class File_FormItem extends FormItem {
 	}
 
 	protected function uploadFile() {
+		if (!$this->validate())
+			return $this->value;
 		$file = $this->getFileArray();
 		$info = pathinfo($file["name"]);
 		$path = ($this->file_dir == "private" ? PRIVATE_PATH : PUBLIC_PATH)."/";
