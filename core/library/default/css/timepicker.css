@@ -20,8 +20,10 @@
 	overflow: hidden;
 	color: #fff;
 	visibility: hidden;
-	transform: scale(0.001);
+	transform: scale(0.1);
 	transition: visibility 0.2s 0s, transform 0.2s cubic-bezier(0.64, 0.57, 0.67, 1.53);
+	-webkit-transform: scale(0.1);
+	-webkit-transition: visibility 0.2s 0s, -webkit-transform 0.2s cubic-bezier(0.64, 0.57, 0.67, 1.53);
 }
 
 .timepicker-hour {
@@ -34,6 +36,7 @@
 	font-size: 14px;
 	cursor: pointer;
 	transition: background 0.2s ease;
+	-webkit-transition: background 0.2s ease;
 }
 .timepicker-hour.active,
 .timepicker-hour:hover {
@@ -51,6 +54,7 @@
 	cursor: pointer;
 	opacity: 0;
 	transition: background 0.2s ease;
+	-webkit-transition: background 0.2s ease;
 }
 .timepicker-minute-five  {
 	opacity: 1;
@@ -66,7 +70,10 @@
 	visibility: visible;
 	transform: scale(1);
 	transition: visibility 0s, transform 0.2s cubic-bezier(0.64, 0.57, 0.67, 1.53);
+	-webkit-transform: scale(1);
+	-webkit-transition: visibility 0s, -webkit-transform 0.2s cubic-bezier(0.64, 0.57, 0.67, 1.53);
 }
 .timepicker-minute-open .timepicker-minutes {
 	transition: visibility 0s, transform 0.2s 0.2s cubic-bezier(0.64, 0.57, 0.67, 1.53);
+	-webkit-transition: visibility 0s, -webkit-transform 0.2s 0.2s cubic-bezier(0.64, 0.57, 0.67, 1.53);
 }

@@ -10,13 +10,19 @@
 	color: #fff;
 	overflow: hidden;
 	visibility: hidden;
-	transform: scale(0.001);
+	transform-origin: top left;
+	transform: scale(0.1);
 	transition: visibility 0.2s 0s, transform 0.2s cubic-bezier(0.64, 0.57, 0.67, 1.53);
+	-webkit-transform-origin: top left;
+	-webkit-transform: scale(0.1);
+	-webkit-transition: visibility 0.2s 0s, -webkit-transform 0.2s cubic-bezier(0.64, 0.57, 0.67, 1.53);
 }
 .datepicker-open .datepicker {
 	visibility: visible;
 	transform: scale(1);
 	transition: visibility 0s, transform 0.2s cubic-bezier(0.64, 0.57, 0.67, 1.53);
+	-webkit-transform: scale(1);
+	-webkit-transition: visibility 0s, -webkit-transform 0.2s cubic-bezier(0.64, 0.57, 0.67, 1.53);
 }
 .datepicker .arrow {
 	border-left: 7px solid transparent;
