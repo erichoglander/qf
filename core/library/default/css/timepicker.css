@@ -20,7 +20,7 @@
 	color: #fff;
 	visibility: hidden;
 	transform: scale(0.001);
-	transition: visibility 0.3s 0s, transform 0.3s cubic-bezier(0.64, 0.57, 0.67, 1.53);
+	transition: visibility 0.2s 0s, transform 0.2s cubic-bezier(0.64, 0.57, 0.67, 1.53);
 }
 .timepicker-init {
 	width: 80px;
@@ -37,6 +37,7 @@
 	cursor: pointer;
 	transition: background 0.2s ease;
 }
+.timepicker-hour.active,
 .timepicker-hour:hover {
 	background: rgba(102, 175, 233, 0.6);
 }
@@ -57,6 +58,7 @@
 	opacity: 1;
 	z-index: 3;
 }
+.timepicker-minute-five.active,
 .timepicker-minute-five:hover {
 	background: rgba(102, 175, 233, 0.6);
 }
@@ -65,8 +67,8 @@
 .timepicker-minute-open .timepicker-minutes {
 	visibility: visible;
 	transform: scale(1);
-	transition: visibility 0s, transform 0.3s cubic-bezier(0.64, 0.57, 0.67, 1.53);
+	transition: visibility 0s, transform 0.2s cubic-bezier(0.64, 0.57, 0.67, 1.53);
 }
 .timepicker-minute-open .timepicker-minutes {
-	transition: visibility 0s, transform 0.3s 0.3s cubic-bezier(0.64, 0.57, 0.67, 1.53);
+	transition: visibility 0s, transform 0.2s 0.2s cubic-bezier(0.64, 0.57, 0.67, 1.53);
 }

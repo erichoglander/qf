@@ -34,6 +34,10 @@ class UserSettings_Form_Core extends Form {
 					"type" => "password",
 					"label" => t("Confirm password"),
 				],
+				"time" => [
+					"type" => "time",
+					"label" => "Time",
+				],
 				"actions" => $this->defaultActions(),
 			],
 		];

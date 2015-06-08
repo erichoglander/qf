@@ -31,6 +31,7 @@ function timepicker(el) {
 		var self = this;
 		this.tags.wrap.addClass("timepicker-init");
 		this.tags.input.addEventListener("click", function(){ self.toggle(); }, false);
+		window.addEventListener("click", function(e){ self.windowClick(e); }, false);
 		if (this.tags.input.value.length) {
 			var arr = this.tags.input.value.split(":");
 			this.value.h = arr[0];
@@ -53,6 +54,8 @@ function timepicker(el) {
 		for (var i=1; i<=24; i++) {
 			this.tags.hours[i] = document.createElement("div");
 			this.tags.hours[i].className = "timepicker-hour timepicker-hour-"+i;
+			if (i == this.value.h)
+				this.tags.hours[i].className+= " active";
 			this.tags.hours[i].textContent = i;
 			var x = (i > 12 ? i-12 : i);
 			var d = (i > 12 ? 40 : 28);
@@ -71,6 +74,8 @@ function timepicker(el) {
 			this.tags.minutes[i].className = "timepicker-minute timepicker-minute-"+i;
 			if (i%5 == 0)
 				this.tags.minutes[i].className+= " timepicker-minute-five";
+			if (i == this.value.m)
+				this.tags.minutes[i].className+= " active";
 			this.tags.minutes[i].textContent = i;
 			var d = 40;
 			var a = 2 * Math.PI * i / 60;
@@ -136,12 +141,27 @@ function timepicker(el) {
 		this.close();
 	}
 
+	this.windowClick = function(e) {
+		var el = e.target;
+		for (var i=0; el  && i<7; el = el.parentNode, i++) {
+			if (el == this.tags.wrap)
+				return;
+		}
+		this.close();
+	}
+
 	this.setHour = function(h) {
+		if (this.tags.hours[this.value.h])
+			this.tags.hours[this.value.h].removeClass("active");
 		this.value.h = h;
+		this.tags.hours[h].addClass("active");
 		this.renderValue();
 	}
 	this.setMinute = function(m) {
+		if (this.tags.minutes[this.value.m])
+			this.tags.minutes[this.value.m].removeClass("active");
 		this.value.m = m;
+		this.tags.minutes[m].addClass("active");
 		this.renderValue();
 	}
 
