@@ -1,5 +1,6 @@
 .timepicker-init {
 	position: relative;
+	width: 80px;
 }
 .timepicker {
 	position: relative;
@@ -21,9 +22,6 @@
 	visibility: hidden;
 	transform: scale(0.001);
 	transition: visibility 0.2s 0s, transform 0.2s cubic-bezier(0.64, 0.57, 0.67, 1.53);
-}
-.timepicker-init {
-	width: 80px;
 }
 
 .timepicker-hour {
