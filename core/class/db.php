@@ -81,8 +81,13 @@ class Db_Core {
 			$stmt->execute($param);
 		}
 		catch(PDOException $e) {
-			if ($this->debug)
-				print $e->getMessage();
+			if ($this->debug) {
+				$debug = [
+					"exception" => $e->getMessage(),
+					"backtrace" => debug_backtrace(),
+				];
+				pr($debug);
+			}
 			die("Ett fel uppstod med en fråga till databasen.");
 		}
 		$err = $stmt->errorInfo();
