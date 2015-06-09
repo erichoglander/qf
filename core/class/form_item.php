@@ -171,7 +171,7 @@ class FormItem {
 			unset($st["prefix"]);
 			unset($st["suffix"]);
 			foreach ($value as $i => $val) {
-				if (!empty($structure["value"]) && array_key_exists($structure["value"][$i]))
+				if (!empty($structure["value"]) && array_key_exists($i, $structure["value"]))
 					$st = $structure["value"][$i];
 				else
 					unset($st["value"]);
