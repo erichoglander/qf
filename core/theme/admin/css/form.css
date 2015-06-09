@@ -59,6 +59,22 @@ input {
 	height: 100px;
 }
 
+.checkbox-label .fa {
+	margin-right: 2px;
+}
+.checkbox-label .checkbox-icon-checked {
+	display: none;
+}
+.checkbox-label input {
+	display: none;
+}
+.checkbox-label input:checked ~ .checkbox-icon-checked {
+	display: inline-block;
+}
+.checkbox-label input:checked ~ .checkbox-icon-unchecked {
+	display: none;
+}
+
 .form-item-error .form-label {
 	color: #A94442;
 }
