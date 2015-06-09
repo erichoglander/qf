@@ -36,6 +36,10 @@ class ControllerFactory_Core {
 	}
 
 	public function getController($controller, $init = true) {
+		$arr = explode("-", $controller);
+		$controller = null;
+		foreach ($arr as $a)
+			$controller.= ucwords($a);
 		$class = newClass($controller."_Controller", $this->Config, $this->Db, $init);
 		if (!$class)
 			$class = new Controller($this->Config, $this->Db);
