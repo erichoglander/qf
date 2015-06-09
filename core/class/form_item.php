@@ -172,7 +172,7 @@ class FormItem {
 			unset($st["suffix"]);
 			foreach ($value as $i => $val) {
 				if (!empty($structure["value"]) && array_key_exists($i, $structure["value"]))
-					$st = $structure["value"][$i];
+					$st["value"] = $structure["value"][$i];
 				else
 					unset($st["value"]);
 				unset($st["focus"]);
