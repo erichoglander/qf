@@ -45,7 +45,7 @@ class File_FormItem extends FormItem {
 			if (!empty($data["id"]))
 				return (int) $data["id"];
 			else
-				return 0;
+				return null;
 		}
 	}
 	
