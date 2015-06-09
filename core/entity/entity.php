@@ -45,6 +45,8 @@ class Entity {
 	}
 
 	public function set($field, $value) {
+		if (strlen($value) === 0)
+			$value = null;
 		if (array_key_exists($field, $this->schema["fields"]) && $value !== null) {
 			if (!empty($this->schema["fields"][$field]["serialize"]))
 				$value = serialize($value);
