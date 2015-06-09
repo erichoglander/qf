@@ -80,7 +80,7 @@ class Controller {
 		$class = get_class($this);
 		if ($class == "Controller")
 			return "default";
-		return strtolower(str_replace("_Controller", "", str_replace("_Core", "", $class)));
+		return strtolower(preg_replace("/([a-z])([A-Z])/", "$1_$2", str_replace("_Controller", "", str_replace("_Core", "", $class))));
 	}
 
 	protected function getModel($name) {

@@ -62,7 +62,7 @@ function newClass($cname) {
 
 function classToFile($class) {
 	// SomeClassName_Model_Core -> some_class_name_model.php
-	return str_replace(["_core", "_theme", "_library"], ["", ""], strtolower(preg_replace("/([a-z])([A-Z])/", "$1_$2", $class).".php"));
+	return str_replace(["_core", "_theme", "_library"], "", classToDir($class).".php");
 }
 function classToDir($class) {
 	return strtolower(preg_replace("/([a-z])([A-Z])/", "$1_$2", $class));
