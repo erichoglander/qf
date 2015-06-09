@@ -107,6 +107,12 @@ class Io_Core {
 		$this->setError(t("Invalid machine name (only a-z, 0-9, and _)"));
 		return false;
 	}
+	protected function validateUrl($value) {
+		if (filter_var($value, FILTER_VALIDATE_URL))
+			return true;
+		$this->setError(t("Invalid url"));
+		return false;
+	}
 	protected function validateEmail($value) {
 		if (filter_var($value, FILTER_VALIDATE_EMAIL))
 			return true;
