@@ -84,7 +84,11 @@ class Controller {
 	}
 
 	protected function getModel($name) {
-		$cname = ucwords($name)."_Model";
+		$arr = explode("_", $name);
+		$cname = "";
+		foreach ($arr as $a)
+			$cname.= ucwords($a);
+		$cname.= "_Model";
 		return newClass($cname, $this->Config, $this->Db, $this->Io, $this->Cache, $this->Variable, $this->User);
 	}
 
