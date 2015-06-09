@@ -188,7 +188,7 @@ class FormItem {
 		else {
 			if (isset($structure["items"])) {
 				foreach ($structure["items"] as $name => $item) {
-					if (!empty($structure["value"]) && array_key_exists($structure["value"][$name]))
+					if (!empty($structure["value"]) && array_key_exists($name, $structure["value"]))
 						$item["value"] = $structure["value"][$name];
 					$item["parent_name"] = $this->inputName();
 					$this->loadItem($name, $item);
