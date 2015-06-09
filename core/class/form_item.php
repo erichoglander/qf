@@ -59,7 +59,7 @@ class FormItem {
 		}
 		else {
 			$value = $this->itemValue();
-			if ($this->filter && $this->options === null)
+			if ($this->filter && $this->options === null && $value !== null)
 				$value = $this->filter($value, $this->filter);
 		}
 		return $value;
