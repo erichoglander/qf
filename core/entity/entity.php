@@ -33,7 +33,7 @@ class Entity {
 		if (!array_key_exists($field, $this->fields))
 			return $def;
 		$value = $this->fields[$field];
-		if (array_key_exists($field, $this->schema["fields"])) {
+		if (array_key_exists($field, $this->schema["fields"]) && $value !== null) {
 			if ($this->schema["fields"][$field]["type"] == "int" || $this->schema["fields"][$field]["type"] == "uint")
 				$value = (int) $value;
 			if (!empty($this->schema["fields"][$field]["serialize"]))
@@ -45,7 +45,7 @@ class Entity {
 	}
 
 	public function set($field, $value) {
-		if (array_key_exists($field, $this->schema["fields"])) {
+		if (array_key_exists($field, $this->schema["fields"]) && $value !== null) {
 			if (!empty($this->schema["fields"][$field]["serialize"]))
 				$value = serialize($value);
 			if (!empty($this->schema["fields"][$field]["json"]))
