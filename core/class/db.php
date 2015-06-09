@@ -82,7 +82,7 @@ class Db_Core {
 		}
 		catch(PDOException $e) {
 			if ($this->debug)
-				pr($debug);
+				print $e->getMessage();
 			die("Ett fel uppstod med en fråga till databasen.");
 		}
 		$err = $stmt->errorInfo();
