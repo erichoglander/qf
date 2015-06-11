@@ -59,7 +59,7 @@ class FormItem {
 		}
 		else {
 			$value = $this->itemValue();
-			if ($this->filter && $this->options === null && $value !== null)
+			if ($this->filter && $this->options === null && !$this->emptyValue($value))
 				$value = $this->filter($value, $this->filter);
 		}
 		return $value;
@@ -103,7 +103,7 @@ class FormItem {
 				$this->setError(t("Field is required"));
 				return false;
 			}
-			if ($this->validation && !$this->validate($value, $this->validation))
+			if ($this->validation && !$this->emptyValue($value) && !$this->validate($value, $this->validation))
 				return false;
 			if ($this->options !== null) {
 				if (!is_array($value))
