@@ -289,6 +289,8 @@ class FormItem {
 			$class.= " form-item-required";
 		if ($this->error)
 			$class.= " form-item-error";
+		if (!empty($this->item_class))
+			$class.= " ".$this->item_class;
 		return $class;
 	}
 
@@ -398,7 +400,7 @@ class FormItem {
 	protected function renderDeleteButton() {
 		if (!$this->parent_multiple)
 			return null;
-		return '<input type="button" class="form-button form-delete-button btn" value="'.$this->delete_button.'" onclick="formDeleteButton(this)">';
+		return '<input type="button" class="form-button form-delete-button btn btn-danger" value="'.$this->delete_button.'" onclick="formDeleteButton(this)">';
 	}
 
 };
