@@ -54,47 +54,47 @@ class Config_Core {
 							],
 						],
 					],
-					"alias" => [
-						"title" => "Aliases",
-						"href" => "alias/list",
-						"links" => [
-							"alias-add" => [
-								"title" => "Add alias",
-								"href" => "alias/add",
-							],
-						],
-					],
-					"redirect" => [
-						"title" => "Redirects",
-						"href" => "redirect/list",
-						"links" => [
-							"redirect-add" => [
-								"title" => "Add redirect",
-								"href" => "redirect/add",
-							],
-						],
-					],
-					"l10n" => [
-						"title" => "Localization",
-						"href" => "l10n/list",
-						"links" => [
-							"scan" => [
-								"title" => "Scan code",
-								"href" => "l10n/scan",
-							],
-							"export" => [
-								"title" => "Export",
-								"href" => "l10n/export",
-							],
-							"import" => [
-								"title" => "Import",
-								"href" => "l10n/import",
-							],
-						],
-					],
 					"system" => [
 						"title" => "System",
 						"links" => [
+							"alias" => [
+								"title" => "Aliases",
+								"href" => "alias/list",
+								"links" => [
+									"alias-add" => [
+										"title" => "Add alias",
+										"href" => "alias/add",
+									],
+								],
+							],
+							"redirect" => [
+								"title" => "Redirects",
+								"href" => "redirect/list",
+								"links" => [
+									"redirect-add" => [
+										"title" => "Add redirect",
+										"href" => "redirect/add",
+									],
+								],
+							],
+							"l10n" => [
+								"title" => "Localization",
+								"href" => "l10n/list",
+								"links" => [
+									"scan" => [
+										"title" => "Scan code",
+										"href" => "l10n/scan",
+									],
+									"export" => [
+										"title" => "Export",
+										"href" => "l10n/export",
+									],
+									"import" => [
+										"title" => "Import",
+										"href" => "l10n/import",
+									],
+								],
+							],
 							"logs" => [
 								"title" => "Logs",
 								"href" => "log/list",
