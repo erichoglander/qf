@@ -59,6 +59,10 @@ input {
 	height: 100px;
 }
 
+.form-number {
+	width: 100px;
+}
+
 .checkbox-label .fa {
 	margin-right: 2px;
 }
@@ -142,6 +146,13 @@ input {
 	display: none;
 }
 
+
+.form-type-fieldset {
+	border: 1px solid #ddd;
+	padding: 15px;
+	border-radius: 4px;
+	box-sizing: border-box;
+}
 
 .form-type-editor {
 	width: auto;

@@ -277,7 +277,10 @@ class FormItem {
 	}
 
 	protected function itemClass() {
-		$class = "form-item ".cssClass("form-type-".$this->type)." ".cssClass("form-name-".$this->name);
+		$type = $this->type;
+		if ($this->multiple)
+			$type = "container";
+		$class = "form-item ".cssClass("form-type-".$type)." ".cssClass("form-name-".$this->name);
 		if ($this->icon)
 			$class.= " form-item-icon";
 		if ($this->isTextfield())
