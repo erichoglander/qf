@@ -5,6 +5,10 @@
 	margin: 100px auto;
 }
 
+.clear {
+	clear: both;
+}
+
 
 ul.breadcrumbs {
 	padding: 0;
