@@ -76,6 +76,25 @@ function formatBytes($bytes) {
 	return round($bytes, 2).$units[$pow];
 }
 
+// 3,74 -> 374
+function decimalInt($value) {
+	$a = str_replace(",", ".", $a);
+	$x = strpos($a, ".");
+	if ($x === false)
+		return $a*100;
+	else {
+		$int = substr($a, 0, $x);
+		$dec = substr($a, $x+1, 2);
+		if (strlen($dec) == 1)
+			$dec.= "0";
+		return (int) $int.$dec;
+	}
+}
+// 374 -> 3,74
+function decimalFloat($value, $p = 2, $dec = ",", $thousand = " ") {
+	return number_format($value/100, $p, $dec, $thousand);
+}
+
 function getjson($assoc = false) {
 	$post = @file_get_contents("php://input");
 	if (!$post)
