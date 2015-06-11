@@ -153,6 +153,12 @@ input {
 	border-radius: 4px;
 	box-sizing: border-box;
 }
+.form-type-container:after,
+.form-type-fieldset:after {
+	content: "";
+	display: block;
+	clear: both;
+}
 
 .form-type-editor {
 	width: auto;
