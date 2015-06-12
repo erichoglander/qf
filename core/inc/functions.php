@@ -78,13 +78,13 @@ function formatBytes($bytes) {
 
 // 3,74 -> 374
 function decimalInt($value) {
-	$a = str_replace(",", ".", $a);
-	$x = strpos($a, ".");
+	$value = str_replace(",", ".", $value);
+	$x = strpos($value, ".");
 	if ($x === false)
-		return $a*100;
+		return $value*100;
 	else {
-		$int = substr($a, 0, $x);
-		$dec = substr($a, $x+1, 2);
+		$int = substr($value, 0, $x);
+		$dec = substr($value, $x+1, 2);
 		if (strlen($dec) == 1)
 			$dec.= "0";
 		return (int) $int.$dec;
