@@ -1,5 +1,5 @@
 <?php
-class Image_FormItem extends File_FormItem {
+class Image_FormItem_Core extends File_FormItem_Core {
 	
 	protected $file_extensions = ["jpeg", "jpg", "png", "gif"];
 	protected $image_exact_size, $image_min_size, $image_max_size;

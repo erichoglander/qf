@@ -126,7 +126,7 @@ function formAddButton(el, structure) {
 	var item = formGetItem(el);
 	item.addClass("loading");
 	var cname = el.previousElementSibling.className.match(/form\-name\-([0-9]+)/);
-	var n = parseInt(cname[1])+1;
+	var n = (cname ? parseInt(cname[1])+1 : 1);
 	var callback = function(r) {
 		_formAdding = false;
 		item.removeClass("loading");

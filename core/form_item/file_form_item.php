@@ -1,5 +1,5 @@
 <?php
-class File_FormItem extends FormItem {
+class File_FormItem_Core extends FormItem {
 	
 	protected $remove = false;
 	protected $uploaded = null;
