@@ -46,6 +46,8 @@ function autocomplete(el) {
 		var self = this;
 		this.tags.title.addEventListener("keydown", function(e){ self.onKeydown(e); }, false);
 		this.tags.title.addEventListener("keyup", function(e){ self.onKeyup(e); }, false);
+		this.tags.title.addEventListener("blur", function(){ self.onBlur(); }, false);
+		this.tags.title.addEventListener("focus", function(){ self.onFocus(); }, false);
 		this.tags.remove.addEventListener("click", function(){ self.remove(); }, false);
 		
 		this.tags.wrap.addClass("autocomplete-init");
@@ -83,7 +85,7 @@ function autocomplete(el) {
 		}
 		else if (this.lastLength != this.tags.title.value.length) {
 			this.lastLength = this.tags.title.value.length;
-			this.hideItems();
+			this.deleteItems();
 			if (this.timeout)
 				clearTimeout(this.timeout);
 			if (this.ajax.xmlhttp.readyState != 0)
@@ -93,6 +95,13 @@ function autocomplete(el) {
 			}, this.timeoutTime);
 		}
 	}
+	this.onBlur = function() {
+		this.hideItems();
+	}
+	this.onFocus = function() {
+		this.showItems();
+	}
+	
 	this.request = function() {
 		var self = this;
 		var q = this.tags.title.value.trim();
@@ -110,7 +119,14 @@ function autocomplete(el) {
 		if (r && r.items)
 			this.renderItems(r.items);
 	}
+	this.showItems = function() {
+		if (this.tags.items.length)
+			this.tags.itemsWrap.addClass("active");
+	}
 	this.hideItems = function() {
+		this.tags.itemsWrap.removeClass("active");
+	}
+	this.deleteItems = function() {
 		this.tags.itemsWrap.removeClass("active");
 		this.tags.itemsWrap.innerHTML = "";
 		this.itemSetActive(-1);
@@ -165,7 +181,7 @@ function autocomplete(el) {
 		this.tags.value.value = this.items[n].value;
 		this.tags.wrap.addClass("has-value");
 		this.preview();
-		this.hideItems();
+		this.deleteItems();
 	}
 	this.itemSetActive = function(n) {
 		if (this.itemActive != -1 && this.items[this.itemActive])
