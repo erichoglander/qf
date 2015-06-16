@@ -18,6 +18,7 @@ class Address_FormItem_Core extends FormItem {
 			$structure["items"]["line"] = [
 				"type" => "text",
 				"label" => t("Address"),
+				"filter" => ["strip_tags", "trim"],
 				"required" => true,
 			];
 		}
@@ -25,6 +26,7 @@ class Address_FormItem_Core extends FormItem {
 			$structure["items"]["postal_code"] = [
 				"type" => "text",
 				"label" => t("Postal code"),
+				"filter" => ["strip_tags", "trim"],
 				"required" => true,
 			];
 		}
@@ -32,6 +34,7 @@ class Address_FormItem_Core extends FormItem {
 			$structure["items"]["locality"] = [
 				"type" => "text",
 				"label" => t("Locality"),
+				"filter" => ["strip_tags", "trim"],
 				"required" => true,
 			];
 		}

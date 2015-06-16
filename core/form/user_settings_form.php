@@ -30,10 +30,12 @@ class UserSettings_Form_Core extends Form {
 				"pass" => [
 					"type" => "password",
 					"label" => t("Change password"),
+					"icon" => "key",
 				],
 				"pass_confirm" => [
 					"type" => "password",
 					"label" => t("Confirm password"),
+					"icon" => "key",
 				],
 				"actions" => $this->defaultActions(),
 			],
