@@ -136,7 +136,7 @@ class l10n_Model_Core extends Model {
 			$sql.= " && string LIKE :q";
 			$vars[":q"] = "%".$q."%";
 		}
-		$sql.= " ORDER BY (updated-created) ASC";
+		$sql.= " ORDER BY created DESC";
 		$sql.= " LIMIT ".$start.", ".$stop;
 		$sources = $this->Db->getRows($sql, $vars);
 		$l10n_strings = [];
