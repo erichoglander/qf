@@ -147,17 +147,30 @@ input {
 }
 
 
+.form-type-address,
 .form-type-fieldset {
 	border: 1px solid #ddd;
 	padding: 15px;
 	border-radius: 4px;
 	box-sizing: border-box;
 }
+.form-type-address:after,
 .form-type-container:after,
 .form-type-fieldset:after {
 	content: "";
 	display: block;
 	clear: both;
+}
+.form-type-address .form-name-postal-code {
+	max-width: 100px;
+	float: left;
+	margin-top: 0;
+}
+.form-type-address .form-name-locality {
+	max-width: 256px;
+	margin-left: 10px;
+	float: left;
+	margin-top: 0;
 }
 
 .form-type-editor {

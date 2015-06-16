@@ -20,7 +20,8 @@ class UserEdit_Form_Core extends Form {
 		return true;
 	}
 	
-	public function structure() {
+	
+	protected function structure() {
 		$User = $this->get("User");
 		$role_rows = $this->Db->getRows("SELECT * FROM `role` ORDER BY title ASC");
 		$rolesop = [];

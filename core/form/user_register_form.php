@@ -19,6 +19,7 @@ class UserRegister_Form extends Form {
 		return true;
 	}
 	
+	
 	protected function structure() {
 		return [
 			"name" => "user_register",

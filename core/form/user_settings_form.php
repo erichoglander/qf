@@ -15,7 +15,8 @@ class UserSettings_Form_Core extends Form {
 		return true;
 	}
 	
-	public function structure() {
+	
+	protected function structure() {
 		$User = $this->get("User");
 		$structure = [
 			"name" => "user_settings",

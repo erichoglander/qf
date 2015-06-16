@@ -108,14 +108,16 @@ class Controller {
 	}
 
 	protected function automaticCron() {
-		$last = $this->Variable->get("cron", 0);
-		if (date("Y-m-d", $last) != date("Y-m-d", REQUEST_TIME)) {
-			$Cron = newClass("Cron", $this->Db);
-			$time = microtime(true);
-			$Cron->run();
-			$time = round(microtime(true) - $time, 4);
-			$this->Variable->set("cron", REQUEST_TIME);
-			addlog($this->Db, "cron", t("Cron completed in :sec seconds", "en", [":sec" => $time]));
+		if ($this->Config->getAutomaticCron()) {
+			$last = $this->Variable->get("cron", 0);
+			if (date("Y-m-d", $last) != date("Y-m-d", REQUEST_TIME)) {
+				$Cron = newClass("Cron", $this->Db);
+				$time = microtime(true);
+				$Cron->run();
+				$time = round(microtime(true) - $time, 4);
+				$this->Variable->set("cron", REQUEST_TIME);
+				addlog($this->Db, "cron", t("Cron completed in :sec seconds", "en", [":sec" => $time]));
+			}
 		}
 	}
 
