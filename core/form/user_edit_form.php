@@ -53,12 +53,12 @@ class UserEdit_Form_Core extends Form {
 				"pass" => [
 					"type" => "password",
 					"label" => t("Password"),
-					"icon" => "key",
+					"icon" => "lock",
 				],
 				"pass_confirm" => [
 					"type" => "password",
 					"label" => t("Confirm password"),
-					"icon" => "key",
+					"icon" => "lock",
 				],
 				"roles" => [
 					"type" => "checkboxes",

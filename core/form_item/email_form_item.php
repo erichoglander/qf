@@ -2,6 +2,6 @@
 class Email_FormItem_Core extends FormItem {
 	
 	protected $validation = "email";
-	protected $icon = "at";
+	protected $icon = "envelope-o";
 
 }

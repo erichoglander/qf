@@ -36,7 +36,7 @@ class UserLogin_Form extends Form {
 				"password" => [
 					"type" => "password",
 					"label" => t("Password"),
-					"icon" => "key",
+					"icon" => "lock",
 					"required" => true,
 				],
 				"actions" => [

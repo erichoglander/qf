@@ -38,11 +38,13 @@ class UserRegister_Form extends Form {
 				"password" => [
 					"type" => "password",
 					"label" => t("Password"),
+					"icon" => "lock",
 					"required" => true,
 				],
 				"password_confirm" => [
 					"type" => "password",
 					"label" => t("Confirm password"),
+					"icon" => "lock",
 					"required" => true,
 				],
 				"actions" => [
