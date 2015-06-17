@@ -161,6 +161,15 @@ input {
 	display: block;
 	clear: both;
 }
+.form-type-fieldset > .form-label,
+.form-type-address > .form-label {
+	position: relative;
+	top: -5px;
+	font-weight: 600;
+	color: #959595;
+	font-size: 12px;
+	text-transform: uppercase;
+}
 .form-type-address .form-name-postal-code {
 	max-width: 100px;
 	float: left;
