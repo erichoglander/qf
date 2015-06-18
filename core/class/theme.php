@@ -14,7 +14,7 @@ class Theme {
 	public function render($part, $vars = []) {
 		$template = $this->getTemplate($part);
 		if (!$template)
-			throw new Exception("Unable to find ".$this->name." template for ".$part);
+			throw new Exception("Unable to find ".$part." template for ".$this->name." theme");
 		$this->preRender($part, $vars);
 		return renderTemplate($template, $vars);
 	}
