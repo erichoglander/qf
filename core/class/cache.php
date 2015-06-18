@@ -46,11 +46,11 @@ class Cache_Core {
 		if (is_dir($path)) {
 			$files = array_diff(scandir($path), [".", ".."]);
 			foreach ($files as $file)
-				rmr($file);
+				$this->rmr($path."/".$file);
 			rmdir($path);
 		}
 		else if (is_file($path)) {
-			unlink($rmr);
+			unlink($path);
 		}
 	}
 

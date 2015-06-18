@@ -144,10 +144,11 @@ class Db_Core {
 		return true;
 	}
 	
-	public function delete($table, $conditions) {
+	public function delete($table, $conditions = []) {
 		$vars = [];
 		$sql = "DELETE FROM `".$table."`";
-		$this->where($sql, $vars, $conditions);
+		if (!empty($conditions))
+			$this->where($sql, $vars, $conditions);
 		$this->query($sql, $vars);
 		return true;
 	}
