@@ -17,11 +17,12 @@ class Html_Core {
 
 	public $libraries = ["FontAwesome"];
 
-	protected $Theme, $Db;
+	protected $Theme, $Db, $User;
 
-	public function __construct($Db) {
+	public function __construct($Db, $User) {
 		$this->Config = newClass("Config");
 		$this->Db = &$Db;
+		$this->User = &$User;
 		$this->breadcrumbs[] = (IS_FRONT_PAGE ? t("Home") : ["", t("Home")]);
 		if (!$this->title_suffix)
 			$this->title_suffix = " | ".$this->Config->getSiteName();

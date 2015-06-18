@@ -3,17 +3,17 @@ class View_Core {
 	
 	protected $controller_name;
 	protected $name;
-	protected $Acl;
+	protected $User;
 	protected $Html;
 
 
-	public function __construct($Db, $Acl, $controller_name, $name, $variables = []) {
-		$this->Acl = &$Acl;
+	public function __construct($Db, $User, $controller_name, $name, $variables = []) {
+		$this->User = &$User;
 		$this->controller_name = $controller_name;
 		$this->name = $name;
 		$this->variables = $variables;
 		if ($Db) {
-			$this->Html = newClass("Html", $Db);
+			$this->Html = newClass("Html", $Db, $this->User);
 			$this->Html->title = ucwords($controller_name)." ".$name;
 			$this->Html->body_class[] = cssClass("page-".$controller_name."-".$name);
 			$this->Html->body_class[] = cssClass("controller-".$controller_name);
