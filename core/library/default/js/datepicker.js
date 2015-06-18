@@ -27,6 +27,7 @@ function datepicker(el) {
 	};
 	this.now = new Date();
 	this.value = {y: this.now.getFullYear(), m: this.now.getMonth()+1, d: 0};
+	this.active = {y: this.value.y, m: this.value.m};
 	this.months = [
 		"January", "February", "March", 
 		"April", "May", "June", 
@@ -49,6 +50,7 @@ function datepicker(el) {
 	}
 
 	this.render = function() {
+		var self = this;
 		this.tags.picker = document.createElement("div");
 		this.tags.picker.className = "datepicker";
 		var arrow = document.createElement("div");
@@ -67,32 +69,38 @@ function datepicker(el) {
 		months.className = "datepicker-select datepicker-select-months";
 		this.tags.month = document.createElement("div");
 		this.tags.month.className = "datepicker-selected";
+		this.tags.month.textContent = this.months[this.active.m-1];
+		this.tags.month.addEventListener("click", function(){ self.selectToggle("month"); }, false);
 		var month_options = document.createElement("div");
 		month_options.className = "datepicker-options";
-		if (this.value.m)
-			this.tags.month.textContent = this.months[this.value.m-1];
 		this.tags.months = {};
 		for (var i=1; i<=12; i++) {
 			this.tags.months[i] = document.createElement("div");
 			this.tags.months[i].className = "datepicker-option";
 			this.tags.months[i].textContent = this.months[i-1];
 			month_options.appendChild(this.tags.months[i]);
+			(function(n) {
+				self.tags.months[n].addEventListener("click", function(){ self.chooseMonth(n); }, false);
+			}(i));
 		}
 		var years = document.createElement("div");
 		years.className = "datepicker-select datepicker-select-years";
 		this.tags.year = document.createElement("div");
 		this.tags.year.className = "datepicker-selected";
-		if (this.value.y)
-			this.tags.year.textContent = this.value.y;
+		this.tags.year.textContent = this.active.y;
+		this.tags.year.addEventListener("click", function(){ self.selectToggle("year"); }, false);
 		var year_options = document.createElement("div");
 		year_options.className = "datepicker-options";
 		this.tags.years = {};
 		var stop = this.now.getFullYear()+20;
-		for (var i=1900; i<=stop; i++) {
+		for (var i=stop; i>=1900; i--) {
 			this.tags.years[i] = document.createElement("div");
 			this.tags.years[i].className = "datepicker-option";
 			this.tags.years[i].textContent = i;
 			year_options.appendChild(this.tags.years[i]);
+			(function(n) {
+				self.tags.years[n].addEventListener("click", function(){ self.chooseYear(n); }, false);
+			}(i));
 		}
 		months.appendChild(month_options);
 		months.appendChild(this.tags.month);
@@ -106,6 +114,36 @@ function datepicker(el) {
 		this.tags.picker.appendChild(arrow);
 		this.tags.picker.appendChild(inner);
 		this.tags.wrap.appendChild(this.tags.picker);
+	}
+	
+	this.renderCal = function() {
+		
+	}
+	
+	this.selectToggle = function(key) {
+		if (this.tags[key].parentNode.className.match("active"))
+			this.selectClose(key);
+		else
+			this.selectOpen(key);
+	}
+	this.selectOpen = function(key) {
+		this.tags[key].parentNode.addClass("active");
+	}
+	this.selectClose = function(key) {
+		this.tags[key].parentNode.removeClass("active");
+	}
+	
+	this.chooseMonth = function(m) {
+		this.active.m = m;
+		this.selectClose("month");
+		this.tags.month.textContent = this.months[m-1];
+		this.renderCal();
+	}
+	this.chooseYear = function(y) {
+		this.active.y = y;
+		this.selectClose("year");
+		this.tags.year.textContent = y;
+		this.renderCal();
 	}
 
 	this.toggle = function() {
