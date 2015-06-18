@@ -41,6 +41,8 @@ class Entity {
 			if (!empty($this->schema["fields"][$field]["json"]))
 				$value = json_decode($value);
 		}
+		if ($value === null && $def !== null)
+			return $def;
 		return $value;
 	}
 
