@@ -60,7 +60,7 @@ class Io_Core {
 
 
 	protected function validateNumber($value) {
-		if (preg_match("/^\-?[0-9]+[\.|\,]?[0-9]*$/", $value))
+		if (preg_match("/^\-?[0-9\ ]+[\.|\,]?[0-9]*$/", $value))
 			return true;
 		$this->setError(t("Invalid number"));
 		return false;

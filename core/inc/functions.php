@@ -78,6 +78,7 @@ function formatBytes($bytes) {
 
 // 3,74 -> 374
 function decimalInt($value) {
+	$value = str_replace(" ", "", $value);
 	$value = str_replace(",", ".", $value);
 	$x = strpos($value, ".");
 	if ($x === false)
