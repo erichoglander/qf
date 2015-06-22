@@ -40,7 +40,9 @@
 	position: absolute;
 	top: 0;
 	padding: 0 10px;
+	color: #fff;
 	font-size: 18px;
+	line-height: 26px;
 	cursor: pointer;
 }
 .datepicker-prev {
@@ -143,5 +145,9 @@
 	color: #333;
 }
 .datepicker-calendar-day.active {
-	font-weight: bold;
+	color: #3C763D;
+	background-color: #DFF0D8;
+}
+.datepicker-calendar-day.today {
+	background: #f0f0f0;
 }

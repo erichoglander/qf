@@ -134,6 +134,7 @@ function datepicker(el) {
 	
 	this.renderCal = function() {
 		var dates = this.getCalendarDates(this.active.y, this.active.m);
+		var today = new Date();
 		this.tags.calendar.innerHTML = "";
 		var week;
 		for (var i=0; i<dates.length; i++) {
@@ -145,6 +146,8 @@ function datepicker(el) {
 			}
 			var day = document.createElement("div");
 			day.className = "datepicker-calendar-day";
+			if (dates[i].d == today.getDate() && dates[i].m == today.getMonth()+1 && dates[i].y == today.getFullYear())
+				day.className+= " today";
 			if (dates[i].m == this.active.m)
 				day.className+= " current-month";
 			if (dates[i].d == this.value.d && dates[i].m == this.value.m && this.active.y == this.value.y)
