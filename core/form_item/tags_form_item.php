@@ -5,7 +5,7 @@ class Tags_FormItem_Core extends FormItem {
 	
 	
 	protected function itemValue() {
-		return explode(",", parent::itemValue());
+		return array_filter(explode(",", parent::itemValue()));
 	}
 	
 	protected function inputType() {
