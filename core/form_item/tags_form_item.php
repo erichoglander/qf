@@ -16,10 +16,6 @@ class Tags_FormItem_Core extends FormItem {
 		return parent::inputClass()." form-tags";
 	}
 	
-	protected function itemClass() {
-		return parent::itemClass().($this->value() ? " has-value" : "");
-	}
-	
 	protected function getAttributes() {
 		$attr = parent::getAttributes();
 		$attr["autocomplete"] = "off";
