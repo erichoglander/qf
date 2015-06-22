@@ -43,9 +43,11 @@ function datepicker(el) {
 		window.addEventListener("click", function(e){ self.windowClick(e); }, false);
 		if (this.tags.input.value.length) {
 			var arr = this.tags.input.value.split("-");
-			this.value.y = arr[0];
-			this.value.m = arr[1];
-			this.value.d = arr[2];
+			this.value.y = parseInt(arr[0]);
+			this.value.m = parseInt(arr[1]);
+			this.value.d = parseInt(arr[2]);
+			this.active.y = this.value.y;
+			this.active.m = this.value.m;
 		}
 		this.render();
 	}
