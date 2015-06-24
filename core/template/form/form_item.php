@@ -4,7 +4,7 @@
 	<label class="form-label" for="<?=$input_name?>"><?=$label?></label>
 <?php } ?>
 <?php 
-if ($items != null) {
+if ($items !== null) {
 	foreach ($items as $item) 
 		print $item;
 }

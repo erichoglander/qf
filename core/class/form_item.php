@@ -187,6 +187,7 @@ class FormItem {
 		}
 		else {
 			if (isset($structure["items"])) {
+				$this->items = [];
 				foreach ($structure["items"] as $name => $item) {
 					if (!empty($structure["value"]) && array_key_exists($name, $structure["value"]))
 						$item["value"] = $structure["value"][$name];
