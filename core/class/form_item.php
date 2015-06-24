@@ -8,7 +8,7 @@ class FormItem {
 
 	protected $type;
 	protected $label, $description, $icon;
-	protected $dragable;
+	protected $dragable, $collapsible;
 	protected $add_button = "Add item";
 	protected $delete_button = "Delete item";
 	protected $required, $focus;

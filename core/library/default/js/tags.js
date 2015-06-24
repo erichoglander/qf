@@ -52,7 +52,7 @@ function autocompleteTags(el) {
 	
 	this.lastValue = function() {
 		var val = this.tags.input.value;
-		var x = val.indexOf(",");
+		var x = val.lastIndexOf(",");
 		if (x == -1)
 			return val;
 		else
@@ -171,7 +171,7 @@ function autocompleteTags(el) {
 	}
 	this.itemChoose = function(n) {
 		var val = this.tags.input.value;
-		var x = val.indexOf(",");
+		var x = val.lastIndexOf(",");
 		if (x == -1)
 			val = this.items[n];
 		else
