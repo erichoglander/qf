@@ -28,7 +28,7 @@ Element.prototype.removeClass = function(cname) {
 if (typeof(document.getElementsByClassName) != "function") {
 	HTMLDocument.prototype.getElementsByClassName = function(cname) {
 		var a = [];
-		var re = new RegExp('(^| )'+classname+'( |$)');
+		var re = new RegExp('(^| )'+cname+'( |$)');
 		var els = node.getElementsByTagName("*");
 		for(var i=0,j=els.length; i<j; i++)
 				if(re.test(els[i].className))a.push(els[i]);
@@ -36,7 +36,7 @@ if (typeof(document.getElementsByClassName) != "function") {
 	}
 	Element.prototype.getElementsByClassName = function(cname) {
 		var a = [];
-		var re = new RegExp('(^| )'+classname+'( |$)');
+		var re = new RegExp('(^| )'+cname+'( |$)');
 		var els = node.getElementsByTagName("*");
 		for(var i=0,j=els.length; i<j; i++)
 				if(re.test(els[i].className))a.push(els[i]);
