@@ -7,8 +7,8 @@ class FormItem {
 	public $submit_data = true;
 
 	protected $type;
-	protected $label, $description, $icon;
-	protected $dragable, $collapsible;
+	protected $label, $item_label, $description, $icon;
+	protected $dragable;
 	protected $add_button = "Add item";
 	protected $delete_button = "Delete item";
 	protected $required, $focus;
@@ -166,6 +166,7 @@ class FormItem {
 			$st["parent_name"] = $this->inputName();
 			$st["multiple"] = false;
 			$st["parent_multiple"] = true;
+			$item_label = $st["item_label"];
 			unset($st["label"]);
 			unset($st["description"]);
 			unset($st["prefix"]);
@@ -175,6 +176,10 @@ class FormItem {
 					$st["value"] = $structure["value"][$i];
 				else
 					unset($st["value"]);
+				if (!empty($structure["labels"]) && array_key_exists($i, $structure["labels"]))
+					$st["label"] = $structure["labels"][$i];
+				else
+					$st["label"] = $item_label;
 				unset($st["focus"]);
 				$this->loadItem($i, $st);
 			}
@@ -182,6 +187,7 @@ class FormItem {
 			unset($st["validation"]);
 			unset($st["submitted"]);
 			unset($st["value"]);
+			$st["label"] = $item_label;
 			$st["form_item_class"] = get_class($this);
 			$this->item_structure = $st;
 		}

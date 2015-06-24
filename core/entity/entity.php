@@ -94,7 +94,7 @@ class Entity {
 		}
 		else {
 			foreach ($this->schema["fields"] as $key => $field) {
-				if (!array_key_exists($key, $data) && array_key_exists("default", $field))
+				if ((!array_key_exists($key, $data) || $data[$key] === null) && array_key_exists("default", $field))
 					$data[$key] = $field["default"];
 			}
 			return $this->fields["id"] = $this->Db->insert($this->schema["table"], $data);
