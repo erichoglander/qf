@@ -166,7 +166,7 @@ class FormItem {
 			$st["parent_name"] = $this->inputName();
 			$st["multiple"] = false;
 			$st["parent_multiple"] = true;
-			$item_label = $st["item_label"];
+			$item_label = (!empty($st["item_label"]) ? $st["item_label"] : null);
 			unset($st["label"]);
 			unset($st["description"]);
 			unset($st["prefix"]);
