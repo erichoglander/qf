@@ -52,14 +52,17 @@ function collapsible(el) {
 		var self = this;
 		this.tags.wrap.removeClass("collapsed");
 		this.tags.wrap.addClass("expanded");
-		this.tags.content.style.height = this.tags.inner.offsetHeight+"px";
-		setTimeout(function(){
-			self.tags.content.addClass("no-transition");
-			self.tags.content.style.height = "auto";
-			setTimeout(function() {
-				self.tags.content.removeClass("no-transition");
-			}, 1);
-		}, this.getTransition());
+		this.tags.content.style.height = "0px";
+		setTimeout(function() {
+			self.tags.content.style.height = self.tags.inner.offsetHeight+"px";
+			setTimeout(function(){
+				self.tags.content.addClass("no-transition");
+				self.tags.content.style.height = "auto";
+				setTimeout(function() {
+					self.tags.content.removeClass("no-transition");
+				}, 1);
+			}, self.getTransition());
+		}, 1);
 	}
 	this.close = function() {
 		var self = this;

@@ -8,6 +8,9 @@
 	transition: height 0.3s ease;
 	-webkit-transition: height 0.3s ease;
 }
+.expanded > .collapsible-content {
+	height: auto;
+}
 .collapsible-title {
 	cursor: pointer;
 }
