@@ -155,3 +155,26 @@ function formGetForm(el) {
 	for (el; el && el.tagName != "FORM"; el = el.parentNode);
 	return el;
 }
+
+
+var _formCollapsibles = [];
+function formCollapsibleInit() {
+	var els = document.getElementsByClassName("form-collapsible");
+	for (var i=0; i<els.length; i++)
+		_formCollapsibles.push(new collapsible(els[i]));
+	var observer = new MutationObserver(function(mutations) {
+		mutations.forEach(function(mutation) {
+			formCollapsibleObserve(mutation.target);
+		});    
+	});
+	var config = { childList: true, subtree: true };
+	observer.observe(document.body, config);
+}
+function formCollapsibleObserve(el) {
+	var els = el.getElementsByClassName("form-collapsible");
+	for (var i=0; i<els.length; i++) {
+		if (!els[i].className.match("collapsible-init"))
+			_formCollapsibles.push(new collapsible(els[i]));
+	}
+}
+window.addEventListener("load", formCollapsibleInit, false);

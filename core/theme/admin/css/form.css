@@ -58,9 +58,13 @@ input {
 .form-textarea {
 	height: 100px;
 }
-
 .form-number {
 	max-width: 100px;
+}
+
+.form-delete-button,
+.form-add-button {
+	margin-top: 10px;
 }
 
 .checkbox-label .fa {
@@ -162,12 +166,11 @@ input {
 }
 .form-type-fieldset > .form-label,
 .form-type-address > .form-label {
-	position: relative;
-	top: -5px;
 	font-weight: 600;
 	color: #959595;
 	font-size: 12px;
 	text-transform: uppercase;
+	margin-bottom: 5px;
 }
 .form-type-address .form-name-postal-code {
 	max-width: 100px;
@@ -179,6 +182,9 @@ input {
 	margin-left: 10px;
 	float: left;
 	margin-top: 0;
+}
+.form-collapsible.collapsed .form-delete-button {
+	display: none;
 }
 
 .form-type-editor {

@@ -25,6 +25,7 @@ Element.prototype.removeClass = function(cname) {
 		}
 	}
 }
+
 if (typeof(document.getElementsByClassName) != "function") {
 	HTMLDocument.prototype.getElementsByClassName = function(cname) {
 		var a = [];
@@ -58,6 +59,25 @@ if (typeof(window.addEventListener) != "function") {
 	Element.prototype.addEventListener = function(ev, func, nothing) {
 		window.attachEvent("on"+ev, func);
 	}
+}
+
+function getStyle(el, prop) {
+	if (el.currentStyle) {
+		var x = prop.indexOf("-");
+		while (x != -1) {
+			if (x === 0) 
+				prop = prop.substr(1);
+			else
+				prop = prop.substr(0, x)+prop.substr(x+1,1).toUpperCase()+prop.substr(x+2);
+			x = prop.indexOf("-");
+		}
+		var y = el.currentStyle[prop];
+	}
+	else if (window.getComputedStyle)
+		var y = document.defaultView.getComputedStyle(el, null).getPropertyValue(prop);
+	else
+		var y = el.style[prop];
+	return y;
 }
 
 (function() {
