@@ -26,6 +26,10 @@ Element.prototype.removeClass = function(cname) {
 	}
 }
 
+Element.prototype.hasClass = function(cname) {
+	return (this.className.match("(^| )"+cname+"( |$)") ? true : false);
+}
+
 if (typeof(document.getElementsByClassName) != "function") {
 	HTMLDocument.prototype.getElementsByClassName = function(cname) {
 		var a = [];

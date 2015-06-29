@@ -148,7 +148,7 @@ function formAddButton(el, structure) {
 }
 
 function formGetItem(el) {
-	for (el; el && !el.className.match("form-item"); el = el.parentNode);
+	for (el; el && !el.hasClass("form-item"); el = el.parentNode);
 	return el;
 }
 function formGetForm(el) {
