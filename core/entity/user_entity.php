@@ -14,8 +14,10 @@ class User_Entity_Core extends Entity {
 		if (!parent::save())
 			return false;
 		$this->Db->delete("user_role", ["user_id" => $this->id()]);
-		foreach ($this->get("roles") as $role)
-			$this->Db->insert("user_role", ["user_id" => $this->id(), "role_id" => $role->id]);
+		if (!empty($this->get("roles"))) {
+			foreach ($this->get("roles") as $role)
+				$this->Db->insert("user_role", ["user_id" => $this->id(), "role_id" => $role->id]);
+		}
 		return true;
 	}
 

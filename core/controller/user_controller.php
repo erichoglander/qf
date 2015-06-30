@@ -207,7 +207,17 @@ class User_Controller_Core extends Controller {
 	}
 
 	public function listAction() {
-		$this->viewData["users"] = $this->Model->getUsers();
+		$values = (array_key_exists("user_list_search", $_SESSION) ? $_SESSION["user_list_search"] : []);
+		$Form = $this->getForm("Search", ["q" => (!empty($values["q"]) ? $values["q"] : null)]);
+		if ($Form->isSubmitted()) {
+			$_SESSION["user_list_search"] = $Form->values();
+			refresh();
+		}
+		$Pager = newClass("Pager");
+		$Pager->setNum($this->Model->listSearchNum($values));
+		$this->viewData["users"] = $this->Model->listSearch($values, $Pager->start(), $Pager->ppp);
+		$this->viewData["pager"] = $Pager->render();
+		$this->viewData["search"] = $Form->render();
 		return $this->view("list");
 	}
 

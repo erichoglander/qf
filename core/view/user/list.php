@@ -5,10 +5,11 @@ $this->Html->breadcrumbs[] = t("Users");
 
 <a class="btn btn-primary" href="/user/add"><?=t("Add user")?></a>
 
+<?=$search?>
+
 <table class="striped">
 	<thead>
 		<tr>
-			<th><?=t("ID")?></th>
 			<th><?=t("Username")?></th>
 			<th><?=t("E-mail")?></th>
 			<th><?=t("Active")?></th>
@@ -21,7 +22,6 @@ $this->Html->breadcrumbs[] = t("Users");
 	<tbody>
 	<?php foreach ($users as $User) { ?>
 		<tr>
-			<td><?=$User->id()?></td>
 			<td><?=$User->get("name")?></td>
 			<td><?=$User->get("email")?></td>
 			<td><?=($User->get("status") ? t("Yes") : t("No"))?></td>
@@ -33,7 +33,7 @@ $this->Html->breadcrumbs[] = t("Users");
 			} 
 			?></td>
 			<td><?=date("Y-m-d H:i:s", $User->get("created"))?></td>
-			<td><?=date("Y-m-d H:i:s", $User->get("login"))?></td>
+			<td><?=($User->get("login") ? date("Y-m-d H:i:s", $User->get("login")) : t("Never"))?></td>
 			<td class="actions">
 				<a href="/user/edit/<?=$User->id()?>"><?=t("Edit")?></a>
 				<?php if ($User->id() != 1) { ?>
@@ -45,3 +45,5 @@ $this->Html->breadcrumbs[] = t("Users");
 	<?php } ?>
 	</tbody>
 </table>
+
+<?=$pager?>

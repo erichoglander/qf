@@ -112,4 +112,27 @@ class User_Model_Core extends Model {
 		return $users;
 	}
 	
+	public function listSearchQuery($values) {
+		$sql = "SELECT id FROM `user`";
+		$vars = [];
+		if (!empty($values["q"])) {
+			$sql.= " WHERE name LIKE :q || email LIKE :q";
+			$vars[":q"] = "%".$values["q"]."%";
+		}
+		return [$sql, $vars];
+	}
+	public function listSearchNum($values = []) {
+		list($sql, $vars) = $this->listSearchQuery($values);
+		return $this->Db->numRows($sql, $vars);
+	}
+	public function listSearch($values = [], $start = 0, $stop = 30) {
+		$list = [];
+		list($sql, $vars) = $this->listSearchQuery($values);
+		$sql.= " LIMIT ".$start.", ".$stop;
+		$rows = $this->Db->getRows($sql, $vars);
+		foreach ($rows as $row)
+			$list[] = $this->getEntity("User", $row->id);
+		return $list;
+	}
+	
 };
