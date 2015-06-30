@@ -110,7 +110,7 @@ class Db_Core {
 		return $stmt->rowCount();
 	}
 	
-	public function insert($table, $data) {
+	public function insert($table, $data, $ignore = false) {
 		if (!is_array($data))
 			$data = (array) $data;
 		$keys = array_keys($data);
@@ -120,13 +120,20 @@ class Db_Core {
 			$vars[":".$key] = $val;
 			$holders[] = ":".$key;
 		}
-		$sql = "INSERT INTO `".$table."`(`";
+		$sql = "INSERT ";
+		if ($ignore)
+			$sql.= "IGNORE ";
+		$sql.= "INTO `".$table."`(`";
 		$sql.= implode("`,`", $keys);
 		$sql.= "`) VALUES(";
 		$sql.= implode(",", $holders);
 		$sql.= ")";
 		$stmt = $this->query($sql, $vars);
 		return (int) $this->db->lastInsertId();
+	}
+	
+	public function insertIgnore($table, $data) {
+		return $this->insert($table, $data, true);
 	}
 	
 	public function update($table, $data, $conditions = []) {
