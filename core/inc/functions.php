@@ -214,11 +214,12 @@ function addlog($Db, $category, $text, $data = null, $type = "info") {
 		$obj["data"] = serialize($data);
 	}
 	catch (Exception $e) {
-		$obj["data"] = null;
+		$string = print_r($data, 1);
+		$obj["data"] = serialize($string);
 	}
 	$Db->insert("log", $obj);
 	$row = $Db->getRow("SELECT COUNT(id) as num FROM `log`");
-	if ($row->num > MAX_LOGS)
+	if ($row && $row->num > MAX_LOGS)
 		$Db->query("DELETE FROM `log` ORDER BY id ASC LIMIT 1");
 }
 
