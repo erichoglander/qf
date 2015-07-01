@@ -10,7 +10,7 @@ class FormItem {
 	protected $label, $item_label, $description, $icon;
 	protected $dragable;
 	protected $add_button = "Add item";
-	protected $delete_button = "Delete item";
+	protected $delete_button = "Remove";
 	protected $required, $focus;
 	protected $attributes = [];
 	protected $value;
