@@ -14,6 +14,11 @@ class Address_FormItem_Core extends FormItem {
 	
 	protected function loadStructure($structure) {
 		$structure["items"] = [];
+		if (in_array("id", $this->address_fields)) {
+			$structure["items"]["id"] = [
+				"type" => "value",
+			];
+		}
 		if (in_array("line", $this->address_fields)) {
 			$structure["items"]["line"] = [
 				"type" => "text",
