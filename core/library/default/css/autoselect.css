@@ -1,0 +1,28 @@
+.autoselect-hidden {
+	display: none;
+}
+.autoselect {
+	position: relaitve;
+}
+.autoselect-options {
+	position: absolute;
+	left: 0;
+	top: 100%;
+	min-width: 100%;
+	max-height: 215px;
+	overflow: auto;
+	z-index: 2;
+	opacity: 0;
+	filter: alpha(opacity=0);
+	transition: opacity 0.1s ease;
+	-webkit-transition: opacity 0.1s ease;
+}
+.form-autoselect:focus ~ .autoselect-options {
+	opacity: 1;
+	filter: alpha(opacity=100);
+}
+.autoselect-option {
+	padding: 3px 15px;
+	white-space: nowrap;
+	cursor: pointer;
+}

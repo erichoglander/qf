@@ -6,6 +6,7 @@ class Default_Library_Core extends Library {
 		"css/timepicker.css", 
 		"css/datepicker.css", 
 		"css/autocomplete.css",
+		"css/autoselect.css",
 	];
 	public $js = [
 		"js/script.js", 
@@ -15,6 +16,7 @@ class Default_Library_Core extends Library {
 		"js/timepicker.js", 
 		"js/datepicker.js", 
 		"js/autocomplete.js", 
+		"js/autoselect.js", 
 		"js/tags.js",
 	];
 
