@@ -144,10 +144,10 @@
 .datepicker-calendar-day.current-month {
 	color: #333;
 }
+.datepicker-calendar-day.today {
+	background: #f0f0f0;
+}
 .datepicker-calendar-day.active {
 	color: #3C763D;
 	background-color: #DFF0D8;
-}
-.datepicker-calendar-day.today {
-	background: #f0f0f0;
 }
