@@ -63,6 +63,7 @@ function autoselect(el) {
 	this.onBlur = function() {
 		if (!this.tags.input.value.length) {
 			this.tags.select.selectedIndex = 0;
+			this.tags.select.trigger("change");
 			this.tags.input.value = this.tags.select.options[this.tags.select.selectedIndex].text;
 		}
 	}
@@ -136,6 +137,7 @@ function autoselect(el) {
 		this.tags.input.value = this.tags.select.options[n].text;
 		this.tags.input.blur();
 		this.tags.select.selectedIndex = n;
+		this.tags.select.trigger("change");
 	}
 	
 	this.init();
