@@ -35,6 +35,7 @@ function autoselect(el) {
 		this.tags.input.addEventListener("focus", function(){ self.onFocus(); }, false);
 		this.tags.input.addEventListener("keydown", function(e){ self.onKeyDown(e); }, false);
 		this.tags.input.addEventListener("keyup", function(e){ self.onKeyUp(e); }, false);
+		this.tags.input.addClass("autoselect-init");
 	}
 	
 	this.renderOptions = function() {
