@@ -125,6 +125,39 @@ function smoothScroll(stop, d) {
 	}
 	requestAnimationFrame(scroll);
 }
+function scrollToEl(id) {
+	var el = document.getElementById(id);
+	if (!el)
+		return;
+	var y = getTopPos(el);
+	if (document.body.className.match("admin-menu"))
+		y-= 30;
+	smoothScroll(y);
+}
 function ease(t) {
 	return (t<.5 ? 4*t*t*t : (t-1)*(2*t-2)*(2*t-2)+1);
+}
+function scrollTop() {
+	var doc = document.documentElement, body = document.body;
+	return (doc && doc.scrollTop || body && body.scrollTop  || 0);
+}
+function bodyHeight() {
+	return Math.max( 
+		document.body.scrollHeight, 
+		document.body.offsetHeight, 
+		document.documentElement.clientHeight, 
+		document.documentElement.scrollHeight, 
+		document.documentElement.offsetHeight);
+}
+function getTopPos(el) {
+	for (var y=0; el != null; y += el.offsetTop, el = el.offsetParent);
+	return y;
+}
+function getPos(el) {
+	for (var pos={x: 0, y:0}; el != null; pos.x+= el.offsetLeft, pos.y+= el.offsetTop, el = el.offsetParent);
+	return pos;
+}
+function getXY(e) {
+	evt = (e.type == "touchmove" || e.type == "touchstart" ? e.touches[0] : (e.type == "touchend" ? e.changedTouches[0] : e));
+	return {x: evt.clientX, y: evt.clientY};
 }
