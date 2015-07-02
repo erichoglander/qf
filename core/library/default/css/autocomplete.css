@@ -27,12 +27,15 @@
 	z-index: 2;
 	opacity: 0;
 	filter: alpha(opacity=0);
-	transition: opacity 0.1s ease;
-	-webkit-transition: opacity 0.1s ease;
+	visibility: hidden;
+	transition: opacity 0.1s ease, visibility 0s 0.5s;
+	-webkit-transition: opacity 0.1s ease, visibility 0s 0.5s;
 }
 .autocomplete-items.active {
 	opacity: 1;
 	filter: alpha(opacity=100);
+	visibility: visible;
+	transition-delay: 0s;
 }
 .autocomplete-item {
 	padding: 3px 15px;
