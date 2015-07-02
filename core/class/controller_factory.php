@@ -36,10 +36,6 @@ class ControllerFactory_Core {
 	}
 
 	public function getController($controller, $init = true) {
-		$arr = explode("-", $controller);
-		$controller = null;
-		foreach ($arr as $a)
-			$controller.= ucwords($a);
 		$class = newClass($controller."_Controller", $this->Config, $this->Db, $init);
 		if (!$class)
 			$class = new Controller($this->Config, $this->Db);
@@ -95,11 +91,36 @@ class ControllerFactory_Core {
 					(!empty($redir["uri"]) ? $redir["uri"] : $_SERVER["REQUEST_URI"]);
 			}
 		}
+		
+		$params = explode("/", $uri);
+		
+		// Controller 
+		if (!empty($params[0])) {
+			$controller = strtolower($params[0]);
+			$arr = explode("-", $controller);
+			$controller = null;
+			foreach ($arr as $a)
+				$controller.= ucwords($a);
+			$request["controller"] = $controller;
+		}
+		else {
+			$request["controller"] = "page";
+		}
+		
+		// Action
+		if (!empty($params[1])) {
+			$action = strtolower($params[1]);
+			$arr = explode("-", $action);
+			$action = null;
+			foreach ($arr as $a)
+				$action.= ucwords($a);
+			$request["action"] = $action;
+		}
+		else {
+			$request["action"] = "index";
+		}
 
 		// Summarize
-		$params = explode("/", $uri);
-		$request["controller"] = (empty($params[0]) ? "page" : strtolower($params[0]));
-		$request["action"] = (empty($params[1]) ? "index" : str_replace("-", "_", strtolower($params[1])));
 		$request["args"] = array_slice($params, 2);
 		return $request;
 	}
