@@ -16,8 +16,8 @@ foreach ($options as $key => $val) {
 }
 ?>
 <div class="checkboxes-select">
-	<div class="checkboxes-select-title">
-		<div class="checkboxes-select-title-inner"><?=$title?></div>
+	<div class="checkboxes-select-title form-textfield">
+		<span class="checkboxes-select-title-inner"><?=$title?></span>
 		<?=FontAwesome\Icon("angle-down")?>
 	</div>
 	<div class="checkboxes-select-options">

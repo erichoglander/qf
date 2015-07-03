@@ -5,7 +5,7 @@ function checkboxesSelectInit() {
 		_checkboxes_selects.push(new checkboxesSelect(els[i]));
 	var observer = new MutationObserver(function(mutations) {
 		mutations.forEach(function(mutation) {
-			checkboxes_selectObserve(mutation.target);
+			checkboxesSelectObserve(mutation.target);
 		});    
 	});
 	var config = { childList: true, subtree: true };
@@ -26,12 +26,60 @@ function checkboxesSelect(el) {
 	};
 	
 	this.init = function() {
-		this.tags.title = this.tags.wrap.getElementsByClassName("checkboxes-select-title-inner")[0];
-		var checkboxes = this.tags.wrap.getElementsByTagName("input");
-		this.tags.checkboxes = {};
-		for (var i=0; i<checkboxes.length; i++)
-			this.tags.checkboxes[checkboxes[i].value] = checkboxes[i];
+		var self = this;
+		this.tags.titleWrap = this.tags.wrap.getElementsByClassName("checkboxes-select-title")[0];
+		this.tags.title = this.tags.titleWrap.getElementsByClassName("checkboxes-select-title-inner")[0];
+		this.tags.labels = this.tags.wrap.getElementsByTagName("label");
+		this.tags.checkboxes = this.tags.wrap.getElementsByTagName("input");
+		for (var i=0; i<this.tags.checkboxes.length; i++) {
+			(function(n) {
+				self.tags.checkboxes[n].addEventListener("click", function(){ self.checkboxClick(n); }, false);
+			}(i));
+		}
+		this.tags.titleWrap.addEventListener("click", function(){ self.toggle(); }, false);
 		this.tags.wrap.addClass("checkboxes-select-init");
+	}
+	
+	this.toggle = function() {
+		if (this.isOpen())
+			this.close();
+		else
+			this.open();
+	}
+	this.open = function() {
+		this.tags.wrap.addClass("active");
+	}
+	this.close = function() {
+		this.tags.wrap.removeClass("active");
+	}
+	this.isOpen = function() {
+		if (this.tags.wrap.hasClass("active"))
+			return true;
+		return false;
+	}
+	
+	this.checkboxClick = function(n) {
+		this.renderTitle();
+	}
+	
+	this.renderTitle = function() {
+		var title = "";
+		var n = 0;
+		for (var i=0; i<this.tags.checkboxes.length; i++) {
+			if (this.tags.checkboxes[i].checked) {
+				if (n == 3) {
+					title+= "...";
+					break;
+				}
+				else {
+					if (n != 0)
+						title+= ", ";
+					title+=  this.tags.labels[i].textContent.trim();
+					n++;
+				}
+			}
+		}
+		this.tags.title.innerHTML = title;
 	}
 	
 	this.init();

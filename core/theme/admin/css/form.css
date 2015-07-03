@@ -299,3 +299,16 @@ input {
 .autoselect-option.active {
 	background: #f5f5f5;
 }
+
+.checkboxes-select-options {
+	background: #fff;
+	padding: 3px 0;
+	margin-top: 2px;
+	box-shadow: 0 6px 12px rgba(0,0,0,0.18);
+	border-radius: 4px;
+	border: 1px solid #ccc;
+}
+.checkboxes-select-option:hover,
+.checkboxes-select-option.active {
+	background: #f5f5f5;
+}
