@@ -35,7 +35,7 @@
 }
 .checkboxes-select-title-inner {
 	display: inline-block;
-	max-width: 100%;
+	max-width: 90%;
 	text-overflow: ellipsis;
 	overflow: hidden;
 	white-space: nowrap;
