@@ -67,16 +67,10 @@ function checkboxesSelect(el) {
 		var n = 0;
 		for (var i=0; i<this.tags.checkboxes.length; i++) {
 			if (this.tags.checkboxes[i].checked) {
-				if (n == 3) {
-					title+= "...";
-					break;
-				}
-				else {
-					if (n != 0)
-						title+= ", ";
-					title+=  this.tags.labels[i].textContent.trim();
-					n++;
-				}
+				if (n != 0)
+					title+= ", ";
+				title+=  this.tags.labels[i].textContent.trim();
+				n++;
 			}
 		}
 		this.tags.title.innerHTML = title;
