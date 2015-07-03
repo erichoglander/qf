@@ -3,15 +3,10 @@ $title = "";
 $n = 0;
 foreach ($options as $key => $val) { 
 	if ($value && in_array($key, $value)) {
-		if ($n == 3) {
-			$title.= "...";
-			break;
-		}
-		else {
-			if ($n != 0)
-				$title.= ", ";
-			$title.= $val;
-		}
+		if ($n != 0)
+			$title.= ", ";
+		$title.= $val;
+		$n++;
 	}
 }
 ?>
