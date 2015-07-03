@@ -40,7 +40,7 @@ class Db_Core {
 			$n = 0;
 			foreach ($conditions as $i => $cond) {
 				$n++;
-				if (is_array($cond)) {
+				if (is_array($cond) && is_int($i)) {
 					$pred = (isset($cond[2]) ? $cond[2] : null);
 					$key = $cond[0];
 					$val = $cond[1];
