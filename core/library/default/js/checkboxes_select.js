@@ -37,6 +37,7 @@ function checkboxesSelect(el) {
 			}(i));
 		}
 		this.tags.titleWrap.addEventListener("click", function(){ self.toggle(); }, false);
+		window.addEventListener("click", function(e){ self.windowClick(e); }, false);
 		this.tags.wrap.addClass("checkboxes-select-init");
 	}
 	
@@ -56,6 +57,14 @@ function checkboxesSelect(el) {
 		if (this.tags.wrap.hasClass("active"))
 			return true;
 		return false;
+	}
+	
+	this.windowClick = function(e) {
+		if (!this.isOpen())
+			return;
+		for (var i=0, el = e.target; i<5 && el != null && el != this.tags.wrap; i++, el = el.parentNode);
+		if (!el || i == 5)
+			this.close();
 	}
 	
 	this.checkboxClick = function(n) {
