@@ -397,7 +397,7 @@ class FormItem {
 		return renderTemplate($path, $vars);
 	}
 	protected function renderAddButton() {
-		if (!$this->multiple) 
+		if (!$this->multiple || !$this->add_button) 
 			return null;
 		$values = 
 		$data = $this->item_structure;
@@ -405,7 +405,7 @@ class FormItem {
 		return '<input type="button" class="form-button form-add-button btn" value="'.$this->add_button.'" onclick="formAddButton(this, '.$json.')">';
 	}
 	protected function renderDeleteButton() {
-		if (!$this->parent_multiple)
+		if (!$this->parent_multiple || !$this->delete_button)
 			return null;
 		return '<input type="button" class="form-button form-delete-button btn btn-danger" value="'.$this->delete_button.'" onclick="formDeleteButton(this)">';
 	}
