@@ -57,8 +57,12 @@ function autoselect(el) {
 	}
 	
 	this.onFocus = function() {
-		this.tags.input.value = "";
 		this.renderOptions();
+		this.tags.input.select();
+		var self = this;
+		setTimeout(function(){
+			self.tags.input.select();
+		}, 100);
 	}
 	
 	this.onBlur = function() {
@@ -85,7 +89,6 @@ function autoselect(el) {
 			return false;
 		}
 		else if (code == 27) {
-			this.tags.input.value = this.tags.select.options[this.tags.select.selectedIndex].text;
 			this.tags.input.blur();
 		}
 	}
