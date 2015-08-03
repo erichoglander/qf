@@ -166,6 +166,14 @@ tr.status-error {
 	background-color: #F2DEDE;
 	border-color: #EBCCD1;
 }
+table .actions a .ban,
+table .actions a .fa-trash-o {
+	color: #A94442;
+}
+table .actions a:hover .ban,
+table .actions a:hover .fa-trash-o {
+	color: #833;
+}
 
 
 
