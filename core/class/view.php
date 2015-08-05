@@ -19,16 +19,18 @@ class View_Core {
 	}
 
 	public function render() {
-		if (!empty($this->variables["html"])) {
-			foreach ($this->variables["html"] as $key => $var)
-				$this->Html->{$key} = $var;
-			unset($this->variables["html"]);
+		if ($this->Html) {
+			if (!empty($this->variables["html"])) {
+				foreach ($this->variables["html"] as $key => $var)
+					$this->Html->{$key} = $var;
+				unset($this->variables["html"]);
+			}
+			if (IS_FRONT_PAGE)
+				$this->Html->body_class[] = "front";
+			$this->Html->body_class[] = cssClass("page-".$this->controller_name."-".$this->name);
+			$this->Html->body_class[] = cssClass("controller-".$this->controller_name);
+			$this->Html->body_class[] = cssClass("action-".$this->name);
 		}
-		if (IS_FRONT_PAGE)
-			$this->Html->body_class[] = "front";
-		$this->Html->body_class[] = cssClass("page-".$this->controller_name."-".$this->name);
-		$this->Html->body_class[] = cssClass("controller-".$this->controller_name);
-		$this->Html->body_class[] = cssClass("action-".$this->name);
 		$path = $this->path();
 		extract($this->variables);
 		ob_start();
