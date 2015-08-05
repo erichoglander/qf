@@ -125,7 +125,7 @@ class Html_Core {
 
 	protected function getTitle() {
 		if ($this->title_full)
-			return $title_full;
+			return $this->title_full;
 		return $this->title.$this->title_suffix;
 	}
 
