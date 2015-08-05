@@ -15,9 +15,6 @@ class View_Core {
 		if ($Db) {
 			$this->Html = newClass("Html", $Db, $this->User);
 			$this->Html->title = ucwords($controller_name)." ".$name;
-			$this->Html->body_class[] = cssClass("page-".$controller_name."-".$name);
-			$this->Html->body_class[] = cssClass("controller-".$controller_name);
-			$this->Html->body_class[] = cssClass("action-".$name);
 		}
 	}
 
@@ -27,6 +24,11 @@ class View_Core {
 				$this->Html->{$key} = $var;
 			unset($this->variables["html"]);
 		}
+		if (IS_FRONT_PAGE)
+			$this->Html->body_class[] = "front";
+		$this->Html->body_class[] = cssClass("page-".$this->controller_name."-".$this->name);
+		$this->Html->body_class[] = cssClass("controller-".$this->controller_name);
+		$this->Html->body_class[] = cssClass("action-".$this->name);
 		$path = $this->path();
 		extract($this->variables);
 		ob_start();
