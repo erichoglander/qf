@@ -3,6 +3,7 @@ class Html_Core {
 	
 	public $title, $title_suffix, $title_full;
 	public $h1;
+	public $meta;
 	public $pre_css, $pre_js, $head_end;
 	public $pre_page, $post_page;
 	public $pre_content, $post_content;
@@ -34,6 +35,7 @@ class Html_Core {
 		$vars = [
 			"css" => $this->css,
 			"js" => $this->js,
+			"meta" => $this->meta,
 			"pre_css" => $this->pre_css,
 			"pre_js" => $this->pre_js,
 			"head_end" => $this->head_end,
