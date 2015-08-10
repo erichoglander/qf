@@ -115,13 +115,13 @@ class Html_Core {
 	}
 
 
-	protected function preProcessHtml(&$vars) {
+	protected function preProcessHtml() {
 	}
-	protected function preProcessPage(&$vars) {
+	protected function preProcessPage() {
 	}
-	protected function preRenderHtml() {
+	protected function preRenderHtml(&$vars) {
 	}
-	protected function preRenderPage() {
+	protected function preRenderPage(&$vars) {
 	}
 
 	protected function menus() {
