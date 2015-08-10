@@ -5,10 +5,12 @@ class Theme {
 	public $css = [];
 	public $js = [];
 
-	protected $Db;
+	protected $Config, $Db, $User;
 
-	public function __construct($Db) {
+	public function __construct($Config, $Db, $User) {
+		$this->Config = &$Config;
 		$this->Db = &$Db;
+		$this->User = &$User;
 	}
 
 	public function render($part, $vars = []) {

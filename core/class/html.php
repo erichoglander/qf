@@ -18,10 +18,10 @@ class Html_Core {
 
 	public $libraries = ["FontAwesome"];
 
-	protected $Theme, $Db, $User;
+	protected $Config, $Db, $User, $Theme;
 
-	public function __construct($Db, $User) {
-		$this->Config = newClass("Config");
+	public function __construct($Config, $Db, $User) {
+		$this->Config = &$Config;
 		$this->Db = &$Db;
 		$this->User = &$User;
 		$this->breadcrumbs[] = (IS_FRONT_PAGE ? t("Home") : ["", t("Home")]);
@@ -31,7 +31,7 @@ class Html_Core {
 
 	public function renderHtml() {
 		$this->loadTheme();
-		$this->preRenderHtml();
+		$this->preProcessHtml();
 		$vars = [
 			"css" => $this->css,
 			"js" => $this->js,
@@ -47,12 +47,13 @@ class Html_Core {
 			"menu" => $this->menus(),
 			"breadcrumbs" => $this->breadcrumbs,
 		];
+		$this->preRenderHtml($vars);
 		return $this->Theme->render("html", $vars);
 	}
 
 	public function renderPage() {
 		$this->loadTheme();
-		$this->preRenderPage();
+		$this->preProcessPage();
 		$vars = [
 			"h1" => $this->h1,
 			"pre_content" => $this->pre_content,
@@ -62,6 +63,7 @@ class Html_Core {
 			"breadcrumbs" => $this->breadcrumbs,
 			"msgs" => getmsgs(),
 		];
+		$this->preRenderHtml($vars);
 		clearmsgs();
 		return $this->Theme->render("page", $vars);
 	}
@@ -113,6 +115,10 @@ class Html_Core {
 	}
 
 
+	protected function preProcessHtml(&$vars) {
+	}
+	protected function preProcessPage(&$vars) {
+	}
 	protected function preRenderHtml() {
 	}
 	protected function preRenderPage() {
@@ -133,7 +139,7 @@ class Html_Core {
 
 	protected function getTheme($theme) {
 		$class = ucwords($theme)."_Theme";
-		return newClass($class, $this->Db);
+		return newClass($class, $this->Config, $this->Db, $this->User);
 	}
 
 	protected function loadTheme() {

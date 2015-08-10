@@ -182,7 +182,7 @@ class Controller {
 	}
 
 	protected function view($name) {
-		$View = newClass("View", $this->Db, $this->User, $this->name, $name, $this->viewData);
+		$View = newClass("View", $this->Config, $this->Db, $this->User, $this->name, $name, $this->viewData);
 		try {
 			return $View->render();
 		}
@@ -192,7 +192,7 @@ class Controller {
 		}
 	}
 	protected function viewDefault($name) {
-		$View = newClass("View", $this->Db, $this->User, "default", $name, $this->viewData);
+		$View = newClass("View", $this->Config, $this->Db, $this->User, "default", $name, $this->viewData);
 		try {
 			return $View->render();
 		}
@@ -201,7 +201,7 @@ class Controller {
 		}
 	}
 	protected function viewBare($name) {
-		$View = newClass("View", null, null, "default", $name, $this->viewData);
+		$View = newClass("View", null, null, null, "default", $name, $this->viewData);
 		try {
 			return $View->render();
 		}
