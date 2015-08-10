@@ -186,6 +186,17 @@ function t($str, $lang = "en", $vars = []) {
 	return $str;
 }
 
+function uri($path) {
+	global $Db;
+	$row = $Db->getRow("
+			SELECT * FROM `alias`
+			WHERE path = :path && status = 1",
+			["path" => $path]);
+	if ($row)
+		$path = $row->alias;
+	return $path;
+}
+
 function setmsg($msg, $type = "info") {
 	if (!isset($_SESSION["sysmsg"]))
 		$_SESSION["sysmsg"] = [];
