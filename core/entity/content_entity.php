@@ -16,6 +16,7 @@ class Content_Entity_Core extends l10n_Entity {
 			$html.= '</div>';
 		}
 		$html.= '</div></div>';
+		return $html;
 	}
 
 	public function editButton() {
