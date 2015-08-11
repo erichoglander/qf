@@ -6,12 +6,12 @@ class Content_Entity_Core extends l10n_Entity {
 
 	public function render() {
 		$data = $this->get("data");
-		$html = '<div class="content-entity">';
+		$html = '<div class="content-entity content-entity-'.$this->id().'">';
 		if ($this->editAccess())
 			$html.= $this->editButton();
 		$html.= '<div class="inner">';
 		foreach ($this->get("config")["fields"] as $i => $field) {
-			$html.= '<div class="field field-'.$field["type"].'">';
+			$html.= '<div class="field field-'.$field["type"].' field-'.($i+1).'">';
 			$html.= $this->renderField($field["type"], $data[$i]);
 			$html.= '</div>';
 		}
