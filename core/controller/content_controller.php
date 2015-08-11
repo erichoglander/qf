@@ -9,12 +9,13 @@ class Content_Controller_Core extends Controller {
 			$acl[] = "contentEdit";
 		else if ($action == "delete")
 			$acl[] = "contentDelete";
+		else if ($action == "config")
+			$acl[] = "contentConfig";
+		return $acl;
 	}
 
 	public function addAction() {
-		$Form = $this->getForm("ContentEdit", [
-			"config" => $this->Acl->access($this->User, ["contentAdmin", "contentConfig"]),
-		]);
+		$Form = $this->getForm("ContentConfig");
 		if ($Form->isSubmitted()) {
 			$Content = $this->Model->addContent($Form->values());
 			if ($Content) {
@@ -27,6 +28,28 @@ class Content_Controller_Core extends Controller {
 		}
 		$this->viewData["form"] = $Form->render();
 		return $this->view("add");
+	}
+
+	public function configAction($args = []) {
+		if (count($args) < 1)
+			return $this->notFound();
+		$Content = $this->getEntity("Content", $args[0]);
+		if (!$Content->id())
+			return $this->notFound();
+		$Form = $this->getForm("ContentConfig", [
+			"Content" => $Content, 
+		]);
+		if ($Form->isSubmitted()) {
+			if ($this->Model->editContent($Content, $Form->values())) {
+				setmsg(t("Content saved"), "success");
+				redirect("content/list");
+			}
+			else {
+				$this->defaultError();
+			}
+		}
+		$this->viewData["form"] = $Form->render();
+		return $this->view("config");
 	}
 
 	public function editAction($args = []) {

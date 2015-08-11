@@ -4,13 +4,22 @@ class Content_Model_Core extends Model {
 	public function addContent($values) {
 		$Content = $this->getEntity("Content");
 		$Content->set("config", ["fields" => null]);
-		if ($this->editContent($Content, $values))
+		if ($this->configContent($Content, $values))
 			return $Content;
 		return null;
 	}
 
-	public function editContent($Content, $values) {
+	public function configContent($Content, $values) {
 		$Content->set("title", $values["title"]);
+		if (array_key_exists("fields", $values)) {
+			$config = $Content->get("config");
+			$config["fields"] = $values["fields"];
+			$Content->set("config", $config);
+		}
+		return $Content->save();
+	}
+
+	public function editContent($Content, $values) {
 		if ($Content->get("config")) {
 			$data = [];
 			foreach ($Content->get("config")["fields"] as $i => $field) {
@@ -18,11 +27,6 @@ class Content_Model_Core extends Model {
 					$data[$i] = $values["field_".$i];
 			}
 			$Content->set("data", $data);
-		}
-		if (array_key_exists("fields", $values)) {
-			$config = $Content->get("config");
-			$config["fields"] = $values["fields"];
-			$Content->set("config", $config);
 		}
 		return $Content->save();
 	}

@@ -54,6 +54,16 @@ class Config_Core {
 							],
 						],
 					],
+					"content" => [
+						"title" => "Content",
+						"href" => "content/list",
+						"links" => [
+							"content-add" => [
+								"title" => "Add content",
+								"href" => "content/add",
+							],
+						],
+					],
 					"system" => [
 						"title" => "System",
 						"links" => [
