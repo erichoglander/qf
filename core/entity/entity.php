@@ -87,7 +87,7 @@ class Entity {
 		$data = [];
 		foreach ($this->schema["fields"] as $key => $field) {
 			if (array_key_exists($key, $this->fields))
-				$data[$key] = $this->get($key);
+				$data[$key] = $this->fields[$key];
 		}
 		if ($this->id()) {
 			return $this->Db->update($this->schema["table"], $data, ["id" => $this->id()]);

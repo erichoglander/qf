@@ -4,6 +4,7 @@ class Controller {
 	public $args = [];
 	protected $action, $viewData = [];
 	protected $Config, $Db, $Model, $User, $Io;
+	protected $Acl, $Cache, $Variable;
 
 	public function __construct($Config, $Db, $init = true) {
 		$this->Config = &$Config;

@@ -1,7 +1,7 @@
 <?php
 function classAutoload($class) {
 	$fname = classToFile($class);
-	$suffixes = ["controller", "model", "entity", "form_item", "form", "mail", "update"];
+	$suffixes = ["controller", "model", "entity", "form_item", "form", "mail"];
 	$dirs = ["theme", "library"];
 	foreach ($suffixes as $suffix) {
 		$csuffix = "";

@@ -2,10 +2,14 @@
 class Updater_Model_Core extends Model {
 	
 	public function updatesPath() {
-		return DOC_ROOT."/core/updates";
+		return DOC_ROOT."/core/update";
 	}
 
 	public function runUpdate($value) {
+		$path = $this->updatesPath()."/update_".$value.".php";
+		if (!file_exists($path))
+			return false;
+		require_once($path);
 		$cname = "Update_".$value;
 		if (!class_exists($cname))
 			return false;

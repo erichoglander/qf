@@ -87,4 +87,18 @@ class Acl_Core {
 		return $User->id() == 1;
 	}
 
+	/* CONTENT ACCESS */
+	protected function contentAdminAccess($User) {
+		return $User->id() == 1;
+	}
+	protected function contentConfigAccess($User) {
+		return $User->id() == 1;
+	}
+	protected function contentEditAccess($User) {
+		return $User->id() == 1;
+	}
+	protected function contentDeleteAccess($User) {
+		return $User->id() == 1;
+	}
+
 }
