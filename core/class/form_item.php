@@ -389,6 +389,7 @@ class FormItem {
 			"attributes" => $this->attributes(),
 			"name" => $this->inputName(),
 			"focus" => $this->focus,
+			"empty_option" => $this->empty_option,
 			"options" => $this->options(),
 			"value" => $this->value(),
 		];

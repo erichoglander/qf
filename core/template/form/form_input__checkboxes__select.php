@@ -9,8 +9,10 @@ foreach ($options as $key => $val) {
 		$n++;
 	}
 }
+if (!$n)
+	$title = $empty_option;
 ?>
-<div class="checkboxes-select">
+<div class="checkboxes-select" empty_option="<?=$empty_option?>">
 	<div class="checkboxes-select-title form-textfield">
 		<span class="checkboxes-select-title-inner"><?=$title?></span>
 		<?=FontAwesome\Icon("angle-down")?>

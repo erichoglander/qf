@@ -31,6 +31,7 @@ function checkboxesSelect(el) {
 		this.tags.title = this.tags.titleWrap.getElementsByClassName("checkboxes-select-title-inner")[0];
 		this.tags.labels = this.tags.wrap.getElementsByTagName("label");
 		this.tags.checkboxes = this.tags.wrap.getElementsByTagName("input");
+		this.emptyOption = this.tags.wrap.getAttribute("empty_option");
 		for (var i=0; i<this.tags.checkboxes.length; i++) {
 			(function(n) {
 				self.tags.checkboxes[n].addEventListener("click", function(){ self.checkboxClick(n); }, false);
@@ -82,6 +83,8 @@ function checkboxesSelect(el) {
 				n++;
 			}
 		}
+		if (!title.length)
+			title = this.emptyOption;
 		this.tags.title.innerHTML = title;
 	}
 	
