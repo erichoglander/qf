@@ -40,7 +40,7 @@ class Content_Controller_Core extends Controller {
 			"Content" => $Content, 
 		]);
 		if ($Form->isSubmitted()) {
-			if ($this->Model->editContent($Content, $Form->values())) {
+			if ($this->Model->configContent($Content, $Form->values())) {
 				setmsg(t("Content saved"), "success");
 				redirect("content/list");
 			}
