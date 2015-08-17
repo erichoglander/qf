@@ -38,7 +38,7 @@ function jsonToHtml(parent, json, replace) {
 			}
 		}
 	}
-	else {
+	else if (json.length) {
 		var e = document.createElement("div");
 		e.innerHTML = json.replace("&nbsp;", "\u00A0");
 		parent.appendChild(document.createTextNode(e.childNodes[0].nodeValue));
