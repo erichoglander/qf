@@ -8,6 +8,7 @@ class Default_Library_Core extends Library {
 		"css/autocomplete.css",
 		"css/autoselect.css",
 		"css/checkboxes_select.css",
+		"css/select_custom.css",
 	];
 	public $js = [
 		"js/script.js", 
@@ -20,6 +21,7 @@ class Default_Library_Core extends Library {
 		"js/autoselect.js", 
 		"js/tags.js",
 		"js/checkboxes_select.js",
+		"js/select_custom.js",
 	];
 
 }

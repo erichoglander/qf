@@ -1,0 +1,47 @@
+.select-custom-hidden {
+	display: none;
+}
+.select-custom {
+	position: relative;
+}
+.select-custom-options {
+	position: absolute;
+	left: 0;
+	top: 100%;
+	background: #fff;
+	min-width: 100%;
+	max-height: 215px;
+	overflow-y: auto;
+	overflow-x: hidden;
+	z-index: 2;
+	opacity: 0;
+	filter: alpha(opacity=0);
+	visibility: hidden;
+	transition: opacity 0.1s ease, visibility 0s 0.5s;
+	-webkit-transition: opacity 0.1s ease, visibility 0s 0.5s;
+}
+.select-custom.active .select-custom-options {
+	opacity: 1;
+	filter: alpha(opacity=100);
+	visibility: visible;
+	transition-delay: 0s;
+}
+.select-custom-option {
+	padding: 3px 15px;
+	cursor: pointer;
+	white-space: nowrap;
+}
+.select-custom-title {
+	cursor: pointer;
+}
+.select-custom-title .fa {
+	float: right;
+	line-height: inherit;
+}
+.select-custom-title-inner {
+	display: inline-block;
+	max-width: 90%;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+}
