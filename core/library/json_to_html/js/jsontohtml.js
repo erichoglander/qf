@@ -39,6 +39,8 @@ function jsonToHtml(parent, json, replace) {
 		}
 	}
 	else {
-		parent.appendChild(document.createTextNode(json));
+		var e = document.createElement("div");
+		e.innerHTML = json.replace("&nbsp;", "\u00A0");
+		parent.appendChild(document.createTextNode(e.childNodes[0].nodeValue));
 	}
 }
