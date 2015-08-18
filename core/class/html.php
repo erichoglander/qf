@@ -35,6 +35,7 @@ class Html_Core {
 				var BASE_DOMAIN = "'.BASE_DOMAIN.'";
 				var SITE_URL = "'.SITE_URL.'";
 				var REQUEST_TIME = '.REQUEST_TIME.';
+				var LANG = "'.LANG.'";
 			</script>';
 	}
 
