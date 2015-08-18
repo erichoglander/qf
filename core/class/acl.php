@@ -56,6 +56,9 @@ class Acl_Core {
 	protected function userSigninAccess($User) {
 		return $User->id() == 1;
 	}
+	protected function userSettingsAccess($User) {
+		return !!$User->id();
+	}
 
 	/* L10N ACCESS */
 	protected function l10nAdminAccess($User) {

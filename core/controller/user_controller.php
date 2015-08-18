@@ -10,6 +10,8 @@ class User_Controller_Core extends Controller {
 			return ["userAdmin", "userList"];
 		if ($action == "signin")
 			return ["userAdmin", "userSignin"];
+		if ($action == "settings")
+			return ["userSettings"];
 		return null;
 	}
 
