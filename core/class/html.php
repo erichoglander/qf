@@ -27,6 +27,15 @@ class Html_Core {
 		$this->breadcrumbs[] = (IS_FRONT_PAGE ? t("Home") : ["", t("Home")]);
 		if (!$this->title_suffix)
 			$this->title_suffix = " | ".$this->Config->getSiteName();
+		$this->pre_js = '
+			<script>
+				var REQUEST_PATH = "'.REQUEST_PATH.'";
+				var REQUEST_ALIAS = "'.REQUEST_ALIAS.'";
+				var IS_FRONT_PAGE = '.(IS_FRONT_PAGE ? 'true' : 'false').';
+				var BASE_DOMAIN = "'.BASE_DOMAIN.'";
+				var SITE_URL = "'.SITE_URL.'";
+				var REQUEST_TIME = '.REQUEST_TIME.';
+			</script>';
 	}
 
 	public function renderHtml() {
