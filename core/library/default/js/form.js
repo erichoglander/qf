@@ -13,7 +13,7 @@ function formAjaxSubmit(form) {
 			wrap.appendChild(el.getElementsByTagName("form")[0]);
 		}
 		if (r.replace) {
-			jsonToHtml(r.replace[0], r.replace[1]);
+			jsonToHtml(r.replace[0], r.replace[1], true);
 		}
 		if (r.eval) {
 			eval(r.eval);
