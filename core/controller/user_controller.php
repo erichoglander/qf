@@ -214,8 +214,9 @@ class User_Controller_Core extends Controller {
 			refresh();
 		}
 		$Pager = newClass("Pager");
-		$Pager->setNum($this->Model->listSearchNum($values));
-		$this->viewData["users"] = $this->Model->listSearch($values, $Pager->start(), $Pager->ppp);
+		$data = $this->Model->listSearch($values, $Pager->start(), $Pager->ppp);
+		$Pager->setNum($data["num"]);
+		$this->viewData["users"] = $data["items"];
 		$this->viewData["pager"] = $Pager->render();
 		$this->viewData["search"] = $Form->render();
 		return $this->view("list");

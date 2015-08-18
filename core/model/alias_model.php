@@ -63,5 +63,23 @@ class Alias_Model_Core extends Model {
 			$aliases[] = $this->getEntity("Alias", $row->id);
 		return $aliases;
 	}
+	
+	public function listSearch($values = [], $start = 0, $stop = 30) {
+		$sql = "SELECT id FROM `alias`";
+		$vars = [];
+		if (!empty($values["q"])) {
+			$sql.= " WHERE path LIKE :q || alias LIKE :q";
+			$vars[":q"] = "%".$values["q"]."%";
+		}
+		$data = [
+			"num" => $this->Db->numRows($sql, $vars),
+			"items" => [],
+		];
+		$sql.= " ORDER BY path ASC LIMIT ".$start.", ".$stop;
+		$rows = $this->Db->getRows($sql, $vars);
+		foreach ($rows as $row)
+			$data["items"][] = $this->getEntity("Alias", $row->id);
+		return $data;
+	}
 
 }

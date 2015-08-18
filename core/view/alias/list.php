@@ -2,7 +2,10 @@
 $this->Html->h1 = $this->Html->title = t("Aliases");
 $this->Html->breadcrumbs[] = $this->Html->title;
 ?>
+
 <a class="btn btn-primary" href="/alias/add"><?=t("Add alias")?></a>
+
+<?=$search?>
 
 <table class="striped">
 	<thead>
@@ -27,3 +30,5 @@ $this->Html->breadcrumbs[] = $this->Html->title;
 	<?php } ?>
 	</tbody>
 </table>
+
+<?=$pager?>

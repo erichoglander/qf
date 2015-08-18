@@ -67,7 +67,18 @@ class Alias_Controller_Core extends Controller {
 	}
 
 	public function listAction() {
-		$this->viewData["aliases"] = $this->Model->getAliases();
+		$values = (array_key_exists("alias_list_search", $_SESSION) ? $_SESSION["alias_list_search"] : []);
+		$Form = $this->getForm("Search", ["q" => (!empty($values["q"]) ? $values["q"] : null)]);
+		if ($Form->isSubmitted()) {
+			$_SESSION["alias_list_search"] = $Form->values();
+			refresh();
+		}
+		$Pager = newClass("Pager");
+		$data = $this->Model->listSearch($values, $Pager->start(), $Pager->ppp);
+		$Pager->setNum($data["num"]);
+		$this->viewData["aliases"] = $data["items"];
+		$this->viewData["pager"] = $Pager->render();
+		$this->viewData["search"] = $Form->render();
 		return $this->view("list");
 	}
 
