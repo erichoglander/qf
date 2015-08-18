@@ -241,7 +241,10 @@ function redirect($url = "", $redir = true) {
 	if ($pcl === false || $pcl > 8)
 		$url = "/".$url;
 	$url = str_replace("<front>", "", $url);
-	header("Location: ".$url);
+	if (IS_CLI)
+		print "Redirect: ".$url."\n";
+	else
+		header("Location: ".$url);
 	exit;
 }
 function refresh() {

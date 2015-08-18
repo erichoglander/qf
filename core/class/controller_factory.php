@@ -12,15 +12,15 @@ class ControllerFactory_Core {
 	public function executeUri($uri) {
 		$request = $this->parseUri($uri);
 		if (!empty($request["redirect"])) {
-			if ($request["redirect"]->code == "301")
+			if ($request["redirect"]["code"] == "301")
 				header("HTTP/1.1 301 Moved Permanently");
-			else if ($request["redirect"]->code == "302")
+			else if ($request["redirect"]["code"] == "302")
 				header("HTTP/1.1 302 Moved");
-			else if ($request["redirect"]->code == "303")
+			else if ($request["redirect"]["code"] == "303")
 				header("HTTP/1.1 302 See Other");
-			else if ($request["redirect"]->code == "307")
+			else if ($request["redirect"]["code"] == "307")
 				header("HTTP/1.1 302 Temporary Redirect");
-			redirect($request["redirect"]);
+			redirect($request["redirect"]["location"]);
 		}
 		define("REQUEST_ALIAS", $request["alias"]);
 		define("REQUEST_PATH", $request["path"]);
@@ -82,13 +82,18 @@ class ControllerFactory_Core {
 			}
 			$redirect = $this->Db->getRow("SELECT * FROM `redirect` WHERE status = 1 && (source = :alias || source = :path)", 
 					[":alias" => $request["alias"], ":path" => $request["path"]]);
-			if ($redirect) 
+			if ($redirect) {
 				$redir["uri"] = $redirect->target;
+				$redir["code"] = $redirect->code;
+			}
 			if (!empty($redir)) {
-				$request["redirect"] = 
-					(!empty($redir["protocol"]) ? $redir["protocol"] : HTTP_PROTOCOL)."://".
-					(!empty($redir["host"]) ? $redir["host"] : $_SERVER["HTTP_HOST"]).
-					(!empty($redir["uri"]) ? $redir["uri"] : $_SERVER["REQUEST_URI"]);
+				$request["redirect"] = [
+					"location" => 
+						(!empty($redir["protocol"]) ? $redir["protocol"] : HTTP_PROTOCOL)."://".
+						(!empty($redir["host"]) ? $redir["host"] : $_SERVER["HTTP_HOST"]).
+						(!empty($redir["uri"]) ? $redir["uri"] : $_SERVER["REQUEST_URI"]),
+					"code" => (!empty($redir["code"]) ? $redir["code"] : null)
+				];
 			}
 		}
 		
@@ -111,9 +116,12 @@ class ControllerFactory_Core {
 		if (!empty($params[1])) {
 			$action = strtolower($params[1]);
 			$arr = explode("-", $action);
-			$action = null;
-			foreach ($arr as $a)
-				$action.= ucwords($a);
+			foreach ($arr as $i => $a) {
+				if ($i == 0)
+					$action = $a;
+				else
+					$action.= ucwords($a);
+			}
 			$request["action"] = $action;
 		}
 		else {
