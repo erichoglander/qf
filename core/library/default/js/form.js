@@ -1,3 +1,29 @@
+function formAjaxSubmit(form) {
+	var obj = {
+		method: "POST",
+		post: new FormData(form)
+	};
+	var url = (form.action ? form.action : "/"+REQUEST_PATH);
+	var callback = function(r) {
+		if (r.form) {
+			var el = document.createElement("div");
+			jsonToHtml(el, r.form);
+			var wrap = form.parentNode;
+			wrap.removeChild(form);
+			wrap.appendChild(el.getElementsByTagName("form")[0]);
+		}
+		if (r.replace) {
+			jsonToHtml(r.replace[0], r.replace[1]);
+		}
+		if (r.eval) {
+			eval(r.eval);
+		}
+	};
+	var ajax = new xajax();
+	ajax.send(url, callback, obj);
+	return false;
+}
+
 function formFileUpload(el, parent_multiple, callback) {
 
 	var item = formGetItem(el);

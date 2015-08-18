@@ -30,6 +30,7 @@ class Form {
 	protected $vars;
 	protected $name;
 	protected $items;
+	protected $ajax = false;
 	protected $errors = [];
 	protected $prefix, $suffix;
 	protected $Db, $Io, $User;
@@ -222,6 +223,8 @@ class Form {
 			$attr["class"] = $class;
 		else
 			$attr["class"].= " ".$class;
+		if ($this->ajax)
+			$attr["onsubmit"] = "return formAjaxSubmit(this);";
 		return $attr;
 	}
 	protected function attributes($attributes = null) {
