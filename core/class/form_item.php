@@ -244,8 +244,12 @@ class FormItem {
 		$data = $_POST;
 		if ($this->parent_name) {
 			$arr = explode("[", str_replace("]", "", $this->parent_name));
-			foreach ($arr as $f)
-				$data = $data[$f];
+			foreach ($arr as $f) {
+				if (!array_key_exists($f, $data))
+					$data = [];
+				else
+					$data = $data[$f];
+			}
 		}
 		return (isset($data[$this->name]) ? $data[$this->name] : null);
 	}

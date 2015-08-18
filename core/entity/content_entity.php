@@ -60,7 +60,7 @@ class Content_Entity_Core extends l10n_Entity {
 	protected function editAccess() {
 		if (!$this->Acl) {
 			$this->Acl = newClass("Acl", $this->Db);
-			$this->User = newClass("User_Entity", $this->Db, $_SESSION["user_id"]);
+			$this->User = newClass("User_Entity", $this->Db, (!empty($_SESSION["user_id"]) ? $_SESSION["user_id"] : null));
 		}
 		return $this->Acl->access($this->User, ["contentAdmin", "contentEdit"]);
 	}
