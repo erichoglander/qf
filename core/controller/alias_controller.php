@@ -74,9 +74,8 @@ class Alias_Controller_Core extends Controller {
 			refresh();
 		}
 		$Pager = newClass("Pager");
-		$data = $this->Model->listSearch($values, $Pager->start(), $Pager->ppp);
-		$Pager->setNum($data["num"]);
-		$this->viewData["aliases"] = $data["items"];
+		$Pager->setNum($this->Model->listSearchNum($values));
+		$this->viewData["aliases"] = $this->Model->listSearch($values, $Pager->start(), $Pager->ppp);
 		$this->viewData["pager"] = $Pager->render();
 		$this->viewData["search"] = $Form->render();
 		return $this->view("list");
