@@ -22,6 +22,9 @@ else {
 			<?=FontAwesome\Icon("times", "form-icon-feedback form-icon-error")?>
 		<?php } ?>
 		<?=$input_suffix?>
+		<?php if (!empty($description)) { ?>
+			<div class="form-item-description"><?=$description?></div>
+		<?php } ?>
 	</div>
 	<?php if (!empty($error)) { ?>
 		<div class="form-input-error"><?=$error?></div>

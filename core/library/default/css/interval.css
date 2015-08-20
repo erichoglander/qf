@@ -29,6 +29,9 @@
 }
 .interval-dropdown .form-label {
 	cursor: pointer;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	user-select: none;
 }
 .interval-dropdown .form-label .fa {
 	float: right;
