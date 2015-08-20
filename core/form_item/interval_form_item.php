@@ -24,7 +24,7 @@ class Interval_FormItem_Core extends FormItem {
 				$value[$i] = (float) $value[$i];
 			else
 				$value[$i] = (int) $value[$i];
-			$value[$i] = min(max($value[$i], $interval_min), $interval_max);
+			$value[$i] = min(max($value[$i], $this->interval_min), $this->interval_max);
 		}
 		return $value;
 	}
