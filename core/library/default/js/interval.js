@@ -18,6 +18,13 @@ function intervalObserve(el) {
 			_intervals.push(new interval(els[i]));
 	}
 }
+function intervalToggle(el) {
+	var item = formGetItem(el);
+	if (item.hasClass("active"))
+		item.removeClass("active");
+	else
+		item.addClass("active");
+}
 
 function interval(el) {
 	
