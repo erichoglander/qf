@@ -10,6 +10,7 @@ class Default_Library_Core extends Library {
 		"css/checkboxes_select.css",
 		"css/select_custom.css",
 		"css/tooltip.css",
+		"css/interval.css",
 	];
 	public $js = [
 		"js/script.js", 
@@ -24,6 +25,7 @@ class Default_Library_Core extends Library {
 		"js/checkboxes_select.js",
 		"js/select_custom.js",
 		"js/tooltip.js",
+		"js/interval.js",
 	];
 
 }

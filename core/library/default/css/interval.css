@@ -1,0 +1,25 @@
+.slider-outer {
+	position: relative;
+	height: 4px;
+}
+.slider-inner {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+}
+.slider-point {
+	position: absolute;
+	width: 16px;
+	height: 16px;
+	padding: 8px;
+	top: 50%;
+	margin: -16px 0 0 -16px;
+	cursor: pointer;
+}
+.slider-point-inner {
+	background: #000;
+	border-radius: 50%;
+	height: 16px;
+	width: 16px;
+	margin: 0 auto;
+}
