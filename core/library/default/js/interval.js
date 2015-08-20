@@ -123,8 +123,7 @@ function interval(el) {
 		this.tags[p].input.value = value;
 		this.tags[p].text.textContent = this.numberFormat(value);
 		this.updatePosition(p);
-		if (this.tags.wrap.getAttribute("onchange"))
-			eval(this.tags.wrap.getAttribute("onchange"));
+		this.tags.wrap.trigger("change");
 	}
 	
 	this.updatePositions = function() {
