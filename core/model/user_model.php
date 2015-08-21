@@ -82,6 +82,8 @@ class User_Model_Core extends Model {
 
 	public function saveSettings($User, $values) {
 		$change_email = $values["email"] != $User->get("email");
+		if ($change_email && $User->get("email") == $User->get("name"))
+			$values["name"] = $values["email"];
 		foreach ($values as $key => $value)
 			$User->set($key, $value);
 		if ($change_email) {

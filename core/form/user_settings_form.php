@@ -12,6 +12,13 @@ class UserSettings_Form_Core extends Form {
 			$this->setError(t("E-mail unavailable"), "email");
 			return false;
 		}
+		if ($User && $User->get("name") == $User->get("email")) {
+			$row = $this->Db->getRow("SELECT id FROM `user` WHERE name = :email", [":email" => $values["email"]]);
+			if ($row && $row->id != $User->id()) {
+				$this->setError(t("E-mail unavailable"), "email");
+				return false;
+			}
+		}
 		return true;
 	}
 	
