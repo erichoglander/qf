@@ -67,22 +67,31 @@ input {
 	margin-top: 10px;
 }
 
+
+.radio-label,
+.checkbox-label {
+	cursor: pointer;
+}
+.radio-label .fa,
 .checkbox-label .fa {
 	margin-right: 2px;
 }
+.radio-label .radio-icon-checked,
 .checkbox-label .checkbox-icon-checked {
 	display: none;
 }
+.radio-label input,
 .checkbox-label input {
 	display: none;
 }
+.radio-label input:checked ~ .radio-icon-checked,
 .checkbox-label input:checked ~ .checkbox-icon-checked {
 	display: inline-block;
 }
+.radio-label input:checked ~ .radio-icon-unchecked,
 .checkbox-label input:checked ~ .checkbox-icon-unchecked {
 	display: none;
 }
-
 .form-item-error .form-label {
 	color: #A94442;
 }
