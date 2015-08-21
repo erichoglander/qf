@@ -3,16 +3,24 @@ class Address_FormItem_Core extends FormItem {
 	
 	protected $address_fields = ["line", "postal_code", "locality", "country"];
 	protected $address_countries;
+	protected $label_placeholder = false;
 	
 	
 	public function countries() {
-		if (empty($this->address_countries))
-			return countryList();
-		return $this->address_countries;
+		return countryList();
 	}
 	
 	
 	protected function loadStructure($structure) {
+		if (isset($structure["address_fields"]))
+			$this->address_fields = $structure["address_fields"];
+		if (isset($structure["address_countries"]))
+			$this->address_countries = $structure["address_countries"];
+		else
+			$this->address_countries = $this->countries();
+		if (isset($structure["label_placeholder"]))
+			$this->label_placeholder = $structure["label_placeholder"];
+		
 		$structure["items"] = [];
 		if (in_array("id", $this->address_fields)) {
 			$structure["items"]["id"] = [
@@ -25,6 +33,13 @@ class Address_FormItem_Core extends FormItem {
 				"label" => t("Address"),
 				"filter" => ["strip_tags", "trim"],
 				"required" => true,
+			];
+		}
+		if (in_array("line2", $this->address_fields)) {
+			$structure["items"]["line2"] = [
+				"type" => "text",
+				"label" => t("Address 2"),
+				"filter" => ["strip_tags", "trim"],
 			];
 		}
 		if (in_array("postal_code", $this->address_fields)) {
@@ -47,9 +62,15 @@ class Address_FormItem_Core extends FormItem {
 			$structure["items"]["country"] = [
 				"type" => "select",
 				"label" => t("Country"),
-				"options" => $this->countries(),
+				"options" => $this->address_countries,
 				"required" => true,
 			];
+		}
+		if ($this->label_placeholder) {
+			foreach ($structure["items"] as $key => $item) {
+				$structure["items"][$key]["attributes"]["placeholder"] = $item["label"];
+				unset($structure["items"][$key]["label"]);
+			}
 		}
 		parent::loadStructure($structure);
 	}
