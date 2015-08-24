@@ -5,7 +5,13 @@ class Config_Core {
 		return BASE_DOMAIN;
 	}
 	public function getDatabase() {
-		return null;
+		$file = filePath("inc/database.php");
+		if (!$file)
+			return null;
+		require_once($file);
+		if (!isset($database))
+			return null;
+		return $database;
 	}
 	public function getSubdomain() {
 		return null;
