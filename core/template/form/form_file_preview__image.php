@@ -1,1 +1,1 @@
-<div class="form-file-preview-image-wrap"><img src="<?=$url?>" alt="" class="form-file-preview-image"></div>
+<div class="form-file-preview-image-wrap"><img src="<?=$url?>" alt="<?=$url?>" class="form-file-preview-image"></div>

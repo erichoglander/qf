@@ -31,7 +31,8 @@ class Imagestyle_Core {
 		$target_uri = $uri."/".$dir."/".$fname;
 		if (file_exists($target_path))
 			return $target_uri;
-		$this->loadSource();
+		if (!$this->loadSource())
+			return null;
 		foreach ($this->styles[$name] as $method => $params)
 			call_user_func_array([$this, $method], $params);
 		if (!file_exists($path."/".$dir))
@@ -103,7 +104,7 @@ class Imagestyle_Core {
 	
 	public function loadSource() {
 		if (!file_exists($this->src))
-			throw new Exception("Image file does not exist");
+			return false;
 		$this->info = pathinfo(strtolower($this->src));
 		if ($this->info["extension"] == "jpg" || $this->info["extension"] == "jpeg")
 			$this->im = imagecreatefromjpeg($this->src);
@@ -112,8 +113,9 @@ class Imagestyle_Core {
 		else if ($this->info["extension"] == "gif")
 			$this->im = imagecreatefromgif($this->src);
 		else
-			throw new Exception("Invalid image format");
+			return false;
 		list($this->width, $this->height) = getimagesize($this->src);
+		return true;
 	}
 	
 	public function save($dest) {
