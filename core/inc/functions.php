@@ -150,11 +150,11 @@ function filePath($path) {
 	return null;
 }
 function fileUrl($path) {
-	$epath = "/extend/".$path;
-	$cpath = "/core/".$path;
-	if (file_exists(DOC_ROOT.$epath))
+	$epath = "extend/".$path;
+	$cpath = "core/".$path;
+	if (file_exists(DOC_ROOT."/".$epath))
 		return BASE_URL.$epath;
-	if (file_exists(DOC_ROOT.$cpath))
+	if (file_exists(DOC_ROOT."/".$cpath))
 		return BASE_URL.$cpath;
 	return null;
 }
