@@ -67,6 +67,7 @@ class User_Controller_Core extends Controller {
 				redirect();
 		}
 		$this->viewData["form"] = $Form->render();
+		$this->viewData["status"] = $this->Config->getUserRegistration();
 		return $this->view("register");
 	}
 
