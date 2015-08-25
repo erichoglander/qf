@@ -1,5 +1,5 @@
 <?php
-class UserRegister_Form extends Form {
+class UserRegister_Form_Core extends Form {
 
 	public function validate($values) {
 		if ($values["password"] != $values["password_confirm"]) {

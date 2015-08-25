@@ -1,5 +1,5 @@
 <?php
-class UserLogin_Form extends Form {
+class UserLogin_Form_Core extends Form {
 
 
 	public function validate($values) {
@@ -50,7 +50,7 @@ class UserLogin_Form extends Form {
 							"type" => "button",
 							"value" => t("Forgot password"),
 							"attributes" => [
-								"onclick" => "window.location.href = '/user/reset'",
+								"onclick" => "window.location.href = '".url("user/reset")."'",
 							],
 						],
 					],

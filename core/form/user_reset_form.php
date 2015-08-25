@@ -1,5 +1,5 @@
 <?php
-class UserReset_Form extends Form {
+class UserReset_Form_Core extends Form {
 
 	public function validate($values) {
 		$row = $this->Db->getRow("SELECT id FROM `user` WHERE email = :email", [":email" => $values["email"]]);
