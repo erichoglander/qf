@@ -1,6 +1,7 @@
 <?php
 session_start();
-define("DOC_ROOT", str_replace("/core/inc", "", __DIR__));
+error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT);
+define("DOC_ROOT", str_replace("/core/inc", "", str_replace("\\", "/", __DIR__)));
 
 require_once(DOC_ROOT."/core/inc/constants.php");
 require_once(DOC_ROOT."/core/inc/functions.php");

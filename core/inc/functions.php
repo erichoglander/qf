@@ -153,9 +153,9 @@ function fileUrl($path) {
 	$epath = "/extend/".$path;
 	$cpath = "/core/".$path;
 	if (file_exists(DOC_ROOT.$epath))
-		return $epath;
+		return BASE_URL.$epath;
 	if (file_exists(DOC_ROOT.$cpath))
-		return $cpath;
+		return BASE_URL.$cpath;
 	return null;
 }
 
@@ -195,6 +195,9 @@ function uri($path) {
 	if ($row)
 		$path = $row->alias;
 	return $path;
+}
+function url($path) {
+	return BASE_URL.uri($path);
 }
 
 function setmsg($msg, $type = "info") {
@@ -239,7 +242,7 @@ function redirect($url = "", $redir = true) {
 		$url = $_GET["redir"];
 	$pcl = strpos($url, "://");
 	if ($pcl === false || $pcl > 8)
-		$url = "/".$url;
+		$url = BASE_URL.$url;
 	$url = str_replace("<front>", "", $url);
 	if (IS_CLI)
 		print "Redirect: ".$url."\n";

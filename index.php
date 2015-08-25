@@ -4,6 +4,7 @@ require_once("core/inc/bootstrap.php");
 if (IS_CLI)
 	die("Cannot be run through cli\n");
 
-$doc = $ControllerFactory->executeUri($_SERVER["REQUEST_URI"]);
+$uri = substr($_SERVER["REQUEST_URI"], strlen(DOC_ROOT) - strlen($_SERVER["DOCUMENT_ROOT"]) + 1);
+$doc = $ControllerFactory->executeUri($uri);
 
 print $doc;

@@ -8,6 +8,7 @@ define("MAX_LOGS", 100000);
 define("IS_CLI", !empty($_SERVER["SHELL"]));
 define("LANG", "sv");
 if (!IS_CLI) {
+	define("BASE_URL", str_replace("index.php", "", $_SERVER["SCRIPT_NAME"]));
 	define("HTTP_PROTOCOL", (empty($_SERVER["HTTPS"]) ? "http" : "https"));
 	define("BASE_DOMAIN", preg_replace("/^.*\.([^\.]+\.[^\.]+)$/", "$1", $_SERVER["SERVER_NAME"]));
 	define("SITE_URL", HTTP_PROTOCOL."://".$_SERVER["HTTP_HOST"]);

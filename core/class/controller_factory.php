@@ -96,6 +96,9 @@ class ControllerFactory_Core {
 				];
 			}
 		}
+		else {
+			$request["alias"] = $request["path"] = $uri;
+		}
 		
 		$params = explode("/", $uri);
 		

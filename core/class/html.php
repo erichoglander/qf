@@ -106,7 +106,7 @@ class Html_Core {
 					if (!empty($link["active"]))
 						$class.= " active";
 					if (strpos($url, "http") !== 0 && strpos($url, "#") !== 0)
-						$url = "/".$url;
+						$url = BASE_URL.$url;
 					$html.= '
 						<a href="'.$url.'" class="'.$class.'">'.$title.'</a>';
 				}
