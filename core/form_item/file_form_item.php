@@ -147,7 +147,7 @@ class File_FormItem_Core extends FormItem {
 		for ($fname = $name.".".$ext, $i = 0; file_exists($path.$uri.$fname); $fname = $name."-".$i.".".$ext, $i++);
 		if (!move_uploaded_file($file["tmp_name"], $path.$uri.$fname)) {
 			$this->setError(t("Insufficient directory permissions, contact administrator"));
-			addlog($this->Db, "file", t("Insufficient directory permissions"), $path.$uri.$fname, "error");
+			addlog("file", "Insufficient directory permissions", $path.$uri.$fname, "error");
 			return $this->value;
 		}
 		$File = newClass("File_Entity", $this->Db);

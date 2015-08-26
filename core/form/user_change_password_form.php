@@ -1,9 +1,9 @@
 <?php
-class UserChangePassword_Form extends Form {
+class UserChangePassword_Form_Core extends Form {
 
 	public function validate($values) { 
-		if ($values["password"] !== $values["password_confirm"]) {
-			$this->setError(t("Passwords mismatch"), "password");
+		if ($values["pass"] !== $values["pass_confirm"]) {
+			$this->setError(t("Passwords mismatch"), "pass");
 			return false;
 		}
 		return true;
@@ -14,12 +14,12 @@ class UserChangePassword_Form extends Form {
 		return [
 			"name" => "user_change_password",
 			"items" => [
-				"password" => [
+				"pass" => [
 					"type" => "password",
 					"label" => t("New password"),
 					"required" => true,
 				],
-				"password_confirm" => [
+				"pass_confirm" => [
 					"type" => "password",
 					"label" => t("Confirm password"),
 					"required" => true, 

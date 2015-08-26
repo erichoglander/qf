@@ -78,9 +78,8 @@ class User_Entity_Core extends Entity {
 		$this->set("login", REQUEST_TIME);
 		$this->save();
 		addlog(
-				$this->Db, 
 				"user", 
-				t("User session started for :user", "en", [":user" => $this->name()]), 
+				"User session started for ".$this->name(),
 				["id" => $this->id(), "name" => $this->get("name")],
 				"success");
 	}
@@ -88,27 +87,27 @@ class User_Entity_Core extends Entity {
 	public function authorize($name, $pass) {
 		if ($this->ipFloodProtection()) {
 			$this->login_error = "flood";
-			addlog($this->Db, "user", t("Login IP flood protection"), null, "warning");
+			addlog("user", "Login IP flood protection", null, "warning");
 			return false;
 		}
 		if (!$this->loadByName($name)) {
 			$this->login_error = "invalid_user";
-			addlog($this->Db, "user", t("Failed login attempt for :name", "en", [":name" => $name]), null, "warning");
+			addlog("user", "Failed login attempt for ".$name, null, "warning");
 			return false;
 		}
 		if (!$this->allowLogin()) {
 			$this->login_error = "inactive";
-			addlog($this->Db, "user", t("Login attempt for inactive user :name", "en", [":name" => $this->get("name")]), null, "warning");
+			addlog("user", "Login attempt for inactive user ".$this->get("name"), null, "warning");
 			return false;
 		}
 		if ($this->userFloodProtection()) {
 			$this->login_error = "flood";
-			addlog($this->Db, "user", t("Login user flood protection for :user", "en", [":user" => $this->get("name")]), null, "warning");
+			addlog("user", "Login user flood protection for ".$this->get("name"), null, "warning");
 			return false;
 		}
 		if (!$this->hashPassword($pass, $this->get("salt")) === $this->get("pass")) {
 			$this->login_error = "invalid_pass";
-			addlog($this->Db, "user", t("Failed login attempt for :name", "en", [":name" => $this->get("name")]), null, "warning");
+			addlog("user", "Failed login attempt for ".$this->get("name"), null, "warning");
 			return false;
 		}
 		return true;

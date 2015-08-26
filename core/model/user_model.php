@@ -2,37 +2,44 @@
 class User_Model_Core extends Model {
 
 	public function register($values) {
+		$User = $this->getEntity("User");
+		if (!array_key_exists("name", $values))
+			$values["name"] = $values["email"];
+		foreach ($values as $key => $value)
+			$User->set($key, $value);
+		$User->set("status", 1);
+		return $this->registerFinalize($User, $values);
+	}
+	public function registerFinalize($User, $values) {
 		$registration = $this->Config->getUserRegistration();
 		$num_users = $this->Db->numRows("SELECT id FROM `user`");
-		$User = $this->getEntity("User");
-		$User->set("name", $values["name"]);
-		$User->set("email", $values["email"]);
-		$User->set("pass", $values["password"]);
-		$User->set("status", 1);
+		$re = null;
 		if ($num_users === 0) {
 			$User->save();
 			$User->login();
-			return "admin_login";
+			$re = "admin_login";
 		}
 		else {
 			if ($registration == "email_confirmation") {
 				if ($this->sendEmailConfirmation($User)) {
 					$User->login();
-					return "email_confirmation";
+					$re = "email_confirmation";
 				}
 			}
 			else if ($registration == "admin_approval") {
 				$User->set("status", 0);
 				// TODO: Approval mail
 				if ($User->save()) 
-					return "admin_approval";
+					$re = "admin_approval";
 			}
 			else {
 				if ($User->save())
-					return "register_login";
+					$re = "register_login";
 			}
 		}
-		return null;
+		if ($re)
+			addlog("user", t("New user registration :name", "en", [":name" => $User->get("name")]));
+		return $re;
 	}
 
 	public function sendEmailConfirmation($User) {
@@ -82,7 +89,7 @@ class User_Model_Core extends Model {
 
 	public function saveSettings($User, $values) {
 		$change_email = $values["email"] != $User->get("email");
-		if ($change_email && $User->get("email") == $User->get("name"))
+		if ($change_email && $User->get("email") == $User->get("name") && !array_key_exists("name", $values))
 			$values["name"] = $values["email"];
 		foreach ($values as $key => $value)
 			$User->set($key, $value);
@@ -92,10 +99,7 @@ class User_Model_Core extends Model {
 			else
 				return false;
 		}
-		if ($User->save())
-			return true;
-		else
-			return false;
+		return $User->save();
 	}
 
 	public function deleteUser($User)  {

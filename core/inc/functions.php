@@ -215,7 +215,8 @@ function clearmsgs() {
 	unset($_SESSION["sysmsg"]);
 }
 
-function addlog($Db, $category, $text, $data = null, $type = "info") {
+function addlog($category, $text, $data = null, $type = "info") {
+	global $Db;
 	$obj = [
 		"user_id" => (!empty($_SESSION["user_id"]) ? $_SESSION["user_id"] : 0),
 		"ip" => (!empty($_SERVER["REMOTE_ADDR"]) ? $_SERVER["REMOTE_ADDR"] : null),

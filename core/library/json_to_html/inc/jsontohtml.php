@@ -28,26 +28,51 @@ namespace JsonToHtml {
 					$stack[++$i] = [
 						"tagName" => preg_replace("/^\<\s*([a-z0-9]+).*$/si", "$1", $tag),
 					];
-					preg_match_all("/([a-z0-9]+)\=\"([^\"]*)\"/i", $tag, $matches); // attr="value"
-					preg_match_all("/([a-z0-9]+)\=\'([^\']*)\'/i", $tag, $matches2); // attr='value'
-					preg_match_all("/\ ([a-z0-9+]+)[\ |\>]/i", $tag, $matches3); // attr
-					$matches[1]+= $matches2[1];
-					$matches[2]+= $matches2[2];
-					if (!empty($matches[1])) {
+					$len = strlen($tag);
+					$tlen = strlen($stack[$i]["tagName"]);
+					if ($len-2 > $tlen) {
 						$stack[$i]["attributes"] = [];
-						foreach ($matches[1] as $j => $key) {
-							$key = strtolower($key);
-							$value = (array_key_exists($j, $matches[2]) ? $matches[2][$j] : null);
-							if ($key == "style") {
-								preg_match_all("/([a-z0-9\-\_]+)\s*\:\s*([a-z0-9\-\_\#\(\)\,\.\ ]+)\s*/is", $value, $styles);
-								if (!empty($styles)) {
-									$stack[$i]["style"] = [];
-									foreach ($styles[1] as $k => $style) 
-										$stack[$i]["style"][$k] = $styles[2][$k];
-								}
+						$key = $value = null;
+						$where = "key";
+						$add = false;
+						$q = null;
+						for ($cx=$tlen+2; $cx<$len; $cx++) {
+							$c = $tag[$cx];
+							if ($q && $c == $q) {
+								$where = "key";
+								$add = true;
+								$q = null;
+							}
+							else if (!$q && ($c == "'" || $c == '"')) {
+								$q = $c;
+							}
+							else if ($c == "=") {
+								$where = "value";
+							}
+							else if (($c == " " || $c == ">") && !$q) {
+								$where = "key";
+								$add = true;
 							}
 							else {
-								$stack[$i]["attributes"][$key] = $value;
+								if ($where == "key")
+									$key.= $c;
+								else
+									$value.= $c;
+							}
+							if ($add) {
+								if ($key == "style") {
+									preg_match_all("/([a-z0-9\-\_]+)\s*\:\s*([a-z0-9\-\_\#\(\)\,\.\ ]+)\s*/is", $value, $styles);
+									if (!empty($styles)) {
+										$stack[$i]["style"] = [];
+										foreach ($styles[1] as $k => $style) 
+											$stack[$i]["style"][$k] = $styles[2][$k];
+									}
+								}
+								else if ($key) {
+									$stack[$i]["attributes"][$key] = $value;
+								}
+								$add = false;
+								$key = $value = "";
 							}
 						}
 					}

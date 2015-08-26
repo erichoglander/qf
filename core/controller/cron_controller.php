@@ -11,7 +11,7 @@ class Cron_Controller_Core extends Controller {
 		$Cron->run();
 		$time = round(microtime(true) - $time, 4);
 		setmsg(t("Cron completed in :sec seconds", "en", [":sec" => $time]), "success");
-		addlog($this->Db, "cron", t("Cron completed in :sec seconds", "en", [":sec" => $time]));
+		addlog("cron", "Cron completed in ".$time." seconds");
 		redirect();
 	}
 

@@ -29,7 +29,7 @@ class Cron_Core {
 			];
 		}
 		if (!empty($deleted)) 
-			addlog($this->Db, "file", t("Deleted :n temporary files", "en", [":n" => count($deleted)]), $deleted, "success");
+			addlog("file", "Deleted ".count($deleted)." temporary files", $deleted, "success");
 	}
 
 }

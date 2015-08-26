@@ -60,7 +60,7 @@ class User_Controller_Core extends Controller {
 			else if ($status == "admin_login")
 				setmsg(t("An admin account has been created and you have been signed in."), "success");
 			else if ($status == "register_login")
-				setmsg(t("<b>Registration complete.</b> You've been signed in to your new account."), "success");
+				setmsg(t("Registration complete. You've been signed in to your new account."), "success");
 			else if (!$status)
 				$this->defaultError();
 			if ($status)
@@ -74,10 +74,10 @@ class User_Controller_Core extends Controller {
 	public function resetAction() {
 		if ($this->User->id())
 			redirect();
-		$Form = $this->getForm("reset");
+		$Form = $this->getForm("userReset");
 		if ($Form->isSubmitted()) {
 			$values = $Form->values();
-			$User = $this->getEntity();
+			$User = $this->getEntity("User");
 			$User->loadByEmail($values["email"]);
 			if ($this->Model->reset($User)) {
 				setmsg(t("An e-mail has been sent with further instructions."), "success");
@@ -91,17 +91,17 @@ class User_Controller_Core extends Controller {
 		return $this->view("reset");
 	}
 
-	public function change_passwordAction($args = []) {
+	public function changePasswordAction($args = []) {
 		if (count($args) != 2)
 			return $this->notFound();
-		$User = $this->getEntity("UserChangePassword", $args[0]);
+		$User = $this->getEntity("User", $args[0]);
 		if (!$User->id() || !$User->verifyResetLink($args[1]))
 			return $this->view("reset_invalid");
 		$Form = $this->getForm("UserChangePassword");
 		if ($Form->isSubmitted()) {
 			$values = $Form->values();
-			if ($this->Model->change_password($User, $values["password"])) {
-				setmsg(t("<b>Your account password has been changed.</b> You can use your new password to sign in."), "success");
+			if ($this->Model->changePassword($User, $values["pass"])) {
+				setmsg(t("Your account password has been changed. You can use your new password to sign in."), "success");
 				redirect();
 			}
 			else {

@@ -117,7 +117,7 @@ class Controller {
 				$Cron->run();
 				$time = round(microtime(true) - $time, 4);
 				$this->Variable->set("cron", REQUEST_TIME);
-				addlog($this->Db, "cron", t("Cron completed in :sec seconds", "en", [":sec" => $time]));
+				addlog("cron", "Cron completed in ".$time." seconds");
 			}
 		}
 	}

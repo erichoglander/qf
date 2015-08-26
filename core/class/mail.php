@@ -47,11 +47,11 @@ class Mail_Core {
 			$headers.= $key.": ".$val."\r\n";
 
 		if (!$this->mail($this->to, $subject, $message, $headers)) {
-			addlog($this->Db, "mail", "Mail failed ".$this->to." (".$this->subject.")", $data, "error");
+			addlog("mail", "Mail failed ".$this->to." (".$this->subject.")", $data, "error");
 			return false;
 		}
 		else {
-			addlog($this->Db, "mail", "Mail sent to ".$this->to." (".$this->subject.")", $data, "success");
+			addlog("mail", "Mail sent to ".$this->to." (".$this->subject.")", $data, "success");
 			return true;
 		}
 	}
@@ -83,8 +83,7 @@ class Mail_Core {
 
 
 	protected function mail($to, $subject, $message, $headers) {
-		// return mail($this->to, $subject, $message, $headers);
-		setmsg($message);
+		return mail($this->to, $subject, $message, $headers);
 		return true;
 	}
 	protected function prepareAttachments() {

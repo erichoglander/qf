@@ -2,14 +2,20 @@
 class UserRegister_Form_Core extends Form {
 
 	public function validate($values) {
-		if ($values["password"] != $values["password_confirm"]) {
-			$this->setError(t("Passwords mismatch"), "password");
+		if ($values["pass"] != $values["pass_confirm"]) {
+			$this->setError(t("Passwords mismatch"), "pass");
 			return false;
 		}
-		$row = $this->Db->getRow("SELECT id FROM `user` WHERE name = :name", [":name" => $values["name"]]);
-		if ($row) {
-			$this->setError(t("Username is already taken"), "name");
-			return false;
+		if (array_key_exists("name", $values)) {
+			if ($values["name"] != strip_tags($values["name"])) {
+				$this->setError(t("Username contains illegal characters"), "name");
+				return false;
+			}
+			$row = $this->Db->getRow("SELECT id FROM `user` WHERE name = :name", [":name" => $values["name"]]);
+			if ($row) {
+				$this->setError(t("Username is already taken"), "name");
+				return false;
+			}
 		}
 		$row = $this->Db->getRow("SELECT id FROM `user` WHERE email = :email", [":email" => $values["email"]]);
 		if ($row) {
@@ -35,13 +41,13 @@ class UserRegister_Form_Core extends Form {
 					"label" => t("E-mail"),
 					"required" => true,
 				],
-				"password" => [
+				"pass" => [
 					"type" => "password",
 					"label" => t("Password"),
 					"icon" => "lock",
 					"required" => true,
 				],
-				"password_confirm" => [
+				"pass_confirm" => [
 					"type" => "password",
 					"label" => t("Confirm password"),
 					"icon" => "lock",

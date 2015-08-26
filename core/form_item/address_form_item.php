@@ -3,6 +3,7 @@ class Address_FormItem_Core extends FormItem {
 	
 	protected $address_fields = ["line", "postal_code", "locality", "country"];
 	protected $address_countries;
+	protected $address_country = "SE";
 	protected $label_placeholder = false;
 	
 	
@@ -63,12 +64,18 @@ class Address_FormItem_Core extends FormItem {
 				"type" => "select",
 				"label" => t("Country"),
 				"options" => $this->address_countries,
+				"value" => $this->address_country,
 				"required" => true,
 			];
 		}
 		if ($this->label_placeholder) {
 			foreach ($structure["items"] as $key => $item) {
-				$structure["items"][$key]["attributes"]["placeholder"] = $item["label"];
+				if ($item["type"] == "select") {
+					$structure["items"][$key]["empty_option"] = "- ".$item["label"]." -";
+				}
+				else {
+					$structure["items"][$key]["attributes"]["placeholder"] = $item["label"];
+				}
 				unset($structure["items"][$key]["label"]);
 			}
 		}
