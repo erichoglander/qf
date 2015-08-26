@@ -38,7 +38,7 @@ class User_Model_Core extends Model {
 			}
 		}
 		if ($re)
-			addlog("user", t("New user registration :name", "en", [":name" => $User->get("name")]));
+			addlog("user", "New user registration ".$User->get("name"));
 		return $re;
 	}
 
