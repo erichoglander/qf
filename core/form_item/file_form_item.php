@@ -75,7 +75,7 @@ class File_FormItem_Core extends FormItem {
 		return "file-o";
 	}
 
-	protected function validate($values) {
+	protected function validate($values = null) {
 		if ($this->isFileUpload()) {
 			$file = $this->getFileArray();
 			if (!empty($file["error"])) {
