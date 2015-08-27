@@ -188,12 +188,17 @@ function t($str, $lang = "en", $vars = []) {
 
 function uri($path) {
 	global $Db;
-	$row = $Db->getRow("
-			SELECT * FROM `alias`
-			WHERE path = :path && status = 1",
-			["path" => $path]);
-	if ($row)
-		$path = $row->alias;
+	if ($path == "<front>") {
+		$path = "";
+	}
+	else {
+		$row = $Db->getRow("
+				SELECT * FROM `alias`
+				WHERE path = :path && status = 1",
+				["path" => $path]);
+		if ($row)
+			$path = $row->alias;
+	}
 	return $path;
 }
 function url($path) {
@@ -243,8 +248,7 @@ function redirect($url = "", $redir = true) {
 		$url = $_GET["redir"];
 	$pcl = strpos($url, "://");
 	if ($pcl === false || $pcl > 8)
-		$url = BASE_URL.$url;
-	$url = str_replace("<front>", "", $url);
+		$url = url($url);
 	if (IS_CLI)
 		print "Redirect: ".$url."\n";
 	else
