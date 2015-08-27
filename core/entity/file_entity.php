@@ -13,8 +13,8 @@ class File_Entity_Core extends Entity {
 			return null;
 		if (!$this->Imagestyle)
 			$this->Imagestyle = newClass("Imagestyle");
-		$Imagestyle->src = $this->path();
-		return $Imagestyle->style($style);
+		$this->Imagestyle->src = $this->path();
+		return $this->Imagestyle->style($style);
 	}
 
 	public function url() {
