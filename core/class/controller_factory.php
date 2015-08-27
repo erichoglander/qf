@@ -22,6 +22,7 @@ class ControllerFactory_Core {
 				header("HTTP/1.1 302 Temporary Redirect");
 			redirect($request["redirect"]["location"]);
 		}
+		define("REQUEST_URI", $uri);
 		define("REQUEST_ALIAS", $request["alias"]);
 		define("REQUEST_PATH", $request["path"]);
 		define("IS_FRONT_PAGE", $request["controller"] == "page" && $request["action"] == "index");
