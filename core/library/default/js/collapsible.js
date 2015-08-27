@@ -1,3 +1,24 @@
+var _collapsibles = [];
+function collapsibleInit() {
+	var els = document.getElementsByClassName("collapsible");
+	for (var i=0; i<els.length; i++)
+		_collapsibles.push(new collapsible(els[i]));
+	var observer = new MutationObserver(function(mutations) {
+		mutations.forEach(function(mutation) {
+			collapsibleObserve(mutation.target);
+		});    
+	});
+	var config = { childList: true, subtree: true };
+	observer.observe(document.body, config);
+}
+function collapsibleObserve(el) {
+	var els = el.getElementsByClassName("collapsible");
+	for (var i=0; i<els.length; i++) {
+		if (!els[i].className.match("collapsible-init"))
+			_collapsibles.push(new collapsible(els[i]));
+	}
+}
+
 function collapsible(el) {
 	
 	this.tags = {
@@ -8,6 +29,8 @@ function collapsible(el) {
 		
 		var self = this;
 		
+		this.name = this.tags.wrap.getAttribute("name");
+		this.remember = this.name && this.tags.wrap.hasClass("remember");
 		this.tags.title = null;
 		this.tags.content = null;
 		this.tags.inner = null;
@@ -27,6 +50,16 @@ function collapsible(el) {
 			}
 		}
 		
+		if (this.remember) {
+			var cookie = document.cookie;
+			var r = new RegExp("collapsible-"+this.name+"=([a-z]+)");
+			var m = cookie.match(r);
+			if (m) {
+				if (m[1] == "open" && !this.isOpen() || m[1] == "closed" && this.isOpen())
+					this.toggleFast();
+			}
+		}
+		
 		this.tags.title.addEventListener("click", function(){ self.toggle(); }, false);
 		
 		this.tags.title.addClass("collapsible-title");
@@ -40,6 +73,36 @@ function collapsible(el) {
 		if (!duration)
 			duration = getStyle(this.tags.content, "-webkit-transition-duration");
 		return parseFloat(duration)*1000;
+	}
+	
+	this.toggleFast = function() {
+		if (this.isOpen())
+			this.closeFast();
+		else
+			this.openFast();
+	}
+	this.openFast = function() {
+		var self = this;
+		this.tags.wrap.removeClass("collapsed");
+		this.tags.wrap.addClass("expanded");
+		this.tags.content.addClass("no-transition");
+		setTimeout(function() {
+			self.tags.content.style.height = "auto";
+			self.tags.content.removeClass("no-transition");
+			setTimeout(function() {
+				self.tags.content.removeClass("no-transition");
+			}, 1);
+		}, 1);
+	}
+	this.closeFast = function() {
+		var self = this;
+		this.tags.wrap.removeClass("expanded");
+		this.tags.wrap.addClass("collapsed");
+		this.tags.content.addClass("no-transition");
+		this.tags.content.style.height = "0";
+		setTimeout(function() {
+			self.tags.content.removeClass("no-transition");
+		}, 1);
 	}
 	
 	this.toggle = function() {
@@ -63,6 +126,8 @@ function collapsible(el) {
 				}, 1);
 			}, self.getTransition());
 		}, 1);
+		if (this.remember) 
+			document.cookie = "collapsible-"+this.name+"=open";
 	}
 	this.close = function() {
 		var self = this;
@@ -76,6 +141,8 @@ function collapsible(el) {
 				self.tags.content.style.height = "0";
 			}, 1);
 		}, 1);
+		if (this.remember) 
+			document.cookie = "collapsible-"+this.name+"=closed";
 	}
 	this.isOpen = function() {
 		return (this.tags.wrap.className.match("expanded") ? true : false);
@@ -84,3 +151,5 @@ function collapsible(el) {
 	this.init();
 	
 }
+
+window.addEventListener("load", collapsibleInit, false);
