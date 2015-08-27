@@ -1,5 +1,21 @@
 <?php
 class File_Entity_Core extends Entity {
+	
+	protected $Imagestyle;
+	
+	
+	public function isImage() {
+		return in_array($this->get("extension"), ["jpg", "jpeg", "png", "gif"]);
+	}
+	
+	public function imageStyle($style) {
+		if (!$this->isImage())
+			return null;
+		if (!$this->Imagestyle)
+			$this->Imagestyle = newClass("Imagestyle");
+		$Imagestyle->src = $this->path();
+		return $Imagestyle->style($style);
+	}
 
 	public function url() {
 		if ($this->get("dir") == "private")
