@@ -75,10 +75,16 @@ function selectCustom(el) {
 	}
 	
 	this.onChange = function() {
-		if (this.tags.select.selectedIndex != -1)
-			this.tags.title.textContent = this.tags.select.options[this.tags.select.selectedIndex].text;
-		else
-			this.tags.title.textContent = "";
+		for (var i=0; i<this.tags.items.length; i++) {
+			if (i == this.tags.select.selectedIndex)
+				this.tags.items[i].addClass("active");
+			else
+				this.tags.items[i].removeClass("active");
+		}
+		if (this.tags.select.selectedIndex != -1) 
+			this.tags.title.innerHTML = this.tags.select.options[this.tags.select.selectedIndex].text;
+		else 
+			this.tags.title.innerHTML = "";
 	}
 	
 	this.init();
