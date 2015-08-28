@@ -18,13 +18,6 @@ function intervalObserve(el) {
 			_intervals.push(new interval(els[i]));
 	}
 }
-function intervalToggle(el) {
-	var item = formGetItem(el);
-	if (item.hasClass("active"))
-		item.removeClass("active");
-	else
-		item.addClass("active");
-}
 
 function interval(el) {
 	
@@ -35,6 +28,7 @@ function interval(el) {
 	this.init = function() {
 		var self = this;
 		this.tags.wrap.addClass("interval-init");
+		this.tags.item = formGetItem(this.tags.wrap);
 		this.suffix = this.tags.wrap.getAttribute("interval_suffix");
 		this.min = this.tags.wrap.getAttribute("interval_min");
 		this.max = this.tags.wrap.getAttribute("interval_max");
@@ -54,6 +48,37 @@ function interval(el) {
 		window.addEventListener("touchmove", function(e){ self.onMouseMove(e); }, false);
 		window.addEventListener("touchend", function(e){ self.onMouseUp(e); }, false);
 		this.create();
+		if (this.tags.item.hasClass("interval-dropdown")) {
+			this.tags.label = this.tags.item.getElementsByClassName("form-label")[0];
+			this.tags.label.addEventListener("click", function(){ self.toggle(); }, false);
+			window.addEventListener("click", function(e){ self.windowClick(e); }, false);
+		}
+	}
+	
+	this.toggle = function() {
+		if (this.isOpen())
+			this.close();
+		else
+			this.open();
+	}
+	this.open = function() {
+		this.tags.item.addClass("active");
+	}
+	this.close = function() {
+		this.tags.item.removeClass("active");
+	}
+	this.isOpen = function() {
+		if (this.tags.item.hasClass("active"))
+			return true;
+		return false;
+	}
+	
+	this.windowClick = function(e) {
+		if (!this.isOpen())
+			return;
+		for (var i=0, el = e.target; i<5 && el != null && el != this.tags.item; i++, el = el.parentNode);
+		if (!el || i == 5)
+			this.close();
 	}
 	
 	this.onMouseDown = function(e, point) {

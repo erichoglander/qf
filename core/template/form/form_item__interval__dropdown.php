@@ -1,7 +1,7 @@
 <?=$prefix?>
 <div class="<?=$item_class?> interval-dropdown">
 <?php if (!empty($label)) { ?>
-	<label class="form-label form-textfield" onclick="intervalToggle(this)">
+	<label class="form-label form-textfield">
 		<?=$label?><?=FontAwesome\Icon("angle-down")?>
 	</label>
 <?php } ?>
