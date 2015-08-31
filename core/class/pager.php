@@ -5,15 +5,13 @@ class Pager_Core {
 	public $ppp = 30;
 	public $span = 7;
 	public $get = "page";
-	public $sep;
-	public $url;
 	
 	protected $num = 1;
+	protected $url, $sep;
 
 
 	public function __construct() {
-		$this->url = BASE_URL.preg_replace("/[\?|\&]".$this->get."\=[0-9]+/", "", substr($_SERVER['REQUEST_URI'], 1));
-		$this->sep = (strpos($this->url, "?") ? "&" : "?");
+		$this->setUrl($_SERVER["REQUEST_URI"]);
 	}
 
 	public function url($x) {
@@ -26,6 +24,11 @@ class Pager_Core {
 
 	public function start() {
 		return ($this->page-1)*$this->ppp;
+	}
+	
+	public function setUrl($url) {
+		$this->url = preg_replace("/[\?|\&]".$this->get."\=[0-9]+/", "", $url);
+		$this->sep = (strpos($this->url, "?") ? "&" : "?");
 	}
 
 	public function setNum($num) {
