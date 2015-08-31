@@ -5,14 +5,14 @@ class Pager_Core {
 	public $ppp = 30;
 	public $span = 7;
 	public $get = "page";
+	public $sep;
+	public $url;
 	
 	protected $num = 1;
-	protected $sep;
-	protected $url;
 
 
 	public function __construct() {
-		$this->url = "/".preg_replace("/[\?|\&]".$this->get."\=[0-9]+/", "", substr($_SERVER['REQUEST_URI'], 1));
+		$this->url = BASE_URL.preg_replace("/[\?|\&]".$this->get."\=[0-9]+/", "", substr($_SERVER['REQUEST_URI'], 1));
 		$this->sep = (strpos($this->url, "?") ? "&" : "?");
 	}
 

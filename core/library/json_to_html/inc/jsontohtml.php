@@ -46,7 +46,7 @@ namespace JsonToHtml {
 							else if (!$q && ($c == "'" || $c == '"')) {
 								$q = $c;
 							}
-							else if ($c == "=") {
+							else if ($c == "=" && !$q) {
 								$where = "value";
 							}
 							else if (($c == " " || $c == ">") && !$q) {
