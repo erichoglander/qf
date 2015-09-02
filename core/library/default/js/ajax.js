@@ -16,7 +16,7 @@ function xajax() {
 				if (response && response.substr(0, 1) == "{") {
 					var r = eval("(function(){ return "+response+";}())");
 					if (!opt.errorHandle && r.status == "error") {
-						alert("Fel: "+r.error);
+						alert(r.error);
 						return;
 					}
 				}

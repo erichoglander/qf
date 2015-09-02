@@ -33,6 +33,7 @@ class Html_Core {
 				var REQUEST_ALIAS = "'.REQUEST_ALIAS.'";
 				var IS_FRONT_PAGE = '.(IS_FRONT_PAGE ? 'true' : 'false').';
 				var BASE_DOMAIN = "'.BASE_DOMAIN.'";
+				var BASE_URL = "'.BASE_URL.'";
 				var SITE_URL = "'.SITE_URL.'";
 				var REQUEST_TIME = '.REQUEST_TIME.';
 				var LANG = "'.LANG.'";
