@@ -12,30 +12,22 @@ class User_Model_Core extends Model {
 	}
 	public function registerFinalize($User, $values) {
 		$registration = $this->Config->getUserRegistration();
-		$num_users = $this->Db->numRows("SELECT id FROM `user`");
 		$re = null;
-		if ($num_users === 0) {
-			$User->save();
-			$User->login();
-			$re = "admin_login";
+		if ($registration == "email_confirmation") {
+			if ($this->sendEmailConfirmation($User)) {
+				$User->login();
+				$re = "email_confirmation";
+			}
+		}
+		else if ($registration == "admin_approval") {
+			$User->set("status", 0);
+			// TODO: Approval mail
+			if ($User->save()) 
+				$re = "admin_approval";
 		}
 		else {
-			if ($registration == "email_confirmation") {
-				if ($this->sendEmailConfirmation($User)) {
-					$User->login();
-					$re = "email_confirmation";
-				}
-			}
-			else if ($registration == "admin_approval") {
-				$User->set("status", 0);
-				// TODO: Approval mail
-				if ($User->save()) 
-					$re = "admin_approval";
-			}
-			else {
-				if ($User->save())
-					$re = "register_login";
-			}
+			if ($User->save())
+				$re = "register_login";
 		}
 		if ($re)
 			addlog("user", "New user registration ".$User->get("name"));

@@ -57,8 +57,6 @@ class User_Controller_Core extends Controller {
 			}
 			else if ($status == "admin_approval")
 				setmsg(t("Your account registration is now pending approval from the site administrator."), "success");
-			else if ($status == "admin_login")
-				setmsg(t("An admin account has been created and you have been signed in."), "success");
 			else if ($status == "register_login")
 				setmsg(t("Registration complete. You've been signed in to your new account."), "success");
 			else if (!$status)
@@ -66,8 +64,9 @@ class User_Controller_Core extends Controller {
 			if ($status)
 				redirect();
 		}
+		$num_users = $this->Db->numRows("SELECT id FROM `user`");
 		$this->viewData["form"] = $Form->render();
-		$this->viewData["status"] = $this->Config->getUserRegistration();
+		$this->viewData["status"] = ($num == 0 ? "admin_login" : $this->Config->getUserRegistration());
 		return $this->view("register");
 	}
 

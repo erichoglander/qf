@@ -150,6 +150,7 @@ class l10n_Model_Core extends Model {
 
 	public function scanAdd($parts) {
 		$arr = $this->scan($parts);
+		$n = 0;
 		foreach ($arr as $l10n_string) {
 			$l10nString = $this->getEntity("l10nString");
 			if (!$l10nString->loadFromString($l10n_string->string, $l10n_string->lang)) {

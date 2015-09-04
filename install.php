@@ -8,7 +8,16 @@ if (!$Db->connected)
 	die("Could not connect to database.\n");
 
 if ($Db->numRows("SHOW TABLES LIKE 'alias'"))
-	die("System already installed.\n");
+	die("System is already installed.\n");
+
+print "Enter admin e-mail: ";
+$email = trim(fgets(STDIN));
+
+print "Enter admin password: ";
+system("stty -echo");
+$pass = trim(fgets(STDIN));
+system("stty echo");
+print PHP_EOL;
 
 $sql = "
 --
@@ -117,6 +126,14 @@ CREATE TABLE IF NOT EXISTS `language` (
   KEY `status` (`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 
+--
+-- Dumping data for table `language`
+--
+
+INSERT INTO `language` (`lang`, `title`, `status`) VALUES
+('en', 'English', 1),
+('sv', 'Svenska', 1);
+
 -- --------------------------------------------------------
 
 --
@@ -182,7 +199,14 @@ CREATE TABLE IF NOT EXISTS `role` (
   `machine_name` varchar(32) COLLATE utf8_swedish_ci NOT NULL,
   PRIMARY KEY (`id`),
   KEY `machine_name` (`machine_name`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci AUTO_INCREMENT=2 ;
+
+--
+-- Dumping data for table `role`
+--
+
+INSERT INTO `role` (`id`, `title`, `machine_name`) VALUES
+(1, 'Administratör', 'administrator');
 
 -- --------------------------------------------------------
 
@@ -255,8 +279,19 @@ print "OK\n";
 $Variable = newClass("Variable", $Db);
 $Variable->set("core_update", 2);
 
-print "Installation successful!\n";
-
-print "Running updates...\n";
+print "Installing updates...\n";
 $doc = $ControllerFactory->executeUri("updater/update");
 print $doc.PHP_EOL;
+
+print t("Creating admin account...")." ";
+$User = newClass("User_Entity", $Db);
+$User->set("name", "admin");
+$User->set("email", $email);
+$User->set("pass", $pass);
+if (!$User->save())
+  die(t("Failed").PHP_EOL);
+print t("OK").PHP_EOL;
+
+$Db->insert("user_role", ["user_id" => 1, "role_id" => 1]);
+
+print t("Installation complete").PHP_EOL;
