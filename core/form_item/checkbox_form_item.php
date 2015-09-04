@@ -9,5 +9,9 @@ class Checkbox_FormItem_Core extends FormItem {
 			$value = 1;
 		return $value;
 	}
+	
+	protected function emptyValue($val) {
+		return !$val;
+	}
 
 };
