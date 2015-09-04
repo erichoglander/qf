@@ -65,12 +65,20 @@ class Form {
 	}
 
 	public function values() {
-		$values = [];
-		foreach ($this->items as $name => $item) {
-			if ($item->submit_data)
-				$values[$name] = $item->value();
+		$value = [];
+		foreach ($this->items as $item) {
+			if ($item->submit_data) {
+				$val = $item->value();
+				if (is_array($val) && !$item->tree) {
+					foreach ($val as $k => $v)
+						$value[$k] = $v;
+				}
+				else {
+					$value[$item->name] = $val;
+				}
+			}
 		}
-		return $values;
+		return $value;
 	}
 
 	public function isValidated() {

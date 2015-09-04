@@ -3,7 +3,6 @@ class Address_FormItem_Core extends FormItem {
 	
 	protected $address_fields = ["line", "postal_code", "locality", "country"];
 	protected $address_countries;
-	protected $address_country = "SE";
 	protected $label_placeholder = false;
 	
 	
@@ -64,7 +63,6 @@ class Address_FormItem_Core extends FormItem {
 				"type" => "select",
 				"label" => t("Country"),
 				"options" => $this->address_countries,
-				"value" => $this->address_country,
 				"required" => true,
 			];
 		}

@@ -5,6 +5,7 @@ class FormItem {
 	public $items;
 	public $multiple, $parent_multiple;
 	public $submit_data = true;
+	public $tree = true;
 
 	protected $type;
 	protected $label, $item_label, $description, $icon;
@@ -20,7 +21,6 @@ class FormItem {
 	protected $validation, $validation_error;
 	protected $template;
 	protected $submitted = false;
-	protected $tree = true;
 
 	protected $prefix, $suffix;
 	protected $input_prefix, $input_suffix;
@@ -53,9 +53,18 @@ class FormItem {
 			return $this->value;
 		if ($this->items !== null) {
 			$value = [];
-			foreach ($this->items as $item)
-				if ($item->submit_data)
-					$value[$item->name] = $item->value();
+			foreach ($this->items as $item) {
+				if ($item->submit_data) {
+					$val = $item->value();
+					if (is_array($val) && !$item->tree) {
+						foreach ($val as $k => $v)
+							$value[$k] = $v;
+					}
+					else {
+						$value[$item->name] = $val;
+					}
+				}
+			}
 		}
 		else {
 			$value = $this->itemValue();
