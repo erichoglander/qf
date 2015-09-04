@@ -66,7 +66,7 @@ class User_Controller_Core extends Controller {
 		}
 		$num_users = $this->Db->numRows("SELECT id FROM `user`");
 		$this->viewData["form"] = $Form->render();
-		$this->viewData["status"] = ($num == 0 ? "admin_login" : $this->Config->getUserRegistration());
+		$this->viewData["status"] = $this->Config->getUserRegistration();
 		return $this->view("register");
 	}
 
