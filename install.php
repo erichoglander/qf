@@ -256,3 +256,7 @@ $Variable = newClass("Variable", $Db);
 $Variable->set("core_update", 2);
 
 print "Installation successful!\n";
+
+print "Running updates...\n";
+$doc = $ControllerFactory->executeUri("updater/update");
+print $doc.PHP_EOL;
