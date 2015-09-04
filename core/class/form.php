@@ -54,6 +54,7 @@ class Form {
 			"name" => $this->name,
 			"prefix" => $this->prefix,
 			"suffix" => $this->suffix,
+			"ajax" => $this->ajax,
 		];
 		return renderTemplate($path, $vars);
 	}

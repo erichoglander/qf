@@ -16,6 +16,11 @@
 		</div>
 		<input type="hidden" name="form_<?=$name?>" value="1">
 		<input type="hidden" name="form_token" value="<?=$token?>">
+		<?php if ($ajax) { ?>
+		<div class="form-loader">
+			<?=FontAwesome\Icon("refresh", "fa-spin")?>
+		</div>
+		<?php } ?>
 	</form>
 </div>
 <?=$suffix?>

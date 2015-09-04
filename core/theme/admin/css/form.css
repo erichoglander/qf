@@ -144,14 +144,17 @@ input {
 	color: #A94442;
 }
 
+.form-loader,
 .form-item-loader {
 	display: none;
-	font-size: 24px;
+	font-size: 16px;
 }
-.form-item-loader .fa-pulse {
-	animation-duration: 0.7s;
-	-webkit-animation-duration: 0.7s;
+.form-loader .fa-spin,
+.form-item-loader .fa-spin {
+	animation-duration: 1s;
+	-webkit-animation-duration: 1s;
 }
+.form.loading > .form-loader,
 .form-item.loading > .form-item-loader {
 	display: block;
 }

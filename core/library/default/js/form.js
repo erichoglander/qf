@@ -1,10 +1,18 @@
 function formAjaxSubmit(form) {
+	if (form.hasClass("loading"))
+		return false;
 	var obj = {
 		method: "POST",
-		post: new FormData(form)
+		post: new FormData(form),
+		errorHandle: true
 	};
 	var url = (form.action ? form.action : "/"+REQUEST_PATH);
 	var callback = function(r) {
+		form.removeClass("loading");
+		if (r.status == "error") {
+			alert(r.error);
+			return;
+		}
 		if (r.form) {
 			var el = document.createElement("div");
 			jsonToHtml(el, r.form);
@@ -20,6 +28,7 @@ function formAjaxSubmit(form) {
 		}
 	};
 	var ajax = new xajax();
+	form.addClass("loading");
 	ajax.send(url, callback, obj);
 	return false;
 }
