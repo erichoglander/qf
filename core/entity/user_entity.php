@@ -45,7 +45,7 @@ class User_Entity_Core extends Entity {
 		$roles = $this->get("roles");
 		if (!empty($roles)) {
 			foreach ($roles as $role) {
-				if ($role->key === $key)
+				if ($role->machine_name === $key)
 					return true;
 			}
 		}
