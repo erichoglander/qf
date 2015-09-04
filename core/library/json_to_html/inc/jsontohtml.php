@@ -53,6 +53,9 @@ namespace JsonToHtml {
 								$where = "key";
 								$add = true;
 							}
+							else if ($c == "/" && $where == "key") {
+								continue;
+							}
 							else {
 								if ($where == "key")
 									$key.= $c;
