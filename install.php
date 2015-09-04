@@ -252,7 +252,7 @@ if (!$Db->query($sql))
 	die("Failed\n");
 print "OK\n";
 
-$Variable = newClass("Variable");
+$Variable = newClass("Variable", $Db);
 $Variable->set("core_update", 2);
 
 print "Installation successful!\n";
