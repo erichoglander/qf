@@ -23,8 +23,12 @@ function jsonToHtml(parent, json, replace) {
 				}
 				if (json.attributes) {
 					for (var attr in json.attributes) {
-						if (json.attributes[attr] !== null)
-							el.setAttribute(attr, json.attributes[attr]);
+						if (typeof(json.attributes[attr]) != "undefined") {
+							if (json.attributes[attr] === null)
+								el.setAttribute(attr, "");
+							else
+								el.setAttribute(attr, json.attributes[attr]);
+						}
 					}
 				}
 				if (json.children) {
