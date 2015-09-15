@@ -112,7 +112,7 @@ class User_Controller_Core extends Controller {
 		return $this->view("change_password");
 	}
 
-	public function confirm_emailAction($args = []) {
+	public function confirmEmailAction($args = []) {
 		if (count($args) != 2)
 			return $this->notFound();
 		$User = $this->getEntity("User", $args[0]);
