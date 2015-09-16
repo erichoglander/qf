@@ -107,7 +107,7 @@ class User_Model_Core extends Model {
 			$values["name"] = $values["email"];
 		foreach ($values as $key => $value)
 			$User->set($key, $value);
-		if ($change_email) {
+		if ($change_email && $this->Config->getUserRegistration() == "email_confirmation") {
 			if ($this->sendEmailConfirmation($User))
 				return "email_confirmation";
 			else
