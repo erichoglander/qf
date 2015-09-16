@@ -11,14 +11,16 @@ class UserRegister_Form_Core extends Form {
 				$this->setError(t("Username contains illegal characters"), "name");
 				return false;
 			}
-			$row = $this->Db->getRow("SELECT id FROM `user` WHERE name = :name", [":name" => $values["name"]]);
-			if ($row) {
+			$U = newClass("User_Entity", $this->Db);
+			$U->loadByName($values["name"]);
+			if ($U->id()) {
 				$this->setError(t("Username is already taken"), "name");
 				return false;
 			}
 		}
-		$row = $this->Db->getRow("SELECT id FROM `user` WHERE email = :email", [":email" => $values["email"]]);
-		if ($row) {
+		$U = newClass("User_Entity", $this->Db);
+		$U->loadByEmail($values["email"]);
+		if ($U->id()) {
 			$this->setError(t("E-mail is already taken"), "email");
 			return false;
 		}

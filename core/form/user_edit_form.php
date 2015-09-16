@@ -7,13 +7,15 @@ class UserEdit_Form_Core extends Form {
 			$this->setError(t("Passwords mismatch"), "pass");
 			return false;
 		}
-		$row = $this->Db->getRow("SELECT id FROM `user` WHERE name = :name", [":name" => $values["name"]]);
-		if ($row && (!$User || $row->id != $User->id())) {
+		$U = newClass("User_Entity", $this->Db);
+		$U->loadByName($values["name"]);
+		if ($U->id() && (!$User || $U->id() != $User->id())) {
 			$this->setError(t("Username unavailable"), "name");
 			return false;
 		}
-		$row = $this->Db->getRow("SELECT id FROM `user` WHERE email = :email", [":email" => $values["email"]]);
-		if ($row && (!$User || $row->id != $User->id())) {
+		$U = newClass("User_Entity", $this->Db);
+		$U->loadByEmail($values["email"]);
+		if ($U->id() && (!$User || $U->id() != $User->id())) {
 			$this->setError(t("E-mail unavailable"), "email");
 			return false;
 		}
