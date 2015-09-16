@@ -39,12 +39,15 @@ class User_Model_Core extends Model {
 		if (!$User->save())
 			return false;
 		$link = SITE_URL.url("user/confirm-email/".$User->id()."/".$code);
-		return $User->save() && $this->sendMail("UserEmailConfirmation", $User->get("email"), ["link" => $link]);
+		return $this->sendMail("UserEmailConfirmation", $User->get("email"), ["link" => $link]);
 	}
 
 	public function reset($User) {
-		$link = $User->generateResetLink();
-		return $User->save() && $this->sendMail("UserReset", $User->get("email"), ["id" => $User->id(), "link" => $link]);
+		$code = $User->generateResetLink();
+		if (!$User->save())
+			return false;
+		$link = SITE_URL.url("user/change-password/".$User->id()."/".$code);
+		return $this->sendMail("UserReset", $User->get("email"), ["link" => $link]);
 	}
 
 	public function changePassword($User, $password) {
