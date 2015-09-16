@@ -35,7 +35,10 @@ class User_Model_Core extends Model {
 	}
 
 	public function sendEmailConfirmation($User) {
-		$link = SITE_URL.url("user/confirm-email/".$User->id()."/".$User->generateEmailConfirmationLink());
+		$code = $User->generateEmailConfirmationLink();
+		if (!$User->save())
+			return false;
+		$link = SITE_URL.url("user/confirm-email/".$User->id()."/".$code);
 		return $User->save() && $this->sendMail("UserEmailConfirmation", $User->get("email"), ["link" => $link]);
 	}
 
