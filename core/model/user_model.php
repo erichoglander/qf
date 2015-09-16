@@ -72,6 +72,7 @@ class User_Model_Core extends Model {
 		unset($_SESSION["superuser_id"]);
 		if (!$User->id())
 			return null;
+		$User->login();
 		return $User;
 	}
 	
