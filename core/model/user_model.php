@@ -60,6 +60,21 @@ class User_Model_Core extends Model {
 		return $User->save();
 	}
 	
+	public function signInAs($User) {
+		$_SESSION["superuser_id"] = $this->User->id();
+		$User->login();
+	}
+	
+	public function signBack() {
+		if (empty($_SESSION["superuser_id"]))
+			return null;
+		$User = $this->getEntity("User", $_SESSION["superuser_id"]);
+		unset($_SESSION["superuser_id"]);
+		if (!$User->id())
+			return null;
+		return $User;
+	}
+	
 	public function addUser($values) {
 		$User = $this->getEntity("User");
 		if ($this->editUser($User, $values))

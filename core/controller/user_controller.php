@@ -9,7 +9,7 @@ class User_Controller_Core extends Controller {
 		if ($action == "list")
 			return ["userAdmin", "userList"];
 		if ($action == "signin")
-			return ["userAdmin", "userSignin"];
+			return ["userSignin"];
 		if ($action == "settings")
 			return ["userSettings"];
 		return null;
@@ -203,9 +203,20 @@ class User_Controller_Core extends Controller {
 		$User = $this->getEntity("User", $args[0]);
 		if (!$User->id())
 			return $this->notFound();
-		$User->login();
+		$this->Model->signInAs($User);
 		setmsg(t("Now logged in as :user", "en", [":user" => $User->get("name")]), "success");
 		redirect("user/list");
+	}
+	
+	public function signbackAction() {
+		$User = $this->Model->signBack();
+		if ($User) {
+			setmsg(t("Now logged in as :user", "en", [":user" => $User->get("name")]), "success");
+			redirect();
+		}
+		else {
+			return $this->accessDenied();
+		}
 	}
 
 	public function listAction() {

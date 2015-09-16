@@ -71,6 +71,7 @@ class User_Entity_Core extends Entity {
 		unset($_SESSION["file_uploaded"]);
 		unset($_SESSION["file_upload"]);
 		unset($_SESSION["user_id"]);
+		unset($_SESSION["superuser_id"]);
 	}
 
 	public function login() {
