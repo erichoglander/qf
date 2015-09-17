@@ -4,6 +4,7 @@ class Db_Core {
 	public $debug = false;
 	public $connected = false;
 
+	protected $exception_depth = 0;
 	protected $errors = [];
 
 	private $database, $user, $pass;
@@ -87,8 +88,10 @@ class Db_Core {
 			];
 			if ($this->debug) 
 				pr($debug);
-			else if (strpos($debug["exception"], "SQLSTATE[42S") !== false)
+			if ($this->exception_depth == 0) {
+				$this->exception_depth++;
 				addlog("database", "Exception", $debug, "error");
+			}
 			die("Ett fel uppstod med en fråga till databasen.");
 		}
 		$err = $stmt->errorInfo();
