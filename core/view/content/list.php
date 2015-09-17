@@ -3,7 +3,7 @@ $this->Html->h1 = $this->Html->title = t("Content");
 $this->Html->breadcrumbs[] = $this->Html->title;
 ?>
 
-<a class="btn btn-primary" href="/content/add"><?=t("Add content")?></a>
+<a class="btn btn-primary" href="<?=url("content/add")?>"><?=t("Add content")?></a>
 
 <table class="striped">
 	<thead>
@@ -23,9 +23,9 @@ $this->Html->breadcrumbs[] = $this->Html->title;
 			<td><?=date("Y-m-d H:i:s", $Content->get("created"))?></td>
 			<td><?=date("Y-m-d H:i:s", $Content->get("updated"))?></td>
 			<td class="actions">
-				<a href="/content/config/<?=$Content->id()?>"><?=t("Configure")?></a>
-				<a href="/content/edit/<?=$Content->id()?>"><?=t("Edit")?></a>
-				<a href="/content/delete/<?=$Content->id()?>"><?=t("Delete")?></a>
+				<a href="<?=url("content/config/".$Content->id())?>"><?=t("Configure")?></a>
+				<a href="<?=url("content/edit/".$Content->id())?>"><?=t("Edit")?></a>
+				<a href="<?=url("content/delete/".$Content->id())?>"><?=t("Delete")?></a>
 			</td>
 		</tr>
 	<?php } ?>

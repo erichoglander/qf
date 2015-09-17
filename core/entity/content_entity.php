@@ -21,7 +21,7 @@ class Content_Entity_Core extends l10n_Entity {
 
 	public function editButton() {
 		return 
-			'<a class="edit-btn" href="/content/edit/'.$this->id().'?redir='.REQUEST_ALIAS.'">'.
+			'<a class="edit-btn" href="'.url("content/edit/".$this->id()).'?redir='.REQUEST_ALIAS.'">'.
 				FontAwesome\Icon("pencil").
 			'</a>';
 	}

@@ -18,9 +18,9 @@ $this->Html->breadcrumbs[] = $this->Html->title;
 		<tr class="status-<?=$Log->get("type")?>">
 			<td><?=$Log->get("User")->name()?></td>
 			<td><?=xss($Log->get("category"))?></td>
-			<td><a href="/log/view/<?=$Log->id()?>"><?=xss(substr($Log->get("text"), 0, 140))?></a></td>
+			<td><a href="<?=url("log/view/".$Log->id())?>"><?=xss(substr($Log->get("text"), 0, 140))?></a></td>
 			<td><?=date("Y-m-d H:i:s", $Log->get("created"))?></td>
-			<td><a href="/log/delete/<?=$Log->id()?>"><?=t("Delete")?></a></td>
+			<td><a href="<?=url("log/delete/".$Log->id())?>"><?=t("Delete")?></a></td>
 		</tr>
 	<?php } ?>
 	</tbody>

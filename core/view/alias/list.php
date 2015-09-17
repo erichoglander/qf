@@ -3,7 +3,7 @@ $this->Html->h1 = $this->Html->title = t("Aliases");
 $this->Html->breadcrumbs[] = $this->Html->title;
 ?>
 
-<a class="btn btn-primary" href="/alias/add"><?=t("Add alias")?></a>
+<a class="btn btn-primary" href="<?=url("alias/add")?>"><?=t("Add alias")?></a>
 
 <?=$search?>
 
@@ -23,8 +23,8 @@ $this->Html->breadcrumbs[] = $this->Html->title;
 			<td><?=xss($Alias->get("alias"))?></td>
 			<td><?=($Alias->get("status") ? t("Yes") : t("No"))?></td>
 			<td class="actions">
-				<a href="/alias/edit/<?=$Alias->id()?>"><?=t("Edit")?></a>
-				<a href="/alias/delete/<?=$Alias->id()?>"><?=t("Delete")?></a>
+				<a href="<?=url("alias/edit/".$Alias->id())?>"><?=t("Edit")?></a>
+				<a href="<?=url("alias/delete/".$Alias->id())?>"><?=t("Delete")?></a>
 			</td>
 		</tr>
 	<?php } ?>

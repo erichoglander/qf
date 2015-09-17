@@ -26,8 +26,8 @@ $this->Html->breadcrumbs[] = $this->Html->title;
 			<td><?=$l10nString->get("lang")?></td>
 			<td><?=$translation_languages?></td>
 			<td class="actions">
-				<a href="/l10n/edit/<?=$l10nString->id()?>"><?=t("Translate")?></a>
-				<a href="/l10n/delete/<?=$l10nString->id()?>"><?=t("Delete")?></a>
+				<a href="<?=url("l10n/edit/".$l10nString->id())?>"><?=t("Translate")?></a>
+				<a href="<?=url("l10n/delete/".$l10nString->id())?>"><?=t("Delete")?></a>
 			</td>
 		</tr>
 	<?php } ?>

@@ -2,7 +2,7 @@
 $this->Html->h1 = $this->Html->title = t("Redirects");
 $this->Html->breadcrumbs[] = $this->Html->title;
 ?>
-<a class="btn btn-primary" href="/redirect/add"><?=t("Add redirect")?></a>
+<a class="btn btn-primary" href="<?=url("redirect/add")?>"><?=t("Add redirect")?></a>
 
 <table class="striped">
 	<thead>
@@ -22,8 +22,8 @@ $this->Html->breadcrumbs[] = $this->Html->title;
 			<td><?=$Redirect->get("code")?></td>
 			<td><?=($Redirect->get("status") ? t("Yes") : t("No"))?></td>
 			<td class="actions">
-				<a href="/redirect/edit/<?=$Redirect->id()?>"><?=t("Edit")?></a>
-				<a href="/redirect/delete/<?=$Redirect->id()?>"><?=t("Delete")?></a>
+				<a href="<?=url("redirect/edit/".$Redirect->id())?>"><?=t("Edit")?></a>
+				<a href="<?=url("redirect/delete/".$Redirect->id())?>"><?=t("Delete")?></a>
 			</td>
 		</tr>
 	<?php } ?>
