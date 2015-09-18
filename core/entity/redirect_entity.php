@@ -12,7 +12,7 @@ class Redirect_Entity_Core extends Entity  {
 		];
 		$schema["fields"]["code"] = [
 			"type" => "enum",
-			"values" => ["301", "302"],
+			"values" => ["301", "302", "303", "307"],
 		];
 		return $schema;
 	}
