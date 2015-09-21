@@ -45,7 +45,7 @@ function collapsible(el) {
 		}
 		for (var i=0; i<this.tags.content.childNodes.length; i++) {
 			if (this.tags.content.childNodes[i].nodeType == 1) {
-				this.tags.inner = this.tags.content.childNodes[1];
+				this.tags.inner = this.tags.content.childNodes[i];
 				break;
 			}
 		}
