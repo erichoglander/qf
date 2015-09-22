@@ -157,7 +157,7 @@ class Html_Core {
 		if (!$this->Theme) {
 			$this->Theme = $this->getTheme($this->theme);
 			if (!$this->Theme)
-				throw new Exception("Unable to load theme \"".$this->theme."\"");
+				throw new Exception("Unable to load theme '".$this->theme."'");
 		}
 	}
 
