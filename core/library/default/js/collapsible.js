@@ -88,6 +88,7 @@ function collapsible(el) {
 		this.tags.content.addClass("no-transition");
 		setTimeout(function() {
 			self.tags.content.style.height = "auto";
+			self.tags.content.style.overflow = "visible";
 			self.tags.content.removeClass("no-transition");
 			setTimeout(function() {
 				self.tags.content.removeClass("no-transition");
@@ -100,6 +101,7 @@ function collapsible(el) {
 		this.tags.wrap.addClass("collapsed");
 		this.tags.content.addClass("no-transition");
 		this.tags.content.style.height = "0";
+		this.tags.content.style.overflow = "hidden";
 		setTimeout(function() {
 			self.tags.content.removeClass("no-transition");
 		}, 1);
@@ -121,6 +123,7 @@ function collapsible(el) {
 			setTimeout(function(){
 				self.tags.content.addClass("no-transition");
 				self.tags.content.style.height = "auto";
+				self.tags.content.style.overflow = "visible";
 				setTimeout(function() {
 					self.tags.content.removeClass("no-transition");
 				}, 1);
@@ -135,6 +138,7 @@ function collapsible(el) {
 		this.tags.wrap.addClass("collapsed");
 		this.tags.content.addClass("no-transition");
 		this.tags.content.style.height = this.tags.inner.offsetHeight+"px";
+		this.tags.content.style.overflow = "hidden";
 		setTimeout(function() {
 			self.tags.content.removeClass("no-transition");
 			setTimeout(function(){
