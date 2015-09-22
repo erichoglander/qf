@@ -72,6 +72,64 @@ Element.prototype.trigger = function(type) {
     this.fireEvent("on"+type);
 }
 
+Element.prototype.expand = function() {
+	var t = getStyle(this, "transition-duration");
+	t = parseInt(parseFloat(t.replace("s", ""))*1000);
+	var inner;
+	for (var i=0; i<this.childNodes.length; i++) {
+		if (this.childNodes[i].nodeType == 1) {
+			inner = this.childNodes[i];
+			break;
+		}
+	}
+	if (!inner)
+		return;
+	var el = this;
+	this.style.height = "0px";
+	this.addClass("active");
+	setTimeout(function() {
+		el.style.height = inner.offsetHeight+"px";
+		setTimeout(function(){
+			el.addClass("no-transition");
+			el.style.height = "auto";
+			el.style.overflow = "visible";
+			setTimeout(function() {
+				el.removeClass("no-transition");
+			}, 1);
+		}, t);
+	}, 1);
+}
+Element.prototype.collapse = function() {
+	var t = getStyle(this, "transition-duration");
+	t = parseInt(parseFloat(t.replace("s", ""))*1000);
+	var inner;
+	for (var i=0; i<this.childNodes.length; i++) {
+		if (this.childNodes[i].nodeType == 1) {
+			inner = this.childNodes[i];
+			break;
+		}
+	}
+	if (!inner)
+		return;
+	var el = this;
+	this.removeClass("active");
+	this.addClass("no-transition");
+	this.style.height = inner.offsetHeight+"px";
+	this.style.overflow = "hidden";
+	setTimeout(function() {
+		el.removeClass("no-transition");
+		setTimeout(function(){
+			el.style.height = "0";
+		}, 1);
+	}, 1);
+}
+Element.prototype.expandCollapse = function() {
+	if (this.hasClass("active"))
+		this.collapse();
+	else
+		this.expand();
+}
+
 if (typeof(window.addEventListener) != "function") {
 	Element.prototype.addEventListener = function(ev, func, nothing) {
 		window.attachEvent("on"+ev, func);
