@@ -205,7 +205,7 @@ class User_Controller_Core extends Controller {
 			return $this->notFound();
 		$this->Model->signInAs($User);
 		setmsg(t("Now logged in as :user", "en", [":user" => $User->get("name")]), "success");
-		redirect("user/list");
+		redirect();
 	}
 	
 	public function signbackAction() {
