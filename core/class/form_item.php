@@ -271,7 +271,7 @@ class FormItem {
 		if ($this->options === null)
 			return null;
 		$options = $this->options;
-		if ($this->empty_option)
+		if ($this->empty_option !== null)
 			$options = ["" => $this->empty_option]+$options;
 		return $options;
 	}
