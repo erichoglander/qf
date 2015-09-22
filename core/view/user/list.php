@@ -35,10 +35,10 @@ $this->Html->breadcrumbs[] = t("Users");
 			<td><?=date("Y-m-d H:i:s", $User->get("created"))?></td>
 			<td><?=($User->get("login") ? date("Y-m-d H:i:s", $User->get("login")) : t("Never"))?></td>
 			<td class="actions">
-				<a href="<?url("user/edit/".$User->id())?>"><?=t("Edit")?></a>
+				<a href="<?=url("user/edit/".$User->id())?>"><?=t("Edit")?></a>
 				<?php if ($User->id() != 1) { ?>
-				<a href="<?url("user/delete/".$User->id())?>"><?=t("Delete")?></a>
-				<a href="<?url("user/signin/".$User->id())?>"><?=t("Sign in")?></a>
+				<a href="<?=url("user/delete/".$User->id())?>"><?=t("Delete")?></a>
+				<a href="<?=url("user/signin/".$User->id())?>"><?=t("Sign in")?></a>
 				<?php } ?>
 			</td>
 		</tr>
