@@ -1,8 +1,12 @@
 var _collapsibles = [];
 function collapsibleInit() {
 	var els = document.getElementsByClassName("collapsible");
-	for (var i=0; i<els.length; i++)
-		_collapsibles.push(new collapsible(els[i]));
+	for (var i=0; i<els.length; i++) {
+		if (!els[i].className.match("collapsible-init")) {
+			els[i].addClass("collapsible-init");
+			_collapsibles.push(new collapsible(els[i]));
+		}
+	}
 	var observer = new MutationObserver(function(mutations) {
 		mutations.forEach(function(mutation) {
 			collapsibleObserve(mutation.target);
@@ -14,8 +18,10 @@ function collapsibleInit() {
 function collapsibleObserve(el) {
 	var els = el.getElementsByClassName("collapsible");
 	for (var i=0; i<els.length; i++) {
-		if (!els[i].className.match("collapsible-init"))
+		if (!els[i].className.match("collapsible-init")) {
+			els[i].addClass("collapsible-init");
 			_collapsibles.push(new collapsible(els[i]));
+		}
 	}
 }
 

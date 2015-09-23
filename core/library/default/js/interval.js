@@ -1,8 +1,12 @@
 var _intervals = [];
 function intervalInit() {
 	var els = document.getElementsByClassName("form-interval");
-	for (var i=0; i<els.length; i++)
-		_intervals.push(new interval(els[i]));
+	for (var i=0; i<els.length; i++) {
+		if (!els[i].className.match("interval-init")) {
+			els[i].addClass("interval-init");
+			_intervals.push(new interval(els[i]));
+		}
+	}
 	var observer = new MutationObserver(function(mutations) {
 		mutations.forEach(function(mutation) {
 			intervalObserve(mutation.target);
@@ -14,8 +18,10 @@ function intervalInit() {
 function intervalObserve(el) {
 	var els = el.getElementsByClassName("form-interval");
 	for (var i=0; i<els.length; i++) {
-		if (!els[i].className.match("interval-init"))
+		if (!els[i].className.match("interval-init")) {
+			els[i].addClass("interval-init");
 			_intervals.push(new interval(els[i]));
+		}
 	}
 }
 

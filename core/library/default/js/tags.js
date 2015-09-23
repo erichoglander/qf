@@ -1,8 +1,12 @@
 var _autocompleteTags = [];
 function autocompleteTagsInit() {
 	var els = document.getElementsByClassName("form-tags");
-	for (var i=0; i<els.length; i++)
-		_autocompleteTags.push(new autocompleteTags(els[i]));
+	for (var i=0; i<els.length; i++) {
+		if (!els[i].className.match("autocomplete-tags-init")) {
+			els[i].addClass("autocomplete-tags-init");
+			_autocompleteTags.push(new autocompleteTags(els[i]));
+		}
+	}
 	var observer = new MutationObserver(function(mutations) {
 		mutations.forEach(function(mutation) {
 			autocompleteTagsObserve(mutation.target);
@@ -14,8 +18,10 @@ function autocompleteTagsInit() {
 function autocompleteTagsObserve(el) {
 	var els = el.getElementsByClassName("form-tags");
 	for (var i=0; i<els.length; i++) {
-		if (!els[i].className.match("autocomplete-tags-init"))
+		if (!els[i].className.match("autocomplete-tags-init")) {
+			els[i].addClass("autocomplete-tags-init");
 			_autocompleteTags.push(new autocompleteTags(els[i]));
+		}
 	}
 }
 

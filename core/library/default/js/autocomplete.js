@@ -1,8 +1,12 @@
 var _autocompletes = [];
 function autocompleteInit() {
 	var els = document.getElementsByClassName("form-autocomplete");
-	for (var i=0; i<els.length; i++)
-		_autocompletes.push(new autocomplete(els[i]));
+	for (var i=0; i<els.length; i++) {
+		if (!els[i].hasClass("autocomplete-init")) {
+			els[i].addClass("autocomplete-init");
+			_autocompletes.push(new autocomplete(els[i]));
+		}
+	}
 	var observer = new MutationObserver(function(mutations) {
 		mutations.forEach(function(mutation) {
 			autocompleteObserve(mutation.target);
@@ -14,8 +18,10 @@ function autocompleteInit() {
 function autocompleteObserve(el) {
 	var els = el.getElementsByClassName("form-autocomplete");
 	for (var i=0; i<els.length; i++) {
-		if (!els[i].className.match("autocomplete-init"))
+		if (!els[i].hasClass("autocomplete-init")) {
+			els[i].addClass("autocomplete-init");
 			_autocompletes.push(new autocomplete(els[i]));
+		}
 	}
 }
 
@@ -27,6 +33,7 @@ function autocomplete(el) {
 	
 	this.init = function() {
 		
+		var self = this;
 		this.timeoutTime = 400;
 		this.timeout = null;
 		this.itemActive = -1;
@@ -34,23 +41,20 @@ function autocomplete(el) {
 		this.uri = this.tags.title.getAttribute("uri");
 		this.lastLength = this.tags.title.length;
 		
-		this.ajax = new xajax();
-		
 		this.tags.wrap = formGetItem(this.tags.title);
+		this.tags.wrap.addClass("autocomplete-init");
 		this.tags.value = this.tags.title.form.elements[this.tags.title.name.substr(0, this.tags.title.name.length-7)+"[value]"];
 		this.tags.itemsWrap = this.tags.wrap.getElementsByClassName("autocomplete-items")[0];
 		this.tags.preview = this.tags.wrap.getElementsByClassName("autocomplete-preview-title")[0];
 		this.tags.remove = this.tags.wrap.getElementsByClassName("autocomplete-remove")[0];
 		this.tags.items = [];
 		
-		var self = this;
+		this.ajax = new xajax();
 		this.tags.title.addEventListener("keydown", function(e){ self.onKeydown(e); }, false);
 		this.tags.title.addEventListener("keyup", function(e){ self.onKeyup(e); }, false);
 		this.tags.title.addEventListener("blur", function(){ self.onBlur(); }, false);
 		this.tags.title.addEventListener("focus", function(){ self.onFocus(); }, false);
 		this.tags.remove.addEventListener("click", function(){ self.remove(); }, false);
-		
-		this.tags.wrap.addClass("autocomplete-init");
 		
 	}
 	
@@ -88,7 +92,7 @@ function autocomplete(el) {
 			this.deleteItems();
 			if (this.timeout)
 				clearTimeout(this.timeout);
-			if (this.ajax.xmlhttp.readyState != 0)
+			if (this.ajax.xmlhttp.readyState != 0 && this.ajax.xmlhttp.readyState != 4)
 				this.ajax.xmlhttp.abort();
 			this.timeout = setTimeout(function() {
 				self.request();

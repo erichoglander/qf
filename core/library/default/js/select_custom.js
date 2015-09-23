@@ -1,8 +1,12 @@
 var _select_customs = [];
 function selectCustomInit() {
 	var els = document.getElementsByClassName("select-custom");
-	for (var i=0; i<els.length; i++)
-		_select_customs.push(new selectCustom(els[i]));
+	for (var i=0; i<els.length; i++) {
+		if (!els[i].className.match("select-custom-init")) {
+			els[i].addClass("select-custom-init");
+			_select_customs.push(new selectCustom(els[i]));
+		}
+	}
 	var observer = new MutationObserver(function(mutations) {
 		mutations.forEach(function(mutation) {
 			selectCustomObserve(mutation.target);
@@ -14,8 +18,10 @@ function selectCustomInit() {
 function selectCustomObserve(el) {
 	var els = el.getElementsByClassName("select-custom");
 	for (var i=0; i<els.length; i++) {
-		if (!els[i].className.match("select-custom-init"))
+		if (!els[i].className.match("select-custom-init")) {
+			els[i].addClass("select-custom-init");
 			_select_customs.push(new selectCustom(els[i]));
+		}
 	}
 }
 

@@ -1,8 +1,12 @@
 var _datepickers = [];
 function datepickerInit() {
 	var els = document.getElementsByClassName("form-date");
-	for (var i=0; i<els.length; i++)
-		_datepickers.push(new datepicker(els[i]));
+	for (var i=0; i<els.length; i++) {
+		if (!els[i].className.match("datepicker-init")) {
+			els[i].addClass("datepicker-init");
+			_datepickers.push(new datepicker(els[i]));
+		}
+	}
 	var observer = new MutationObserver(function(mutations) {
 		mutations.forEach(function(mutation) {
 			timepickerObserve(mutation.target);
@@ -14,8 +18,10 @@ function datepickerInit() {
 function datepickerObserve(el) {
 	var els = el.getElementsByClassName("form-date");
 	for (var i=0; i<els.length; i++) {
-		if (!els[i].className.match("datepicker-init"))
+		if (!els[i].className.match("datepicker-init")) {
+			els[i].addClass("datepicker-init");
 			_datepickers.push(new datepicker(els[i]));
+		}
 	}
 }
 

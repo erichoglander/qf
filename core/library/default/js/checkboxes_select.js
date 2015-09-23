@@ -1,8 +1,12 @@
 var _checkboxes_selects = [];
 function checkboxesSelectInit() {
 	var els = document.getElementsByClassName("checkboxes-select");
-	for (var i=0; i<els.length; i++)
-		_checkboxes_selects.push(new checkboxesSelect(els[i]));
+	for (var i=0; i<els.length; i++) {
+		if (!els[i].className.match("checkboxes-select-init")) {
+			els[i].addClass("checkboxes-select-init");
+			_checkboxes_selects.push(new checkboxesSelect(els[i]));
+		}
+	}
 	var observer = new MutationObserver(function(mutations) {
 		mutations.forEach(function(mutation) {
 			checkboxesSelectObserve(mutation.target);
@@ -14,8 +18,10 @@ function checkboxesSelectInit() {
 function checkboxesSelectObserve(el) {
 	var els = el.getElementsByClassName("checkboxes-select");
 	for (var i=0; i<els.length; i++) {
-		if (!els[i].className.match("checkboxes-select-init"))
+		if (!els[i].className.match("checkboxes-select-init")) {
+			els[i].addClass("checkboxes-select-init");
 			_checkboxes_selects.push(new checkboxesSelect(els[i]));
+		}
 	}
 }
 

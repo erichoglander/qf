@@ -1,8 +1,12 @@
 var _autoselects = [];
 function autoselectInit() {
 	var els = document.getElementsByClassName("form-autoselect");
-	for (var i=0; i<els.length; i++)
-		_autoselects.push(new autoselect(els[i]));
+	for (var i=0; i<els.length; i++) {
+		if (!els[i].className.match("autoselect-init")) {
+			els[i].addClass("autoselect-init");
+			_autoselects.push(new autoselect(els[i]));
+		}
+	}
 	var observer = new MutationObserver(function(mutations) {
 		mutations.forEach(function(mutation) {
 			autoselectObserve(mutation.target);
@@ -14,8 +18,10 @@ function autoselectInit() {
 function autoselectObserve(el) {
 	var els = el.getElementsByClassName("form-autoselect");
 	for (var i=0; i<els.length; i++) {
-		if (!els[i].className.match("autoselect-init"))
+		if (!els[i].className.match("autoselect-init")) {
+			els[i].addClass("autoselect-init");
 			_autoselects.push(new autoselect(els[i]));
+		}
 	}
 }
 
