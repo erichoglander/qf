@@ -37,6 +37,26 @@ class File_Entity_Core extends Entity {
 			$filename.= ".".$this->get("extension");
 		return $filename;
 	}
+	
+	public function copy() {
+		$Copy = $this->getEntity("File");
+		foreach ($this->schema["fields"] as $key => $field)
+			$Copy->set($key, $this->get($key));
+		$info = pathinfo($Copy->get("uri"));
+		$path = ($Copy->get("dir") == "private" ? PRIVATE_PATH : PUBLIC_PATH)."/";
+		$uri = $info["dirname"]."/";
+		$name = $Copy->get("name");
+		$ext = $Copy->get("extension");
+		for ($fname = $name."-0.".$ext, $i = 1; file_exists($path.$uri.$fname); $fname = $name."-".$i.".".$ext, $i++);
+		if (!copy($this->path(), $path.$uri.$fname)) {
+			setmsg("Failed to copy file: ".$this->path()." to ".$path.$uri.$fname, "error");
+			return false;
+		}
+		$Copy->set("uri", $uri.$fname);
+		if (!$Copy->save())
+			return false;
+		return $Copy;
+	}
 
 	public function delete() {
 		@unlink($this->path());
