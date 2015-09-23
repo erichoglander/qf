@@ -1,0 +1,63 @@
+.popup {
+	display: none;
+}
+.popup-wrap .popup {
+	display: block;
+}
+.popup-wrap {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: 100;
+	visibility: hidden;
+	opacity: 0;
+	transition: opacity 0.3s ease, visibility 0.3s 0s;
+	-webkit-transition: opacity 0.3s ease, visibility 0.3s 0s;
+}
+.popup-wrap.open {
+	visibility: visible;
+	opacity: 1;
+	transition-delay: 0s;
+	-webkit-transition-delay: 0s;
+}
+.popup-dark {
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 100;
+	background: rgba(0,0,0,0.5);
+}
+.popup-light {
+	width: 820px;
+	position: absolute;
+	left: -410px;
+	margin-left: 50%;
+	background: #fff;
+	z-index: 101;
+}
+.popup-size-large .popup-light {
+	width: 1100px;
+	left: -550px;
+}
+.popup-size-small .popup-light {
+	width: 500px;
+	left: -250px;
+}
+.popup-inner {
+	margin: 45px 55px;
+}
+.popup-close {
+	cursor: pointer;
+	position: absolute;
+	right: 20px;
+	top: 20px;
+}
+.popup-close .fa {
+	margin-left: 5px;
+	position: relative;
+	top: 2px;
+	font-size: 20px;
+}
