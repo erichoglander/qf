@@ -151,6 +151,9 @@ input {
 .form-icon-error {
 	color: #A94442;
 }
+.form-type-select .form-icon-feedback {
+	right: 25px;
+}
 
 .form-loader,
 .form-item-loader {
