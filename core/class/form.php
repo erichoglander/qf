@@ -40,7 +40,7 @@ class Form {
 		$this->Db = $Db;
 		$this->Io = $Io;
 		$this->User = $User;
-		$this->vars = $vars;
+		$this->setVars($vars);
 		$this->loadStructure();
 	}
 
@@ -63,6 +63,14 @@ class Form {
 		if (!array_key_exists($name, $this->vars))
 			return $def;
 		return $this->vars[$name];
+	}
+	
+	public function set($name, $value) {
+		$this->vars[$name] = $value;
+	}
+	
+	public function setVars($vars) {
+		$this->vars = $vars;
 	}
 
 	public function values() {
