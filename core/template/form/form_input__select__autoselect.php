@@ -1,5 +1,5 @@
 <div class="autoselect">
-	<input name="__autoselect_<?=$name?>" class="form-textfield form-autoselect" value="<?=(array_key_exists($value, $options) ? $options[$value] : null)?>">
+	<input name="__autoselect_<?=$name?>" class="form-textfield form-autoselect" autocomplete="off" value="<?=(array_key_exists($value, $options) ? $options[$value] : null)?>">
 	<div class="autoselect-options"></div>
 </div>
 <div class="autoselect-hidden">
