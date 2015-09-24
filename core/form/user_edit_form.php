@@ -56,6 +56,8 @@ class UserEdit_Form_Core extends Form {
 					"type" => "password",
 					"label" => t("Password"),
 					"icon" => "lock",
+					"generator" => true,
+					"generator_copy" => "pass_confirm",
 				],
 				"pass_confirm" => [
 					"type" => "password",

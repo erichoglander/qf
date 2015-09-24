@@ -191,6 +191,28 @@ function formGetForm(el) {
 	return el;
 }
 
+function formGeneratePassword(el, copy) {
+	var item = formGetItem(el);
+	el = item.getElementsByTagName("input")[0];
+	var str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789%=!?&/#-_.,:;*+[]()";
+	var pass = "";
+	var len = 10+Math.floor(Math.random()*5);
+	for (var i=0; i<len; i++)
+		pass+= str[Math.floor(Math.random()*str.length)];
+	el.value = pass;
+	el.form.elements[copy].value = pass;
+	var inp = document.createElement("input");
+	inp.type = "text";
+	inp.value = pass;
+	inp.style.position = "fixed";
+	inp.style.left = "-10000px";
+	document.body.appendChild(inp);
+	inp.select();
+	if (!document.execCommand("copy")) 
+		prompt("Copy password: Ctrl+C, Enter", pass);
+	document.body.removeChild(inp);
+}
+
 
 var _formCollapsibles = [];
 function formCollapsibleInit() {
