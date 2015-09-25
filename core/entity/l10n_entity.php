@@ -1,12 +1,14 @@
 <?php
 class l10n_Entity extends Entity {
 
-	public $default_lang = LANG;
+	public $default_lang = "sv";
 	public $translations;
 
 
 	public function __construct(&$Db, $id = null, $lang = null) {
 		parent::__construct($Db, null);
+		$Config = newClass("Config");
+		$this->default_lang = $Config->getDefaultLanguage();
 		if ($id)
 			$this->load($id, $lang);
 	}
