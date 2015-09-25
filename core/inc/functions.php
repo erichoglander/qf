@@ -172,12 +172,11 @@ function t($str, $lang = "en", $vars = []) {
 	if (!$l10nString->loadFromString($str, $lang)) {
 		$l10nString->set("lang", $lang);
 		$l10nString->set("string", $str);
-		$l10nString->set("sid", 0);
 		$l10nString->set("input_type", "code");
 		$l10nString->save();
 	}
 	else {
-		$Translation = $l10nString->getTranslation(LANG);
+		$Translation = $l10nString->translation(LANG);
 		if ($Translation)
 			$str = $Translation->get("string");
 	}

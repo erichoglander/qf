@@ -2,7 +2,8 @@
 class l10n_Entity extends Entity {
 
 	public $default_lang = "sv";
-	public $translations;
+	
+	protected $translations;
 
 
 	public function __construct(&$Db, $id = null, $lang = null) {
@@ -15,9 +16,9 @@ class l10n_Entity extends Entity {
 
 	public function json() {
 		$json = parent::json();
-		if (!empty($this->translations)) {
+		if (!empty($this->translations())) {
 			$json->translations = [];
-			foreach ($this->translations as $lang => $Entity) {
+			foreach ($this->translations() as $lang => $Entity) {
 				$json->translations[$lang] = $Entity->json();
 			}
 		}
@@ -31,18 +32,13 @@ class l10n_Entity extends Entity {
 	public function saveAll() {
 		if (!$this->save())
 			return false;
-		if (!empty($this->translations)) {
-			foreach ($this->translations as $Entity) {
-				$Entity->set("sid", $this->id());
-				if (!$Entity->save())
-					return false;
-			}
+		foreach ($this->translations() as $lang => $Entity) {
+			$Entity->set("sid", $this->sid());
+			$Entity->set("lang", $lang);
+			if (!$Entity->save())
+				return false;
 		}
 		return true;
-	}
-
-	public function loadAll() {
-		$this->translations = $this->getTranslations();
 	}
 
 	public function load($id, $lang = null) {
@@ -53,19 +49,15 @@ class l10n_Entity extends Entity {
 	}
 
 	public function deleteAll() {
-		if (!$this->delete())
-			return false;
-		if (!empty($this->translations)) {
-			foreach ($this->translations as $Entity) {
-				if (!$Entity->delete())
-					return false;
-			}
+		foreach ($this->translations() as $Entity) {
+			if (!$Entity->delete(false))
+				return false;
 		}
-		return true;
+		return $this->delete(false);
 	}
 
-	public function delete() {
-		if ($this->get("sid") === null) {
+	public function delete($change_sid = true) {
+		if ($this->get("sid") === null && $change_sid) {
 			$row = $this->Db->getRow("
 					SELECT * FROM `".$this->schema["table"]."`
 					WHERE sid = :id
@@ -77,6 +69,13 @@ class l10n_Entity extends Entity {
 			}
 		}
 		return parent::delete();
+	}
+	
+	public function newTranslation($lang) {
+		$class = get_class($this);
+		$this->translations[$lang] = new $class($this->Db);
+		$this->translations[$lang]->set("sid", $this->sid());
+		$this->translations[$lang]->set("lang", $lang);
 	}
 
 	public function loadTranslation($id, $lang) {
@@ -92,57 +91,49 @@ class l10n_Entity extends Entity {
 			return false;
 	}
 
-	public function getTranslations() {
+	public function translations() {
 		if (!$this->id())
 			return null;
-		$sid = $this->get("sid");
-		$list = [];
-		if ($sid) {
+		if ($this->translations === null) {
 			$rows = $this->Db->getRows(
 					"SELECT id, lang FROM `".$this->schema["table"]."` 
 					WHERE 
-						(sid = :sid || id = :sid)", 
-					[	":sid" => $sid]);
-		}
-		else {
-			$rows = $this->Db->getRows(
-					"SELECT id, lang FROM `".$this->schema["table"]."` 
-					WHERE 
-						sid = :sid", 
-					[	":sid" => $this->id()]);
-		}
-		if (!empty($rows)) {
+						(sid = :sid || id = :sid) &&
+						id != :id", 
+					[	":sid" => $this->sid(),
+						":id" => $this->id()]);
+			$this->translations = [];
 			foreach ($rows as $row) {
 				$class = get_class($this);
-				$list[$row->lang] = new $class($this->Db, $row->id);
+				$this->translations[$row->lang] = new $class($this->Db, $row->id);
 			}
 		}
-		return $list;
+		return $this->translations;
 	}
 
-	public function getTranslation($lang) {
-		if (!$this->id())
-			return null;
-		$sid = $this->get("sid");
-		if ($sid) {
-			$row = $this->Db->getRow(
-					"SELECT id FROM `".$this->schema["table"]."` WHERE 
-					(sid = :sid || id = :sid) && lang = :lang", 
-					[":sid" => $sid, ":lang" => $lang]);
+	public function translation($lang) {
+		if ($this->get("lang") == $lang)
+			return $this;
+		if (!array_key_exists($lang, $this->translations)) {
+			$this->translations[$lang] = null;
+			if ($this->id()) {
+				$sid = $this->get("sid");
+				$row = $this->Db->getRow("
+						SELECT id, lang FROM `".$this->schema["table"]."`
+						WHERE
+							(sid = :sid || id = :sid) &&
+							id != :id &&
+							lang = :lang",
+						[	":sid" => $this->sid(),
+							":id" => $this->id(),
+							":lang" => $lang]);
+				if ($row) {
+					$class = get_class($this);
+					$this->translations[$lang] = new $class($this->Db, $row->id);
+				}
+			}
 		}
-		else {
-			$row = $this->Db->getRow(
-					"SELECT id FROM `".$this->schema["table"]."` WHERE 
-					sid = :sid && lang = :lang", 
-					[":sid" => $this->id(), ":lang" => $lang]);
-		}
-		if ($row) {
-			$class = get_class($this);
-			return new $class($this->Db, $row->id);
-		}
-		else {
-			return null;
-		}
+		return $this->translations[$lang];
 	}
 
 

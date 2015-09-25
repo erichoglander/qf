@@ -1,7 +1,7 @@
 <?php
 class l10nString_Entity_Core extends l10n_Entity {
 
-	public function loadFromString($string, $lang, $sid = null) {
+	public function loadFromString($string, $lang) {
 		$row = $this->Db->getRow("
 				SELECT id FROM `l10n_string`
 				WHERE 

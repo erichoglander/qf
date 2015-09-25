@@ -19,7 +19,7 @@ class l10n_Model_Core extends Model {
 					WHERE 
 						lang = :lang &&
 						string = :string &&
-						sid = 0",
+						sid IS NULL",
 					[	":lang" => $l10n_string->lang,
 						":string" => $l10n_string->string]);
 			if ($source) {
@@ -29,7 +29,6 @@ class l10n_Model_Core extends Model {
 			else {
 				$l10nString = $this->getEntity("l10nString");
 				$l10nString->set("lang", $l10n_string->lang);
-				$l10nString->set("sid", 0);
 				$l10nString->set("input_type", "import");
 				$l10nString->set("string", $l10n_string->string);
 				$l10nString->save();
@@ -65,7 +64,7 @@ class l10n_Model_Core extends Model {
 
 	public function export($values) {
 		$l10n_strings = [];
-		$sql = "SELECT id, lang, string FROM `l10n_string` WHERE sid = 0";
+		$sql = "SELECT id, lang, string FROM `l10n_string` WHERE sid IS NULL";
 		$rows = $this->Db->getRows($sql);
 		if (!empty($rows)) {
 			$sql = "SELECT lang, string, updated FROM `l10n_string` WHERE sid = :id";
@@ -122,7 +121,7 @@ class l10n_Model_Core extends Model {
 
 	public function searchNum($q = null) {
 		$vars = [];
-		$sql = "SELECT * FROM `l10n_string` WHERE sid = 0";
+		$sql = "SELECT * FROM `l10n_string` WHERE sid IS NULL";
 		if ($q) {
 			$sql.= " && string LIKE :q";
 			$vars[":q"] = "%".$q."%";
@@ -131,7 +130,7 @@ class l10n_Model_Core extends Model {
 	}
 	public function search($q = null, $start = 0, $stop = 30) {
 		$vars = [];
-		$sql = "SELECT id FROM `l10n_string` WHERE sid = 0";
+		$sql = "SELECT id FROM `l10n_string` WHERE sid IS NULL";
 		if ($q) {
 			$sql.= " && string LIKE :q";
 			$vars[":q"] = "%".$q."%";
@@ -157,7 +156,6 @@ class l10n_Model_Core extends Model {
 				$l10nString->set("lang", $l10n_string->lang);
 				$l10nString->set("string", $l10n_string->string);
 				$l10nString->set("input_type", "code");
-				$l10nString->set("sid", 0);
 				$l10nString->save();
 				$n++;
 			}

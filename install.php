@@ -99,7 +99,7 @@ CREATE TABLE IF NOT EXISTS `file` (
 
 CREATE TABLE IF NOT EXISTS `l10n_string` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `sid` int(10) unsigned NOT NULL DEFAULT '0',
+  `sid` int(10) unsigned DEFAULT NULL,
   `lang` varchar(2) COLLATE utf8_swedish_ci NOT NULL,
   `string` longtext COLLATE utf8_swedish_ci NOT NULL,
   `input_type` enum('code','manual','import') COLLATE utf8_swedish_ci NOT NULL DEFAULT 'code',
@@ -269,6 +269,12 @@ CREATE TABLE IF NOT EXISTS `variable` (
 ALTER TABLE `user_role`
   ADD CONSTRAINT `user_role_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `user_role_ibfk_2` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `l10n_string`
+--
+ALTER TABLE `l10n_string`
+  ADD CONSTRAINT `l10n_string_ibfk_1` FOREIGN KEY (`sid`) REFERENCES `l10n_string` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 ";
 
 print "Constructing database... ";
@@ -277,7 +283,7 @@ if (!$Db->query($sql))
 print "OK\n";
 
 $Variable = newClass("Variable", $Db);
-$Variable->set("core_update", 2);
+$Variable->set("core_update", 3);
 
 print "Installing updates...\n";
 $doc = $ControllerFactory->executeUri("updater/update");
