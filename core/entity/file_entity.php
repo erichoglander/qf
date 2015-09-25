@@ -19,9 +19,9 @@ class File_Entity_Core extends Entity {
 
 	public function url() {
 		if ($this->get("dir") == "private")
-			return PRIVATE_URI."/".$this->get("uri");
+			return PRIVATE_URI.$this->get("uri");
 		else
-			return PUBLIC_URI."/".$this->get("uri");
+			return PUBLIC_URI.$this->get("uri");
 	}
 
 	public function path() {
@@ -43,7 +43,7 @@ class File_Entity_Core extends Entity {
 		foreach ($this->schema["fields"] as $key => $field)
 			$Copy->set($key, $this->get($key));
 		$info = pathinfo($Copy->get("uri"));
-		$path = ($Copy->get("dir") == "private" ? PRIVATE_PATH : PUBLIC_PATH)."/";
+		$path = ($Copy->get("dir") == "private" ? PRIVATE_PATH : PUBLIC_PATH).BASE_PATH;
 		$uri = $info["dirname"]."/";
 		$name = $Copy->get("name");
 		$ext = $Copy->get("extension");

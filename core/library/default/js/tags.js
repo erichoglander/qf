@@ -118,7 +118,7 @@ function autocompleteTags(el) {
 		var q = this.lastValue();
 		if (!q.length)
 			return;
-		var url = "/"+this.uri+"/"+q;
+		var url = BASE_URL+this.uri+"/"+q;
 		this.ajax.send(
 			url,
 			function(r){ 

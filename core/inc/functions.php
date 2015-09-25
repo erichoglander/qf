@@ -153,9 +153,9 @@ function fileUrl($path) {
 	$epath = "extend/".$path;
 	$cpath = "core/".$path;
 	if (file_exists(DOC_ROOT."/".$epath))
-		return BASE_URL.$epath;
+		return BASE_PATH.$epath;
 	if (file_exists(DOC_ROOT."/".$cpath))
-		return BASE_URL.$cpath;
+		return BASE_PATH.$cpath;
 	return null;
 }
 
@@ -221,7 +221,7 @@ function clearmsgs() {
 }
 
 function addlog($category, $text, $data = null, $type = "info") {
-	global $Db;
+	global $Db, $Config;
 	$obj = [
 		"user_id" => (!empty($_SESSION["user_id"]) ? $_SESSION["user_id"] : 0),
 		"ip" => (!empty($_SERVER["REMOTE_ADDR"]) ? $_SERVER["REMOTE_ADDR"] : null),
@@ -239,7 +239,7 @@ function addlog($category, $text, $data = null, $type = "info") {
 	}
 	$Db->insert("log", $obj);
 	$row = $Db->getRow("SELECT COUNT(id) as num FROM `log`");
-	if ($row && $row->num > MAX_LOGS)
+	if ($row && $row->num > $Config->getMaxLogs())
 		$Db->query("DELETE FROM `log` ORDER BY id ASC LIMIT 1");
 }
 

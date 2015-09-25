@@ -22,10 +22,17 @@ class ControllerFactory_Core {
 				header("HTTP/1.1 302 Temporary Redirect");
 			redirect($request["redirect"]["location"]);
 		}
-		define("REQUEST_URI", $uri);
+		define("REQUEST_URI", $request["uri"]);
+		define("LANG", $request["lang"]);
+		define("BASE_URL", $request["base"]);
+		define("BASE_PATH", str_replace("index.php", "", $_SERVER["SCRIPT_NAME"]));
 		define("REQUEST_ALIAS", $request["alias"]);
 		define("REQUEST_PATH", $request["path"]);
 		define("IS_FRONT_PAGE", $request["controller"] == "page" && $request["action"] == "index");
+		define("PUBLIC_URI", BASE_PATH.$this->Config->getPublicUri());
+		define("PRIVATE_URI", BASE_URL.$this->Config->getPrivateUri());
+		define("PUBLIC_PATH", $this->Config->getPublicPath());
+		define("PRIVATE_PATH", $this->Config->getPrivatePath());
 		return $this->executeControllerAction($request["controller"], $request["action"], $request["args"]);
 	}
 
@@ -45,7 +52,13 @@ class ControllerFactory_Core {
 
 	# uri: /controller/action/arg0/arg1/arg2/...
 	public function parseUri($uri) {
-		$request = [];
+		
+		$request = [
+			"uri" => $uri,
+			"lang" => $this->Config->getDefaultLanguage(),
+			"base" => str_replace("index.php", "", $_SERVER["SCRIPT_NAME"]),
+		];
+		$redir = [];
 		$uri = strtolower($uri);
 		if (strpos($uri, "/") === 0)
 			$uri = substr($uri, 1);
@@ -61,15 +74,36 @@ class ControllerFactory_Core {
 		}
 
 		if ($this->Db->connected) {
+			// Language
+			if ($this->Config->getLanguageDetection() == "path") {
+				$lang = substr($uri, 0, 2);
+				$language = $this->Db->getRow("
+					SELECT * FROM `language` 
+					WHERE 
+						lang = :lang &&
+						status = 1",
+					[":lang" => $lang]);
+				if ($language) {
+					$uri = substr($uri, 3);
+					$request["lang"] = $language->lang;
+					$request["base"].= $language->lang."/";
+				}
+				else {
+					$redir["uri"] = $this->Config->getDefaultLanguage()."/".$uri;
+					$uri = null;
+				}
+			}
+			
 			// Alias
-			$request["alias"] = $uri;
-			$alias = $this->Db->getRow("SELECT * FROM `alias` WHERE status = 1 && alias = :alias", [":alias" => $uri]);
-			if ($alias) 
-				$uri = $alias->path;
-			$request["path"] = $uri;
+			if ($uri) {
+				$request["alias"] = $uri;
+				$alias = $this->Db->getRow("SELECT * FROM `alias` WHERE status = 1 && alias = :alias", [":alias" => $uri]);
+				if ($alias) 
+					$uri = $alias->path;
+				$request["path"] = $uri;
+			}
 
 			// Redirects
-			$redir = [];
 			if ($this->Config->getHttps() && HTTP_PROTOCOL != "https")
 				$redir["protocol"] = "https";
 			$sub = $this->Config->getSubdomain();
@@ -92,7 +126,7 @@ class ControllerFactory_Core {
 					"location" => 
 						(!empty($redir["protocol"]) ? $redir["protocol"] : HTTP_PROTOCOL)."://".
 						(!empty($redir["host"]) ? $redir["host"] : $_SERVER["HTTP_HOST"]).
-						(!empty($redir["uri"]) ? $redir["uri"] : $_SERVER["REQUEST_URI"]),
+						(!empty($redir["uri"]) ? "/".$redir["uri"] : $uri),
 					"code" => (!empty($redir["code"]) ? $redir["code"] : null)
 				];
 			}
@@ -133,6 +167,7 @@ class ControllerFactory_Core {
 		}
 
 		// Summarize
+		$request["uri"] = $uri;
 		$request["args"] = array_slice($params, 2);
 		return $request;
 	}

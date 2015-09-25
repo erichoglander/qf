@@ -21,6 +21,10 @@ class l10n_Entity extends Entity {
 		}
 		return $json;
 	}
+	
+	public function sid() {
+		return $this->get("sid", $this->id());
+	}
 
 	public function saveAll() {
 		if (!$this->save())
@@ -59,7 +63,7 @@ class l10n_Entity extends Entity {
 	}
 
 	public function delete() {
-		if ($this->get("sid") === 0) {
+		if ($this->get("sid") === null) {
 			$row = $this->Db->getRow("
 					SELECT * FROM `".$this->schema["table"]."`
 					WHERE sid = :id
@@ -67,7 +71,7 @@ class l10n_Entity extends Entity {
 					[	":id" => $this->id()]);
 			if ($row)  {
 				$this->Db->update($this->schema["table"], ["sid" => $row->id], ["sid" => $this->id()]);
-				$this->Db->update($this->schema["table"], ["sid" => 0], ["id" => $row->id]);
+				$this->Db->update($this->schema["table"], ["sid" => null], ["id" => $row->id]);
 			}
 		}
 		return parent::delete();
@@ -77,7 +81,7 @@ class l10n_Entity extends Entity {
 		$row = $this->Db->getRow(
 				"SELECT id FROM `".$this->schema["table"]."`
 				WHERE
-					(id = :id && sid = 0 || sid = :id) &&
+					(id = :id && sid IS NULL || sid = :id) &&
 					lang = :lang",
 				[":id" => $id, ":lang" => $lang]);
 		if ($row)
@@ -144,7 +148,6 @@ class l10n_Entity extends Entity {
 		$schema = parent::schema();
 		$schema["fields"]["sid"] = [
 			"type" => "uint",
-			"default" => 0,
 		];
 		$schema["fields"]["lang"] = [
 			"type" => "varchar",

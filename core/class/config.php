@@ -31,6 +31,27 @@ class Config_Core {
 	public function getAutomaticCron() {
 		return true;
 	}
+	public function getDefaultLanguage() {
+		return "sv";
+	}
+	public function getLanguageDetection() {
+		return null;
+	}
+	public function getMaxLogs() {
+		return 100000;
+	}
+	public function getPublicUri() {
+		return "files";
+	}
+	public function getPrivateUri() {
+		return "file/private";
+	}
+	public function getPublicPath() {
+		return DOC_ROOT."/".PUBLIC_URI;
+	}
+	public function getPrivatePath() {
+		return DOC_ROOT."/files/private";
+	}
 	public function getMenus() {
 		$menu = [
 			"admin" => [

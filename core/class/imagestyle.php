@@ -57,7 +57,7 @@ class Imagestyle_Core {
 		$src_ratio = $this->width/$this->height;
 		$end_ratio = $w/$h;
 		$x = $y = 0;
-		if ($src_ratio < $end_ratio) {
+		if ($src_ratio <= $end_ratio) {
 			$cp_w = $w;
 			$cp_h = $w/$src_ratio;
 			$y = ($cp_h-$h)/2;

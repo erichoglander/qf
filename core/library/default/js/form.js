@@ -54,7 +54,7 @@ function formFileUpload(el, parent_multiple, callback) {
 	iframe.style.display = "none";
 	
 	// Set form options
-	el.form.action = "/form/fileupload/"+token;
+	el.form.action = BASE_URL+"form/fileupload/"+token;
 	el.form.onsubmit = "";
 	el.form.enctype = "multipart/form-data";
 	el.form.target = iframe.name;
@@ -139,7 +139,7 @@ function formFileRemove(button, name, parent_multiple, callback) {
 	};
 	item.addClass("loading");
 	var ajax = new xajax();
-	ajax.send("/form/fileremove/"+token+"/"+id,	callback);
+	ajax.send(BASE_URL+"form/fileremove/"+token+"/"+id,	callback);
 }
 
 function formDeleteButton(el) {
@@ -179,7 +179,7 @@ function formAddButton(el, structure) {
 		}
 	};
 	var ajax = new xajax();
-	ajax.send("/form/additem", callback, data);
+	ajax.send(BASE_URL+"form/additem", callback, data);
 }
 
 function formGetItem(el) {
