@@ -18,8 +18,8 @@ $this->Html->breadcrumbs[] = $this->Html->title;
 	<?php 
 	foreach ($l10n_strings as $l10nString) { 
 		$translation_languages = "";
-		foreach ($l10nString->translations as $translation)
-			$translation_languages.= $translation->get("lang")." ";
+		foreach ($l10nString->translations() as $Translation)
+			$translation_languages.= $Translation->get("lang")." ";
 	?>
 		<tr>
 			<td><?=xss(shorten($l10nString->get("string"), 100))?></td>

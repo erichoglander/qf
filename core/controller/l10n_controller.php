@@ -79,7 +79,6 @@ class l10n_Controller_Core extends Controller {
 		$l10nString = $this->getEntity("l10nString", $args[0]);
 		if (!$l10nString->id())
 			return $this->notFound();
-		$l10nString->loadAll();
 		$languages = $this->Model->getActiveLanguages();
 		$Form = $this->getForm("l10nStringEdit", ["l10nString" => $l10nString, "languages" => $languages]);
 		if ($Form->isSubmitted()) {

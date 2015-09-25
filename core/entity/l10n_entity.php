@@ -3,7 +3,8 @@ class l10n_Entity extends Entity {
 
 	public $default_lang = "sv";
 	
-	protected $translations;
+	protected $translations = [];
+	protected $translations_fetched = false;
 
 
 	public function __construct(&$Db, $id = null, $lang = null) {
@@ -94,7 +95,8 @@ class l10n_Entity extends Entity {
 	public function translations() {
 		if (!$this->id())
 			return null;
-		if ($this->translations === null) {
+		if (!$this->translations_fetched) {
+			$this->translations_fetched = true;
 			$rows = $this->Db->getRows(
 					"SELECT id, lang FROM `".$this->schema["table"]."` 
 					WHERE 

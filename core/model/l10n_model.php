@@ -24,7 +24,6 @@ class l10n_Model_Core extends Model {
 						":string" => $l10n_string->string]);
 			if ($source) {
 				$l10nString = $this->getEntity("l10nString", $source->id);
-				$l10nString->loadAll();
 			}
 			else {
 				$l10nString = $this->getEntity("l10nString");
@@ -33,29 +32,27 @@ class l10n_Model_Core extends Model {
 				$l10nString->set("string", $l10n_string->string);
 				$l10nString->save();
 			}
-			if (!empty($l10n_string->translations)) {
-				foreach ($l10n_string->translations as $lang => $translation) {
-					if (empty($translation->string))
+			foreach ($l10n_string->translations as $lang => $translation) {
+				if (empty($translation->string))
+					continue;
+				if ($source && $l10nString->translation($lang)) {
+					if ($l10nString->translation($lang)->get("string") == $translation->string) 
 						continue;
-					if ($source && isset($l10nString->translations[$lang])) {
-						if ($l10nString->translations[$lang]->get("string") == $translation->string) 
-							continue;
-						if ($l10nString->translations[$lang]->get("input_type") == "manual")
-							continue;
-						$l10nString->translations[$lang]->set("string", $translation->string);
-						$l10nString->translations[$lang]->set("input_type", "import");
-						$l10nString->translations[$lang]->save();
-						$n++;
-					}
-					else {
-						$l10nString->translations[$lang] = $this->getEntity("l10nString");
-						$l10nString->translations[$lang]->set("lang", $lang);
-						$l10nString->translations[$lang]->set("string", $translation->string);
-						$l10nString->translations[$lang]->set("sid", $l10nString->id());
-						$l10nString->translations[$lang]->set("input_type", "import");
-						$l10nString->translations[$lang]->save();
-						$n++;
-					}
+					if ($l10nString->translation($lang)->get("input_type") == "manual")
+						continue;
+					$l10nString->translation($lang)->set("string", $translation->string);
+					$l10nString->translation($lang)->set("input_type", "import");
+					$l10nString->translation($lang)->save();
+					$n++;
+				}
+				else {
+					$l10nString->newTranslation($lang);
+					$l10nString->translation($lang)->set("lang", $lang);
+					$l10nString->translation($lang)->set("string", $translation->string);
+					$l10nString->translation($lang)->set("sid", $l10nString->id());
+					$l10nString->translation($lang)->set("input_type", "import");
+					$l10nString->translation($lang)->save();
+					$n++;
 				}
 			}
 		}
@@ -94,20 +91,20 @@ class l10n_Model_Core extends Model {
 		if (!$l10nString->id())
 			return false;
 		foreach ($values as $lang => $string) {
-			if (!isset($l10nString->translations[$lang])) {
-				$l10nString->translations[$lang] = $this->getEntity("l10nString");
-				$l10nString->translations[$lang]->set("lang", $lang);
-				$l10nString->translations[$lang]->set("input_type", "manual");
-				$l10nString->translations[$lang]->set("string", $string);
-				$l10nString->translations[$lang]->set("sid", $l10nString->id());
-				if (!$l10nString->translations[$lang]->save())
+			if (!$l10nString->translation($lang)) {
+				$l10nString->newTranslation($lang);
+				$l10nString->translation($lang)->set("lang", $lang);
+				$l10nString->translation($lang)->set("input_type", "manual");
+				$l10nString->translation($lang)->set("string", $string);
+				$l10nString->translation($lang)->set("sid", $l10nString->id());
+				if (!$l10nString->translation($lang)->save())
 					return false;
 			}
 			else {
-				if ($l10nString->translations[$lang]->get("string") != $string) {
-					$l10nString->translations[$lang]->set("input_type", "manual");
-					$l10nString->translations[$lang]->set("string", $string);
-					if (!$l10nString->translations[$lang]->save())
+				if ($l10nString->translation($lang)->get("string") != $string) {
+					$l10nString->translation($lang)->set("input_type", "manual");
+					$l10nString->translation($lang)->set("string", $string);
+					if (!$l10nString->translation($lang)->save())
 						return false;
 				}
 			}
@@ -141,7 +138,6 @@ class l10n_Model_Core extends Model {
 		$l10n_strings = [];
 		foreach ($sources as $source) {
 			$l10nString = $this->getEntity("l10nString", $source->id);
-			$l10nString->loadAll();
 			$l10n_strings[] = $l10nString;
 		}
 		return $l10n_strings;
