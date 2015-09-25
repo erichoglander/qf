@@ -166,9 +166,8 @@ function formAddButton(el, structure) {
 		_formAdding = false;
 		item.removeClass("loading");
 		if (r.dom) {
-			var wrap = document.createElement("div");
-			jsonToHtml(wrap, r.dom);
-			item.insertBefore(wrap.childNodes[0], el);
+			var items = item.getElementByClassName("form-item").parentNode;
+			jsonToHtml(items, r.dom);
 		}
 	};
 	structure.name = n;
