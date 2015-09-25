@@ -41,7 +41,6 @@ class Form {
 		$this->Io = $Io;
 		$this->User = $User;
 		$this->setVars($vars);
-		$this->loadStructure();
 	}
 
 	public function render() {
@@ -64,13 +63,13 @@ class Form {
 			return $def;
 		return $this->vars[$name];
 	}
-	
 	public function set($name, $value) {
 		$this->vars[$name] = $value;
+		$this->loadStructure();
 	}
-	
 	public function setVars($vars) {
 		$this->vars = $vars;
+		$this->loadStructure();
 	}
 
 	public function values() {
