@@ -33,7 +33,7 @@ class l10n_Entity extends Entity {
 	public function saveAll() {
 		if (!$this->save())
 			return false;
-		foreach ($this->translations() as $lang => $Entity) {
+		foreach ($this->translations as $lang => $Entity) {
 			$Entity->set("sid", $this->sid());
 			$Entity->set("lang", $lang);
 			if (!$Entity->save())
@@ -93,9 +93,7 @@ class l10n_Entity extends Entity {
 	}
 
 	public function translations() {
-		if (!$this->id())
-			return null;
-		if (!$this->translations_fetched) {
+		if (!$this->translations_fetched && $this->id()) {
 			$this->translations_fetched = true;
 			$rows = $this->Db->getRows(
 					"SELECT id, lang FROM `".$this->schema["table"]."` 
