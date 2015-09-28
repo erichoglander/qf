@@ -19,9 +19,9 @@ class File_Entity_Core extends Entity {
 
 	public function url() {
 		if ($this->get("dir") == "private")
-			return PRIVATE_URI.$this->get("uri");
+			return PRIVATE_URI.BASE_PATH.$this->get("uri");
 		else
-			return PUBLIC_URI.$this->get("uri");
+			return PUBLIC_URI."/".$this->get("uri");
 	}
 
 	public function path() {
