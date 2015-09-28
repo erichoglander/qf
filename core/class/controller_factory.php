@@ -90,7 +90,6 @@ class ControllerFactory_Core {
 				}
 				else if (!IS_CLI) {
 					$redir["uri"] = $this->Config->getDefaultLanguage()."/".$uri;
-					$uri = null;
 				}
 			}
 			
@@ -115,11 +114,13 @@ class ControllerFactory_Core {
 						$redir["host"] = preg_replace("/^[^\.]+/", $sub, $_SERVER["HTTP_HOST"]);
 				}
 			}
-			$redirect = $this->Db->getRow("SELECT * FROM `redirect` WHERE status = 1 && (source = :alias || source = :path)", 
-					[":alias" => $request["alias"], ":path" => $request["path"]]);
-			if ($redirect) {
-				$redir["uri"] = $redirect->target;
-				$redir["code"] = $redirect->code;
+			if (!array_key_exists("uri", $redir)) {
+				$redirect = $this->Db->getRow("SELECT * FROM `redirect` WHERE status = 1 && (source = :alias || source = :path)", 
+						[":alias" => $request["alias"], ":path" => $request["path"]]);
+				if ($redirect) {
+					$redir["uri"] = $redirect->target;
+					$redir["code"] = $redirect->code;
+				}
 			}
 			if (!empty($redir)) {
 				$request["redirect"] = [

@@ -255,6 +255,5 @@ function redirect($url = "", $redir = true) {
 	exit;
 }
 function refresh() {
-	$url = substr($_SERVER["REQUEST_URI"], 1);
-	redirect($url);
+	redirect(REQUEST_URI);
 }
