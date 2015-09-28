@@ -26,6 +26,23 @@ class l10n_Entity extends Entity {
 		return $json;
 	}
 	
+	public function translate($key, $lang = null, $def = null) {
+		if (!$lang)
+			$lang = LANG;
+		if ($this->translation($lang))
+			return $this->translation($lang)->get($key, $def);
+		return null;
+	}
+	
+	public function translateFallback($key, $lang = null, $def = null) {
+		if (!$lang)
+			$lang = LANG;
+		if ($this->translation($lang))
+			return $this->translation($lang)->get($key, $def);
+		else
+			return $this->get($key, $def);
+	} 
+	
 	public function sid() {
 		return $this->get("sid", $this->id());
 	}
