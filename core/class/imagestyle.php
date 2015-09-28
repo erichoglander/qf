@@ -60,16 +60,16 @@ class Imagestyle_Core {
 		if ($src_ratio <= $end_ratio) {
 			$cp_w = $w;
 			$cp_h = $w/$src_ratio;
-			$y = ($cp_h-$h)/2;
+			$y = ($h-$cp_h)/2;
 		}
 		else if ($src_ratio > $end_ratio) {
 			$cp_w = $h*$src_ratio;
 			$cp_h = $h;
-			$x = ($cp_w-$w)/2;
+			$x = ($w-$cp_w)/2;
 		}
 		$im = imagecreatetruecolor($w, $h);
 		$this->setAlpha($im);
-		imagecopyresampled($im, $this->im, 0, 0, $x, $y, $cp_w, $cp_h, $this->width, $this->height);
+		imagecopyresampled($im, $this->im, $x, $y, 0, 0, $cp_w, $cp_h, $this->width, $this->height);
 		$this->width = $w;
 		$this->height = $h;
 		$this->im = $im;
