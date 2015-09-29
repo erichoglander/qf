@@ -24,7 +24,10 @@ class Theme {
 			foreach ($this->js as $js)
 				$vars["js"][] = fileUrl("theme/".$this->name."/js/".$js);
 		}
-		return renderTemplate($template, $vars);
+		extract($vars);
+		ob_start();
+		include $template;
+		return ob_get_clean();
 	}
 
 

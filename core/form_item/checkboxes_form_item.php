@@ -10,7 +10,7 @@ class Checkboxes_FormItem_Core extends FormItem {
 	* See issue #1707, https://github.com/facebook/hhvm/issues/1706
 	*/
 	protected function postValue() {
-		return array_unique(parent::postValue());
+		return @array_unique(parent::postValue());
 	}
 	
 	protected function inputType() {
