@@ -141,6 +141,9 @@ class Io_Core {
 	protected function filterStripTags($value) {
 		return strip_tags($value);
 	}
+	protected function filterNumber($value) {
+		return preg_replace("/.*(^\-?[0-9\ ]+[\.|\,]?[0-9]*).*$/", "$1", $value);
+	}
 	protected function filterInt($value) {
 		return (int) $value;
 	}
