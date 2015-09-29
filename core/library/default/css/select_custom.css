@@ -17,8 +17,8 @@
 	opacity: 0;
 	filter: alpha(opacity=0);
 	visibility: hidden;
-	transition: opacity 0.1s ease, visibility 0s 0.5s;
-	-webkit-transition: opacity 0.1s ease, visibility 0s 0.5s;
+	transition: opacity 0.1s ease, visibility 0s 0.1s;
+	-webkit-transition: opacity 0.1s ease, visibility 0s 0.1s;
 }
 .select-custom.active .select-custom-options {
 	opacity: 1;
