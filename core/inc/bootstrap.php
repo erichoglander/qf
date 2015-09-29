@@ -5,7 +5,7 @@ define("DOC_ROOT", str_replace("/core/inc", "", str_replace("\\", "/", __DIR__))
 
 require_once(DOC_ROOT."/core/inc/constants.php");
 require_once(DOC_ROOT."/core/inc/functions.php");
-require_once(DOC_ROOT."/core/inc/country_list.php");
+require_once(filePath("inc/country_list.php"));
 require_once(DOC_ROOT."/core/entity/entity.php");
 require_once(DOC_ROOT."/core/entity/l10n_entity.php");
 require_once(DOC_ROOT."/core/controller/controller.php");
