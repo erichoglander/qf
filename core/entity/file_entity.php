@@ -57,6 +57,28 @@ class File_Entity_Core extends Entity {
 			return false;
 		return $Copy;
 	}
+	
+	public function loadFromUri($uri, $dir = "public") {
+		$row = $this->Db->getRow("
+				SELECT * FROM `file`
+				WHERE 
+					uri = :uri && 
+					dir = :dir",
+				[	":uri" => $uri,
+					":dir" => $dir]);
+		if ($row) {
+			$this->load($row->id);
+			return true;
+		}
+		else {
+			$this->set("uri", $uri);
+			$this->set("dir", $dir);
+			$info = pathinfo($this->path());
+			$this->set("name", $info["filename"]);
+			$this->set("extension", $info["extension"]);
+			return false;
+		}
+	}
 
 	public function delete() {
 		@unlink($this->path());
