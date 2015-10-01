@@ -67,6 +67,10 @@ input {
 .form-textfield {
 	-webkit-appearance: none;
 }
+.form-textfield:disabled {
+	background: #f8f8f8;
+	color: #555;
+}
 .form-textarea {
 	height: 100px;
 }
