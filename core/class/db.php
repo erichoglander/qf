@@ -42,7 +42,7 @@ class Db_Core {
 			foreach ($conditions as $i => $cond) {
 				$n++;
 				if (is_array($cond) && is_int($i)) {
-					$pred = (isset($cond[2]) ? $cond[2] : null);
+					$pred = (isset($cond[2]) ? $cond[2] : "=");
 					$key = $cond[0];
 					$val = $cond[1];
 				}
@@ -52,7 +52,7 @@ class Db_Core {
 					$val = $cond;
 				}
 				if (is_array($val)) {
-					if (!$pred || $pred == "=")
+					if ($pred == "=")
 						$pred = " IN ";
 					if ($pred == "!=")
 						$pred = " NOT IN ";
@@ -65,11 +65,17 @@ class Db_Core {
 					$condarr[] = $key.$pred."(".implode(",", $or).")";
 				}
 				else {
-					if (!$pred)
-						$pred = "=";
-					$varkey = ":".$key.$n;
-					$vars[$varkey] = $val;
-					$condarr[] = $key.$pred.$varkey;
+					if ($val === null) {
+						if ($pred == "=")
+							$condarr[] = $key." IS NULL";
+						else if ($pred == "!=")
+							$condarr[] = $key." IS NOT NULL";
+					}
+					else {
+						$varkey = ":".$key.$n;
+						$vars[$varkey] = $val;
+						$condarr[] = $key.$pred.$varkey;
+					}
 				}
 			}
 			$sql.= implode(" && ", $condarr);
