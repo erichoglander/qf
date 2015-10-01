@@ -32,6 +32,12 @@
 	position: relative;
 }
 
+.form-items > .inner:after {
+	content: "";
+	display: block;
+	clear: both;
+}
+
 select,
 textarea,
 input {
