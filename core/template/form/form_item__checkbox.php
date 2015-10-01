@@ -1,9 +1,17 @@
 <?=$prefix?>
 <div class="<?=$item_class?>">
 <?php 
-if ($items != null) {
+if ($items !== null) {
+?>
+	<div class="form-items">
+		<div class="inner">
+<?php
 	foreach ($items as $item) 
 		print $item;
+?>
+		</div>
+	</div>
+<?php
 }
 else {
 ?>
