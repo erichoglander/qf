@@ -36,6 +36,8 @@ class Entity {
 		if (array_key_exists($field, $this->schema["fields"]) && $value !== null) {
 			if ($this->schema["fields"][$field]["type"] == "int" || $this->schema["fields"][$field]["type"] == "uint")
 				$value = (int) $value;
+			else if ($this->schema["fields"][$field]["type"] == "float")
+				$value = (float) $value;
 			if (!empty($this->schema["fields"][$field]["serialize"]))
 				$value = unserialize($value);
 			if (!empty($this->schema["fields"][$field]["json"]))
@@ -58,6 +60,10 @@ class Entity {
 				$value = abs((int) $value);
 			else if ($this->schema["fields"][$field]["type"] == "int")
 				$value = (int) $value;
+			else if ($this->schema["fields"][$field]["type"] == "float")
+				$value = (float) $value;
+			else if ($this->schema["fields"][$field]["type"] == "varchar" && isset($this->schema["fields"][$field]["length"]))
+				$value = substr($value, 0, $this->schema["fields"][$field]["length"]);
 			else if ($this->schema["fields"][$field]["type"] == "enum") {
 				if (!in_array($value, $this->schema["fields"][$field]["values"]))
 					return;
