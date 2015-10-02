@@ -122,8 +122,6 @@ class Form {
 				if (!isset($item->items[$arr[$i]]))
 					return;
 				$item = $item->items[$arr[$i]];
-				if ($item->multiple)
-					$i++;
 			}
 			$item->setError($msg, $name);
 		}
