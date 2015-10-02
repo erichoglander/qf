@@ -189,7 +189,7 @@ class Controller {
 		}
 		catch (Exception $e) {
 			$this->viewData["console"] = $e->getMessage();
-			return $this->notFound();
+			return $this->internalError();
 		}
 	}
 	protected function viewDefault($name) {

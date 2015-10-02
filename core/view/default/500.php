@@ -7,5 +7,8 @@
 <body>
 	<h1>Internal error</h1>
 	<p>Something went wrong while trying to load your page.</p>
+	<?php if (isset($console)) { ?>
+	<script>console.log("<?=$console?>");</script>
+	<?php } ?>
 </body>
 </html>
