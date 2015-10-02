@@ -193,6 +193,7 @@ class Controller {
 		}
 	}
 	protected function viewDefault($name) {
+		ob_clean();
 		$View = newClass("View", $this->Config, $this->Db, $this->User, "default", $name, $this->viewData);
 		try {
 			return $View->render();
@@ -202,6 +203,7 @@ class Controller {
 		}
 	}
 	protected function viewBare($name) {
+		ob_clean();
 		$View = newClass("View", null, null, null, "default", $name, $this->viewData);
 		try {
 			return $View->render();
