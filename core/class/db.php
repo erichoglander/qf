@@ -83,6 +83,19 @@ class Db_Core {
 	}
 	
 	public function query($sql, $param = []) {
+		// Replace every array param with multiple primitive params
+		foreach ($param as $key => $val) {
+			if (is_array($val)) {
+				$keys = [];
+				foreach ($val as $i => $v) {
+					$keys[] = $key.$i;
+					$param[$key.$i] = $v;
+				}
+				$replace = "(".implode(", ", $keys).")";
+				unset($param[$key]);
+				$sql = str_replace($key, $replace, $sql);
+			}
+		}
 		try  {
 			$stmt = $this->db->prepare($sql);
 			$stmt->execute($param);
