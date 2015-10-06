@@ -33,7 +33,11 @@ class Log_Controller_Core extends Controller {
 	}
 
 	public function listAction() {
-		$this->viewData["logs"] = $this->Model->getLogs();
+		$Pager = newClass("Pager");
+		$Pager->ppp = 50;
+		$Pager->setNum($this->Model->numLogs());
+		$this->viewData["logs"] = $this->Model->getLogs($Pager->start(), $Pager->ppp);
+		$this->viewData["pager"] = $Pager->render();
 		return $this->view("list");
 	}
 

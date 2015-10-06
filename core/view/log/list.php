@@ -25,3 +25,5 @@ $this->Html->breadcrumbs[] = $this->Html->title;
 	<?php } ?>
 	</tbody>
 </table>
+
+<?=$pager?>
