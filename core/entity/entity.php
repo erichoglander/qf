@@ -148,8 +148,8 @@ class Entity {
 					WHERE alias = :alias",
 					[":alias" => $a]);
 			}
+			$alias = $a;
 		}
-		$alias = $a;
 		if ($row) {
 			if ($row->status == 0)
 				$this->Db->update("alias", ["status" => 1], ["id" => $row->id]);
