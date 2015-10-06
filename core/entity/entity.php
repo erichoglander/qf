@@ -1,11 +1,13 @@
 <?php
 class Entity {
-
+	
+	public $update_alias = false;
+	
 	protected $type = "default";
 	protected $fields = [];
 	protected $entities = [];
 	protected $schema;
-	protected $Db;
+	protected $Db, $Io;
 
 	public function __construct(&$Db, $id = null) {
 		$this->Db = $Db;
@@ -96,21 +98,76 @@ class Entity {
 				$data[$key] = $this->fields[$key];
 		}
 		if ($this->id()) {
-			return $this->Db->update($this->schema["table"], $data, ["id" => $this->id()]);
+			$new = false;
+			if (!$this->Db->update($this->schema["table"], $data, ["id" => $this->id()]))
+				return false;
 		}
 		else {
+			$new = true;
 			foreach ($this->schema["fields"] as $key => $field) {
 				if ((!array_key_exists($key, $data) || $data[$key] === null) && array_key_exists("default", $field))
 					$data[$key] = $field["default"];
 			}
-			return $this->fields["id"] = $this->Db->insert($this->schema["table"], $data);
+			$this->fields["id"] = $this->Db->insert($this->schema["table"], $data);
+			if (!$this->id())
+				return false;
 		}
+		if ($this->getCreateAlias($new))
+			$this->createAlias();
+		return true;
 	}
 
 	public function delete() {
 		if (!$this->id())
 			return false;
-		return $this->Db->delete($this->schema["table"], ["id" => $this->id()]);
+		if (!$this->Db->delete($this->schema["table"], ["id" => $this->id()]))
+			return false;
+		$this->deleteAlias();
+		return true;
+	}
+	
+	public function createAlias() {
+		if (!$this->id() || !is_callable([$this, "getPath"]) || !is_callable([$this, "getAlias"]))
+			return false;
+		if (!$this->Io)
+			$this->Io = newClass("Io");
+		$alias = $this->Io->filter($this->getAlias(), "alias");
+		$path = $this->getPath();
+		if (!$alias || !$path)
+			return false;
+		$row = $this->Db->getRow("
+				SELECT * FROM `alias`
+				WHERE alias = :alias",
+				[":alias" => $alias]);
+		// Find an available alias
+		if ($row && $row->path != $path) {
+			for ($i = 1; $row && $row->path != $path; $i++) {
+				$a = $alias."-".$i;
+				$row = $this->Db->getRow("
+					SELECT * FROM `alias`
+					WHERE alias = :alias",
+					[":alias" => $a]);
+			}
+		}
+		$alias = $a;
+		if ($row) {
+			if ($row->status == 0)
+				$this->Db->update("alias", ["status" => 1], ["id" => $row->id]);
+			return true;
+		}
+		else {
+			$this->Db->delete("alias", ["path" => $path]);
+			$Alias = $this->getEntity("Alias");
+			$Alias->set("path", $path);
+			$Alias->set("alias", $alias);
+			return $Alias->save();
+		}
+	}
+	
+	public function deleteAlias() {
+		if (!$this->id() || !is_callable([$this, "getPath"]) || !is_callable([$this, "getAlias"]))
+			return false;
+		return $this->Db->delete("alias", ["path" => $this->getPath()]);
 	}
 
 
@@ -140,6 +197,14 @@ class Entity {
 
 	protected function getEntity($name, $id = null) {
 		return newClass($name."_Entity", $this->Db, $id);
+	}
+
+	protected function getCreateAlias($new) {
+		return $new || $this->update_alias;
+	}
+	
+	protected function getPath() {
+		return $this->schema["table"]."/view/".$this->id();
 	}
 
 };

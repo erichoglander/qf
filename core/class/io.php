@@ -171,5 +171,21 @@ class Io_Core {
 		$value = preg_replace("/[^a-z0-9\-\_\.]/i", "", $value);
 		return $value;
 	}
+	protected function filterAlias($value) {
+		$value = str_replace(["Å", "å", "Ä", "ä", "À", "à", "Á", "á", "Æ", "æ"], "a", $value);
+		$value = str_replace(["Ö", "ö", "Õ", "õ", "Ó", "ó", "Ò", "ò", "Ø", "ø", "ð"], "o", $value);
+		$value = str_replace(["Ë", "ë", "É", "é", "È", "è", "Ê", "ê"], "e", $value);
+		$value = str_replace(["Ï", "ï", "Í", "í", "Ì", "ì", "Î", "î"], "i", $value);
+		$value = str_replace(["Ü", "ü", "Ú", "ú", "Ù", "ù", "Û", "û"], "u", $value);
+		$value = str_replace(["Ç", "ç"], "c", $value);
+		$value = str_replace(["Ñ", "ñ"], "n", $value);
+		$value = str_replace("ß", "ss", $value);
+		$value = str_replace(["Ž", "ž"], "z", $value);
+		$value = strtolower($value);
+		$value = preg_replace("/\s+/", "-", $value);
+		$value = preg_replace("/[^a-z0-9\-\_\/]/", "", $value);
+		$value = preg_replace("/[\-]+/", "-", $value);
+		return $value;
+	}
 
 };
