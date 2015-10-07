@@ -257,3 +257,12 @@ function redirect($url = "", $redir = true) {
 function refresh() {
 	redirect(REQUEST_URI);
 }
+
+function httpRequest($url) {
+	$ch = curl_init();
+	curl_setopt($ch, CURLOPT_URL, $url);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	$re = curl_exec($ch);
+	curl_close($ch);
+	return $re;
+}
