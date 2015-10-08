@@ -47,7 +47,7 @@ class Config_Core {
 		return "file/private";
 	}
 	public function getPublicPath() {
-		return DOC_ROOT.PUBLIC_URI;
+		return DOC_ROOT."/".$this->getPublicUri();
 	}
 	public function getPrivatePath() {
 		return DOC_ROOT."/files/private";

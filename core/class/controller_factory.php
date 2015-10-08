@@ -25,7 +25,10 @@ class ControllerFactory_Core {
 		define("REQUEST_URI", $request["uri"]);
 		define("LANG", $request["lang"]);
 		define("BASE_URL", $request["base"]);
-		define("BASE_PATH", str_replace("index.php", "", $_SERVER["SCRIPT_NAME"]));
+		if (IS_CLI)
+			define("BASE_PATH", DOC_ROOT."/");
+		else
+			define("BASE_PATH", substr($_SERVER["SCRIPT_NAME"], 0, strrpos($_SERVER["SCRIPT_NAME"], "/")+1));
 		define("REQUEST_ALIAS", $request["alias"]);
 		define("REQUEST_PATH", $request["path"]);
 		define("IS_FRONT_PAGE", $request["controller"] == "page" && $request["action"] == "index");
