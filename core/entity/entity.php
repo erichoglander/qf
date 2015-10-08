@@ -36,7 +36,9 @@ class Entity {
 			return $def;
 		$value = $this->fields[$field];
 		if (array_key_exists($field, $this->schema["fields"]) && $value !== null) {
-			if ($this->schema["fields"][$field]["type"] == "int" || $this->schema["fields"][$field]["type"] == "uint")
+			if ($this->schema["fields"][$field]["type"] == "int" || 
+					$this->schema["fields"][$field]["type"] == "uint" ||
+					$this->schema["fields"][$field]["type"] == "file")
 				$value = (int) $value;
 			else if ($this->schema["fields"][$field]["type"] == "float")
 				$value = (float) $value;
@@ -58,7 +60,8 @@ class Entity {
 				$value = serialize($value);
 			if (!empty($this->schema["fields"][$field]["json"]))
 				$value = json_encode($value);
-			if ($this->schema["fields"][$field]["type"] == "uint")
+			if ($this->schema["fields"][$field]["type"] == "uint" ||
+					$this->schema["fields"][$field]["type"] == "file")
 				$value = abs((int) $value);
 			else if ($this->schema["fields"][$field]["type"] == "int")
 				$value = (int) $value;
@@ -93,12 +96,35 @@ class Entity {
 		if (!$this->id())
 			$this->set("created", REQUEST_TIME);
 		$data = [];
+		$has_file = false;
 		foreach ($this->schema["fields"] as $key => $field) {
-			if (array_key_exists($key, $this->fields))
+			if (array_key_exists($key, $this->fields)) {
 				$data[$key] = $this->fields[$key];
+				if (!$has_file && $field["type"] == "file")
+					$has_file = true;
+			}
 		}
 		if ($this->id()) {
 			$new = false;
+			if ($has_file) {
+				$row = $this->Db->getRow("SELECT * FROM `".$this->schema["table"]."` WHERE id = :id", [":id" => $this->id()]);
+				// Delete old files and set new files as permanent
+				foreach ($this->schema["fields"] as $key => $field) {
+					if ($field["type"] == "file") {
+						if ($row->{$key} && $row->{$key} != $data[$key]) {
+							$File = $this->getEntity("File", $row->{$key});
+							$File->delete();
+						}
+						if ($data[$key]) {
+							$File = $this->getEntity("File", $data[$key]);
+							if ($File->get("status") == 0) {
+								$File->set("status", 1);
+								$File->save();
+							}
+						}
+					}
+				}
+			}
 			if (!$this->Db->update($this->schema["table"], $data, ["id" => $this->id()]))
 				return false;
 		}

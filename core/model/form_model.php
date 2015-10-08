@@ -14,7 +14,8 @@ class Form_Model_Core extends Model {
 	
 	public function removeFile($structure, $File) {
 		$structure["value"] = 0;
-		$File->delete();
+		if ($File->get("status") == 0)
+			$File->delete();
 		$FormItem = newClass($structure["form_item_class"], $this->Db, $this->Io, $structure);
 		return JsonToHtml\htmlToJson($FormItem->render());
 	}
