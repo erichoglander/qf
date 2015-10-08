@@ -35,12 +35,13 @@ class Image_FormItem_Core extends File_FormItem_Core {
 	}
 	
 	protected function preRenderPreview(&$vars) {
+		$vars["src"] = $vars["url"];
 		if ($this->image_style) {
 			$Imagestyle = newClass("Imagestyle", $vars["path"]);
 			if ($Imagestyle->styleExists($this->image_style)) {
 				$url = $Imagestyle->style($this->image_style);
-				if ($url)
-					$vars["url"] = $url;
+				if ($url) 
+					$vars["src"] = $url;
 			}
 		}
 	}
