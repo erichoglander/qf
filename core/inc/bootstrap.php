@@ -12,6 +12,8 @@ require_once(DOC_ROOT."/core/controller/controller.php");
 require_once(DOC_ROOT."/core/model/model.php");
 require_once(DOC_ROOT."/core/class/mail_message.php");
 
+if (file_exists(DOC_ROOT."/extend/inc/bootstrap.php"))
+	require_once(DOC_ROOT."/extend/inc/bootstrap.php");
 if (file_exists(DOC_ROOT."/extend/inc/constants.php"))
 	require_once(DOC_ROOT."/extend/inc/constants.php");
 if (file_exists(DOC_ROOT."/extend/inc/functions.php"))
