@@ -2,9 +2,9 @@ var _popups = {};
 
 function popupInit() {
 	var els = document.getElementsByClassName("popup");
-	for (var i=0; i<els.length; i++) {
-		var name = els[i].getAttribute("name");
-		_popups[name] = new popup(els[i]);
+	while(els.length) {
+		var name = els[0].getAttribute("name");
+		_popups[name] = new popup(els[0]);
 	}
 	var observer = new MutationObserver(function(mutations) {
 		mutations.forEach(function(mutation) {
@@ -16,9 +16,9 @@ function popupInit() {
 }
 function popupObserve(el) {
 	var els = el.getElementsByClassName("popup");
-	for (var i=0; i<els.length; i++) {
-		var name = els[i].getAttribute("name");
-		_popups[name] = new popup(els[i]);
+	while(els.length) {
+		var name = els[0].getAttribute("name");
+		_popups[name] = new popup(els[0]);
 	}
 }
 
