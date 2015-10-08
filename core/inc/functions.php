@@ -266,3 +266,9 @@ function httpRequest($url) {
 	curl_close($ch);
 	return $re;
 }
+
+function promptFile($path) {
+	header("Content-Type: application/octet-stream");
+	readfile($path);
+	exit;
+}

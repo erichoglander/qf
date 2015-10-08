@@ -38,6 +38,11 @@ class File_Entity_Core extends Entity {
 		return $filename;
 	}
 	
+	public function prompt() {
+		header('Content-Disposition: attachment;filename="'.$this->filename().'"');
+		promptFile($this->path());
+	}
+	
 	public function copy() {
 		$Copy = $this->getEntity("File");
 		foreach ($this->schema["fields"] as $key => $field)

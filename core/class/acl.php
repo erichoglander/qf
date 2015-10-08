@@ -32,10 +32,10 @@ class Acl_Core {
 	}
 	
 	/* FORM ACCESS */
-	protected function formFileRemoveAccess($User, $file_id) {
+	protected function formFileRemoveAccess($User, $args = []) {
 		if ($User->id() == 1)
 			return true;
-		if (!empty($_SESSION["file_uploaded"]) && in_array($file_id, $_SESSION["file_uploaded"]))
+		if (!empty($args[0]) && !empty($_SESSION["file_uploaded"]) && in_array($args[0], $_SESSION["file_uploaded"]))
 			return true;
 		return false;
 	}
@@ -102,6 +102,16 @@ class Acl_Core {
 	}
 	protected function contentDeleteAccess($User) {
 		return $User->id() == 1;
+	}
+	
+	/* FILE ACCESS */
+	protected function filePrivateAccess($User) {
+		if ($User->id() == 1)
+			return true;
+		return false;
+	}
+	protected function filePrivateUriAccess($User, $uri) {
+		return true;
 	}
 
 }
