@@ -152,12 +152,6 @@ class Controller {
 		if (array_key_exists("href", $menu)) {
 			if (!$this->uriAccess($menu["href"]))
 				unset($menu["href"]);
-			else {
-				if (!empty($menu["return"])) {
-					$d = (strpos($menu["href"], "?") === false ? "?" : "&");
-					$menu["href"].= $d."redir=".REQUEST_ALIAS;
-				}
-			}
 		}
 		if (!empty($menu["links"])) {
 			foreach ($menu["links"] as $key => $link) {

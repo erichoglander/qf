@@ -29,8 +29,10 @@ class Html_Core {
 			$this->title_suffix = " | ".$this->Config->getSiteName();
 		$this->pre_js = '
 			<script>
+				var REQUEST_URI = "'.REQUEST_URI.'";
 				var REQUEST_PATH = "'.REQUEST_PATH.'";
 				var REQUEST_ALIAS = "'.REQUEST_ALIAS.'";
+				var QUERY_STRING = "'.QUERY_STRING.'";
 				var IS_FRONT_PAGE = '.(IS_FRONT_PAGE ? 'true' : 'false').';
 				var BASE_DOMAIN = "'.BASE_DOMAIN.'";
 				var BASE_URL = "'.BASE_URL.'";
@@ -108,7 +110,7 @@ class Html_Core {
 					if (!empty($link["active"]))
 						$class.= " active";
 					if (strpos($url, "http") !== 0 && strpos($url, "#") !== 0)
-						$url = BASE_URL.$url;
+						$url = url($url, !empty($link["return"]));
 					$html.= '
 						<a href="'.$url.'" class="'.$class.'">'.$title.'</a>';
 				}

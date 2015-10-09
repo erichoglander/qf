@@ -200,8 +200,13 @@ function uri($path) {
 	}
 	return $path;
 }
-function url($path) {
-	return BASE_URL.uri($path);
+function url($path, $redir = false) {
+	$url = BASE_URL.uri($path);
+	if ($redir) {
+		$sep = (strpos($url, "?") === false ? "?" : "&");
+		$url.= $sep."redir=".urlencode(REQUEST_URI);
+	}
+	return $url;
 }
 
 function setmsg($msg, $type = "info") {
@@ -244,7 +249,7 @@ function addlog($category, $text, $data = null, $type = "info") {
 
 function redirect($url = "", $redir = true) {
 	if ($redir && array_key_exists("redir", $_GET))
-		$url = $_GET["redir"];
+		$url = urldecode($_GET["redir"]);
 	$pcl = strpos($url, "://");
 	if ($pcl === false || $pcl > 8)
 		$url = url($url);

@@ -23,6 +23,7 @@ class ControllerFactory_Core {
 			redirect($request["redirect"]["location"]);
 		}
 		define("REQUEST_URI", $request["uri"]);
+		define("QUERY_STRING", $request["query"]);
 		define("LANG", $request["lang"]);
 		define("BASE_URL", $request["base"]);
 		if (IS_CLI)
@@ -56,28 +57,21 @@ class ControllerFactory_Core {
 	# uri: /controller/action/arg0/arg1/arg2/...
 	public function parseUri($uri) {
 		
-		$request = [
-			"uri" => $uri,
-			"lang" => $this->Config->getDefaultLanguage(),
-			"base" => str_replace("index.php", "", $_SERVER["SCRIPT_NAME"]),
-		];
-		$redir = [];
+		// Remove leading slash if there is one
 		$uri = strtolower($uri);
 		if (strpos($uri, "/") === 0)
 			$uri = substr($uri, 1);
+		
+		$request = [
+			"uri" => $uri,
+			"query" => null,
+			"lang" => $this->Config->getDefaultLanguage(),
+			"base" => substr($_SERVER["SCRIPT_NAME"], 0, strrpos($_SERVER["SCRIPT_NAME"], "/")+1),
+		];
+		$redir = [];
 
-		// Query string
-		$x = strpos($uri, "?");
-		if ($x !== false) {
-			$request["query"] = substr($uri, $x+1);
-			$uri = substr($uri, 0, $x);
-		}
-		else {
-			$request["query"] = null;
-		}
-
+		// Language
 		if ($this->Db->connected) {
-			// Language
 			if ($this->Config->getLanguageDetection() == "path") {
 				$lang = substr($uri, 0, 2);
 				$language = $this->Db->getRow("
@@ -95,14 +89,24 @@ class ControllerFactory_Core {
 					$redir["uri"] = $this->Config->getDefaultLanguage()."/".$uri;
 				}
 			}
+		}
 			
+		$request["alias"] = $request["path"] = $uri;
+
+		// Query string
+		$x = strpos($request["path"], "?");
+		if ($x !== false) {
+			$request["query"] = substr($request["path"], $x+1);
+			$request["path"] = substr($request["path"], 0, $x);
+		}
+			
+		if ($this->Db->connected) {
 			// Alias
-			if ($uri) {
-				$request["alias"] = $uri;
-				$alias = $this->Db->getRow("SELECT * FROM `alias` WHERE status = 1 && alias = :alias", [":alias" => $uri]);
+			if ($request["path"]) {
+				$request["alias"] = $request["path"];
+				$alias = $this->Db->getRow("SELECT * FROM `alias` WHERE status = 1 && alias = :alias", [":alias" => $request["path"]]);
 				if ($alias) 
-					$uri = $alias->path;
-				$request["path"] = $uri;
+					$request["path"] = $alias->path;
 			}
 
 			// Redirects
@@ -135,11 +139,8 @@ class ControllerFactory_Core {
 				];
 			}
 		}
-		else {
-			$request["alias"] = $request["path"] = $uri;
-		}
 		
-		$params = explode("/", $uri);
+		$params = explode("/", $request["path"]);
 		
 		// Controller 
 		if (!empty($params[0])) {
@@ -171,7 +172,6 @@ class ControllerFactory_Core {
 		}
 
 		// Summarize
-		$request["uri"] = $uri;
 		$request["args"] = array_slice($params, 2);
 		return $request;
 	}
