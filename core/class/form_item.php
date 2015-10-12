@@ -415,8 +415,9 @@ class FormItem {
 			return null;
 		$values = 
 		$data = $this->item_structure;
+		$last_item = count($this->items)-1;
 		$json = htmlspecialchars(json_encode($data), ENT_QUOTES);
-		return '<input type="button" class="form-button form-add-button btn" value="'.$this->add_button.'" onclick="formAddButton(this, '.$json.')">';
+		return '<input type="button" class="form-button form-add-button btn" value="'.$this->add_button.'" last_item="'.$last_item.'" onclick="formAddButton(this, '.$json.')">';
 	}
 	protected function renderDeleteButton() {
 		if (!$this->parent_multiple || !$this->delete_button)

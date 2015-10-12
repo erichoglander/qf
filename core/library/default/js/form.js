@@ -161,15 +161,8 @@ function formAddButton(el, structure) {
 	var item = formGetItem(el);
 	item.addClass("loading");
 	var items = item.getElementByClassName("form-items").getElementByClassName("inner");
-	var last;
-	for (var i=items.childNodes.length-1; i>=0; i--) {
-		if (items.childNodes[i].nodeType == 1 && items.childNodes[i].className.match("form-item")) {
-			last = items.childNodes[i];
-			break;
-		}
-	}
-	var cname = (last ? last.className.match(/form\-name\-([0-9]+)/) : null);
-	var n = (cname ? parseInt(cname[1])+1 : 1);
+	var n = parseInt(el.getAttribute("last_item"))+1;
+	el.setAttribute("last_item", n);
 	var callback = function(r) {
 		_formAdding = false;
 		item.removeClass("loading");
