@@ -99,7 +99,11 @@ Element.prototype.expand = function() {
 		}, t);
 	}, 1);
 }
-Element.prototype.collapse = function() {
+Element.prototype.collapse = function(height) {
+	if (!height)
+		height = 0;
+	else if (typeof(height) == "number")
+		height = height+"px";
 	var t = getStyle(this, "transition-duration");
 	t = parseInt(parseFloat(t.replace("s", ""))*1000);
 	var inner;
@@ -119,13 +123,13 @@ Element.prototype.collapse = function() {
 	setTimeout(function() {
 		el.removeClass("no-transition");
 		setTimeout(function(){
-			el.style.height = "0";
+			el.style.height = height;
 		}, 1);
 	}, 1);
 }
-Element.prototype.expandCollapse = function() {
+Element.prototype.expandCollapse = function(height) {
 	if (this.hasClass("active"))
-		this.collapse();
+		this.collapse(height);
 	else
 		this.expand();
 }
