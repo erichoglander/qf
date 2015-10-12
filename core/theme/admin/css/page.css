@@ -116,6 +116,16 @@ a.btn-danger,
 	background: #C9302C;
 	border-color: #AC2925;
 }
+a.btn-success,
+.btn-success {
+	color: #FFF;
+	background-color: #5CB85C;
+	border-color: #4CAE4C;
+}
+.btn-success:hover {
+	background-color: #449D44;
+	border-color: #398439;
+}
 
 
 table {
