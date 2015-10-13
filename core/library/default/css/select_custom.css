@@ -32,9 +32,12 @@
 	white-space: nowrap;
 }
 .select-custom-title {
+	position: relative;
 	cursor: pointer;
 }
 .select-custom-title .fa {
+	position: absolute;
+	right: 15px;
 	float: right;
 	line-height: inherit;
 }
