@@ -35,6 +35,7 @@ function selectCustom(el) {
 		var self = this;
 		this.tags.titleWrap = this.tags.wrap.getElementsByClassName("select-custom-title")[0];
 		this.tags.title = this.tags.titleWrap.getElementsByClassName("select-custom-title-inner")[0];
+		this.tags.itemsWrap = this.tags.wrap.getElementByClassName("select-custom-options");
 		this.tags.items = this.tags.wrap.getElementsByClassName("select-custom-option");
 		this.tags.select = this.tags.wrap.getElementsByTagName("select")[0];
 		this.tags.select.addEventListener("change", function(){ self.onChange(); }, false);
@@ -46,6 +47,32 @@ function selectCustom(el) {
 		this.tags.titleWrap.addEventListener("click", function(){ self.toggle(); }, false);
 		window.addEventListener("click", function(e){ self.windowClick(e); }, false);
 		this.tags.wrap.addClass("select-custom-init");
+		var observer = new MutationObserver(function(mutations) {
+			mutations.forEach(function(mutation) {
+				self.selectChange(mutation.target);
+			});
+		});
+		var config = { childList: true, subtree: true };
+		observer.observe(this.tags.select, config);
+	}
+
+	this.selectChange = function() {
+		this.renderOptions();
+	}
+	
+	this.renderOptions = function() {
+		this.tags.itemsWrap.innerHTML = "";
+		this.tags.items = [];
+		for (var i=0; i<this.tags.select.options.length; i++) {
+			this.tags.items[i] = document.createElement("div");
+			this.tags.items[i].className = "select-custom-option";
+			this.tags.items[i].innerHTML = this.tags.select.options[i].innerHTML;
+			this.tags.itemsWrap.appendChild(this.tags.items[i]);
+			(function(self, n) {
+				self.tags.items[n].addEventListener("click", function(){ self.itemClick(n); }, false);
+			}(this, i));
+		}
+		this.tags.select.trigger("change");
 	}
 	
 	this.toggle = function() {
