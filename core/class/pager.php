@@ -11,7 +11,7 @@ class Pager_Core {
 
 
 	public function __construct() {
-		$this->setUrl(REQUEST_URI);
+		$this->setUrl(url(REQUEST_URI));
 	}
 
 	public function url($x) {
