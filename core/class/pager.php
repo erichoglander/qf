@@ -33,7 +33,7 @@ class Pager_Core {
 
 	public function setNum($num) {
 		$this->num = $num;
-		$this->pages = ceil($this->num/$this->ppp);
+		$this->pages = (int) max(1, ceil($this->num/$this->ppp));
 		$this->page = (empty($_GET[$this->get]) ? 0 : abs((int) $_GET[$this->get]));
 		if ($this->page < 1)
 			$this->page = 1;
