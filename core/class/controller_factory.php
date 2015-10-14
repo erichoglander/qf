@@ -91,7 +91,7 @@ class ControllerFactory_Core {
 			}
 		}
 			
-		$request["alias"] = $request["path"] = $uri;
+		$request["path"] = $uri;
 
 		// Query string
 		$x = strpos($request["path"], "?");
@@ -99,11 +99,12 @@ class ControllerFactory_Core {
 			$request["query"] = substr($request["path"], $x+1);
 			$request["path"] = substr($request["path"], 0, $x);
 		}
+		
+		$request["alias"] = $request["path"];
 			
 		if ($this->Db->connected) {
 			// Alias
 			if ($request["path"]) {
-				$request["alias"] = $request["path"];
 				$alias = $this->Db->getRow("SELECT * FROM `alias` WHERE status = 1 && alias = :alias", [":alias" => $request["path"]]);
 				if ($alias) 
 					$request["path"] = $alias->path;
@@ -122,10 +123,13 @@ class ControllerFactory_Core {
 				}
 			}
 			if (!array_key_exists("uri", $redir)) {
-				$redirect = $this->Db->getRow("SELECT * FROM `redirect` WHERE status = 1 && (source = :alias || source = :path)", 
-						[":alias" => $request["alias"], ":path" => $request["path"]]);
+				$redirect = $this->Db->getRow("SELECT * FROM `redirect` WHERE status = 1 && source = :uri", 
+						[":uri" => $uri]);
+				if (!$redirect)
+					$redirect = $this->Db->getRow("SELECT * FROM `redirect` WHERE status = 1 && (source = :alias || source = :path)", 
+							[":alias" => $request["alias"], ":path" => $request["path"]]);
 				if ($redirect) {
-					$redir["uri"] = $redirect->target;
+					$redir["uri"] = uri($redirect->target);
 					$redir["code"] = $redirect->code;
 				}
 			}
