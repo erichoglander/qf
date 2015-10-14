@@ -75,7 +75,6 @@ function autoselect(el) {
 		if (!this.tags.input.value.length) {
 			this.tags.select.selectedIndex = 0;
 			this.tags.select.trigger("change");
-			this.tags.input.value = this.tags.select.options[this.tags.select.selectedIndex].text;
 		}
 	}
 	
