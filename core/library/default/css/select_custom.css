@@ -10,6 +10,7 @@
 	top: 100%;
 	background: #fff;
 	min-width: 100%;
+	max-width: 800px;
 	max-height: 215px;
 	overflow-y: auto;
 	overflow-x: hidden;
@@ -27,6 +28,8 @@
 	transition-delay: 0s;
 }
 .select-custom-option {
+	text-overflow: ellipsis;
+	overflow: hidden;
 	padding: 3px 15px;
 	cursor: pointer;
 	white-space: nowrap;
