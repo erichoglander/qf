@@ -17,11 +17,14 @@ class File_Entity_Core extends Entity {
 		return $this->Imagestyle->style($style);
 	}
 
-	public function url() {
+	public function url($abs = false) {
 		if ($this->get("dir") == "private")
-			return PRIVATE_URI.BASE_PATH.$this->get("uri");
+			$url = PRIVATE_URI.BASE_PATH.$this->get("uri");
 		else
-			return PUBLIC_URI."/".$this->get("uri");
+			$url = PUBLIC_URI."/".$this->get("uri");
+		if ($abs)
+			$url = HTTP_PROTOCOL."://".$_SERVER["HTTP_HOST"].$url;
+		return $url;
 	}
 
 	public function path() {
