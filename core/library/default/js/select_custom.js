@@ -47,6 +47,7 @@ function selectCustom(el) {
 		this.tags.titleWrap.addEventListener("click", function(){ self.toggle(); }, false);
 		window.addEventListener("click", function(e){ self.windowClick(e); }, false);
 		this.tags.wrap.addClass("select-custom-init");
+		self.selectChange();
 		var observer = new MutationObserver(function(mutations) {
 			mutations.forEach(function(mutation) {
 				self.selectChange(mutation.target);

@@ -78,12 +78,22 @@ function popup(el) {
 		return this.tags.wrap.hasClass("open");
 	}
 	this.open = function() {
-		var t = scrollTop()+Math.max(20, (window.innerHeight-this.tags.light.offsetHeight)/2);
-		this.tags.light.style.top = t+"px";
-		this.tags.wrap.addClass("open");
+		var self = this;
+		var top = scrollTop()+Math.max(20, (window.innerHeight-this.tags.light.offsetHeight)/2);
+		this.tags.light.style.top = top+"px";
+		this.tags.wrap.style.display = "block";
+		setTimeout(function() {
+			self.tags.wrap.addClass("open");
+		}, 1);
 	}
 	this.close = function() {
-		this.tags.wrap.removeClass("open");
+		var self = this;
+		var t = getStyle(this.tags.wrap, "transition-duration");
+		t = parseInt(parseFloat(t.replace("s", ""))*1000);
+		self.tags.wrap.removeClass("open");
+		setTimeout(function() {
+			self.tags.wrap.style.display = "none";
+		},t);
 	}
 	
 	if (el)
