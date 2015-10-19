@@ -79,10 +79,10 @@ function popup(el) {
 	}
 	this.open = function() {
 		var self = this;
-		var top = scrollTop()+Math.max(20, (window.innerHeight-this.tags.light.offsetHeight)/2);
-		this.tags.light.style.top = top+"px";
 		this.tags.wrap.style.display = "block";
 		setTimeout(function() {
+			var top = scrollTop()+Math.max(20, (window.innerHeight-self.tags.light.offsetHeight)/2);
+			self.tags.light.style.top = top+"px";
 			self.tags.wrap.addClass("open");
 		}, 1);
 	}
