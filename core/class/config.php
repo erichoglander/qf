@@ -50,7 +50,7 @@ class Config_Core {
 		return DOC_ROOT."/".$this->getPublicUri();
 	}
 	public function getPrivatePath() {
-		return DOC_ROOT."/files/private";
+		return substr(DOC_ROOT, 0, strrpos(DOC_ROOT, "/"))."/private";
 	}
 	public function getMenus() {
 		$menu = [
