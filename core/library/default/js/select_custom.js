@@ -73,7 +73,7 @@ function selectCustom(el) {
 				self.tags.items[n].addEventListener("click", function(){ self.itemClick(n); }, false);
 			}(this, i));
 		}
-		this.tags.select.trigger("change");
+		this.onChange();
 	}
 	
 	this.toggle = function() {
