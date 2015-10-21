@@ -19,10 +19,16 @@ class Theme {
 			throw new Exception("Unable to find ".$part." template for ".$this->name." theme");
 		$this->preRender($part, $vars);
 		if ($part == "html") {
-			foreach ($this->css as $css)
-				$vars["css"][] = fileUrl("theme/".$this->name."/css/".$css);
-			foreach ($this->js as $js)
-				$vars["js"][] = fileUrl("theme/".$this->name."/js/".$js);
+			foreach ($this->css as $css) {
+				$url = fileUrl("theme/".$this->name."/css/".$css);
+				if ($url)
+					$vars["css"][] = $url;
+			}
+			foreach ($this->js as $js) {
+				$url = fileUrl("theme/".$this->name."/js/".$js);
+				if ($url)
+					$vars["js"][] = $url;
+			}
 		}
 		extract($vars);
 		ob_start();
