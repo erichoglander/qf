@@ -16,6 +16,7 @@
 	overflow-x: hidden;
 	z-index: 2;
 	opacity: 0;
+	pointer-events: none;
 	filter: alpha(opacity=0);
 	visibility: hidden;
 	transition: opacity 0.1s ease, visibility 0s 0.1s;
@@ -26,6 +27,7 @@
 	filter: alpha(opacity=100);
 	visibility: visible;
 	transition-delay: 0s;
+	pointer-events: auto;
 }
 .select-custom-option {
 	text-overflow: ellipsis;
