@@ -114,6 +114,8 @@ class Imagestyle_Core {
 			$this->im = imagecreatefromgif($this->src);
 		else
 			return false;
+		if (!$this->im)
+			return false;
 		$this->setAlpha($this->im);
 		list($this->width, $this->height) = getimagesize($this->src);
 		return true;
