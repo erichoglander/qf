@@ -39,6 +39,11 @@
 	clear: both;
 }
 
+.form-type-hidden {
+	margin: 0;
+	display: none;
+}
+
 select,
 textarea,
 input {
