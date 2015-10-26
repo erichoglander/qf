@@ -83,10 +83,26 @@ function selectCustom(el) {
 			this.open();
 	}
 	this.open = function() {
-		this.tags.wrap.addClass("active");
+		var self = this;
+		this.tags.itemsWrap.style.display = "block";
+		setTimeout(function() {
+			self.tags.wrap.addClass("active");
+			if (typeof(self.tags.items[self.tags.select.selectedIndex]) != "undefined") {
+				self.tags.itemsWrap.scrollTop = 
+						self.tags.items[self.tags.select.selectedIndex].offsetTop +
+						self.tags.items[self.tags.select.selectedIndex].offsetHeight/2 -
+						self.tags.itemsWrap.offsetHeight/2;
+			}
+		}, 1);
 	}
 	this.close = function() {
+		var self = this;
+		var duration = getStyle(this.tags.itemsWrap, "transition-duration");
+		var t = parseFloat(duration)*1000;
 		this.tags.wrap.removeClass("active");
+		setTimeout(function() {
+			self.tags.itemsWrap.style.display = "none";
+		},t);
 	}
 	this.isOpen = function() {
 		if (this.tags.wrap.hasClass("active"))
