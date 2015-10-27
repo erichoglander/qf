@@ -36,7 +36,7 @@ class Form {
 	protected $Db, $Io, $User;
 
 
-	public function __construct(&$Db, &$Io, &$User, $vars = []) {
+	public function __construct($Db, $Io, $User, $vars = []) {
 		$this->Db = $Db;
 		$this->Io = $Io;
 		$this->User = $User;

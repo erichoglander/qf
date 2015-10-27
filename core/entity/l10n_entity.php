@@ -7,7 +7,7 @@ class l10n_Entity extends Entity {
 	protected $translations_fetched = false;
 
 
-	public function __construct(&$Db, $id = null, $lang = null) {
+	public function __construct($Db, $id = null, $lang = null) {
 		parent::__construct($Db, null);
 		$Config = newClass("Config");
 		$this->default_lang = $Config->getDefaultLanguage();

@@ -9,7 +9,7 @@ class Library {
 	protected $Db;
 
 
-	public function __construct(&$Db) {
+	public function __construct($Db) {
 		$this->Db = $Db;
 		$this->name = $this->parseName();
 	}

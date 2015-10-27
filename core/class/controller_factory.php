@@ -5,8 +5,8 @@ class ControllerFactory_Core {
 
 
 	public function __construct($Config, $Db) {
-		$this->Config = &$Config;
-		$this->Db = &$Db;
+		$this->Config = $Config;
+		$this->Db = $Db;
 	}
 
 	public function executeUri($uri) {

@@ -18,12 +18,15 @@ class Html_Core {
 
 	public $libraries = ["FontAwesome"];
 
-	protected $Config, $Db, $User, $Theme;
+	protected $Config, $Db, $Io, $Cache, $Variable, $User, $Theme;
 
-	public function __construct($Config, $Db, $User) {
-		$this->Config = &$Config;
-		$this->Db = &$Db;
-		$this->User = &$User;
+	public function __construct($Config, $Db, $Io, $Cache, $Variable, $User) {
+		$this->Config = $Config;
+		$this->Db = $Db;
+		$this->Io = $Io;
+		$this->Cache = $Cache;
+		$this->Variable = $Variable;
+		$this->User = $User;
 		$this->breadcrumbs[] = (IS_FRONT_PAGE ? t("Home") : ["", t("Home")]);
 		if (!$this->title_suffix)
 			$this->title_suffix = " | ".$this->Config->getSiteName();
@@ -153,7 +156,7 @@ class Html_Core {
 
 	protected function getTheme($theme) {
 		$class = ucwords($theme)."_Theme";
-		return newClass($class, $this->Config, $this->Db, $this->User);
+		return newClass($class, $this->Config, $this->Db, $this->Io, $this->Cache, $this->Variable, $this->User);
 	}
 
 	protected function loadTheme() {
@@ -162,6 +165,15 @@ class Html_Core {
 			if (!$this->Theme)
 				throw new Exception("Unable to load theme '".$this->theme."'");
 		}
+	}
+	
+	protected function getEntity($name, $id = null) {
+		return newClass($name."_Entity", $this->Db, $id);
+	}
+	
+	protected function getModel($name) {
+		$cname = ucwords($name)."_Model";
+		return newClass($cname, $this->Config, $this->Db, $this->Io, $this->Cache, $this->Variable, $this->User);
 	}
 
 };

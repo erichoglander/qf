@@ -35,8 +35,8 @@ class FormItem {
 
 
 	public function __construct($Db, $Io, $structure) {
-		$this->Db = &$Db;
-		$this->Io = &$Io;
+		$this->Db = $Db;
+		$this->Io = $Io;
 		$this->empty_option = t("- Choose -");
 		$this->loadStructure($structure);
 	}

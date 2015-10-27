@@ -4,7 +4,7 @@ class Acl_Core {
 	protected $Db, $User;
 
 	public function __construct($Db) {
-		$this->Db = &$Db;
+		$this->Db = $Db;
 	}
 
 	public function access($User, $names, $args = []) {

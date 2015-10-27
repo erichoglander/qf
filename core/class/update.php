@@ -5,7 +5,7 @@ class Update_Core {
 	
 
 	public function __construct($Db) {
-		$this->Db = &$Db;
+		$this->Db = $Db;
 	}
 	
 	public function execute() {

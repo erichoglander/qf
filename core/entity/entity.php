@@ -9,7 +9,7 @@ class Entity {
 	protected $schema;
 	protected $Db, $Io;
 
-	public function __construct(&$Db, $id = null) {
+	public function __construct($Db, $id = null) {
 		$this->Db = $Db;
 		$this->schema = $this->schema();
 		if ($id)

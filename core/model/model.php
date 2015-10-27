@@ -4,12 +4,12 @@ class Model {
 	protected $Config, $Db, $Io, $Cache, $Variable, $User;
 
 	public function __construct($Config, $Db, $Io, $Cache, $Variable, $User) {
-		$this->Config = &$Config;
-		$this->Db = &$Db;
-		$this->Io = &$Io;
-		$this->Cache = &$Cache;
-		$this->Variable = &$Variable;
-		$this->User = &$User;
+		$this->Config = $Config;
+		$this->Db = $Db;
+		$this->Io = $Io;
+		$this->Cache = $Cache;
+		$this->Variable = $Variable;
+		$this->User = $User;
 	}
 
 

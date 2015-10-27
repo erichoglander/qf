@@ -10,7 +10,7 @@ class Mail_Core {
 
 
 	public function __construct($Db) {
-		$this->Db = &$Db;
+		$this->Db = $Db;
 		$this->from = "info@".BASE_DOMAIN;
 		$this->Config = newClass("Config");
 		$this->setDefaultHeaders();

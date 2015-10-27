@@ -7,8 +7,8 @@ class Controller {
 	protected $Acl, $Cache, $Variable;
 
 	public function __construct($Config, $Db, $init = true) {
-		$this->Config = &$Config;
-		$this->Db = &$Db;
+		$this->Config = $Config;
+		$this->Db = $Db;
 		$this->Io = newClass("Io");
 		$this->name = $this->getName();
 		if ($this->Db->connected) {
@@ -177,7 +177,7 @@ class Controller {
 	}
 
 	protected function view($name) {
-		$View = newClass("View", $this->Config, $this->Db, $this->User, $this->name, $name, $this->viewData);
+		$View = newClass("View", $this->Config, $this->Db, $this->Io, $this->Cache, $this->Variable, $this->User, $this->name, $name, $this->viewData);
 		try {
 			return $View->render();
 		}
@@ -188,7 +188,7 @@ class Controller {
 	}
 	protected function viewDefault($name) {
 		ob_clean();
-		$View = newClass("View", $this->Config, $this->Db, $this->User, "default", $name, $this->viewData);
+		$View = newClass("View", $this->Config, $this->Db, $this->Io, $this->Cache, $this->Variable, $this->User, "default", $name, $this->viewData);
 		try {
 			return $View->render();
 		}
@@ -198,7 +198,7 @@ class Controller {
 	}
 	protected function viewBare($name) {
 		ob_clean();
-		$View = newClass("View", null, null, null, "default", $name, $this->viewData);
+		$View = newClass("View", null, null, null, null, null, null, "default", $name, $this->viewData);
 		try {
 			return $View->render();
 		}

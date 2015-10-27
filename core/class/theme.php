@@ -5,12 +5,16 @@ class Theme {
 	public $css = [];
 	public $js = [];
 
-	protected $Config, $Db, $User;
+	protected $Config, $Db, $Io, $Cache, $Variable, $User;
 
-	public function __construct($Config, $Db, $User) {
-		$this->Config = &$Config;
-		$this->Db = &$Db;
-		$this->User = &$User;
+	public function __construct($Config, $Db, $Io, $Cache, $Variable, $User) {
+		$this->Config = $Config;
+		$this->Db = $Db;
+		$this->Io = $Io;
+		$this->Cache = $Cache;
+		$this->Variable = $Variable;
+		$this->User = $User;
+		$this->loadFiles();
 	}
 
 	public function render($part, $vars = []) {
@@ -37,11 +41,22 @@ class Theme {
 	}
 
 
+	protected function loadFiles() {
+	}
 	protected function preRender($part, &$vars) {
 	}
 
 	protected function getTemplate($name) {
 		return filePath("theme/".$this->name."/template/".$name.".php");
+	}
+	
+	protected function getEntity($name, $id = null) {
+		return newClass($name."_Entity", $this->Db, $id);
+	}
+	
+	protected function getModel($name) {
+		$cname = ucwords($name)."_Model";
+		return newClass($cname, $this->Config, $this->Db, $this->Io, $this->Cache, $this->Variable, $this->User);
 	}
 
 };
