@@ -58,5 +58,9 @@ class Theme {
 		$cname = ucwords($name)."_Model";
 		return newClass($cname, $this->Config, $this->Db, $this->Io, $this->Cache, $this->Variable, $this->User);
 	}
+	
+	protected function getForm($name, $vars = []) {
+		return newClass($name."_Form", $this->Db, $this->Io, $this->User, $vars);
+	}
 
 };
