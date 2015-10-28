@@ -114,8 +114,22 @@ class Imagestyle_Core {
 			$this->im = imagecreatefromgif($this->src);
 		else
 			return false;
-		if (!$this->im)
-			return false;
+		if (!$this->im) {
+			// Some jpgs are saved as gifs
+			if ($this->info["extension"] == "gif") {
+				$this->im = imagecreatefromjpeg($this->src);
+				if ($this->im)
+					$this->info["extension"] = "jpg";
+			}
+			// And some gifs are saved as jpgs
+			else if ($this->info["extension"] == "jpg" || $this->info["extension"] == "jpeg") {
+				$this->im = imagecreatefromgif($this->src);
+				if ($this->im)
+					$this->info["extension"] = "gif";
+			}
+			if (!$this->im)
+				return false;
+		}
 		$this->setAlpha($this->im);
 		list($this->width, $this->height) = getimagesize($this->src);
 		return true;
