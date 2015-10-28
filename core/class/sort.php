@@ -25,13 +25,20 @@ class Sort_Core {
 	
 	public function url($str, $def = "asc") {
 		$url = REQUEST_URI;
-		$url = preg_replace("/[\?|\&]sort\=[^\&]+/i", "", $url);
-		$url = preg_replace("/\&order\=[a-z0-9\-\_]+/i", "", $url);
+		$regex_sort = "/([\?|\&])sort\=[^\&]+/i";
+		$regex_order = "/([\?|\&])order\=[a-z0-9\-\_]+/i";
 		if ($str == $this->sort)
 			$order = ($this->order == "desc" ? "asc" : "desc");
 		else
 			$order = $def;
-		$url.= (strpos($url, "?") ? "&" : "?")."sort=".$str."&order=".$order;
+		if (preg_match($regex_sort, $url)) 
+			$url = preg_replace($regex_sort, "$1sort=".$str, $url);
+		else 
+			$url.= (strpos($url, "?") ? "&" : "?")."sort=".$str;
+		if (preg_match($regex_order, $url))
+			$url = preg_replace($regex_order, "$1order=".$order, $url);
+		else
+			$url.= "&order=".$order;
 		return BASE_URL.$url;
 	}
 	
