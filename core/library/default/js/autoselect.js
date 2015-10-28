@@ -45,12 +45,25 @@ function autoselect(el) {
 	}
 	
 	this.renderOptions = function() {
-		var value = this.tags.input.value;
+		var value = this.tags.input.value.toLowerCase();
 		this.tags.options.innerHTML = "";
 		this.tags.option = [];
 		this.optionActive = -1;
 		for (var i=0; i<this.tags.select.options.length; i++) {
-			if (!value.length || this.tags.select.options[i].text.substr(0, value.length).toLowerCase() == value.toLowerCase()) {
+			var match = false;
+			if (!value.length) {
+				match = true;
+			}
+			else {
+				var arr = this.tags.select.options[i].text.toLowerCase().split(" ");
+				for (var j=0; j<arr.length; j++) {
+					if (arr[j].substr(0, value.length) == value) {
+						match = true;
+						break;
+					}
+				}
+			}
+			if (match) {
 				this.tags.option[i] = document.createElement("div");
 				this.tags.option[i].className = "autoselect-option";
 				this.tags.option[i].innerHTML = this.tags.select.options[i].text;
