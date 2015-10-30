@@ -156,6 +156,8 @@ class FormItem {
 	protected function loadStructure($structure) {
 		if (is_callable([$this, "loadDefault"]))
 			$this->loadDefault();
+		if (is_callable([$this, "preStructure"]))
+			$this->preStructure($structure);
 		$this->structure = $structure;
 		if (!empty($structure["attributes"])) {
 			foreach ($structure["attributes"] as $key => $val)
