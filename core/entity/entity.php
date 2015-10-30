@@ -146,6 +146,12 @@ class Entity {
 	public function delete() {
 		if (!$this->id())
 			return false;
+		foreach ($this->schema["fields"] as $key => $field) {
+			if ($field["type"] == "file" && $this->get($key)) {
+				$File = $this->getEntity("File", $this->get($key));
+				$File->delete();
+			}
+		}
 		if (!$this->Db->delete($this->schema["table"], ["id" => $this->id()]))
 			return false;
 		$this->deleteAlias();
