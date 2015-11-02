@@ -7,7 +7,7 @@ class Pager_Core {
 	public $get = "page";
 	
 	protected $num = 1;
-	protected $url, $sep;
+	protected $url;
 
 
 	public function __construct() {
@@ -15,7 +15,13 @@ class Pager_Core {
 	}
 
 	public function url($x) {
-		return $this->url.($x == 1 ? "" : $this->sep.$this->get."=".$x);
+		$regex = "/([\&|\?])".$this->get."\=[0-9]+/";
+		$url = $this->url;
+		if (preg_match($regex, $url))
+			$url = preg_replace($regex, "$1".$this->get."=".$x, $url);
+		else if ($x)
+			$url.= (strpos($url, "?") === false ? "?" : "&").$this->get."=".$x;
+		return $url;
 	}
 
 	public function tag($x, $html, $class = null) {
@@ -27,8 +33,7 @@ class Pager_Core {
 	}
 	
 	public function setUrl($url) {
-		$this->url = preg_replace("/[\?|\&]".$this->get."\=[0-9]+/", "", $url);
-		$this->sep = (strpos($this->url, "?") ? "&" : "?");
+		$this->url = $url;
 	}
 
 	public function setNum($num) {
