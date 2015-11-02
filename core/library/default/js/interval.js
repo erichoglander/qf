@@ -82,8 +82,8 @@ function interval(el) {
 	this.windowClick = function(e) {
 		if (!this.isOpen())
 			return;
-		for (var i=0, el = e.target; i<5 && el != null && el != this.tags.item; i++, el = el.parentNode);
-		if (!el || i == 5)
+		for (var i=0, el = e.target; i<10 && el != null && el != this.tags.item; i++, el = el.parentNode);
+		if (!el || i == 10)
 			this.close();
 	}
 	
