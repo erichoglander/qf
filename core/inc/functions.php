@@ -159,8 +159,9 @@ function fileUrl($path) {
 	return null;
 }
 
-function renderTemplate($include_path, $vars) {
-	extract($vars);
+function renderTemplate($include_path, $vars = null) {
+	if (!empty($vars))
+		extract($vars);
 	ob_start();
 	include $include_path;
 	return ob_get_clean();
