@@ -188,6 +188,14 @@ function t($str, $lang = "en", $vars = []) {
 
 function uri($path) {
 	global $Db;
+	$x = strpos($path, "?");
+	if ($x) {
+		$q = substr($path, $x);
+		$path = substr($path, 0, $x);
+	}
+	else {
+		$q = null;
+	}
 	if ($path == "<front>") {
 		$path = "";
 	}
@@ -199,7 +207,7 @@ function uri($path) {
 		if ($row)
 			$path = $row->alias;
 	}
-	return $path;
+	return $path.$q;
 }
 function url($path, $redir = false) {
 	$url = BASE_URL.uri($path);
