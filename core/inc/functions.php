@@ -166,6 +166,12 @@ function renderTemplate($include_path, $vars = null) {
 	include $include_path;
 	return ob_get_clean();
 }
+function tpl($name, $vars = null) {
+	$path = filePath("template/".$name.".php");
+	if (!$path)
+		return null;
+	return renderTemplate($path, $vars);
+}
 
 function t($str, $lang = "en", $vars = []) {
 	global $Db;
