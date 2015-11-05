@@ -3,10 +3,32 @@ var _naturalForms = {};
 function naturalFormsInit() {
 	var els = document.getElementsByClassName("natural-form");
 	for (var i=0; i<els.length; i++) {
-		var name = els[i].getAttribute("name");
-		if (!name)
-			name = Math.random().toString(36).substr(2,5);
-		_naturalForms[name] = new naturalForm(els[i], name);
+		if (!els[i].className.match("natural-form-init")) {
+			els[i].addClass("natural-form-init");
+			var name = els[i].getAttribute("name");
+			if (!name)
+				name = Math.random().toString(36).substr(2,5);
+			_naturalForms[name] = new naturalForm(els[i], name);
+		}
+	}
+	var observer = new MutationObserver(function(mutations) {
+		mutations.forEach(function(mutation) {
+			naturalFormsObserve(mutation.target);
+		});    
+	});
+	var config = { childList: true, subtree: true };
+	observer.observe(document.body, config);
+}
+function naturalFormsObserve() {
+	var els = document.getElementsByClassName("natural-form");
+	for (var i=0; i<els.length; i++) {
+		if (!els[i].className.match("natural-form-init")) {
+			els[i].addClass("natural-form-init");
+			var name = els[i].getAttribute("name");
+			if (!name)
+				name = Math.random().toString(36).substr(2,5);
+			_naturalForms[name] = new naturalForm(els[i], name);
+		}
 	}
 }
 
@@ -43,8 +65,12 @@ function naturalForm(el, name) {
 				wrap: items[i],
 				input: inp
 			});
-			if (items[i].hasClass("active") && i != 0)
-				this.setActive(i);
+			if (items[i].hasClass("active")) {
+				if (i == 0 && items[i].hasClass("form-item-error"))
+					inp.focus();
+				else if (i != 0)
+					this.setActive(i);
+			}
 		}
 		
 		for (var i=0; i<this.items.length; i++) {
