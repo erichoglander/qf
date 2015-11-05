@@ -218,8 +218,11 @@ function uri($path) {
 function url($path, $redir = false) {
 	$url = BASE_URL.uri($path);
 	if ($redir) {
+		$uri = REQUEST_PATH;
+		if (QUERY_STRING)
+			$uri.= "?".QUERY_STRING;
 		$sep = (strpos($url, "?") === false ? "?" : "&");
-		$url.= $sep."redir=".urlencode(REQUEST_URI);
+		$url.= $sep."redir=".urlencode($uri);
 	}
 	return $url;
 }
@@ -275,7 +278,10 @@ function redirect($url = "", $redir = true) {
 	exit;
 }
 function refresh() {
-	redirect(REQUEST_URI);
+	$uri = REQUEST_PATH;
+	if (QUERY_STRING)
+		$uri.= "?".QUERY_STRING;
+	redirect($uri);
 }
 
 function httpRequest($url) {
