@@ -233,6 +233,7 @@ class Form {
 		foreach ($this->attributes as $key => $val)
 			$attr[$key] = $val;
 		$class = cssClass("form-".$this->name);
+		$attr["name"] = $this->name;
 		if (empty($attr["class"]))
 			$attr["class"] = $class;
 		else

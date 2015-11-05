@@ -1,10 +1,10 @@
 <?php
 class Interval_FormItem_Core extends FormItem {
 	
-	protected $interval_min = 0;
-	protected $interval_max = 100;
-	protected $interval_round = 1;
-	protected $interval_suffix;
+	public $interval_min = 0;
+	public $interval_max = 100;
+	public $interval_round = 1;
+	public $interval_suffix;
 	
 	protected function getAttributes() {
 		$attr = parent::getAttributes();

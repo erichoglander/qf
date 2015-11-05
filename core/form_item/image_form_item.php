@@ -1,12 +1,12 @@
 <?php
 class Image_FormItem_Core extends File_FormItem_Core {
 	
-	protected $file_extensions = ["jpeg", "jpg", "png", "gif"];
-	protected $image_exact_size, $image_min_size, $image_max_size;
-	protected $file_folder = "images";
-	protected $template = "file";
-	protected $preview_template = "image";
-	protected $image_style = "upload";
+	public $file_extensions = ["jpeg", "jpg", "png", "gif"];
+	public $image_exact_size, $image_min_size, $image_max_size;
+	public $file_folder = "images";
+	public $template = "file";
+	public $preview_template = "image";
+	public $image_style = "upload";
 
 
 	protected function loadDefault() {

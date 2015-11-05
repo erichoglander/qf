@@ -7,24 +7,24 @@ class FormItem {
 	public $submit_data = true;
 	public $tree = true;
 
-	protected $type;
-	protected $label, $item_label, $description, $icon;
-	protected $dragable;
-	protected $add_button = "Add item";
-	protected $delete_button = "Remove";
-	protected $required, $focus;
-	protected $attributes = [];
-	protected $value;
-	protected $options;
-	protected $empty_option;
-	protected $filter = "trim";
-	protected $validation, $validation_error;
-	protected $template;
-	protected $submitted = false;
+	public $type;
+	public $label, $item_label, $description, $icon;
+	public $dragable;
+	public $add_button = "Add item";
+	public $delete_button = "Remove";
+	public $required, $focus;
+	public $attributes = [];
+	public $value;
+	public $options;
+	public $empty_option;
+	public $filter = "trim";
+	public $validation, $validation_error;
+	public $template;
+	public $submitted = false;
 
-	protected $prefix, $suffix;
-	protected $input_prefix, $input_suffix;
-	protected $item_class;
+	public $prefix, $suffix;
+	public $input_prefix, $input_suffix;
+	public $item_class;
 
 	protected $structure = [];
 	protected $item_structure = [];

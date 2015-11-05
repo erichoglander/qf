@@ -1,10 +1,10 @@
 <?php
 class Address_FormItem_Core extends FormItem {
 	
-	protected $address_fields = ["line", "postal_code", "locality", "country"];
-	protected $address_country = "SE";
-	protected $address_countries;
-	protected $label_placeholder = false;
+	public $address_fields = ["line", "postal_code", "locality", "country"];
+	public $address_country = "SE";
+	public $address_countries;
+	public $label_placeholder = false;
 	
 	
 	public function countries() {

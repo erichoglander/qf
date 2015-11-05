@@ -12,6 +12,7 @@ class Default_Library_Core extends Library {
 		"css/tooltip.css",
 		"css/interval.css",
 		"css/popup.css",
+		"css/natural_form.css",
 	];
 	public $js = [
 		"js/script.js", 
@@ -28,6 +29,7 @@ class Default_Library_Core extends Library {
 		"js/tooltip.js",
 		"js/interval.js",
 		"js/popup.js",
+		"js/natural_form.js",
 	];
 
 }

@@ -1,7 +1,7 @@
 <?php
 class Tags_FormItem_Core extends FormItem {
 	
-	protected $autocomplete_uri;
+	public $autocomplete_uri;
 	
 	
 	protected function itemValue() {

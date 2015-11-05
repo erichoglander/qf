@@ -1,14 +1,14 @@
 <?php
 class File_FormItem_Core extends FormItem {
 	
-	protected $remove = false;
-	protected $uploaded = null;
-	protected $upload_button, $remove_button;
-	protected $file_folder, $file_extensions, $file_dir, $file_max_size;
-	protected $file_blacklist = ["php", "phtml", ".htaccess"];
-	protected $upload_callback, $remove_callback;
-	protected $preview_template;
-	protected $filter = "uint";
+	public $remove = false;
+	public $uploaded = null;
+	public $upload_button, $remove_button;
+	public $file_folder, $file_extensions, $file_dir, $file_max_size;
+	public $file_blacklist = ["php", "phtml", ".htaccess"];
+	public $upload_callback, $remove_callback;
+	public $preview_template;
+	public $filter = "uint";
 
 
 	public function hasFileItem() {

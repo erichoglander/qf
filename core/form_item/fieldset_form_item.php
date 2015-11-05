@@ -1,8 +1,8 @@
 <?php
 class Fieldset_FormItem_Core extends FormItem {
 	
-	protected $collapsible = false;
-	protected $collapsed = false;
+	public $collapsible = false;
+	public $collapsed = false;
 	
 	
 	protected function loadStructure($structure) {
