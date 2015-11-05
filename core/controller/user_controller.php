@@ -55,16 +55,18 @@ class User_Controller_Core extends Controller {
 				setmsg(t("You've been registered and signed into your new account. "), "success");
 				setmsg(t("You must confirm your e-mail address within 24 hours."), "warning");
 			}
-			else if ($status == "admin_approval")
+			else if ($status == "admin_approval") {
 				setmsg(t("Your account registration is now pending approval from the site administrator."), "success");
-			else if ($status == "register_login")
+			}
+			else if ($status == "register_login") {
 				setmsg(t("Registration complete. You've been signed in to your new account."), "success");
-			else if (!$status)
+			}
+			else if (!$status) {
 				$this->defaultError();
+			}
 			if ($status)
 				redirect();
 		}
-		$num_users = $this->Db->numRows("SELECT id FROM `user`");
 		$this->viewData["form"] = $Form->render();
 		$this->viewData["status"] = $this->Config->getUserRegistration();
 		return $this->view("register");

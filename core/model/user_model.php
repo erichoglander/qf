@@ -54,7 +54,7 @@ class User_Model_Core extends Model {
 		$User->set("pass", $password);
 		$User->set("reset", "");
 		$User->set("reset_time", 0);
-		 return $User->save();
+		return $User->save();
 	}
 
 	public function confirmEmail($User) {

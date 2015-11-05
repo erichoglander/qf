@@ -33,7 +33,7 @@ class View_Core {
 				$this->Html->body_class[] = "front";
 			$this->Html->body_class[] = cssClass("page-".$this->controller_name."-".$this->name);
 			$this->Html->body_class[] = cssClass("controller-".$this->controller_name);
-			$this->Html->body_class[] = cssClass("action-".$this->name);
+			$this->Html->body_class[] = cssClass("view-".$this->name);
 		}
 		$path = $this->path();
 		extract($this->variables);
