@@ -106,7 +106,7 @@ class User_Entity_Core extends Entity {
 			addlog("user", "Login user flood protection for ".$this->get("name"), null, "warning");
 			return false;
 		}
-		if (!$this->hashPassword($pass, $this->get("salt")) === $this->get("pass")) {
+		if ($this->hashPassword($pass, $this->get("salt")) !== $this->get("pass")) {
 			$this->login_error = "invalid_pass";
 			addlog("user", "Failed login attempt for ".$this->get("name"), null, "warning");
 			return false;
