@@ -7,6 +7,7 @@ CKEDITOR.editorConfig = function( config ) {
 
 	config.toolbarGroups = [
 		{ name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+		{ name: 'styles', 		 groups: [ 'formats' ] },
 		{ name: 'paragraph',   groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ] },
 		{ name: 'clipboard',   groups: [ 'clipboard', 'undo' ] },
 		{ name: 'editing',     groups: [ 'find', 'selection', 'spellchecker' ] },
@@ -18,7 +19,7 @@ CKEDITOR.editorConfig = function( config ) {
 		{ name: 'others' },
 	];
 
-	config.removeButtons = 'Subscript,Superscript,Anchor,Blockquote,Indent,Outdent,SpecialChar,HorizontalRule';
+	config.removeButtons = 'Subscript,Superscript,Anchor,Blockquote,Indent,Outdent,SpecialChar,HorizontalRule,Styles';
 	
 	config.format_tags = 'p';
 	

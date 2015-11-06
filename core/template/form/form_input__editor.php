@@ -1,2 +1,2 @@
 <textarea <?=$attributes?>><?=$value?></textarea>
-<script>CKEDITOR.replace('<?=$name?>', null);</script>
+<script>CKEDITOR.replace('<?=$name?>', <?=$editor_config?>);</script>
