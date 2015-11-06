@@ -9,7 +9,7 @@ class FormItem {
 
 	public $type;
 	public $label, $item_label, $description, $icon;
-	public $dragable;
+	public $sortable;
 	public $add_button = "Add item";
 	public $delete_button = "Remove";
 	public $required, $focus;
@@ -145,6 +145,7 @@ class FormItem {
 			"add_button" => $this->renderAddButton(),
 			"delete_button" => $this->renderDeleteButton(),
 			"icon" => $this->icon,
+			"sortable" => $this->sortable,
 			"error" => $this->getError(),
 		];
 		if (is_callable([$this, "preRender"]))
@@ -166,6 +167,8 @@ class FormItem {
 		$properties = $structure;
 		unset($properties["attributes"]);
 		unset($properties["items"]);
+		if (!empty($properties["multiple"]))
+			unset($properties["sortable"]);
 		foreach ($properties as $key => $val)
 			$this->{$key} = $val;
 		if ($this->multiple) {
@@ -311,6 +314,8 @@ class FormItem {
 			$class.= " form-item-required";
 		if ($this->error)
 			$class.= " form-item-error";
+		if ($this->sortable)
+			$class.= " form-item-sortable";
 		if (!empty($this->item_class))
 			$class.= " ".$this->item_class;
 		return $class;

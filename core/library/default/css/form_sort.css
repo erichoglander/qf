@@ -1,0 +1,16 @@
+.form-item-sortable {
+	position: relative;
+}
+.form-sortable {
+	position: absolute;
+	top: 50%;
+	left: 0;
+}
+.form-sortable .form-sortable-drag {
+	cursor: move;
+}
+.form-sortable .form-sortable-up,
+.form-sortable .form-sortable-down {
+	text-align: center;
+	cursor: pointer;
+}

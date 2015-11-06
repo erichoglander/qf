@@ -233,6 +233,14 @@ input {
 	display: none;
 }
 
+.form-item-sortable {
+	padding-left: 25px;
+}
+.form-sortable {
+	width: 25px;
+	text-align: center;
+}
+
 .form-type-editor {
 	width: auto;
 }
