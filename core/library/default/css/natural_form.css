@@ -5,6 +5,9 @@
 	display: none;
 	margin: 0;
 }
+.natural-form .form-item.active {
+	display: block;
+}
 .natural-form .nf-button {
 	position: absolute;
 	top: 0;
