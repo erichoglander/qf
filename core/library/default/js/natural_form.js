@@ -137,6 +137,8 @@ function naturalForm(el, name) {
 		this.setActive(this.current+1);
 	}
 	this.progress = function() {
+		if (!this.tags.progress)
+			return;
 		var p = Math.round(100*(this.current+1)/this.items.length);
 		this.tags.progress.style.width = p+"%";
 		this.tags.current.innerHTML = this.current+1;
