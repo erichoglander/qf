@@ -40,7 +40,9 @@ class Mail_Core {
 		$this->prepareAttachments();
 
 		$subject = "=?UTF-8?B?".base64_encode($this->subject)."?=";
-		$message = $this->message.$this->signature();
+		$message = $this->message;
+		if ($this->include_signature)
+			$message.= $this->signature();
 		$headers = "";
 
 		foreach ($this->headers as $key => $val)
