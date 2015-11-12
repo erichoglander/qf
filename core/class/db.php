@@ -34,6 +34,17 @@ class Db_Core {
 		return $this->errors;
 	}
 	
+	public function error($debug) {
+		if ($this->debug) {
+			pr($debug);
+			exit;
+		}
+		else {
+			include filePath("view/default/500.php");
+			exit;
+		}
+	}
+	
 	private function where(&$sql, &$vars, $conditions = []) {
 		if (!empty($conditions)) {
 			$sql.= " WHERE ";
@@ -105,13 +116,11 @@ class Db_Core {
 				"exception" => $e->getMessage(),
 				"backtrace" => debug_backtrace(),
 			];
-			if ($this->debug) 
-				pr($debug);
 			if ($this->exception_depth == 0) {
 				$this->exception_depth++;
 				addlog("database", "Exception", $debug, "error");
 			}
-			die("Ett fel uppstod med en fråga till databasen.");
+			$this->error($debug);
 		}
 		$err = $stmt->errorInfo();
 		if ($err[0] != 00000) {
@@ -121,9 +130,7 @@ class Db_Core {
 				"errorInfo" => $err,
 			];
 			addlog("database", "error ".$err[0], $debug, "error");
-			if ($this->debug)
-				pr($debug);
-			die("Ett fel uppstod med en fråga till databasen. (mysql error)");
+			$this->error($debug);
 		}
 		return $stmt;
 	}
