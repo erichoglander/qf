@@ -3,6 +3,6 @@
 		<input <?=$attributes?> value="<?=$key?>"<?=($value && in_array($key, $value) ? " checked" : "")?>> 
 		<?=FontAwesome\Icon("square checkbox-icon-unchecked")?>
 		<?=FontAwesome\Icon("check-square checkbox-icon-checked")?> 
-		<?=$val?>
+		<span class="label-inner"><?=$val?></span>
 	</label>
 <?php } ?>
