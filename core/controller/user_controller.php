@@ -12,6 +12,8 @@ class User_Controller_Core extends Controller {
 			return ["userSignin"];
 		if ($action == "settings")
 			return ["userSettings"];
+		if ($action == "setpass")
+			return ["userSetPass"];
 		return null;
 	}
 
@@ -219,6 +221,23 @@ class User_Controller_Core extends Controller {
 		else {
 			return $this->accessDenied();
 		}
+	}
+	
+	public function setpassAction() {
+		print t("Username").": ";
+		$name = trim(fgets(STDIN));
+		$User = $this->getEntity("User");
+		$User->loadByName($name);
+		if (!$User->id())
+			return "User not found";
+		print t("Password").": ";
+		system("stty -echo");
+		$pass = trim(fgets(STDIN));
+		system("stty echo");
+		print PHP_EOL;
+		$User->set("pass", $pass);
+		$User->save();
+		return t("Password changed for :name", "en", [":name" => $name]);
 	}
 
 	public function listAction() {

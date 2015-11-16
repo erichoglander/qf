@@ -59,6 +59,9 @@ class Acl_Core {
 	protected function userSettingsAccess($User) {
 		return !!$User->id();
 	}
+	protected function userSetPassAccess($User) {
+		return IS_CLI;
+	}
 
 	/* L10N ACCESS */
 	protected function l10nAdminAccess($User) {
