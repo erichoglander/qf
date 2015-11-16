@@ -110,6 +110,13 @@ class Html_Core {
 					<li class="menu-item menu-item-'.$key.'">';
 				if (array_key_exists("href", $link)) {
 					$url = $link["href"];
+					$x = strpos($url, "?");
+					if ($x)
+						$path = substr($url, 0, $x);
+					else
+						$path = $url;
+					if (!array_key_exists("active", $link) && $path == REQUEST_PATH)
+						$link["active"] = true;
 					if (!empty($link["active"]))
 						$class.= " active";
 					if (strpos($url, "http") !== 0 && strpos($url, "#") !== 0)
