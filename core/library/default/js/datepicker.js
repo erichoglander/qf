@@ -9,7 +9,7 @@ function datepickerInit() {
 	}
 	var observer = new MutationObserver(function(mutations) {
 		mutations.forEach(function(mutation) {
-			timepickerObserve(mutation.target);
+			datepickerObserve(mutation.target);
 		});    
 	});
 	var config = { childList: true, subtree: true };
