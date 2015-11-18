@@ -358,7 +358,7 @@ function uri($path) {
  * @see uri()
  * @see redirect()
  * @param  string  $path  Ex: news/view/18
- * @param  boolean $redir If true, returns user to current page on redirect()
+ * @param  boolean $redir If true, returns visitor to current page on redirect()
  * @return string         Ex: /en/blog/my-blog-post
  */
 function url($path, $redir = false) {
@@ -436,9 +436,9 @@ function addlog($category, $text, $data = null, $type = "info") {
 }
 
 /**
- * Redirects the user
+ * Redirects the visitor
  *
- * The function uses url() to redirect the user to the formatted url
+ * The function uses url() to redirect the visitor to the formatted url
  *
  * @see url
  * @param  string  $url
@@ -458,7 +458,7 @@ function redirect($url = "", $redir = true) {
 }
 
 /**
- * Redirects the user to the current page
+ * Redirects the visitor to the current page
  */
 function refresh() {
 	$uri = REQUEST_PATH;

@@ -1,9 +1,29 @@
 <?php
+/**
+ * Default config file
+ */
+
+/**
+ * Config class
+ *
+ * Each function returns a specific configuration option
+ * 
+ * @author Eric Höglander
+ */
 class Config_Core {
 
+	/**
+	 * The name of the site
+	 * @return string
+	 */
 	public function getSiteName() {
 		return BASE_DOMAIN;
 	}
+
+	/**
+	 * The database config
+	 * @return array
+	 */
 	public function getDatabase() {
 		$file = filePath("inc/database.php");
 		if (!$file)
@@ -13,45 +33,119 @@ class Config_Core {
 			return null;
 		return $database;
 	}
+
+	/**
+	 * If there is a default subdomain that should be used when visiting the site
+	 * @return string Ex: www
+	 */
 	public function getSubdomain() {
 		return null;
 	}
+
+	/**
+	 * If the site should redirect visitors to https
+	 * @return bool
+	 */
 	public function getHttps() {
 		return false;
 	}
+
+	/**
+	 * If the site should be in debug mode
+	 * @return bool
+	 */
 	public function getDebug() {
 		return false;
 	}
+
+	/**
+	 * What type of user registration should be active
+	 * @return string "closed", "email_confirmation", "admin_approval", or "open"
+	 */
 	public function getUserRegistration() {
 		return "closed";
 	}
+
+	/**
+	 * Libraries to be included 
+	 * @return array
+	 */
 	public function getLibraries() {
 		return ["Default", "JsonToHtml", "FontAwesome", "CKEditor"];
 	}
+
+	/**
+	 * If automatic cron should be activated
+	 * @return bool If true, cron will run when people visit the site
+	 */
 	public function getAutomaticCron() {
 		return true;
 	}
+
+	/**
+	 * The default language of the site
+	 * @return string
+	 */
 	public function getDefaultLanguage() {
 		return "sv";
 	}
+
+	/**
+	 * What type of language detection to use
+	 * @return string null or "path"
+	 */
 	public function getLanguageDetection() {
 		return null;
 	}
+
+	/**
+	 * How many log entries to save in the database
+	 * @return int
+	 */
 	public function getMaxLogs() {
 		return 100000;
 	}
+
+	/**
+	 * The uri for public files
+	 * @see PUBLIC_URI
+	 * @return string
+	 */
 	public function getPublicUri() {
 		return "files";
 	}
+
+	/**
+	 * The uri for private files
+	 * @see PRIVATE_URI
+	 * @return string
+	 */
 	public function getPrivateUri() {
 		return "file/private";
 	}
+
+	/**
+	 * The path for public files
+	 * @see PUBLIC_PATH
+	 * @return string
+	 */
 	public function getPublicPath() {
 		return DOC_ROOT."/".$this->getPublicUri();
 	}
+
+	/**
+	 * The path for private files
+	 * @see PRIVATE_PATH
+	 * @return string
+	 */
 	public function getPrivatePath() {
 		return substr(DOC_ROOT, 0, strrpos(DOC_ROOT, "/"))."/private";
 	}
+
+	/**
+	 * The menus for the site
+	 * @return array An array of menus and links to be rendered
+	 */
 	public function getMenus() {
 		$menu = [
 			"admin" => [

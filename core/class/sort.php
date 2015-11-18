@@ -1,5 +1,9 @@
 <?php
 /**
+ * Contains the sort class
+ */
+
+/**
  * Sort class
  * @author Eric Höglander
  */
