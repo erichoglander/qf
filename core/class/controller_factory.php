@@ -1,14 +1,36 @@
 <?php
+/**
+ * Controller Factory, where the request begins
+ * Parses the uri, selects the controller, 
+ * and executes the action
+ * @author Eric Höglander
+ */
 class ControllerFactory_Core {
 
-	protected $Config, $Db;
+	/**
+	 * @var \Config_Core
+	 */
+	protected $Config;
 
+	/**
+	 * @var \Db_Core
+	 */
+	protected $Db;
 
+	/**
+	 * @param \Config_Core $Config
+	 * @param \Db_Core $Db
+	 */
 	public function __construct($Config, $Db) {
 		$this->Config = $Config;
 		$this->Db = $Db;
 	}
 
+	/**
+	 * Takes in an uri, sets some constants, and executes the action
+	 * @param  string $uri
+	 * @return string
+	 */
 	public function executeUri($uri) {
 		$request = $this->parseUri($uri);
 		if (!empty($request["redirect"])) {
@@ -22,24 +44,84 @@ class ControllerFactory_Core {
 				header("HTTP/1.1 302 Temporary Redirect");
 			redirect($request["redirect"]["location"]);
 		}
+		/**
+		 * The requested uri without leading slash
+		 * @var string
+		 */
 		define("REQUEST_URI", $request["uri"]);
+		/**
+		 * The query string without leading question mark
+		 * @var string
+		 */
 		define("QUERY_STRING", $request["query"]);
+		/**
+		 * The selected language
+		 * @var string
+		 */
 		define("LANG", $request["lang"]);
+		/**
+		 * The path before the uri.
+		 * If the web is directly under the domain, it will contain "/"
+		 * If there is a language prefix it will might "/en/" or "/sv/"
+		 * @var string
+		 */
 		define("BASE_URL", $request["base"]);
 		if (IS_CLI)
-			define("BASE_PATH", DOC_ROOT."/");
+			$base_path = DOC_ROOT."/";
 		else
-			define("BASE_PATH", substr($_SERVER["SCRIPT_NAME"], 0, strrpos($_SERVER["SCRIPT_NAME"], "/")+1));
+			$base_path = substr($_SERVER["SCRIPT_NAME"], 0, strrpos($_SERVER["SCRIPT_NAME"], "/")+1);
+		/**
+		 * The base path, usually the same as BASE_URL, but does not
+		 * contain prefixes, so it can be used locate files
+		 * @var string
+		 */
+		define("BASE_PATH", $base_path);
+		/**
+		 * The alias of the current page. Contains the same value
+		 * as REQUEST_PATH if there is not alias
+		 * @var string
+		 */
 		define("REQUEST_ALIAS", $request["alias"]);
+		/**
+		 * The system path of the current page. Does not contain query string.
+		 * @var string
+		 */
 		define("REQUEST_PATH", $request["path"]);
+		/**
+		 * Whether or not the current page is the front page.
+		 * @var bool
+		 */
 		define("IS_FRONT_PAGE", $request["controller"] == "page" && $request["action"] == "index");
+		/**
+		 * Uri of public files. Used in urls
+		 * @var string
+		 */
 		define("PUBLIC_URI", BASE_PATH.$this->Config->getPublicUri());
+		/**
+		 * Uri of private files. Used in urls
+		 * @var string
+		 */
 		define("PRIVATE_URI", BASE_URL.$this->Config->getPrivateUri());
+		/**
+		 * Full path of public files.
+		 * @var string
+		 */
 		define("PUBLIC_PATH", $this->Config->getPublicPath());
+		/**
+		 * Full path of private files.
+		 * @var string
+		 */
 		define("PRIVATE_PATH", $this->Config->getPrivatePath());
 		return $this->executeControllerAction($request["controller"], $request["action"], $request["args"]);
 	}
 
+	/**
+	 * Execute the action of the controller
+	 * @param  string $controller
+	 * @param  string $action
+	 * @param  array $args
+	 * @return string
+	 */
 	public function executeControllerAction($controller, $action, $args = []) {
 		$Controller = $this->getController($controller);
 		if (!is_callable([$Controller, $action."Action"]))
@@ -47,6 +129,12 @@ class ControllerFactory_Core {
 		return $Controller->action($action, $args);
 	}
 
+	/**
+	 * Create the controller of the given name
+	 * @param  string $controller
+	 * @param  boolean $init
+	 * @return \Controller
+	 */
 	public function getController($controller, $init = true) {
 		$class = newClass($controller."_Controller", $this->Config, $this->Db, $init);
 		if (!$class)
@@ -54,7 +142,11 @@ class ControllerFactory_Core {
 		return $class;
 	}
 
-	# uri: /controller/action/arg0/arg1/arg2/...
+	/**
+	 * Parses the uri into an array we can use to determine our next move
+	 * @param  string $uri
+	 * @return array Keys: uri, query, lang, base, path, alias, args, redirect
+	 */
 	public function parseUri($uri) {
 		
 		// Remove leading slash if there is one
