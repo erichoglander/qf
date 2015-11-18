@@ -270,6 +270,12 @@ function fileUrl($path) {
 	return null;
 }
 
+/**
+ * Render atemplate from path
+ * @param  string $include_path
+ * @param  array  $vars
+ * @return string
+ */
 function renderTemplate($include_path, $vars = null) {
 	if (!empty($vars))
 		extract($vars);
@@ -277,6 +283,13 @@ function renderTemplate($include_path, $vars = null) {
 	include $include_path;
 	return ob_get_clean();
 }
+
+/**
+ * Shortcut for rendering template in template/ directory
+ * @param  string $name
+ * @param  array  $vars
+ * @return string
+ */
 function tpl($name, $vars = null) {
 	$path = filePath("template/".$name.".php");
 	if (!$path)
@@ -284,6 +297,13 @@ function tpl($name, $vars = null) {
 	return renderTemplate($path, $vars);
 }
 
+/**
+ * Translates a string
+ * @param  string $str  String to be translated
+ * @param  string $lang The language of the string
+ * @param  array  $vars Replacements for the string
+ * @return str
+ */
 function t($str, $lang = "en", $vars = []) {
 	global $Db;
 	$l10nString = newClass("l10nString_Entity", $Db);
@@ -303,6 +323,12 @@ function t($str, $lang = "en", $vars = []) {
 	return $str;
 }
 
+/**
+ * Fetches alias uri for a path
+ * @see uri
+ * @param  string $path Ex: news/view/18
+ * @return string       Ex: blog/my-blog-post
+ */
 function uri($path) {
 	global $Db;
 	$x = strpos($path, "?");
@@ -326,6 +352,15 @@ function uri($path) {
 	}
 	return $path.$q;
 }
+
+/**
+ * Returns the formatted url for a path
+ * @see uri()
+ * @see redirect()
+ * @param  string  $path  Ex: news/view/18
+ * @param  boolean $redir If true, returns user to current page on redirect()
+ * @return string         Ex: /en/blog/my-blog-post
+ */
 function url($path, $redir = false) {
 	$url = BASE_URL.uri($path);
 	if ($redir) {
@@ -338,6 +373,11 @@ function url($path, $redir = false) {
 	return $url;
 }
 
+/**
+ * Sets a system message
+ * @param  string $msg
+ * @param  string $type
+ */
 function setmsg($msg, $type = "info") {
 	if (!isset($_SESSION["sysmsg"]))
 		$_SESSION["sysmsg"] = [];
@@ -346,13 +386,32 @@ function setmsg($msg, $type = "info") {
 		"message" => $msg,
 	];
 }
+
+/**
+ * Fetches all stored system messages
+ * @return array
+ */
 function getmsgs() {
 	return (isset($_SESSION["sysmsg"]) ? $_SESSION["sysmsg"] : null);
 }
+
+/**
+ * Clears all stored system messages
+ */
 function clearmsgs() {
 	unset($_SESSION["sysmsg"]);
 }
 
+/**
+ * Add a log entry
+ *
+ * Ex: addlog("myclass", "Something bad happened", ["foo" => "bar"], "error");
+ * 
+ * @param  string $category
+ * @param  string $text
+ * @param  mixed  $data Any serializable data
+ * @param  string $type Can be anything, but common ones are: info, warning, error, debug
+ */
 function addlog($category, $text, $data = null, $type = "info") {
 	global $Db, $Config;
 	$obj = [
@@ -376,6 +435,15 @@ function addlog($category, $text, $data = null, $type = "info") {
 		$Db->query("DELETE FROM `log` ORDER BY id ASC LIMIT 1");
 }
 
+/**
+ * Redirects the user
+ *
+ * The function uses url() to redirect the user to the formatted url
+ *
+ * @see url
+ * @param  string  $url
+ * @param  boolean $redir If true, it will redirect to the redir param (if set)
+ */
 function redirect($url = "", $redir = true) {
 	if ($redir && array_key_exists("redir", $_GET))
 		$url = urldecode($_GET["redir"]);
@@ -388,6 +456,10 @@ function redirect($url = "", $redir = true) {
 		header("Location: ".$url);
 	exit;
 }
+
+/**
+ * Redirects the user to the current page
+ */
 function refresh() {
 	$uri = REQUEST_PATH;
 	if (QUERY_STRING)
@@ -395,6 +467,11 @@ function refresh() {
 	redirect($uri);
 }
 
+/**
+ * Simple http request without options
+ * @param  string $url
+ * @return string
+ */
 function httpRequest($url) {
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_URL, $url);
@@ -404,6 +481,10 @@ function httpRequest($url) {
 	return $re;
 }
 
+/**
+ * Prompt a file download
+ * @param  string $path Path to file
+ */
 function promptFile($path) {
 	header("Content-Type: application/octet-stream");
 	readfile($path);
