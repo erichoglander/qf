@@ -1,6 +1,20 @@
 <?php
+/**
+ * Bootstrap file
+ *
+ * Include the necessary files
+ * Load config and connect to database
+ * Initialize the controller factory
+ */
 session_start();
 error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT);
+
+/**
+ * Document root
+ *
+ * Ex: /usr/share/nginx/mysite/web
+ * @var string
+ */
 define("DOC_ROOT", str_replace("/core/inc", "", str_replace("\\", "/", __DIR__)));
 
 require_once(DOC_ROOT."/core/inc/constants.php");
