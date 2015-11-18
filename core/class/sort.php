@@ -1,9 +1,34 @@
 <?php
+/**
+ * Sort class
+ * @author Eric Höglander
+ */
 class Sort_Core {
 	
-	public $sort, $order;
+	/**
+	 * The possible sortings, ex. ["created", "title"]
+	 * @var array
+	 */
+	public $sorts = [];
 	
+	/**
+	 * Current sort, ex. "created", or "title"
+	 * @var string
+	*/
+	public $sort;
 	
+	/**
+	 * Current order, "asc" or "desc"
+	 * @var string
+	 */
+	public $order;
+	
+	/**
+	 * Constructor
+	 * @param array $sorts
+	 * @param string $sort
+	 * @param string $order
+	 */
 	public function __construct($sorts, $sort = null, $order = "asc") {
 		$this->sorts = $sorts;
 		if ($sort) {
@@ -13,6 +38,9 @@ class Sort_Core {
 		$this->get();
 	}
 	
+	/**
+	 * Get sorting and order from $_GET
+	 */
 	public function get() {
 		$sort = (array_key_exists("sort", $_GET) ? $_GET["sort"] : null);
 		$order = (array_key_exists("order", $_GET) ? $_GET["order"] : null);
@@ -23,6 +51,12 @@ class Sort_Core {
 		}
 	}
 	
+	/**
+	 * Creates an url for sorting, uses REQUEST_URI as a base
+	 * @param string $str
+	 * @param string $def
+	 * @return string
+	 */
 	public function url($str, $def = "asc") {
 		$url = REQUEST_URI;
 		$regex_sort = "/([\?|\&])sort\=[^\&]+/i";
@@ -42,6 +76,10 @@ class Sort_Core {
 		return BASE_URL.$url;
 	}
 	
+	/**
+	 * Combines $sort and $order to easily fit into an SQL statement
+	 * @return string
+	 */
 	public function sql() {
 		if (!$this->sort)
 			return null;
