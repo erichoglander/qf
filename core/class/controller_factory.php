@@ -53,16 +53,19 @@ class ControllerFactory_Core {
 		}
 		/**
 		 * The requested uri without leading slash
+		 * Ex: controller/action/arg1
 		 * @var string
 		 */
 		define("REQUEST_URI", $request["uri"]);
 		/**
 		 * The query string without leading question mark
+		 * Ex: param1=foo&param2=bar
 		 * @var string
 		 */
 		define("QUERY_STRING", $request["query"]);
 		/**
 		 * The selected language
+		 * Ex: sv
 		 * @var string
 		 */
 		define("LANG", $request["lang"]);
@@ -70,6 +73,7 @@ class ControllerFactory_Core {
 		 * The path before the uri.
 		 * If the web is directly under the domain, it will contain "/"
 		 * If there is a language prefix it will might "/en/" or "/sv/"
+		 * Ex: /
 		 * @var string
 		 */
 		define("BASE_URL", $request["base"]);
@@ -78,19 +82,21 @@ class ControllerFactory_Core {
 		else
 			$base_path = substr($_SERVER["SCRIPT_NAME"], 0, strrpos($_SERVER["SCRIPT_NAME"], "/")+1);
 		/**
-		 * The base path, usually the same as BASE_URL, but does not
-		 * contain prefixes, so it can be used locate files
+		 * The base path, usually the same as BASE_URL, but does
+		 * not contain prefixes, so it can be used locate files
 		 * @var string
 		 */
 		define("BASE_PATH", $base_path);
 		/**
 		 * The alias of the current page. Contains the same value
 		 * as REQUEST_PATH if there is not alias
+		 * Ex: blog/my-first-blog-post
 		 * @var string
 		 */
 		define("REQUEST_ALIAS", $request["alias"]);
 		/**
 		 * The system path of the current page. Does not contain query string.
+		 * Ex: blog/view/13
 		 * @var string
 		 */
 		define("REQUEST_PATH", $request["path"]);
@@ -101,21 +107,25 @@ class ControllerFactory_Core {
 		define("IS_FRONT_PAGE", $request["controller"] == "page" && $request["action"] == "index");
 		/**
 		 * Uri of public files. Used in urls
+		 * Ex: files
 		 * @var string
 		 */
 		define("PUBLIC_URI", BASE_PATH.$this->Config->getPublicUri());
 		/**
 		 * Uri of private files. Used in urls
+		 * Ex: file/private
 		 * @var string
 		 */
 		define("PRIVATE_URI", BASE_URL.$this->Config->getPrivateUri());
 		/**
 		 * Full path of public files.
+		 * Ex: /usr/share/nginx/mysite/web/files
 		 * @var string
 		 */
 		define("PUBLIC_PATH", $this->Config->getPublicPath());
 		/**
 		 * Full path of private files.
+		 * Ex: /usr/share/nginx/mysite/private
 		 * @var string
 		 */
 		define("PRIVATE_PATH", $this->Config->getPrivatePath());
@@ -137,7 +147,7 @@ class ControllerFactory_Core {
 	}
 
 	/**
-	 * Create the controller of the given name
+	 * Creates the controller of the given name
 	 * @param  string $controller
 	 * @param  boolean $init
 	 * @return \Controller
