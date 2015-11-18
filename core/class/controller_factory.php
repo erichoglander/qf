@@ -1,5 +1,9 @@
 <?php
 /**
+ * Contains the ControllerFactory class
+ */
+
+/**
  * Controller Factory, where the request begins
  * Parses the uri, selects the controller, 
  * and executes the action
@@ -8,16 +12,19 @@
 class ControllerFactory_Core {
 
 	/**
+	 * Config object
 	 * @var \Config_Core
 	 */
 	protected $Config;
 
 	/**
+	 * Database object
 	 * @var \Db_Core
 	 */
 	protected $Db;
 
 	/**
+	 * Constructor
 	 * @param \Config_Core $Config
 	 * @param \Db_Core $Db
 	 */
