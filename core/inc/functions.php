@@ -192,6 +192,12 @@ function xss($str) {
 	return htmlspecialchars($str, ENT_QUOTES);
 }
 
+/**
+ * Shorten a string in between words
+ * @param  string $str
+ * @param  int $len
+ * @return string
+ */
 function shorten($str, $len) {
 	if (strlen($str) > $len) {
 		$x = strrpos($str, " ");
@@ -202,6 +208,12 @@ function shorten($str, $len) {
 	return $str;
 }
 
+/**
+ * Formats a string to suitable css class
+ * 
+ * @param  string $str Ex: Some weird_String
+ * @return string      Ex: some-weird-string
+ */
 function cssClass($str) {
 	$str = strtolower($str);
 	$str = preg_replace("/[\ \_]/", "-", $str);
@@ -210,10 +222,24 @@ function cssClass($str) {
 	return $str;
 }
 
+/**
+ * Created a random hexstring that is hopefully unique
+ * @return string 12 characters long
+ */
 function guid() {
 	return substr(md5(microtime().REQUEST_TIME.rand(1, 1000)), 0, 12);
 }
 
+/**
+ * Get absolute file path
+ *
+ * Returns file in extended directory if it exists
+ * otherwise return from core directory
+ *
+ * @see fileUrl()
+ * @param  string $path Ex: library/mylib/somefile.php
+ * @return string       Ex: /usr/share/nginx/myweb/web/extend/library/mylib/somefile.php
+ */
 function filePath($path) {
 	$epath = DOC_ROOT."/extend/".$path;
 	$cpath = DOC_ROOT."/core/".$path;
@@ -223,6 +249,17 @@ function filePath($path) {
 		return $cpath;
 	return null;
 }
+
+/**
+ * Get a file url
+ *
+ * Returns file in extended directory if it exists
+ * otherwise return from core directory
+ * 
+ * @see filePath()
+ * @param  string $path Ex: library/mylib/somefile.png
+ * @return string       Ex: /extend/library/mylib/somefile.png
+ */
 function fileUrl($path) {
 	$epath = "extend/".$path;
 	$cpath = "core/".$path;
