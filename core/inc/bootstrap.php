@@ -5,6 +5,8 @@
  * Include the necessary files
  * Load config and connect to database
  * Initialize the controller factory
+ * 
+ * @author Eric Höglander
  */
 session_start();
 error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT);

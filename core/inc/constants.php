@@ -1,5 +1,10 @@
 <?php
 /**
+ * Contains some basic constants based on the request
+ * @author Eric Höglander
+ */
+
+/**
  * Unix timestamp of when the request began
  * @var int
  */

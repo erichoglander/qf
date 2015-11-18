@@ -1,4 +1,14 @@
 <?php
+/**
+ * Country list file
+ *
+ * Can be replaced by creating a file in extended directory
+ */
+
+/**
+ * Fetch an array of countries with their country code as key
+ * @return array 
+ */
 function countryList() {
 	return [
 		"AF" => "Afghanistan",
