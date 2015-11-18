@@ -1,4 +1,19 @@
 <?php
+/**
+ * A number of default functions
+ *
+ * Includes both necessary functions and helper functions
+ * 
+ * @author Eric Höglander
+ */
+
+/**
+ * Autoloader for classses
+ *
+ * Includes the necessary file based on class name
+ * 
+ * @param  string $class
+ */
 function classAutoload($class) {
 	$fname = classToFile($class);
 	$suffixes = ["controller", "model", "entity", "form_item", "form", "mail"];
@@ -41,6 +56,16 @@ function classAutoload($class) {
 }
 spl_autoload_register("classAutoload");
 
+/**
+ * Creates a class object based on $cname
+ *
+ * If no extended class is found, the object
+ * is created from the core class
+ * Ex: newClass("Io") might create class from Io or Io_Core
+ * 
+ * @param  string $cname The class name
+ * @return object        A class object
+ */
 function newClass($cname) {
 	if (!class_exists($cname)) {
 		$cname.= "_Core";
@@ -60,14 +85,29 @@ function newClass($cname) {
 	}
 }
 
+/**
+ * Gets the correct filename from a class name
+ * @param  string $class Ex: SomeName_Model_Core
+ * @return string        Ex: some_name_model.php
+ */
 function classToFile($class) {
-	// SomeClassName_Model_Core -> some_class_name_model.php
 	return str_replace(["_core", "_theme", "_library"], "", classToDir($class).".php");
 }
+
+/**
+ * Transforms a class name to something more fitting a filesystem
+ * @param  string $class Ex: SomeName_Model
+ * @return string        Ex: some_name_model
+ */
 function classToDir($class) {
 	return strtolower(preg_replace("/([a-z])([A-Z])/", "$1_$2", $class));
 }
 
+/**
+ * Formats a number bytes into a readable format
+ * @param  int $bytes Ex: 2048
+ * @return string     Ex: 2kB
+ */
 function formatBytes($bytes) {
 	if (!$bytes) return "0B";
 	$units = Array("B", "kB", "MB", "GB", "TB");
@@ -76,7 +116,14 @@ function formatBytes($bytes) {
 	return round($bytes, 2).$units[$pow];
 }
 
-// 3,74 -> 374
+/**
+ * Turns a readable number into an integer
+ *
+ * Used primarily to store currency without getting rounding errors
+ * 
+ * @param  string $value Ex: 3,75
+ * @return int           Ex: 375
+ */
 function decimalInt($value) {
 	$value = str_replace(" ", "", $value);
 	$value = str_replace(",", ".", $value);
@@ -91,11 +138,27 @@ function decimalInt($value) {
 		return (int) $int.$dec;
 	}
 }
-// 374 -> 3,74
+
+/**
+ * Turns an integer inte a readable format
+ *
+ * Used primarily for formatting stored currency
+ * 
+ * @param  int $value         Ex: 375
+ * @param  int $p            Number of decimals
+ * @param  string  $dec      Decimal point
+ * @param  string  $thousand Thousand separator
+ * @return string
+ */
 function decimalFloat($value, $p = 2, $dec = ",", $thousand = " ") {
 	return number_format($value/100, $p, $dec, $thousand);
 }
 
+/**
+ * Get json data from POST body
+ * @param  boolean $assoc If true, returns an assoc array, otherwise an object
+ * @return array|object
+ */
 function getjson($assoc = false) {
 	$post = @file_get_contents("php://input");
 	if (!$post)
@@ -106,6 +169,12 @@ function getjson($assoc = false) {
 	return null;
 }
 
+/**
+ * print_r for usage in HTML
+ * @param  mixed  $data
+ * @param  int $ret If true, returns the output, otherwise prints it
+ * @return string
+ */
 function pr($data, $ret = 0) {
 	$html = "<pre>".print_r($data,1)."</pre>";
 	if ($ret)
@@ -114,6 +183,11 @@ function pr($data, $ret = 0) {
 		print $html;
 }
 
+/**
+ * Encode certain characters to avoid Cross Site Scripting
+ * @param  string $str
+ * @return string
+ */
 function xss($str) {
 	return htmlspecialchars($str, ENT_QUOTES);
 }

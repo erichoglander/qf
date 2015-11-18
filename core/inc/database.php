@@ -1,4 +1,10 @@
 <?php
+/**
+ * Only contains an example of a database config
+ *
+ * @author Eric Höglander
+ */
+
 /*
 $database = [
 	"host" => "localhost",
