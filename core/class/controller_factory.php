@@ -59,6 +59,7 @@ class ControllerFactory_Core {
 		 * @var string
 		 */
 		define("REQUEST_URI", $request["uri"]);
+
 		/**
 		 * The query string without leading question mark
 		 * 
@@ -66,11 +67,13 @@ class ControllerFactory_Core {
 		 * @var string
 		 */
 		define("QUERY_STRING", $request["query"]);
+
 		/**
 		 * The code for the selected language
 		 * @var string
 		 */
 		define("LANG", $request["lang"]);
+
 		/**
 		 * The path before the uri
 		 * 
@@ -80,6 +83,7 @@ class ControllerFactory_Core {
 		 * @var string
 		 */
 		define("BASE_URL", $request["base"]);
+
 		if (IS_CLI)
 			$base_path = DOC_ROOT."/";
 		else
@@ -92,6 +96,7 @@ class ControllerFactory_Core {
 		 * @var string
 		 */
 		define("BASE_PATH", $base_path);
+
 		/**
 		 * The alias of the current page. Contains the same value
 		 * as REQUEST_PATH if there is not alias
@@ -100,6 +105,7 @@ class ControllerFactory_Core {
 		 * @var string
 		 */
 		define("REQUEST_ALIAS", $request["alias"]);
+
 		/**
 		 * The system path of the current page. Does not contain query string.
 		 * 
@@ -107,11 +113,13 @@ class ControllerFactory_Core {
 		 * @var string
 		 */
 		define("REQUEST_PATH", $request["path"]);
+
 		/**
 		 * Whether or not the current page is the front page.
 		 * @var bool
 		 */
 		define("IS_FRONT_PAGE", $request["controller"] == "page" && $request["action"] == "index");
+
 		/**
 		 * Uri of public files. Used in urls
 		 * 
@@ -119,6 +127,7 @@ class ControllerFactory_Core {
 		 * @var string
 		 */
 		define("PUBLIC_URI", BASE_PATH.$this->Config->getPublicUri());
+
 		/**
 		 * Uri of private files. Used in urls
 		 * 
@@ -126,6 +135,7 @@ class ControllerFactory_Core {
 		 * @var string
 		 */
 		define("PRIVATE_URI", BASE_URL.$this->Config->getPrivateUri());
+
 		/**
 		 * Full path of public files.
 		 * 
@@ -133,6 +143,7 @@ class ControllerFactory_Core {
 		 * @var string
 		 */
 		define("PUBLIC_PATH", $this->Config->getPublicPath());
+
 		/**
 		 * Full path of private files.
 		 * 
@@ -140,6 +151,7 @@ class ControllerFactory_Core {
 		 * @var string
 		 */
 		define("PRIVATE_PATH", $this->Config->getPrivatePath());
+		
 		return $this->executeControllerAction($request["controller"], $request["action"], $request["args"]);
 	}
 
