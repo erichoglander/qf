@@ -1,13 +1,38 @@
 <?php
+/**
+ * Contains the variable class
+ */
+
+/**
+ * Variable class
+ *
+ * Used to save variables in the database
+ * 
+ * @author Eric Höglander
+ */
 class Variable_Core {
 	
+	/**
+	 * Database object
+	 * @var \Db_Core
+	 */
 	protected $Db;
 
 
+	/**
+	 * Constructor
+	 * @param \Db_Core $Db
+	 */
 	public function __construct($Db) {
 		$this->Db = $Db;
 	}
 	
+	/**
+	 * Fetches a variable from the database
+	 * @param  string $name
+	 * @param  mixed  $def
+	 * @return mixed
+	 */
 	public function get($name, $def = null) {
 		$row = $this->Db->getRow("SELECT * FROM `variable` WHERE name = :name", [":name" => $name]);
 		if (!$row)
@@ -15,6 +40,11 @@ class Variable_Core {
 		return unserialize($row->data);
 	}
 
+	/**
+	 * Save a variable in the database
+	 * @param string $name
+	 * @param mixed $data
+	 */
 	public function set($name, $data) {
 		$values = [
 			"name" => $name,
