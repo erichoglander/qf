@@ -93,6 +93,7 @@ class Db_Core {
 			exit;
 		}
 		else {
+			ob_flush();
 			include filePath("view/default/500.php");
 			exit;
 		}
@@ -102,15 +103,16 @@ class Db_Core {
 	/**
 	 * Creates a WHERE clause from parameters
 	 *
-	 * Ex: $this->where("SELECT * FROM `mytable`", [], ["foo" => "bar", ["mykeys", [2,3], "!="]]);
-	 *     $sql: SELECT * FROM `mytable` WHERE foo = :foo0 && mykeys NOT IN (:mykeys1_0, :mykeys1_1)
-	 *     $vars: [":foo0" => "bar", ":mykeys1_0" => 2, ":mykeys1_1" => 3]
+	 * Ex: 
+	 * - $this->where("SELECT * FROM mytable", [], ["foo" => "bar", ["mykeys", [2,3], "!="]]);
+	 * - $sql: SELECT * FROM mytable WHERE foo = :foo0 && mykeys NOT IN (:mykeys1_0, :mykeys1_1)
+	 * - $vars: [":foo0" => "bar", ":mykeys1_0" => 2, ":mykeys1_1" => 3]
 	 *
 	 * @see    insert
 	 * @see    update
 	 * @see    delete
-	 * @param  string &$sql
-	 * @param  array &$vars
+	 * @param  string $sql
+	 * @param  array  $vars
 	 * @param  array  $conditions
 	 * @return string
 	 */
