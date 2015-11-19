@@ -155,7 +155,7 @@ class Imagestyle_Core {
 	
 	protected function setAlpha(&$im) {
 		if ($this->info["extension"] == "png") {
-			$opacity = imagecolorallocatealpha($im, 0, 0, 0, 127);
+			$opacity = imagecolorallocatealpha($im, 255, 255, 255, 127);
 			imagefill($im, 0, 0, $opacity);
 			imagealphablending($im, true);
 			imagesavealpha($im, true);
