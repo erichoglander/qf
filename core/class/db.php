@@ -1,15 +1,52 @@
 <?php
+/**
+ * Contains database class
+ */
+/**
+ * Database class
+ * @author Eric Höglander
+ */
 class Db_Core {
 
+	/**
+	 * If true, debugging information will be printed when an error occurs
+	 * @var boolean
+	 */
 	public $debug = false;
+
+	/**
+	 * True if connected to database
+	 * @var boolean
+	 */
 	public $connected = false;
 
+	/**
+	 * Used to prevent endless recursion when logging
+	 * @var int
+	 */
 	protected $exception_depth = 0;
+
+	/**
+	 * Contains error messages
+	 * @var array
+	 */
 	protected $errors = [];
 
-	private $database, $user, $pass;
+	/**
+	 * The native PDO object
+	 * @var PDO
+	 */
 	private $db;
 
+
+	/**
+	 * Connects to a database
+	 * @param  string $user
+	 * @param  string $pass
+	 * @param  string $db
+	 * @param  string $host
+	 * @return bool
+	 */
 	public function connect($user, $pass, $db, $host = "localhost") {
 		try {
 			$this->db = new PDO("mysql:host=".$host.";dbname=".$db.";charset=utf8", $user, $pass);
@@ -25,15 +62,31 @@ class Db_Core {
 		return true;
 	}
 	
+	/**
+	 * Dumps the database to a file
+	 * @param  string $file
+	 * @param  string $database
+	 * @param  string $user
+	 * @param  string $pass
+	 * @return bool             Always returns true
+	 */
 	public function dump($file, $database, $user, $pass) {
 		exec("mysqldump ".$database." --password=".$pass." --user=".$user." --single-transaction > ".$file);
 		return true;
 	}
 
+	/**
+	 * Getter for $errors
+	 * @return array
+	 */
 	public function getErrors() {
 		return $this->errors;
 	}
 	
+	/**
+	 * Is called when a database error occurs
+	 * @param  array $debug
+	 */
 	public function error($debug) {
 		if ($this->debug) {
 			pr($debug);
@@ -45,6 +98,22 @@ class Db_Core {
 		}
 	}
 	
+
+	/**
+	 * Creates a WHERE clause from parameters
+	 *
+	 * Ex: $this->where("SELECT * FROM `mytable`", [], ["foo" => "bar", ["mykeys", [2,3], "!="]]);
+	 *     $sql: SELECT * FROM `mytable` WHERE foo = :foo0 && mykeys NOT IN (:mykeys1_0, :mykeys1_1)
+	 *     $vars: [":foo0" => "bar", ":mykeys1_0" => 2, ":mykeys1_1" => 3]
+	 *
+	 * @see    insert
+	 * @see    update
+	 * @see    delete
+	 * @param  string &$sql
+	 * @param  array &$vars
+	 * @param  array  $conditions
+	 * @return string
+	 */
 	private function where(&$sql, &$vars, $conditions = []) {
 		if (!empty($conditions)) {
 			$sql.= " WHERE ";
@@ -93,6 +162,12 @@ class Db_Core {
 		}
 	}
 	
+	/**
+	 * Executes a query
+	 * @param  string $sql
+	 * @param  array  $param
+	 * @return PDOStatement
+	 */
 	public function query($sql, $param = []) {
 		// Replace every array param with multiple primitive params
 		foreach ($param as $key => $val) {
@@ -135,11 +210,24 @@ class Db_Core {
 		return $stmt;
 	}
 	
+	/**
+	 * Number of rows matching a query
+	 * @param  string $sql
+	 * @param  array  $param
+	 * @return int
+	 */
 	public function numRows($sql, $param = []) {
 		$stmt = $this->query($sql, $param);
 		return $stmt->rowCount();
 	}
 	
+	/**
+	 * Inserts data into the database
+	 * @param  string  $table
+	 * @param  array   $data
+	 * @param  boolean $ignore If true, adds IGNORE to the query
+	 * @return int             The id of the inserted row
+	 */
 	public function insert($table, $data, $ignore = false) {
 		if (!is_array($data))
 			$data = (array) $data;
@@ -162,10 +250,25 @@ class Db_Core {
 		return (int) $this->db->lastInsertId();
 	}
 	
+	/**
+	 * Insert data into the database if a row with the same primary keys doesnt exist
+	 * @see    insert
+	 * @param  string $table
+	 * @param  array $data
+	 * @return int           The id of the inserted row
+	 */
 	public function insertIgnore($table, $data) {
 		return $this->insert($table, $data, true);
 	}
 	
+	/**
+	 * Updates a database row
+	 * @see    where
+	 * @param  string $table
+	 * @param  array  $data
+	 * @param  array  $conditions Conditions to be parsed
+	 * @return bool               Always returns true
+	 */
 	public function update($table, $data, $conditions = []) {
 		if (!is_array($data))
 			$data = (array) $data;
@@ -181,6 +284,12 @@ class Db_Core {
 		return true;
 	}
 	
+	/**
+	 * Deletes a row from the database
+	 * @param  string $table
+	 * @param  array  $conditions
+	 * @return bool               Always returns true
+	 */
 	public function delete($table, $conditions = []) {
 		$vars = [];
 		$sql = "DELETE FROM `".$table."`";
@@ -190,11 +299,23 @@ class Db_Core {
 		return true;
 	}
 	
+	/**
+	 * Fetches a single result
+	 * @param  string $sql
+	 * @param  array  $param
+	 * @return object
+	 */
 	public function getRow($sql, $param = []) {
 		$stmt = $this->query($sql, $param);
 		return $stmt->fetch(PDO::FETCH_OBJ);
 	}
 	
+	/**
+	 * Fetches all results
+	 * @param  string $sql
+	 * @param  array  $param
+	 * @return array
+	 */
 	public function getRows($sql, $param = []) {
 		$stmt = $this->query($sql, $param);
 		return $stmt->fetchAll(PDO::FETCH_OBJ);
