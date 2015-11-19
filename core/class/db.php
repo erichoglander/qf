@@ -103,10 +103,12 @@ class Db_Core {
 	/**
 	 * Creates a WHERE clause from parameters
 	 *
-	 * Ex: 
-	 * - $this->where("SELECT * FROM mytable", [], ["foo" => "bar", ["mykeys", [2,3], "!="]]);
-	 * - $sql: SELECT * FROM mytable WHERE foo = :foo0 && mykeys NOT IN (:mykeys1_0, :mykeys1_1)
-	 * - $vars: [":foo0" => "bar", ":mykeys1_0" => 2, ":mykeys1_1" => 3]
+	 * Ex:
+	 * <code>
+	 * $this->where("SELECT * FROM mytable", [], ["foo" => "bar", ["mykeys", [2,3], "!="]]);
+	 * $sql: SELECT * FROM mytable WHERE foo = :foo0 && mykeys NOT IN (:mykeys1_0, :mykeys1_1)
+	 * $vars: [":foo0" => "bar", ":mykeys1_0" => 2, ":mykeys1_1" => 3]
+	 * </code>
 	 *
 	 * @see    insert
 	 * @see    update

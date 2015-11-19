@@ -1,41 +1,96 @@
 <?php
-/*
-	Form class
+/**
+ * Contains the form class
+ */
 
-	Goal is to handle the following:
-		ajax
-		nested items
-		multiple items with an add/delete buttons
-
-
-	Usage:
-
-		class UserLogin_Form extends Form {
-
-			public function structure() {
-				// Return array of structure here
-			}
-
-		};
-			
-
-*/
+/**
+ * Form class
+ *
+ * Goal is to be flexible, extendable, and easy to use.
+ * @see    structure
+ * @author Eric Höglander
+ */
 class Form {
 
+  /**
+   * HTML attributes for form element
+   * @var array
+   */
 	protected $attributes = [
 		"method" => "POST",
 		"action" => "",
 		"class" => "form"
 	];
+
+	/**
+	 * Variables that can be used when creating structure
+	 * @see structure
+	 * @var array
+	 */
 	protected $vars;
+
+	/**
+	 * Name of the form
+	 * @var string
+	 */
 	protected $name;
+
+	/**
+	 * Form items
+	 * @var array
+	 */
 	protected $items;
+
+	/**
+	 * If true, form will be submitted with ajax
+	 * @var bool
+	 */
 	protected $ajax = false;
+
+	/**
+	 * Contains error messages
+	 * @var array
+	 */
 	protected $errors = [];
-	protected $prefix, $suffix;
-	protected $Db, $Io, $User;
+
+	/**
+	 * Will be rendered before the form
+	 * @var string
+	 */
+	protected $prefix;
+
+  /**
+   * Will be rendered after the form
+   * @var string
+   */
+	protected $suffix;
+
+	/**
+	 * Database object
+	 * @var \Db_Core
+	 */
+	protected $Db;
+
+  /**
+   * Io object
+   * @var \Io_Core
+   */
+	protected $Io;
+
+	/**
+	 * User entity
+	 * @var \User_Entity_Core
+	 */
+	protected $User;
 
 
+	/**
+	 * Constructor
+	 * @param \Db_Core          $Db
+	 * @param \Io_Core          $Io
+	 * @param \User_Entity_Core $User
+	 * @param array             $vars
+	 */
 	public function __construct($Db, $Io, $User, $vars = []) {
 		$this->Db = $Db;
 		$this->Io = $Io;
@@ -43,6 +98,10 @@ class Form {
 		$this->setVars($vars);
 	}
 
+	/**
+	 * Renders the form
+	 * @return string
+	 */
 	public function render() {
 		$path = $this->templatePath();
 		$vars = [
@@ -58,20 +117,41 @@ class Form {
 		return renderTemplate($path, $vars);
 	}
 
+	/**
+	 * Get variable from $vars
+	 * @param  string $name
+	 * @param  string $def  Default value is variable isn't set
+	 * @return mixed
+	 */
 	public function get($name, $def = null) {
 		if (!array_key_exists($name, $this->vars))
 			return $def;
 		return $this->vars[$name];
 	}
+
+	/**
+	 * Sets variable in $vars
+	 * @param string $name
+	 * @param mixed  $value
+	 */
 	public function set($name, $value) {
 		$this->vars[$name] = $value;
 		$this->loadStructure();
 	}
+
+	/**
+	 * Replaces all $vars
+	 * @param array $vars
+	 */
 	public function setVars($vars) {
 		$this->vars = $vars;
 		$this->loadStructure();
 	}
 
+	/**
+	 * Fetches all values from elements
+	 * @return array
+	 */
 	public function values() {
 		$value = [];
 		foreach ($this->items as $item) {
@@ -89,6 +169,10 @@ class Form {
 		return $value;
 	}
 
+	/**
+	 * Validates the form
+	 * @return bool
+	 */
 	public function isValidated() {
 		if (!empty($this->errors))
 			return false;
@@ -105,14 +189,29 @@ class Form {
 		return true;
 	}
 
-	public function validate() {
+	/**
+	 * Custom validation
+	 * @param  array $values
+	 * @return bool
+	 */
+	public function validate($values = []) {
 		return true;
 	}
 
+	/**
+	 * Checks if the form is submitted
+	 * @param  bool $validate If true, validates the form first
+	 * @return bool 
+	 */
 	public function isSubmitted($validate = true) {
 		return isset($_POST["form_".$this->name]) && (!$validate || $this->isValidated());
 	}
 
+	/**
+	 * Sets an error message in $errors
+	 * @param string $msg  Error message
+	 * @param string $name Name of the element
+	 */
 	public function setError($msg, $name = null) {
 		if ($name) {
 			$arr = explode("[", str_replace("]", "", $name));
@@ -129,11 +228,38 @@ class Form {
 			$this->errors[] = $msg;
 		}
 	}
+
+	/**
+	 * Getter for $errors
+	 * @return array
+	 */
 	public function getErrors() {
 		return $this->errors;
 	}
 
-
+	/**
+	 * The main structure of the form
+	 *
+	 * This method should be extended by the specific form
+	 * <code>
+	 * return [
+	 * 	"name" => "my_form",
+	 * 	"items" => [
+	 * 		"title" => [
+	 * 			"type" => "text",
+	 * 			"label" => "Title",
+	 * 			"filter" => ["strip_tags", "trim"],
+	 * 			"required" => true,
+	 * 			"value" => "Some default title"",
+	 * 		],
+	 * 		"actions" => $this->defaultActions()
+	 * 	]
+	 * ];
+	 * </code>
+	 *
+	 * @see    loadStructure
+	 * @return array
+	 */
 	protected function structure() {
 		return [
 			"name" => "default_form",
@@ -145,6 +271,10 @@ class Form {
 		];
 	}
 
+	/**
+	 * Loads the form structure
+	 * @see structure
+	 */
 	protected function loadStructure() {
 		$args = func_get_args();
 		if (empty($args))
@@ -168,6 +298,12 @@ class Form {
 			$this->attributes["enctype"] = "multipart/form-data";
 	}
 
+	/**
+	 * Loads a form item
+	 * @see    \FormItem
+	 * @param  string $name
+	 * @param  array $item
+	 */
 	protected function loadItem($name, $item) {
 		if (empty($item["type"]))
 			throw new Exception("No type given for form item ".$name);
@@ -185,6 +321,15 @@ class Form {
 		$this->items[$name] = $class;
 	}
 
+	/**
+	 * Returns structure for common actions
+	 *
+	 * By default, it returns a "Save" and "Cancel" button
+	 * 
+	 * @param  string $submit Text in submit button
+	 * @param  string $cancel Text in cancel button
+	 * @return array
+	 */
 	protected function defaultActions($submit = null, $cancel = null) {
 		if (!$submit)
 			$submit = t("Save");
@@ -208,6 +353,10 @@ class Form {
 		];
 	}
 
+	/**
+	 * Check if the form has a file item
+	 * @return bool
+	 */
 	protected function hasFileItem() {
 		if (!empty($this->items)) {
 			foreach ($this->items as $item) {
@@ -218,16 +367,28 @@ class Form {
 		return false;
 	}
 
+	/**
+	 * Verify user form token
+	 * @return bool
+	 */
 	protected function verifyToken() {
 		return $_POST["form_token"] === $this->token();
 	}
 
+	/**
+	 * Retrieves user form token
+	 * @return string
+	 */
 	protected function token() {
 		if (!isset($_SESSION["form_token"]))
 			$_SESSION["form_token"] = substr(hash("sha512", rand(1,1000).microtime(true)."qfformtoken"), 4, 32);
 		return $_SESSION["form_token"];
 	}
 
+	/**
+	 * Get form attributes
+	 * @return arr
+	 */
 	protected	function getAttributes() {
 		$attr = [];
 		foreach ($this->attributes as $key => $val)
@@ -242,6 +403,12 @@ class Form {
 			$attr["onsubmit"] = "return formAjaxSubmit(this);";
 		return $attr;
 	}
+
+	/**
+	 * Renders an array of attributes to a string
+	 * @param  array $attributes
+	 * @return string
+	 */
 	protected function attributes($attributes = null) {
 		if (!$attributes)
 			$attributes = $this->getAttributes();
@@ -252,10 +419,18 @@ class Form {
 		return $attr;
 	}
 
+	/**
+	 * Path to template for rendering
+	 * @return string
+	 */
 	protected function templatePath() {
 		return filePath("template/form/form.php");
 	}
 
+	/**
+	 * Renders all elements
+	 * @return string
+	 */
 	protected function renderItems() {
 		$items = [];
 		foreach ($this->items as $name => $item)
