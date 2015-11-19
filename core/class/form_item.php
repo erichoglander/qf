@@ -1,39 +1,255 @@
 <?php
+/**
+ * Contains the form item class
+ */
+
+/**
+ * Form item class
+ *
+ * @see    \Form 
+ * @see    \Form::structure
+ * @author Eric Höglander
+ */
 class FormItem {
 	
+	/**
+	 * Name of the element
+	 * @var string
+	 */
 	public $name;
+
+	/**
+	 * Child elements
+	 * @var array
+	 */
 	public $items;
-	public $multiple, $parent_multiple;
+
+	/**
+	 * If element can have multiple inputs
+	 * @var bool
+	 */
+	public $multiple;
+
+	/**
+	 * If parent element can have multiple inputs
+	 * @see $multiple
+	 * @var bool
+	 */
+	public $parent_multiple;
+
+	/**
+	 * If false, data will not be collected
+	 * @see \Form::values
+	 * @var boolean
+	 */
 	public $submit_data = true;
+
+	/**
+	 * If child data should be nested
+	 * @var bool
+	 */
 	public $tree = true;
 
+	/**
+	 * Element type
+	 * @var string
+	 */
 	public $type;
-	public $label, $item_label, $description, $icon;
+
+	/**
+	 * Element label
+	 * @var string
+	 */
+	public $label;
+
+	/**
+	 * Element item label
+	 * @var string
+	 */
+	public $item_label;
+
+	/**
+	 * Element description
+	 * @var string
+	 */
+	public $description;
+
+	/**
+	 * Element icon
+	 * @see \FontAwesome\Icon
+	 * @var string
+	 */
+	public $icon;
+
+	/**
+	 * If true, renders tools to sort elements
+	 * @see $multiple
+	 * @var bool
+	 */
 	public $sortable;
+
+	/**
+	 * Text of "add item"-button
+	 * @see $multiple
+	 * @var string
+	 */
 	public $add_button = "Add item";
+
+	/**
+	 * Text of "delete item"-button
+	 * @see $multiple
+	 * @var string
+	 */
 	public $delete_button = "Remove";
-	public $required, $focus;
+
+	/**
+	 * If input is required
+	 * @var bool
+	 */
+	public $required;
+
+	/**
+	 * If element should be focused on load
+	 * @var bool
+	 */
+	public $focus;
+
+	/**
+	 * HTML attributes of the input element
+	 * @var array
+	 */
 	public $attributes = [];
+
+	/**
+	 * Default value
+	 * @var mixed
+	 */
 	public $value;
+
+	/**
+	 * Possible value options
+	 * 
+	 * Used for elements such as checkboxes, radios, and select
+	 * @var array
+	 */
 	public $options;
+
+	/**
+	 * The empty option text
+	 * @see $options
+	 * @var string
+	 */
 	public $empty_option;
+
+	/**
+	 * What filter(s) should be applied to the value
+	 * @see \Io_Core
+	 * @var string|array
+	 */
 	public $filter = "trim";
-	public $validation, $validation_error;
+
+	/**
+	 * What validation(s) should be used
+	 * @see \Io_Core
+	 * @var string|array
+	 */
+	public $validation;
+
+	/**
+	 * Any validation error
+	 * @var string
+	 */
+	public $validation_error;
+
+	/**
+	 * Custom template path
+	 * @var string
+	 */
 	public $template;
+
+	/**
+	 * If form has been submitted
+	 * @see \Form\loadItem
+	 * @var boolean
+	 */
 	public $submitted = false;
 
-	public $prefix, $suffix;
-	public $input_prefix, $input_suffix;
+	/**
+	 * Will be rendered before the item element
+	 * @var string
+	 */
+	public $prefix;
+
+	/**
+	 * Will be rendered after the item element
+	 * @var string
+	 */
+	public $suffix;
+
+	/**
+	 * Will be rendered before the input element
+	 * @var string
+	 */
+	public $input_prefix;
+
+	/**
+	 * Will be rendered after the input element
+	 * @var string
+	 */
+	public $input_suffix;
+
+	/**
+	 * Any extra item class
+	 * @var string
+	 */
 	public $item_class;
 
+	/**
+	 * The element structure
+	 * @see loadStructure
+	 * @var array
+	 */
 	protected $structure = [];
+
+	/**
+	 * Structure used for children if $multiple is set
+	 * @see $mutiple
+	 * @see loadStructure
+	 * @var array
+	 */
 	protected $item_structure = [];
+
+	/**
+	 * Name of parent element
+	 * @var string
+	 */
 	protected $parent_name;
-	protected $error = [];
 
-	protected $Db, $Io;
+	/**
+	 * Element error
+	 * @var string
+	 */
+	protected $error;
+
+	/**
+	 * Database object
+	 * @var \Db_Core
+	 */
+	protected $Db;
+
+	/**
+	 * Io object
+	 * @var \Io_Core
+	 */
+	protected $Io;
 
 
+	/**
+	 * Contructor
+	 * @param \Db_Core $Db
+	 * @param \Io_Core $Io
+	 * @param array    $structure
+	 */
 	public function __construct($Db, $Io, $structure) {
 		$this->Db = $Db;
 		$this->Io = $Io;
@@ -41,13 +257,28 @@ class FormItem {
 		$this->loadStructure($structure);
 	}
 
+	/**
+	 * Setter for $error
+	 * @param string $msg
+	 */
 	public function setError($msg) {
 		$this->error = $msg;
 	}
+
+	/**
+	 * Getter for $error
+	 * @return string
+	 */
 	public function getError() {
 		return $this->error;
 	}
 
+	/**
+	 * Returns element value
+	 * @see    $filter
+	 * @see    filter
+	 * @return mixed
+	 */
 	public function value() {
 		if (!$this->submitted)
 			return $this->value;
@@ -74,6 +305,12 @@ class FormItem {
 		return $value;
 	}
 
+	/**
+	 * If the element or children has any input
+	 * @see    value
+	 * @see    emptyValue
+	 * @return bool
+	 */
 	public function hasValue() {
 		if ($this->items === null) {
 			return !$this->emptyValue($this->value());
@@ -86,6 +323,10 @@ class FormItem {
 		return false;
 	}
 
+	/**
+	 * If element or children has a file input
+	 * @return bool
+	 */
 	public function hasFileItem() {
 		if (!empty($this->items)) {
 			foreach ($this->items as $item) {
@@ -96,6 +337,12 @@ class FormItem {
 		return false;
 	}
 
+	/**
+	 * Validates the element and it's children
+	 * @see    validate
+	 * @param  bool $req If false, skips "required" checks
+	 * @return true
+	 */
 	public function validated($req = true) {
 		if (!$this->submitted)
 			return false;
@@ -128,6 +375,10 @@ class FormItem {
 		return true;
 	}
 
+	/**
+	 * Renders the element
+	 * @return string
+	 */
 	public function render() {
 		$path = $this->templateItemPath();
 		$vars = [
@@ -154,6 +405,12 @@ class FormItem {
 	}
 
 
+	/**
+	 * Loads the element structure
+	 * @see    structure
+	 * @see    \Form\loadItem
+	 * @param  array $structure
+	 */
 	protected function loadStructure($structure) {
 		if (is_callable([$this, "loadDefault"]))
 			$this->loadDefault();
@@ -218,6 +475,12 @@ class FormItem {
 		}
 	}
 
+	/**
+	 * Loads a child element
+	 * @see    loadStructure
+	 * @param  string $name
+	 * @param  array $item
+	 */
 	protected function loadItem($name, $item) {
 		if (empty($item["type"]))
 			throw new Exception("No type given for form item ".$name);
@@ -235,9 +498,24 @@ class FormItem {
 		$this->items[$name] = $class;
 	}
 
+	/**
+	 * Applies a filter to a value
+	 * @see    \Io_Core::filter
+	 * @param  mixed $value
+	 * @param  string|array $filter
+	 * @return mixed
+	 */
 	protected function filter($value, $filter) {
 		return $this->Io->filter($value, $filter);
 	}
+
+	/**
+	 * Validates a value and sets an error if it fails
+	 * @see    \Io_Core::validate
+	 * @param  mixed $value
+	 * @param  string|array $validation
+	 * @return bool
+	 */
 	protected function validate($value, $validation) {
 		if (!$this->Io->validate($value, $validation)) {
 			if ($this->validation_error)
@@ -249,11 +527,20 @@ class FormItem {
 		return true;
 	}
 
+	/**
+	 * Checks if the value is "empty"
+	 * @param  mixed $val
+	 * @return bool
+	 */
 	protected function emptyValue($val) {
 		$is_arr = is_array($val);
 		return ($is_arr && empty($val) || !$is_arr && strlen($val) === 0);
 	}
 
+	/**
+	 * Fetches the value from $_POST
+	 * @return mixed
+	 */
 	protected function postValue() {
 		$data = $_POST;
 		if ($this->parent_name) {
@@ -268,10 +555,21 @@ class FormItem {
 		return (isset($data[$this->name]) ? $data[$this->name] : null);
 	}
 
+	/**
+	 * Fetches the specific item value
+	 * @see    postValue
+	 * @return mixed
+	 */
 	protected function itemValue() {
 		return $this->postValue();
 	}
 
+	/**
+	 * Combines options into one array
+	 * @see    $options
+	 * @see    $empty_option
+	 * @return array
+	 */
 	protected function options() {
 		if ($this->options === null)
 			return null;
@@ -281,26 +579,51 @@ class FormItem {
 		return $options;
 	}
 
+	/**
+	 * Checks if element type can be considered as text
+	 * @return bool
+	 */
 	protected function isTextfield() {
 		$arr = ["text", "textarea", "password", "tel", "url", "email", "search", "number"];
 		return in_array($this->inputType(), $arr);
 	}
 
+	/**
+	 * The type to be used for the input element
+	 * @return string
+	 */
 	protected function inputType() {
 		return $this->type;
 	}
+
+	/**
+	 * The css classes to be used for the input element
+	 * @return string
+	 */
 	protected function inputClass() {
 		$class = cssClass("form-".$this->inputType());
 		if ($this->isTextfield())
 			$class.= " form-textfield";
 		return $class;
 	}
+
+	/**
+	 * The name to be used for the input element
+	 * @see    $parent_name
+	 * @see    $name
+	 * @return string
+	 */
 	protected function inputName() {
 		if (!$this->tree)
 			return $this->parent_name;
 		return ($this->parent_name ? $this->parent_name."[".$this->name."]" : $this->name);
 	}
 
+	/**
+	 * The css classes to be used for the item element
+	 * @see    $item_class
+	 * @return string
+	 */
 	protected function itemClass() {
 		$type = $this->type;
 		if ($this->multiple)
@@ -321,6 +644,10 @@ class FormItem {
 		return $class;
 	}
 
+	/**
+	 * Get an array of HTML attributes for the input element
+	 * @return array
+	 */
 	protected	function getAttributes() {
 		$attr = [];
 		$attr["type"] = $this->inputType();
@@ -333,6 +660,12 @@ class FormItem {
 			$attr["class"].= " ".$this->inputClass();
 		return $attr;
 	}
+
+	/**
+	 * Combines the HTML attributes to a string
+	 * @see    getAttributes
+	 * @return string
+	 */
 	protected function attributes() {
 		$attributes = $this->getAttributes();
 		$attr = "";
@@ -342,6 +675,10 @@ class FormItem {
 		return $attr;
 	}
 
+	/**
+	 * Path to the item template
+	 * @return string
+	 */
 	protected function templateItemPath() {
 		$prefix = "form_item";
 		$d = "__";
@@ -366,6 +703,11 @@ class FormItem {
 		}
 		return null;
 	}
+
+	/**
+	 * Path to the input template
+	 * @return string
+	 */
 	protected function templateInputPath() {
 		$prefix = "form_input";
 		$d = "__";
@@ -393,6 +735,10 @@ class FormItem {
 		return null;
 	}
 
+	/**
+	 * Render child elements
+	 * @return string
+	 */
 	protected function renderItems() {
 		if ($this->items === null)
 			return null;
@@ -401,6 +747,11 @@ class FormItem {
 			$items[$item->name] = $item->render();
 		return $items;
 	}
+
+	/**
+	 * Render input element
+	 * @return string
+	 */
 	protected function renderInput() {
 		if ($this->items !== null)
 			return null;
@@ -417,6 +768,12 @@ class FormItem {
 			$this->preRenderInput($vars);
 		return renderTemplate($path, $vars);
 	}
+
+	/**
+	 * Render "Add item"-button
+	 * @see    $add_button
+	 * @return string
+	 */
 	protected function renderAddButton() {
 		if (!$this->multiple || !$this->add_button) 
 			return null;
@@ -426,6 +783,12 @@ class FormItem {
 		$json = htmlspecialchars(json_encode($data), ENT_QUOTES);
 		return '<input type="button" class="form-button form-add-button btn" value="'.$this->add_button.'" last_item="'.$last_item.'" onclick="formAddButton(this, '.$json.')">';
 	}
+
+	/**
+	 * Render "Delete item"-button
+	 * @see    $delete_button
+	 * @return string
+	 */
 	protected function renderDeleteButton() {
 		if (!$this->parent_multiple || !$this->delete_button)
 			return null;
