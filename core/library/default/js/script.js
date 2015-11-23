@@ -74,6 +74,8 @@ Element.prototype.trigger = function(type) {
 
 Element.prototype.expand = function() {
 	var t = getStyle(this, "transition-duration");
+	if (!t)
+		t = getStyle(this, "-webkit-transition-duration");
 	t = (t ? parseInt(parseFloat(t.replace("s", ""))*1000) : 0);
 	var inner;
 	for (var i=0; i<this.childNodes.length; i++) {
@@ -105,6 +107,8 @@ Element.prototype.collapse = function(height) {
 	else if (typeof(height) == "number")
 		height = height+"px";
 	var t = getStyle(this, "transition-duration");
+	if (!t)
+		t = getStyle(this, "-webkit-transition-duration");
 	t = (t ? parseInt(parseFloat(t.replace("s", ""))*1000) : 0);
 	var inner;
 	for (var i=0; i<this.childNodes.length; i++) {
