@@ -36,6 +36,9 @@
 .select-custom-title {
 	position: relative;
 	cursor: pointer;
+	user-select: none;
+	-moz-user-select: none;
+	-webkit-user-select: none;
 }
 .select-custom-title .fa {
 	position: absolute;

@@ -29,6 +29,9 @@
 }
 .checkboxes-select-title {
 	cursor: pointer;
+	user-select: none;
+	-moz-user-select: none;
+	-webkit-user-select: none;
 }
 .checkboxes-select-title .fa {
 	float: right;
