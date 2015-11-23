@@ -1,14 +1,74 @@
 <?php
+/**
+ * Contains the mail class
+ */
+
+/**
+ * The mail class
+ * @author Eric Höglander
+ */
 class Mail_Core {
 
-	public $from, $to, $subject, $message;
+	/**
+	 * Sender e-mail address
+	 * @var string
+	 */
+	public $from;
+
+	/**
+	 * Receiver e-mail address
+	 * @var string
+	 */
+	public $to;
+
+	/**
+	 * The e-mail subject
+	 * @var string
+	 */
+	public $subject;
+
+	/**
+	 * The e-mail body
+	 * @var string
+	 */
+	public $message;
+
+	/**
+	 * If true, adds a signature to the end of the message
+	 * @see signature
+	 * @var boolean
+	 */
 	public $include_signature = true;
+
+	/**
+	 * File attachments
+	 * @var array
+	 */
 	public $attachments = [];
+
+	/**
+	 * If true, send e-mail as HTML
+	 * @var bool
+	 */
 	public $html = true;
 
+
+	/**
+	 * Config object
+	 * @var \Config_Core
+	 */
 	protected $Config;
 
+	/**
+	 * Database object
+	 * @var \Db_Core
+	 */
 
+
+	/**
+	 * Constructor
+	 * @param \Db_Core $Db
+	 */
 	public function __construct($Db) {
 		$this->Db = $Db;
 		$this->from = "info@".BASE_DOMAIN;
@@ -16,10 +76,18 @@ class Mail_Core {
 		$this->setDefaultHeaders();
 	}
 
+	/**
+	 * The signature to append to the end of the message
+	 * @return string
+	 */
 	public function signature() {
 		return '<hr><p>'.SITE_URL.'</p>';
 	}
 
+	/**
+	 * Prepare and send e-mail
+	 * @return bool
+	 */
 	public function send() {
 
 		if (!$this->from || !$this->to || !$this->message || !$this->subject)
@@ -58,9 +126,17 @@ class Mail_Core {
 		}
 	}
 
+	/**
+	 * Sets default headers
+	 */
 	public function setDefaultHeaders() {
 		$this->setHeaders($this->defaultHeaders());
 	}
+
+	/**
+	 * Default headers
+	 * @return array
+	 */
 	public function defaultHeaders() {
 		return [
 			"Mime-Version" => "1.0",
@@ -71,23 +147,50 @@ class Mail_Core {
 		];
 	}
 
+	/**
+	 * Sets an e-mail header
+	 * @param string $key
+	 * @param string $val
+	 */
 	public function setHeader($key, $val) {
 		$this->headers[$key] = $val;
 	}
+
+	/**
+	 * Setter for $header
+	 * @param array $arr
+	 */
 	public function setHeaders($arr) {
 		foreach ($arr as $key => $val)
 			$this->setHeader($key, $val);
 	}
 
+	/**
+	 * Attach a file to e-mail
+	 * @see    prepareAttachments
+	 * @param  string             $file Path to file
+	 */
 	public function attach($file) {
 		$this->attachments[] = $file;
 	}
 
 
+	/**
+	 * Send the mail
+	 * @see mail()
+	 * @param  string $to
+	 * @param  string $subject
+	 * @param  string $message
+	 * @param  string $headers
+	 * @return bool
+	 */
 	protected function mail($to, $subject, $message, $headers) {
 		return mail($this->to, $subject, $message, $headers);
-		return true;
 	}
+
+	/**
+	 * Prepare and encode attachments
+	 */
 	protected function prepareAttachments() {
 		if (!empty($this->attachments)) {
 			$hash = md5(time().microtime());

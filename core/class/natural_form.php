@@ -1,16 +1,40 @@
 <?php
+/**
+ * Contains the natural form class
+ */
+
+/**
+ * Natural form class
+ * @author NaturalForm
+ */
 class NaturalForm extends Form {
 	
+	/**
+	 * HTML content of the form button
+	 * @var string
+	 */
 	protected $nf_button;
+
+	/**
+	 * Whether to display a progress bar
+	 * @var bool
+	 */
 	protected $nf_progress = true;
 	
 	
+	/**
+	 * Add attributes to the form
+	 * @return array
+	 */
 	protected function getAttributes() {
 		$arr = parent::getAttributes();
 		$arr["class"].= " natural-form";
 		return $arr;
 	}
 	
+	/**
+	 * Manipulates the form structure
+	 */
 	protected function loadStructure() {
 		parent::loadStructure();
 		
