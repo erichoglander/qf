@@ -7,13 +7,20 @@ function collapsibleInit() {
 			_collapsibles.push(new collapsible(els[i]));
 		}
 	}
-	var observer = new MutationObserver(function(mutations) {
-		mutations.forEach(function(mutation) {
-			collapsibleObserve(mutation.target);
-		});    
-	});
-	var config = { childList: true, subtree: true };
-	observer.observe(document.body, config);
+	if (typeof(MutationObserver) == "function") {
+		var observer = new MutationObserver(function(mutations) {
+			mutations.forEach(function(mutation) {
+				collapsibleObserve(mutation.target);
+			});    
+		});
+		var config = { childList: true, subtree: true };
+		observer.observe(document.body, config);
+	}
+	else {
+		setInterval(function(){
+			collapsibleObserve(document.body);
+		}, 1000);
+	}
 }
 function collapsibleObserve(el) {
 	var els = el.getElementsByClassName("collapsible");

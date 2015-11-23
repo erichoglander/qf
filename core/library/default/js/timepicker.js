@@ -3,13 +3,20 @@ function timepickerInit() {
 	var els = document.getElementsByClassName("form-time");
 	for (var i=0; i<els.length; i++)
 		_timepickers.push(new timepicker(els[i]));
-	var observer = new MutationObserver(function(mutations) {
-		mutations.forEach(function(mutation) {
-			timepickerObserve(mutation.target);
-		});    
-	});
-	var config = { childList: true, subtree: true };
-	observer.observe(document.body, config);
+	if (typeof(MutationObserver) == "function") {
+		var observer = new MutationObserver(function(mutations) {
+			mutations.forEach(function(mutation) {
+				timepickerObserve(mutation.target);
+			});    
+		});
+		var config = { childList: true, subtree: true };
+		observer.observe(document.body, config);
+	}
+	else {
+		setInterval(function() {
+			timepickerObserve(document.body);
+		}, 1000);
+	}
 }
 function timepickerObserve(el) {
 	var els = el.getElementsByClassName("form-time");

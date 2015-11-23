@@ -6,13 +6,20 @@ function popupInit() {
 		var name = els[0].getAttribute("name");
 		_popups[name] = new popup(els[0]);
 	}
-	var observer = new MutationObserver(function(mutations) {
-		mutations.forEach(function(mutation) {
-			popupObserve(mutation.target);
-		});    
-	});
-	var config = { childList: true, subtree: true };
-	observer.observe(document.body, config);
+	if (typeof(MutationObserver) == "function") {
+		var observer = new MutationObserver(function(mutations) {
+			mutations.forEach(function(mutation) {
+				popupObserve(mutation.target);
+			});    
+		});
+		var config = { childList: true, subtree: true };
+		observer.observe(document.body, config);
+	}
+	else {
+		setInterval(function() {
+			popupObserve(document.body);
+		}, 1000);
+	}
 }
 function popupObserve(el) {
 	var els = el.getElementsByClassName("popup");

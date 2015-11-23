@@ -3,13 +3,20 @@ function tooltipInit() {
 	var els = document.getElementsByClassName("tooltip");
 	for (var i=0; i<els.length; i++)
 		_tooltips.push(new tooltip(els[i]));
-	var observer = new MutationObserver(function(mutations) {
-		mutations.forEach(function(mutation) {
-			tooltipInit2(mutation.target);
+	if (typeof(MutationObserver) == "function") {
+		var observer = new MutationObserver(function(mutations) {
+			mutations.forEach(function(mutation) {
+				tooltipInit2(mutation.target);
+			});
 		});
-	});
-	var config = { childList: true, subtree: true };
-	observer.observe(document.body, config);
+		var config = { childList: true, subtree: true };
+		observer.observe(document.body, config);
+	}
+	else {
+		setInterval(function() {
+			tooltipInit2(document.body);
+		}, 1000);
+	}
 }
 function tooltipInit2(el) {
 	var els = el.getElementsByClassName("tooltip");

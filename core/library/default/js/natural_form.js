@@ -11,13 +11,20 @@ function naturalFormsInit() {
 			_naturalForms[name] = new naturalForm(els[i], name);
 		}
 	}
-	var observer = new MutationObserver(function(mutations) {
-		mutations.forEach(function(mutation) {
-			naturalFormsObserve(mutation.target);
-		});    
-	});
-	var config = { childList: true, subtree: true };
-	observer.observe(document.body, config);
+	if (typeof(MutationObserver) == "function") {
+		var observer = new MutationObserver(function(mutations) {
+			mutations.forEach(function(mutation) {
+				naturalFormsObserve(mutation.target);
+			});    
+		});
+		var config = { childList: true, subtree: true };
+		observer.observe(document.body, config);
+	}
+	else {
+		setInterval(function() {
+			naturalFormsObserve(document.body);
+		}, 1000);
+	}
 }
 function naturalFormsObserve() {
 	var els = document.getElementsByClassName("natural-form");

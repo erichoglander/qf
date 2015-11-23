@@ -7,13 +7,20 @@ function autocompleteInit() {
 			_autocompletes.push(new autocomplete(els[i]));
 		}
 	}
-	var observer = new MutationObserver(function(mutations) {
-		mutations.forEach(function(mutation) {
-			autocompleteObserve(mutation.target);
-		});    
-	});
-	var config = { childList: true, subtree: true };
-	observer.observe(document.body, config);
+	if (typeof(MutationObserver) == "function") {
+		var observer = new MutationObserver(function(mutations) {
+			mutations.forEach(function(mutation) {
+				autocompleteObserve(mutation.target);
+			});    
+		});
+		var config = { childList: true, subtree: true };
+		observer.observe(document.body, config);
+	}
+	else {
+		setInterval(function() {
+			autocompleteObserve(document.body);
+		}, 1000);
+	}
 }
 function autocompleteObserve(el) {
 	var els = el.getElementsByClassName("form-autocomplete");

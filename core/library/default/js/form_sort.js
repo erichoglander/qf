@@ -7,13 +7,20 @@ function formSortInit() {
 			_form_sortables.push(new formSort(els[i]));
 		}
 	}
-	var observer = new MutationObserver(function(mutations) {
-		mutations.forEach(function(mutation) {
-			formSortObserve(mutation.target);
-		});    
-	});
-	var config = { childList: true, subtree: true };
-	observer.observe(document.body, config);
+	if (typeof(MutationObserver) == "function") {
+		var observer = new MutationObserver(function(mutations) {
+			mutations.forEach(function(mutation) {
+				formSortObserve(mutation.target);
+			});    
+		});
+		var config = { childList: true, subtree: true };
+		observer.observe(document.body, config);
+	}
+	else {
+		setInterval(function() {
+			formSortObserve(document.body);
+		}, 1000);
+	}
 }
 function formSortObserve(el) {
 	var els = el.getElementsByClassName("form-sortable");

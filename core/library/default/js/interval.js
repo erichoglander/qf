@@ -7,13 +7,20 @@ function intervalInit() {
 			_intervals.push(new interval(els[i]));
 		}
 	}
-	var observer = new MutationObserver(function(mutations) {
-		mutations.forEach(function(mutation) {
-			intervalObserve(mutation.target);
-		});    
-	});
-	var config = { childList: true, subtree: true };
-	observer.observe(document.body, config);
+	if (typeof(MutationObserver) == "function") {
+		var observer = new MutationObserver(function(mutations) {
+			mutations.forEach(function(mutation) {
+				intervalObserve(mutation.target);
+			});    
+		});
+		var config = { childList: true, subtree: true };
+		observer.observe(document.body, config);
+	}
+	else {
+		setInterval(function() {
+			intervalObserve(document.body);
+		}, 1000);
+	}
 }
 function intervalObserve(el) {
 	var els = el.getElementsByClassName("form-interval");

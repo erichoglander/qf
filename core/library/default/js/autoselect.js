@@ -7,13 +7,20 @@ function autoselectInit() {
 			_autoselects.push(new autoselect(els[i]));
 		}
 	}
-	var observer = new MutationObserver(function(mutations) {
-		mutations.forEach(function(mutation) {
-			autoselectObserve(mutation.target);
-		});    
-	});
-	var config = { childList: true, subtree: true };
-	observer.observe(document.body, config);
+	if (typeof(MutationObserver) == "function") {
+		var observer = new MutationObserver(function(mutations) {
+			mutations.forEach(function(mutation) {
+				autoselectObserve(mutation.target);
+			});    
+		});
+		var config = { childList: true, subtree: true };
+		observer.observe(document.body, config);
+	}
+	else {
+		setInterval(function() {
+			autoselectObserve(document.body);
+		}, 1000);
+	}
 }
 function autoselectObserve(el) {
 	var els = el.getElementsByClassName("form-autoselect");

@@ -7,13 +7,20 @@ function autocompleteTagsInit() {
 			_autocompleteTags.push(new autocompleteTags(els[i]));
 		}
 	}
-	var observer = new MutationObserver(function(mutations) {
-		mutations.forEach(function(mutation) {
-			autocompleteTagsObserve(mutation.target);
-		});    
-	});
-	var config = { childList: true, subtree: true };
-	observer.observe(document.body, config);
+	if (typeof(MutationObserver) == "function") {
+		var observer = new MutationObserver(function(mutations) {
+			mutations.forEach(function(mutation) {
+				autocompleteTagsObserve(mutation.target);
+			});    
+		});
+		var config = { childList: true, subtree: true };
+		observer.observe(document.body, config);
+	}
+	else {
+		setInterval(function() {
+			autocompleteTagsObserve(document.body);
+		}, 1000);
+	}
 }
 function autocompleteTagsObserve(el) {
 	var els = el.getElementsByClassName("form-tags");

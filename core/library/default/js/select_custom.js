@@ -7,13 +7,20 @@ function selectCustomInit() {
 			_select_customs.push(new selectCustom(els[i]));
 		}
 	}
-	var observer = new MutationObserver(function(mutations) {
-		mutations.forEach(function(mutation) {
-			selectCustomObserve(mutation.target);
-		});    
-	});
-	var config = { childList: true, subtree: true };
-	observer.observe(document.body, config);
+	if (typeof(MutationObserver) == "function") {
+		var observer = new MutationObserver(function(mutations) {
+			mutations.forEach(function(mutation) {
+				selectCustomObserve(mutation.target);
+			});    
+		});
+		var config = { childList: true, subtree: true };
+		observer.observe(document.body, config);
+	}
+	else {
+		setInterval(function() {
+			selectCustomObserve(document.body);
+		}, 1000);
+	}
 }
 function selectCustomObserve(el) {
 	var els = el.getElementsByClassName("select-custom");
@@ -48,13 +55,15 @@ function selectCustom(el) {
 		window.addEventListener("click", function(e){ self.windowClick(e); }, false);
 		this.tags.wrap.addClass("select-custom-init");
 		self.selectChange();
-		var observer = new MutationObserver(function(mutations) {
-			mutations.forEach(function(mutation) {
-				self.selectChange(mutation.target);
+		if (typeof(MutationObserver) == "function") {
+			var observer = new MutationObserver(function(mutations) {
+				mutations.forEach(function(mutation) {
+					self.selectChange(mutation.target);
+				});
 			});
-		});
-		var config = { childList: true, subtree: true };
-		observer.observe(this.tags.select, config);
+			var config = { childList: true, subtree: true };
+			observer.observe(this.tags.select, config);
+		}
 	}
 
 	this.selectChange = function() {

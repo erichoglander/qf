@@ -7,13 +7,20 @@ function checkboxesSelectInit() {
 			_checkboxes_selects.push(new checkboxesSelect(els[i]));
 		}
 	}
-	var observer = new MutationObserver(function(mutations) {
-		mutations.forEach(function(mutation) {
-			checkboxesSelectObserve(mutation.target);
-		});    
-	});
-	var config = { childList: true, subtree: true };
-	observer.observe(document.body, config);
+	if (typeof(MutationObserver) == "function") {
+		var observer = new MutationObserver(function(mutations) {
+			mutations.forEach(function(mutation) {
+				checkboxesSelectObserve(mutation.target);
+			});    
+		});
+		var config = { childList: true, subtree: true };
+		observer.observe(document.body, config);
+	}
+	else {
+		setInterval(function(){
+			checkboxesSelectObserve(document.body);
+		}, 1000);
+	}
 }
 function checkboxesSelectObserve(el) {
 	var els = el.getElementsByClassName("checkboxes-select");
