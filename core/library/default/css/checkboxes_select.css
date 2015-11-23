@@ -21,6 +21,7 @@
 	filter: alpha(opacity=100);
 	visibility: visible;
 	transition-delay: 0s;
+	-webkit-transition-delay: 0s;
 }
 .checkboxes-select-options label {
 	padding: 3px 15px;
