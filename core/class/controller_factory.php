@@ -255,14 +255,13 @@ class ControllerFactory_Core {
 				}
 			}
 			if (!array_key_exists("uri", $redir)) {
-				$redirect = $this->Db->getRow("SELECT * FROM `redirect` WHERE status = 1 && source = :uri", 
-						[":uri" => $uri]);
-				if (!$redirect)
-					$redirect = $this->Db->getRow("SELECT * FROM `redirect` WHERE status = 1 && (source = :alias || source = :path)", 
-							[":alias" => $request["alias"], ":path" => $request["path"]]);
-				if ($redirect) {
-					$redir["uri"] = uri($redirect->target);
-					$redir["code"] = $redirect->code;
+				$Redirect = newClass("Redirect_Entity", $this->Db);
+				$Redirect->loadBySource($uri);
+				if (!$Redirect->id())
+					$Redirect->loadBySource([$request["alias"], $request["path"]]);
+				if ($Redirect->id()) {
+					$redir["uri"] = $Redirect->uri();
+					$redir["code"] = $Redirect->get("code");
 				}
 			}
 			if (!empty($redir)) {
