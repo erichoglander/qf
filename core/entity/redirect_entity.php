@@ -10,13 +10,11 @@ class Redirect_Entity_Core extends Entity  {
 	}
 	
 	public function loadBySource($source) {
-		if (!is_array($source))
-			$source = [$source];
 		$row = $this->Db->getRow("
 				SELECT * FROM `redirect`
 				WHERE 
 					status = 1 &&
-					source IN :source",
+					source = :source",
 				[":source" => $source]);
 		if ($row) {
 			$this->load($row->id);

@@ -257,8 +257,11 @@ class ControllerFactory_Core {
 			if (!array_key_exists("uri", $redir)) {
 				$Redirect = newClass("Redirect_Entity", $this->Db);
 				$Redirect->loadBySource($uri);
-				if (!$Redirect->id())
-					$Redirect->loadBySource([$request["alias"], $request["path"]]);
+				if (!$Redirect->id()) {
+					$Redirect->loadBySource($request["path"]);
+					if (!$Redirect->id())
+						$Redirect->loadBySource($request["alias"]);
+				}
 				if ($Redirect->id()) {
 					$redir["uri"] = $Redirect->uri();
 					$redir["code"] = $Redirect->get("code");
