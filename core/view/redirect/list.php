@@ -2,7 +2,10 @@
 $this->Html->h1 = $this->Html->title = t("Redirects");
 $this->Html->breadcrumbs[] = $this->Html->title;
 ?>
+
 <a class="btn btn-primary" href="<?=url("redirect/add")?>"><?=t("Add redirect")?></a>
+
+<?=$search?>
 
 <table class="striped">
 	<thead>
@@ -29,3 +32,5 @@ $this->Html->breadcrumbs[] = $this->Html->title;
 	<?php } ?>
 	</tbody>
 </table>
+
+<?=$pager?>

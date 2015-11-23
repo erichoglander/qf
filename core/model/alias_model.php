@@ -61,10 +61,10 @@ class Alias_Model_Core extends Model {
 		return $this->Db->numRows($sql, $vars);
 	}
 	public function listSearch($values = [], $start = 0, $stop = 30) {
-		$list = [];
 		list($sql, $vars) = $this->listSearchQuery($values);
 		$sql.= " ORDER BY path ASC LIMIT ".$start.", ".$stop;
 		$rows = $this->Db->getRows($sql, $vars);
+		$list = [];
 		foreach ($rows as $row)
 			$list[] = $this->getEntity("Alias", $row->id);
 		return $list;

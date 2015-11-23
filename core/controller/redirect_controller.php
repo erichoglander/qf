@@ -68,7 +68,17 @@ class Redirect_Controller_Core extends Controller {
 	}
 
 	public function listAction() {
-		$this->viewData["redirects"] = $this->Model->getRedirectes();
+		$values = (array_key_exists("redirect_list_search", $_SESSION) ? $_SESSION["redirect_list_search"] : []);
+		$Form = $this->getForm("Search", ["q" => (!empty($values["q"]) ? $values["q"] : null)]);
+		if ($Form->isSubmitted()) {
+			$_SESSION["redirect_list_search"] = $Form->values();
+			refresh();
+		}
+		$Pager = newClass("Pager");
+		$Pager->setNum($this->Model->listSearchNum($values));
+		$this->viewData["redirects"] = $this->Model->listSearch($values, $Pager->start(), $Pager->ppp);
+		$this->viewData["pager"] = $Pager->render();
+		$this->viewData["search"] = $Form->render();
 		return $this->view("list");
 	}
 
