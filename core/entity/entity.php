@@ -15,6 +15,10 @@ class Entity {
 		if ($id)
 			$this->load($id);
 	}
+	
+	public function getPath() {
+		return $this->schema["table"]."/view/".$this->id();
+	}
 
 	public function json() {
 		$json = [
@@ -233,10 +237,6 @@ class Entity {
 
 	protected function getCreateAlias($new) {
 		return $new || $this->update_alias;
-	}
-	
-	protected function getPath() {
-		return $this->schema["table"]."/view/".$this->id();
 	}
 
 };
