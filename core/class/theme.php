@@ -5,6 +5,9 @@
 
 /**
  * Theme class
+ *
+ * A base to be extended by themes
+ * 
  * @author Eric Höglander
  */
 class Theme {
