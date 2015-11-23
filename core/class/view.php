@@ -1,11 +1,81 @@
 <?php
+/**
+ * Contains view class
+ */
+
+/**
+ * View class
+ * @author Eric Höglander
+ */
 class View_Core {
 	
+	/**
+	 * Name of the controller
+	 * @var string
+	 */
 	protected $controller_name;
+
+	/**
+	 * Name of the view
+	 * @var string
+	 */
 	protected $name;
-	protected $Config, $Db, $Io, $Cache, $Variable, $User, $Html;
+
+	/**
+	 * Config object
+	 * @var \Config_Core
+	 */
+	protected $Config;
+
+	/**
+	 * Database object
+	 * @var \Db_Core
+	 */
+	protected $Db;
+
+	/**
+	 * Io object
+	 * @var \Io_Core
+	 */
+	protected $Io;
+
+	/**
+	 * Cache object
+	 * @var \Cache_Core
+	 */
+	protected $Cache;
+
+	/**
+	 * Variable object
+	 * @var \Variable_Core
+	 */
+	protected $Variable;
+
+	/**
+	 * User entity
+	 * @var \User_Entity_Core
+	 */
+	protected $User;
+
+	/**
+	 * Html object
+	 * @var \Html_Core
+	 */
+	protected $Html;
 
 
+	/**
+	 * Constructor
+	 * @param \Config_Core      $Config
+	 * @param \Db_Core          $Db
+	 * @param \Io_Core          $Io
+	 * @param \Cache_Core       $Cache
+	 * @param \Variable_Core    $Variable
+	 * @param \User_Entity_Core $User
+	 * @param string            $controller_name
+	 * @param string            $name
+	 * @param array             $variables
+	 */
 	public function __construct($Config, $Db, $Io, $Cache, $Variable, $User, $controller_name, $name, $variables = []) {
 		$this->Config = $Config;
 		$this->Db = $Db;
@@ -22,6 +92,10 @@ class View_Core {
 		}
 	}
 
+	/**
+	 * Renders the view
+	 * @return string
+	 */
 	public function render() {
 		if ($this->Html) {
 			if (!empty($this->variables["html"])) {
@@ -48,6 +122,10 @@ class View_Core {
 	}
 
 
+	/**
+	 * Returns the filepath to the view
+	 * @return string
+	 */
 	protected function path() {
 		$path = filePath("view/".$this->controller_name."/".$this->name.".php");
 		if ($path)
