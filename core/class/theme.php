@@ -1,13 +1,81 @@
 <?php
+/**
+ * Contains theme class
+ */
+
+/**
+ * Theme class
+ * @author Eric Höglander
+ */
 class Theme {
 	
+	/**
+	 * Name of the theme
+	 * @var string
+	 */
 	public $name;
+
+	/**
+	 * Css files
+	 * @var array
+	 */
 	public $css = [];
+
+	/**
+	 * Js files
+	 */
 	public $js = [];
 
-	protected $Config, $Db, $Io, $Cache, $Variable, $User;
 
+	/**
+	 * Config object
+	 * @var \Config_Core
+	 */
+	protected $Config;
+
+	/**
+	 * Database object
+	 * @var \Db_Core
+	 */
+	protected $Db;
+
+	/**
+	 * Io object
+	 * @var \Io_Core
+	 */
+	protected $Io;
+
+	/**
+	 * Cache object
+	 * @var \Cache_Core
+	 */
+	protected $Cache;
+
+	/**
+	 * Variable object
+	 * @var \Variable_Core
+	 */
+	protected $Variable;
+
+	/**
+	 * User entity
+	 * @var \User_Entity_Core
+	 */
+	protected $User;
+
+
+	/**
+	 * Constructor
+	 * @param \Config_Core      $Config
+	 * @param \Db_Core          $Db
+	 * @param \Io-Core          $Io
+	 * @param \Cache_Core       $Cache
+	 * @param \Variable_Core    $Variable
+	 * @param \User_Entity_Core $User
+	 */
 	public function __construct($Config, $Db, $Io, $Cache, $Variable, $User) {
+		if (!$this->name)
+			throw new Exception("Missing theme name.");
 		$this->Config = $Config;
 		$this->Db = $Db;
 		$this->Io = $Io;
@@ -17,6 +85,12 @@ class Theme {
 		$this->loadFiles();
 	}
 
+	/**
+	 * Renders a theme template
+	 * @param  string $part
+	 * @param  array  $vars
+	 * @return string
+	 */
 	public function render($part, $vars = []) {
 		$template = $this->getTemplate($part);
 		if (!$template)
@@ -41,24 +115,55 @@ class Theme {
 	}
 
 
+	/**
+	 * Load theme files
+	 */
 	protected function loadFiles() {
 	}
+
+	/**
+	 * Called before rendering a theme template
+	 * @param  string $part
+	 * @param  array  &$vars
+	 */
 	protected function preRender($part, &$vars) {
 	}
 
+	/**
+	 * Get file path of a theme template
+	 * @param  string $name
+	 * @return string
+	 */
 	protected function getTemplate($name) {
 		return filePath("theme/".$this->name."/template/".$name.".php");
 	}
 	
+	/**
+	 * Returns an entity object
+	 * @param  string $name
+	 * @param  int    $id
+	 * @return \Entity
+	 */
 	protected function getEntity($name, $id = null) {
 		return newClass($name."_Entity", $this->Db, $id);
 	}
 	
+	/**
+	 * Returns a model object
+	 * @param  string $name
+	 * @return \Model
+	 */
 	protected function getModel($name) {
 		$cname = ucwords($name)."_Model";
 		return newClass($cname, $this->Config, $this->Db, $this->Io, $this->Cache, $this->Variable, $this->User);
 	}
 	
+	/**
+	 * Returns a form object
+	 * @param  string $name
+	 * @param  array  $vars
+	 * @return \Form
+	 */
 	protected function getForm($name, $vars = []) {
 		return newClass($name."_Form", $this->Db, $this->Io, $this->User, $vars);
 	}
