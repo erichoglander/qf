@@ -1,4 +1,13 @@
 <?php
+/**
+ * Installation file
+ *
+ * Sets up database, adds translations, and sets up admin account
+ * Ex: php install.php
+ * 
+ * @author Eric Höglander
+ */
+
 require_once("core/inc/bootstrap.php");
 
 if (!IS_CLI)

@@ -1,4 +1,9 @@
 <?php
+/**
+ * Index file
+ * @author Eric Höglander
+ */
+
 require_once("core/inc/bootstrap.php");
 
 if (IS_CLI)

@@ -1,4 +1,13 @@
 <?php
+/**
+ * CLI execution file
+ *
+ * Execute an uri through cli
+ * Ex: php cli.php my-controller/my-action/arg1
+ * 
+ * @author Eric Höglander
+ */
+
 require_once("core/inc/bootstrap.php");
 
 if (!IS_CLI)
