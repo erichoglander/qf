@@ -1,24 +1,84 @@
 <?php
+/**
+ * Contains imagestyle class
+ */
+
+/**
+ * Imagestyle class
+ *
+ * Performs various image transformations
+ *
+ * @author Eric Höglander
+ */
 class Imagestyle_Core {
 	
+	/**
+	 * Original image path
+	 * @var string
+	 */
 	public $src;
+	
+	/**
+	 * Where to save resulting image
+	 * @var string public or private
+	 */
 	public $dir = "public";
-	public $width, $height;
+	
+	/**
+	 * Width of image
+	 * @var int
+	 */
+	public $width;
+	
+	/**
+	 * Height of image
+	 * @var int
+	 */
+	public $height;
+	
+	/**
+	 * Array of available image styles
+	 * @var array
+	 */
 	public $styles = [
 		"upload" => ["scale" => [600, 300]],
 	];
 	
+	/**
+	 * File info
+	 * @var array
+	 */
 	protected $info;
+	
+	/**
+	 * Image resource
+	 * @var resource
+	 */
 	protected $im;
 	
 	
+	/**
+	 * Constructor
+	 * @param $src
+	 */
 	public function __construct($src = null) {
 		$this->src = $src;
 	}
 	
+	/**
+	 * Check if a style exists in $styles
+	 * @param $name
+	 * @return bool
+	 */
 	public function styleExists($name) {
 		return array_key_exists($name, $this->styles);
 	}
+	
+	/**
+	 * Perform style operations
+	 * @param $name Name of style
+	 * @return string
+	 */
 	public function style($name) {
 		if (!$this->styleExists($name))
 			return null;
@@ -42,13 +102,27 @@ class Imagestyle_Core {
 		return $target_uri;
 	}
 	
+	/**
+	 * Returns uri of target directory
+	 * @return string
+	 */
 	public function uri() {
 		return ($this->dir == "private" ? PRIVATE_URI : PUBLIC_URI)."/images";
 	}
+	
+	/**
+	 * Returns path of target directory
+	 * @return string
+	 */
 	public function path() {
 		return ($this->dir == "private" ? PRIVATE_PATH : PUBLIC_PATH)."/images";
 	}
 	
+	/**
+	 * Scale and crop image to cover given dimensions
+	 * @param $w
+	 * @param $h
+	 */
 	public function scaleCrop($w, $h) {
 		if (!$this->im)
 			return;
@@ -75,6 +149,11 @@ class Imagestyle_Core {
 		$this->im = $im;
 	}
 	
+	/**
+	 * Scale image to fit inside given dimesions
+	 * @param $w Max width
+	 * @param $h Max height
+	 */
 	public function scale($w = 0, $h = 0) {
 		if (!$this->im)
 			return;
@@ -102,6 +181,10 @@ class Imagestyle_Core {
 		$this->im = $im;
 	}
 	
+	/**
+	 * Load image
+	 * @return bool
+	 */
 	public function loadSource() {
 		if (!file_exists($this->src))
 			return false;
@@ -135,6 +218,11 @@ class Imagestyle_Core {
 		return true;
 	}
 	
+	/**
+	 * Save resulting image
+	 * @param $dest Destination
+	 * @param bool
+	 */
 	public function save($dest) {
 		try {
 			if ($this->info["extension"] == "jpg" || $this->info["extension"] == "jpeg")
@@ -153,6 +241,12 @@ class Imagestyle_Core {
 	}
 	
 	
+	/**
+	 * Set image alpha for png images
+	 * @see imagealphablending()
+	 * @see imagesavealpha()
+	 * @param resource
+	 */
 	protected function setAlpha(&$im) {
 		if ($this->info["extension"] == "png") {
 			$opacity = imagecolorallocatealpha($im, 255, 255, 255, 127);
