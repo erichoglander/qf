@@ -56,6 +56,11 @@ function autocomplete(el) {
 		this.tags.remove = this.tags.wrap.getElementsByClassName("autocomplete-remove")[0];
 		this.tags.items = [];
 		
+		if (this.tags.title.getAttribute("onchange")) {
+			this.tags.value.setAttribute("onchange", this.tags.title.getAttribute("onchange"));
+			this.tags.title.removeAttribute("onchange");
+		}
+		
 		this.ajax = new xajax();
 		this.tags.title.addEventListener("keydown", function(e){ self.onKeydown(e); }, false);
 		this.tags.title.addEventListener("keyup", function(e){ self.onKeyup(e); }, false);
@@ -170,6 +175,7 @@ function autocomplete(el) {
 		this.tags.preview.textContent = "";
 		this.tags.wrap.removeClass("has-value");
 		this.tags.title.focus();
+		this.tags.value.trigger("change");
 	}
 	
 	this.itemUp = function() {
@@ -193,6 +199,7 @@ function autocomplete(el) {
 		this.tags.wrap.addClass("has-value");
 		this.preview();
 		this.deleteItems();
+		this.tags.value.trigger("change");
 	}
 	this.itemSetActive = function(n) {
 		if (this.itemActive != -1 && this.items[this.itemActive])
