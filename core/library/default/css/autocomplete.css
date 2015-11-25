@@ -1,5 +1,5 @@
 .form-type-autocomplete.has-value .form-autocomplete,
-.autocomplete-preview {
+.autocomplete-preview.form-textfield {
 	display: none;
 }
 .form-type-autocomplete.has-value .autocomplete-preview {

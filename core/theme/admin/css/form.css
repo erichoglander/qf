@@ -323,18 +323,10 @@ input {
 }
 
 .autocomplete-preview {
-	background: none;
-	color: #333;
-	padding: 6px 32px 6px 12px;
-	margin-bottom: 0px;
-	font-size: 14px;
-	font-weight: 400;
 	white-space: nowrap;
 	vertical-align: middle;
 	-moz-user-select: none;
-	background-image: none;
-	border: 1px solid #ccc;
-	border-radius: 4px;
+	padding-right: 20px;
 }
 .autocomplete-remove {
 	color: #C9302C;

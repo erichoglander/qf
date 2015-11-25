@@ -1,4 +1,4 @@
-<div class="autocomplete-preview">
+<div class="autocomplete-preview form-textfield">
 	<div class="autocomplete-preview-title"><?=($value && array_key_exists("title", $value) ? $value["title"] : null)?></div>
 	<div class="autocomplete-remove"><?=FontAwesome\Icon("times")?></div>
 </div>
