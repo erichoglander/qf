@@ -13,7 +13,11 @@ class Autocomplete_FormItem_Core extends FormItem {
 	}
 	
 	protected function itemClass() {
-		return parent::itemClass().($this->value() ? " has-value" : "");
+		return parent::itemClass().(!$this->emptyValue() ? " has-value" : "");
+	}
+	
+	protected function emptyValue($val) {
+		return empty($val["value"]);
 	}
 	
 	protected function getAttributes() {

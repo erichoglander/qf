@@ -88,6 +88,7 @@ function autocomplete(el) {
 	this.onKeyup = function(e) {
 		var self = this;
 		var code = e.keyCode;
+		this.removeError();
 		if (code == 13) {
 			e.preventDefault();
 			this.itemEnter();
@@ -116,6 +117,18 @@ function autocomplete(el) {
 	}
 	this.onFocus = function() {
 		this.showItems();
+	}
+	
+	this.removeError = function() {
+		if (this.tags.wrap.hasClass("form-item-error")) {
+			this.tags.wrap.removeClass("form-item-error");
+			var icon = this.tags.wrap.getElementByClassName("form-icon-feedback");
+			var error = this.tags.wrap.getElementByClassName("form-input-error");
+			if (icon)
+				icon.parentNode.removeChild(icon);
+			if (error)
+				error.parentNode.removeChild(error);
+		}
 	}
 	
 	this.request = function() {
