@@ -5,6 +5,7 @@
 	position: absolute;
 	top: 50%;
 	left: 0;
+	marign-top: -31px;
 }
 .form-sortable .form-sortable-drag {
 	cursor: move;
@@ -13,4 +14,10 @@
 .form-sortable .form-sortable-down {
 	text-align: center;
 	cursor: pointer;
+}
+.form-collapsible.collapsed > .form-sortable {
+	margin-top: -21px;
+}
+.form-collapsible.collapsed > .form-sortable .form-sortable-drag {
+	display: none;
 }

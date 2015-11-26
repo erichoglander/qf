@@ -1,12 +1,5 @@
 <?=$prefix?>
 <div class="<?=$item_class?>">
-<?php if (!empty($sortable)) { ?>
-	<div class="form-sortable">
-		<div class="form-sortable-up"><?=FontAwesome\Icon("angle-up")?></div>
-		<div class="form-sortable-drag"><?=FontAwesome\Icon("arrows")?></div>
-		<div class="form-sortable-down"><?=FontAwesome\Icon("angle-down")?></div>
-	</div>
-<?php } ?>
 <?php if (!empty($label)) { ?>
 	<label class="form-label" for="<?=$input_name?>"><?=$label?></label>
 <?php } ?>
@@ -28,5 +21,12 @@ if ($items !== null) {
 	<div class="form-item-loader">
 		<?=FontAwesome\Icon("refresh", "fa-spin")?>
 	</div>
+<?php if (!empty($sortable)) { ?>
+	<div class="form-sortable">
+		<div class="form-sortable-up"><?=FontAwesome\Icon("angle-up")?></div>
+		<div class="form-sortable-drag"><?=FontAwesome\Icon("arrows")?></div>
+		<div class="form-sortable-down"><?=FontAwesome\Icon("angle-down")?></div>
+	</div>
+<?php } ?>
 </div>
 <?=$suffix?>
