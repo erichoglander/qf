@@ -42,6 +42,13 @@ class Address_FormItem_Core extends FormItem {
 				"type" => "value",
 			];
 		}
+		if (in_array("co", $this->address_fields)) {
+			$structure["items"]["co"] = [
+				"type" => "text",
+				"label" => t("C/o"),
+				"filter" => ["strip_tags", "trim"],
+			];
+		}
 		if (in_array("line", $this->address_fields)) {
 			$structure["items"]["line"] = [
 				"type" => "text",
