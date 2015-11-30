@@ -5,11 +5,11 @@ class Content_Controller_Core extends Controller {
 		$acl = ["contentAdmin"];
 		if ($action == "view")
 			$acl[] = "contentView";
-		else if ($action == "edit")
+		else if ($action == "edit" || $action == "list")
 			$acl[] = "contentEdit";
-		else if ($action == "delete")
+		else if ($action == "delete" || $action == "list")
 			$acl[] = "contentDelete";
-		else if ($action == "config")
+		else if ($action == "config" || $action == "list")
 			$acl[] = "contentConfig";
 		return $acl;
 	}
@@ -98,6 +98,9 @@ class Content_Controller_Core extends Controller {
 	}
 
 	public function listAction() {
+		$this->viewData["access_config"] = $this->Acl->access($this->User, $this->acl("config"));
+		$this->viewData["access_delete"] = $this->Acl->access($this->User, $this->acl("delete"));
+		$this->viewData["access_edit"] = $this->Acl->access($this->User, $this->acl("edit"));
 		$this->viewData["contents"] = $this->Model->getContents();
 		return $this->view("list");
 	}

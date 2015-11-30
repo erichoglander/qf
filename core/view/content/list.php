@@ -23,9 +23,15 @@ $this->Html->breadcrumbs[] = $this->Html->title;
 			<td><?=date("Y-m-d H:i:s", $Content->get("created"))?></td>
 			<td><?=date("Y-m-d H:i:s", $Content->get("updated"))?></td>
 			<td class="actions">
+				<?php if ($access_config) { ?>
 				<a href="<?=url("content/config/".$Content->id())?>"><?=t("Configure")?></a>
+				<?php } ?>
+				<?php if ($access_edit) { ?>
 				<a href="<?=url("content/edit/".$Content->id())?>"><?=t("Edit")?></a>
+				<?php } ?>
+				<?php if ($access_delete) { ?>
 				<a href="<?=url("content/delete/".$Content->id())?>"><?=t("Delete")?></a>
+				<?php } ?>
 			</td>
 		</tr>
 	<?php } ?>
