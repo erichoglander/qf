@@ -451,6 +451,12 @@ class FormItem {
 					$st["label"] = $structure["labels"][$i];
 				else
 					$st["label"] = $item_label;
+				if (!empty($structure["placeholders"]) && array_key_exists($i, $structure["placeholders"])) {
+					if (is_array($structure["placeholders"][$i]))
+						$st["placeholders"] = $structure["placeholders"][$i];
+					else
+						$st["attributes"]["placeholder"] = $structure["placeholders"][$i];
+				}
 				unset($st["focus"]);
 				$this->loadItem($i, $st);
 			}
@@ -468,6 +474,12 @@ class FormItem {
 				foreach ($structure["items"] as $name => $item) {
 					if (!empty($structure["value"]) && array_key_exists($name, $structure["value"]))
 						$item["value"] = $structure["value"][$name];
+					if (!empty($structure["placeholders"]) && array_key_exists($name, $structure["placeholders"])) {
+						if (is_array($structure["placeholders"][$name]))
+							$item["placeholders"] = $structure["placeholders"][$name];
+						else
+							$item["attributes"]["placeholder"] = $structure["placeholders"][$name];
+					}
 					$item["parent_name"] = $this->inputName();
 					$this->loadItem($name, $item);
 				}
