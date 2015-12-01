@@ -1,5 +1,5 @@
 <?php
-class UserEmailConfirmation_Mail extends MailMessage {
+class UserEmailConfirmation_Mail_Core extends MailMessage {
 	
 	public function prepare($vars = []) {
 		$this->Mail->subject = "Account e-mail confirmation";
