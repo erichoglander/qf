@@ -2,6 +2,7 @@
 class Default_Library_Core extends Library {
 	
 	public $css = [
+		"css/style.css",
 		"css/collapsible.css",
 		"css/timepicker.css", 
 		"css/datepicker.css", 
