@@ -2,7 +2,7 @@
 <div id="system-messages">
 	<ul class="system-messages">
 		<?php foreach ($msgs as $msg) { ?>
-		<li class="system-message system-message-<?=$msg["type"]?>"><?=xss($msg["message"])?></li>
+		<li class="system-message system-message-<?=$msg["type"]?>"><?=$msg["message"]?></li>
 		<?php } ?>
 	</ul>
 </div>
