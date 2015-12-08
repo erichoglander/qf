@@ -13,7 +13,7 @@ function formAjaxSubmit(form) {
 		obj.post = oldFormData(form, id);
 		obj.headers = oldFormHeaders(id);
 	}
-	var url = (form.action ? form.action : "/"+REQUEST_PATH);
+	var url = (form.getAttribute("action") ? form.getAttribute("action") : BASE_URL+REQUEST_PATH);
 	var callback = function(r) {
 		form.removeClass("loading");
 		if (r.status == "error") {
