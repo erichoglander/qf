@@ -3,9 +3,16 @@ function formAjaxSubmit(form) {
 		return false;
 	var obj = {
 		method: "POST",
-		post: new FormData(form),
 		errorHandle: true
 	};
+	if (typeof(FormData) != "undefined") {
+		obj.post = new FormData(form);
+	}
+	else {
+		var id = formId();
+		obj.post = oldFormData(form, id);
+		obj.headers = oldFormHeaders(id);
+	}
 	var url = (form.action ? form.action : "/"+REQUEST_PATH);
 	var callback = function(r) {
 		form.removeClass("loading");
@@ -31,6 +38,28 @@ function formAjaxSubmit(form) {
 	form.addClass("loading");
 	ajax.send(url, callback, obj);
 	return false;
+}
+function formId() {
+	var id = "1";
+	for (var i=0; i<12; i++)
+		id+= parseInt(Math.random()*10);
+	return id;
+}
+function oldFormData(form, id) {
+	if (!id)
+		id = formId();
+	var data = '';
+	for (var i=0; form[i]; i++) {
+		data+= '-----------------------------'+id+'\n';
+		data+= 'Content-Disposition: form-data; name="'+form[i].name+'"\n\n';
+		data+= form[i].value;
+		data+= "\n";
+	}
+	data+= '-----------------------------'+id+'--\n';
+	return data;
+}
+function oldFormHeaders(id) {
+	return { "Content-type": "multipart/form-data; boundary=---------------------------"+id };
 }
 
 function formFileUpload(el, parent_multiple, callback) {
@@ -217,13 +246,20 @@ function formCollapsibleInit() {
 	var els = document.getElementsByClassName("form-collapsible");
 	for (var i=0; i<els.length; i++)
 		_formCollapsibles.push(new collapsible(els[i]));
-	var observer = new MutationObserver(function(mutations) {
-		mutations.forEach(function(mutation) {
-			formCollapsibleObserve(mutation.target);
-		});    
-	});
-	var config = { childList: true, subtree: true };
-	observer.observe(document.body, config);
+	if (typeof(MutationObserver) == "function") {
+		var observer = new MutationObserver(function(mutations) {
+			mutations.forEach(function(mutation) {
+				formCollapsibleObserve(mutation.target);
+			});    
+		});
+		var config = { childList: true, subtree: true };
+		observer.observe(document.body, config);
+	}
+	else {
+		setInterval(function() {
+			formCollapsibleObserve(document.body);
+		}, 500);
+	}
 }
 function formCollapsibleObserve(el) {
 	var els = el.getElementsByClassName("form-collapsible");

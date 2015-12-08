@@ -15,6 +15,7 @@ class Default_Library_Core extends Library {
 		"css/popup.css",
 		"css/natural_form.css",
 		"css/form_sort.css",
+		"css/placeholder.css",
 	];
 	public $js = [
 		"js/script.js", 
@@ -33,6 +34,7 @@ class Default_Library_Core extends Library {
 		"js/popup.js",
 		"js/natural_form.js",
 		"js/form_sort.js",
+		"js/placeholder.js",
 	];
 
 }

@@ -1,3 +1,14 @@
+function isIE9() {
+	return navigator.appVersion.indexOf("MSIE 9") > 0;
+}
+if (isIE9()) {
+	Object.setPrototypeOf = function(obj, proto) {
+		for (var prop in proto)
+			obj[prop] = proto[prop];
+		return obj;
+	}
+}
+
 Element.prototype.addClass = function(cname) {
 	if (!this.className) {
 		this.className = cname;
@@ -49,11 +60,13 @@ if (typeof(document.getElementsByClassName) != "function") {
 	}
 }
 
-HTMLDocument.prototype.getElementByClassName = function(cname) {
-	var els = this.getElementsByClassName(cname);
-	if (els.length)
-		return els[0];
-	return null;
+if (typeof(HTMLDocument) != "undefined") {
+	HTMLDocument.prototype.getElementByClassName = function(cname) {
+		var els = this.getElementsByClassName(cname);
+		if (els.length)
+			return els[0];
+		return null;
+	}
 }
 Element.prototype.getElementByClassName = function(cname) {
 	var els = this.getElementsByClassName(cname);
