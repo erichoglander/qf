@@ -124,7 +124,7 @@ class Mail_Core {
 		foreach ($this->headers as $key => $val)
 			$headers.= $key.": ".$val."\r\n";
 
-		if (!$this->mail($this->to, $subject, $message, $headers)) {
+		if (!$this->mail($this->to, $subject, $message, $headers, "-f".$this->from)) {
 			addlog("mail", "Mail failed ".$this->to." (".$this->subject.")", $data, "error");
 			return false;
 		}
@@ -192,8 +192,8 @@ class Mail_Core {
 	 * @param  string $headers
 	 * @return bool
 	 */
-	protected function mail($to, $subject, $message, $headers) {
-		return mail($this->to, $subject, $message, $headers);
+	protected function mail($to, $subject, $message, $headers, $params) {
+		return mail($this->to, $subject, $message, $headers, $params);
 	}
 
 	/**
