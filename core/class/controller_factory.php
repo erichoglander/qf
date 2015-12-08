@@ -265,8 +265,8 @@ class ControllerFactory_Core {
 				$request["redirect"] = [
 					"location" => 
 						(!empty($redir["protocol"]) ? $redir["protocol"] : HTTP_PROTOCOL)."://".
-						(!empty($redir["host"]) ? $redir["host"] : $_SERVER["HTTP_HOST"]).
-						(!empty($redir["uri"]) ? "/".$redir["uri"] : $uri),
+						(!empty($redir["host"]) ? $redir["host"] : $_SERVER["HTTP_HOST"])."/".
+						(!empty($redir["uri"]) ? $redir["uri"] : $uri),
 					"code" => (!empty($redir["code"]) ? $redir["code"] : null)
 				];
 			}
