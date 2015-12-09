@@ -18,6 +18,14 @@ class UserRegister_Form_Core extends Form {
 				return false;
 			}
 		}
+		else {
+			$U = newClass("User_Entity", $this->Db);
+			$U->loadByName($values["email"]);
+			if ($U->id()) {
+				$this->setError(t("E-mail is already taken"), "email");
+				return false;
+			}
+		}
 		$U = newClass("User_Entity", $this->Db);
 		$U->loadByEmail($values["email"]);
 		if ($U->id()) {
