@@ -26,8 +26,10 @@ class User_Model_Core extends Model {
 				$re = "admin_approval";
 		}
 		else {
-			if ($User->save())
+			if ($User->save()) {
+				$User->login();
 				$re = "register_login";
+			}
 		}
 		if ($re)
 			addlog("user", "New user registration ".$User->get("name"));

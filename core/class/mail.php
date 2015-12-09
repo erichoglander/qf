@@ -98,8 +98,10 @@ class Mail_Core {
 	 */
 	public function send() {
 
-		if (!$this->from || !$this->to || !$this->message || !$this->subject)
+		if (!$this->from || !$this->to || !$this->message || !$this->subject) {
+			addlog("mail", "Mail failed: Missing parameters", ["from" => $this->from, "to" => $this->to, "message" => $this->message, "subject" => $this->subject]);
 			return false;
+		}
 
 		if ($this->html)
 			$this->setHeader("Content-Type", "text/html; charset=UTF-8");
