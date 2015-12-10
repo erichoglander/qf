@@ -243,11 +243,13 @@ class ControllerFactory_Core {
 			}
 
 			// Redirects
-			if ($this->Config->getHttps() && HTTP_PROTOCOL != "https")
-				$redir["protocol"] = "https";
-			$sub = $this->Config->getSubdomain();
-			if ($sub && strpos($_SERVER["HTTP_HOST"], $sub.".") !== 0) 
-				$redir["host"] = $sub.".".$_SERVER["HTTP_HOST"];
+			if (!IS_CLI) {
+				if ($this->Config->getHttps() && HTTP_PROTOCOL != "https")
+					$redir["protocol"] = "https";
+				$sub = $this->Config->getSubdomain();
+				if ($sub && strpos($_SERVER["HTTP_HOST"], $sub.".") !== 0) 
+					$redir["host"] = $sub.".".$_SERVER["HTTP_HOST"];
+			}
 			if (!array_key_exists("uri", $redir)) {
 				$Redirect = newClass("Redirect_Entity", $this->Db);
 				$Redirect->loadBySource($uri);
