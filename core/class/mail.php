@@ -153,7 +153,6 @@ class Mail_Core {
 			"Date" => date("D, j M Y H:i:s O"),
 			"Content-Type" => "text/plain; charset=UTF-8",
 			"X-Mailer" => "PHP/".phpversion(),
-			"X-MSMail-Priority" => "High",
 		];
 	}
 

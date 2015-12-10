@@ -159,7 +159,7 @@ class User_Entity_Core extends Entity {
 	}
 
 	public function generateResetLink() {
-		$link = hash("sha512", microtime(true)."qfreset".rand(10001, 20000));
+		$link = md5(hash("sha512", microtime(true)."qfreset".rand(10001, 20000)));
 		$hash = $this->hash($link, "qfresetlink");
 		$this->set("reset", $hash);
 		$this->set("reset_time", REQUEST_TIME);
@@ -174,15 +174,18 @@ class User_Entity_Core extends Entity {
 	}
 
 	public function generateEmailConfirmationLink() {
-		$link = hash("sha512", "qfconfirm".microtime(true).rand(20001, 30000));
+		$link = md5(hash("sha512", "qfconfirm".microtime(true).rand(20001, 30000)));
 		$hash = $this->hash($link, "qfemailconfirmationlink");
 		$this->set("email_confirmation", $hash);
 		$this->set("email_confirmation_time", REQUEST_TIME);
 		return $link;
 	}
 
-	public function hash($str, $salt) {
-		return hash("sha512", $salt.hash("sha512", $str).hash("sha512", $salt."qfpass"));
+	public function hash($str, $salt, $len = null) {
+		$hash = hash("sha512", $salt.hash("sha512", $str).hash("sha512", $salt."qfpass"));
+		if ($len)
+			$hash = substr($len, 0, $len);
+		return $hash;
 	}
 
 	public function hashPassword($pass, $salt) {
