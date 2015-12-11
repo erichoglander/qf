@@ -1,25 +1,182 @@
 <?php
+/**
+ * Contains the Html class
+ */
+/**
+ * The Html class
+ * @author Eric Höglander
+ */
 class Html_Core {
 	
-	public $title, $title_suffix, $title_full;
+	/**
+	 * The page title excluding suffix
+	 * @see getTitle
+	 * @var string
+	 */
+	public $title;
+
+	/**
+	 * The page title suffix
+	 * @see getTitle
+	 * @var string
+	 */
+	public $title_suffix;
+
+	/**
+	 * If present, sets the full page title
+	 * @see getTitle
+	 * @var string
+	 */
+	public $title_full;
+
+	/**
+	 * The main heading
+	 * @var string
+	 */
 	public $h1;
+
+	/**
+	 * Any meta tags to include in html head
+	 * @var string
+	 */
 	public $meta;
-	public $pre_css, $pre_js, $head_end;
-	public $pre_page, $post_page;
-	public $pre_content, $post_content;
+
+	/**
+	 * Html to include before the css files
+	 * @var string
+	 */
+	public $pre_css;
+
+	/**
+	 * Html to include before the js files
+	 * @var string
+	 */
+	public $pre_js;
+
+	/**
+	 * Html to include before the end of head
+	 * @var string
+	 */
+	public $head_end;
+
+	/**
+	 * Html to include before the page container
+	 * @var string
+	 */
+	public $pre_page;
+
+	/**
+	 * Html to include after the page container
+	 * @var string
+	 */
+	public $post_page;
+
+	/**
+	 * Html to include before the content container
+	 * @var string
+	 */
+	public $pre_content;
+
+	/**
+	 * Html to include after the content container
+	 * @var string
+	 */
+	public $post_content;
+
+	/**
+	 * The page content
+	 * @var string
+	 */
 	public $content;
+
+	/**
+	 * The name of the theme to render the page with
+	 * @var string
+	 */
 	public $theme = "admin";
 
+	/**
+	 * Css files to include on page
+	 * @var array
+	 */
 	public $css = [];
+
+	/**
+	 * Js files to include on page
+	 * @var array
+	 */
 	public $js = [];
+
+	/**
+	 * Breadcrumbs of the current page
+	 * @var array
+	 */
 	public $breadcrumbs = [];
+
+	/**
+	 * Css classes for the body
+	 * @var array
+	 */
 	public $body_class = [];
+
+	/**
+	 * Renderable menus
+	 * @var array
+	 */
 	public $menu = [];
 
-	public $libraries = ["FontAwesome"];
+	/**
+	 * Config object
+	 * @var \Config_Core
+	 */
+	protected $Config;
 
-	protected $Config, $Db, $Io, $Cache, $Variable, $User, $Theme;
+	/**
+	 * Database object
+	 * @var \Db_Core
+	 */
+	protected $Db;
 
+	/**
+	 * Io object
+	 * @var \Io_Core
+	 */
+	protected $Io;
+
+	/**
+	 * Cache object
+	 * @var \Cache_Core
+	 */
+	protected $Cache;
+
+	/**
+	 * Variable object
+	 * @var \Variable_Core
+	 */
+	protected $Variable;
+
+	/**
+	 * User entity
+	 * @var \User_Entity_Core
+	 */
+	protected $User;
+
+	/**
+	 * Theme object
+	 * @var \Theme
+	 */
+	protected $Theme;
+
+
+	/**
+	 * Constructor
+	 * @param \Config_Core      $Config
+	 * @param \Db_Core          $Db
+	 * @param \Io_Core          $Io
+	 * @param \Cache_Core       $Cache
+	 * @param \Variable_Core    $Variable
+	 * @param \User_Entity_Core $User
+	 */
 	public function __construct($Config, $Db, $Io, $Cache, $Variable, $User) {
 		$this->Config = $Config;
 		$this->Db = $Db;
@@ -46,6 +203,11 @@ class Html_Core {
 			</script>';
 	}
 
+	/**
+	 * Renders the html part of the theme, which includes the page part
+	 * @see    renderPage
+	 * @return string
+	 */
 	public function renderHtml() {
 		$this->loadTheme();
 		$this->preProcessHtml();
@@ -68,6 +230,10 @@ class Html_Core {
 		return $this->Theme->render("html", $vars);
 	}
 
+	/**
+	 * Renders the page part of the theme, which includes the content
+	 * @return string
+	 */
 	public function renderPage() {
 		$this->loadTheme();
 		$this->preProcessPage();
@@ -85,6 +251,12 @@ class Html_Core {
 		return $this->Theme->render("page", $vars);
 	}
 
+	/**
+	 * Renders a menu
+	 * @param  string $key
+	 * @param  array  $menu
+	 * @return string
+	 */
 	public function renderMenu($key, $menu) {
 		if (empty($menu["links"]))
 			return null;
@@ -94,6 +266,13 @@ class Html_Core {
 			</div>';
 		return $html;
 	}
+
+	/**
+	 * Renders menu links
+	 * @param  array  $menu
+	 * @param  int    $depth
+	 * @return string
+	 */
 	public function renderMenuLinks($menu, $depth = 1) {
 		$html = '';
 		if (!empty($menu["links"])) {
@@ -139,15 +318,37 @@ class Html_Core {
 	}
 
 
+	/**
+	 * Called before the html part is rendered and before the vars are set
+	 */
 	protected function preProcessHtml() {
 	}
+
+	/**
+	 * Called before the page part is rendered and before the vars are set
+	 */
 	protected function preProcessPage() {
 	}
+
+	/**
+	 * Called before the html part is rendered but after the vars are set
+	 * @param  array &$vars
+	 */
 	protected function preRenderHtml(&$vars) {
 	}
+
+	/**
+	 * Called before the page part is rendered but after the vars are set
+	 * @param  array &$vars
+	 */
 	protected function preRenderPage(&$vars) {
 	}
 
+	/**
+	 * Renders the menus
+	 * @see    $menu
+	 * @return array
+	 */
 	protected function menus() {
 		$menus = [];
 		foreach ($this->menu as $key => $menu) 
@@ -155,17 +356,29 @@ class Html_Core {
 		return $menus;
 	}
 
+	/**
+	 * Get the full page title
+	 * @return string
+	 */
 	protected function getTitle() {
 		if ($this->title_full)
 			return $this->title_full;
 		return $this->title.$this->title_suffix;
 	}
 
+	/**
+	 * Create the theme object
+	 * @param  string $theme
+	 * @return \Theme
+	 */
 	protected function getTheme($theme) {
 		$class = ucwords($theme)."_Theme";
 		return newClass($class, $this->Config, $this->Db, $this->Io, $this->Cache, $this->Variable, $this->User);
 	}
 
+	/**
+	 * Load the theme
+	 */
 	protected function loadTheme() {
 		if (!$this->Theme) {
 			$this->Theme = $this->getTheme($this->theme);
@@ -174,15 +387,32 @@ class Html_Core {
 		}
 	}
 	
+	/**
+	 * Get an entity
+	 * @param  string $name
+	 * @param  int    $id
+	 * @return \Entity
+	 */
 	protected function getEntity($name, $id = null) {
 		return newClass($name."_Entity", $this->Db, $id);
 	}
 	
+	/**
+	 * Get a model
+	 * @param  string $name
+	 * @return \Model
+	 */
 	protected function getModel($name) {
 		$cname = ucwords($name)."_Model";
 		return newClass($cname, $this->Config, $this->Db, $this->Io, $this->Cache, $this->Variable, $this->User);
 	}
 	
+	/**
+	 * Get a form
+	 * @param  string $name
+	 * @param  array  $vars
+	 * @return \Form
+	 */
 	protected function getForm($name, $vars = []) {
 		return newClass($name."_Form", $this->Db, $this->Io, $this->User, $vars);
 	}
