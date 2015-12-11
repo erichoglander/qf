@@ -178,7 +178,7 @@ class ControllerFactory_Core {
 	public function getController($controller, $init = true) {
 		$class = newClass($controller."_Controller", $this->Config, $this->Db, $init);
 		if (!$class)
-			$class = new Controller($this->Config, $this->Db);
+			$class = new Controller($this->Config, $this->Db, $init);
 		return $class;
 	}
 
