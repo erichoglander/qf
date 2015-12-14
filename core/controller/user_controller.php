@@ -14,6 +14,8 @@ class User_Controller_Core extends Controller {
 			return ["userSettings"];
 		if ($action == "setpass")
 			return ["userSetPass"];
+		if ($action == "clearFlood")
+			return ["userClearFlood"];
 		return null;
 	}
 
@@ -238,6 +240,12 @@ class User_Controller_Core extends Controller {
 		$User->set("pass", $pass);
 		$User->save();
 		return t("Password changed for :name", "en", [":name" => $name]);
+	}
+	
+	public function clearFloodAction() {
+		$this->Model->clearLoginAttempts();
+		setmsg(t("Login attempts cleared"), "success");
+		redirect();
 	}
 
 	public function listAction() {

@@ -146,6 +146,15 @@ class Acl_Core {
 	protected function userSetPassAccess($User) {
 		return IS_CLI;
 	}
+	/**
+	 * Access to clear failed login attempts
+	 * @see    \User_Controller_Core::acl()
+	 * @param  \User_Entity_Core $User
+	 * @return bool
+	 */
+	protected function userClearFloodAccess($User) {
+		return $User->id() == 1;
+	}
 
 	/**
 	 * Complete localization admin access

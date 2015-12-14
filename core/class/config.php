@@ -141,6 +141,15 @@ class Config_Core {
 	public function getPrivatePath() {
 		return substr(DOC_ROOT, 0, strrpos(DOC_ROOT, "/"))."/private";
 	}
+	
+	/**
+	 * The timespan for failed login attempts
+	 * @see \User_Entity_Core::userFloodProtection()
+	 * @return int
+	 */
+	public function getFloodProtectionTime() {
+		return 60*60*12;
+	}
 
 	/**
 	 * The menus for the site
@@ -239,6 +248,10 @@ class Config_Core {
 								"title" => "Run cron",
 								"href" => "cron",
 								"return" => true,
+							],
+							"user-clear-flood" => [
+								"title" => "Clear login attempts",
+								"href" => "user/clear-flood",
 							],
 						],
 					],

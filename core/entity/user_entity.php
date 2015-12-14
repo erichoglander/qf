@@ -115,6 +115,7 @@ class User_Entity_Core extends Entity {
 	}
 
 	public function ipFloodProtection() {
+		$Config = newClass("Config");
 		$n = $this->Db->numRows("
 			SELECT id FROM `login_attempt` 
 			WHERE 
@@ -122,13 +123,14 @@ class User_Entity_Core extends Entity {
 				created > :time", 
 			[
 				":ip" => $_SERVER["REMOTE_ADDR"],
-				":time" => REQUEST_TIME - 60*60*12
+				":time" => REQUEST_TIME - $Config->getFloodProtectionTime()
 			]);
 		if ($n > 3)
 			return true;
 		return false;
 	}
 	public function userFloodProtection() {
+		$Config = newClass("Config");
 		$n = $this->Db->numRows("
 			SELECT id FROM `login_attempt` 
 			WHERE 
@@ -136,7 +138,7 @@ class User_Entity_Core extends Entity {
 				created > :time", 
 			[
 				":id" => $this->id(),
-				":time" => REQUEST_TIME - 60*60*12
+				":time" => REQUEST_TIME - $Config->getFloodProtectionTime(),
 			]);
 		if ($n > 5)
 			return true;

@@ -81,6 +81,11 @@ class User_Model_Core extends Model {
 		return $User;
 	}
 	
+	public function clearLoginAttempts() {
+		$this->Db->delete("login_attempt");
+		addlog("User", "Login attempts cleared", null, "success");
+	}
+	
 	public function addUser($values) {
 		$User = $this->getEntity("User");
 		if ($this->editUser($User, $values))
