@@ -229,6 +229,9 @@ input {
 	float: left;
 	margin-top: 0;
 }
+.form-type-address .form-name-country {
+	clear: both;
+}
 .form-collapsible.collapsed .form-delete-button {
 	display: none;
 }
