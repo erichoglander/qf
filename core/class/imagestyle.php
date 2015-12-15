@@ -59,7 +59,7 @@ class Imagestyle_Core {
 	
 	/**
 	 * Constructor
-	 * @param $src
+	 * @param string $src
 	 */
 	public function __construct($src = null) {
 		$this->src = $src;
@@ -67,7 +67,7 @@ class Imagestyle_Core {
 	
 	/**
 	 * Check if a style exists in $styles
-	 * @param $name
+	 * @param string $name
 	 * @return bool
 	 */
 	public function styleExists($name) {
@@ -76,7 +76,7 @@ class Imagestyle_Core {
 	
 	/**
 	 * Perform style operations
-	 * @param $name Name of style
+	 * @param string $name Name of style
 	 * @return string
 	 */
 	public function style($name) {
@@ -120,8 +120,8 @@ class Imagestyle_Core {
 	
 	/**
 	 * Scale and crop image to cover given dimensions
-	 * @param $w
-	 * @param $h
+	 * @param int $w
+	 * @param int $h
 	 */
 	public function scaleCrop($w, $h) {
 		if (!$this->im)
@@ -150,9 +150,45 @@ class Imagestyle_Core {
 	}
 	
 	/**
+	 * Scale image to fit inside given dimensions and expand with a background
+	 * @param int   $w
+	 * @param int   $h
+	 * @param array $bg
+	 */
+	public function scaleExpand($w, $h, $bg = null) {
+		if (!$this->im)
+			return;
+		if ($w > $this->width && $h > $this->height)
+			return;
+		$src_ratio = $this->width/$this->height;
+		$end_ratio = $w/$h;
+		$x = $y = 0;
+		if ($src_ratio <= $end_ratio) {
+			$cp_w = $h*$src_ratio;
+			$cp_h = $h;
+			$x = ($w-$cp_w)/2;
+		}
+		else if ($src_ratio > $end_ratio) {
+			$cp_w = $w;
+			$cp_h = $w/$src_ratio;
+			$y = ($h-$cp_h)/2;
+		}
+		$im = imagecreatetruecolor($w, $h);
+		if (!empty($bg)) {
+			$color = imagecolorallocate($im, $bg[0], $bg[1], $bg[2]);
+			imagefill($im, 0, 0, $color);
+		}
+		$this->setAlpha($im);
+		imagecopyresampled($im, $this->im, $x, $y, 0, 0, $cp_w, $cp_h, $this->width, $this->height);
+		$this->width = $w;
+		$this->height = $h;
+		$this->im = $im;
+	}
+	
+	/**
 	 * Scale image to fit inside given dimesions
-	 * @param $w Max width
-	 * @param $h Max height
+	 * @param int $w Max width
+	 * @param int $h Max height
 	 */
 	public function scale($w = 0, $h = 0) {
 		if (!$this->im)
@@ -220,7 +256,7 @@ class Imagestyle_Core {
 	
 	/**
 	 * Save resulting image
-	 * @param $dest Destination
+	 * @param string $dest Destination
 	 * @param bool
 	 */
 	public function save($dest) {
@@ -245,7 +281,7 @@ class Imagestyle_Core {
 	 * Set image alpha for png images
 	 * @see imagealphablending()
 	 * @see imagesavealpha()
-	 * @param resource
+	 * @param resource $im
 	 */
 	protected function setAlpha(&$im) {
 		if ($this->info["extension"] == "png") {
