@@ -23,7 +23,7 @@ class File_Entity_Core extends Entity {
 		else
 			$url = PUBLIC_URI."/".$this->get("uri");
 		if ($abs)
-			$url = HTTP_PROTOCOL."://".$_SERVER["HTTP_HOST"].$url;
+			$url = SITE_URL.$url;
 		return $url;
 	}
 
