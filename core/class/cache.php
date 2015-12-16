@@ -66,8 +66,15 @@ class Cache_Core {
 	 * Clears all caches
 	 */
 	public function clear() {
+		$this->clearData();
+		$this->clearImageStyles();
+	}
+
+	/**
+	 * Clears data cache
+	 */
+	public function clearData() {
 		$this->Db->delete("cache");
-		$this->clearImagestyles();
 	}
 	
 	/**

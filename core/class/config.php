@@ -239,10 +239,26 @@ class Config_Core {
 								"title" => "Logs",
 								"href" => "log/list",
 							],
-							"cache-clear" => [
-								"title" => "Clear cache",
-								"href" => "cache/clear",
-								"return" => true,
+							"cache" => [
+								"title" => "Cache",
+								"href" => "cache/list",
+								"links" => [
+									"clear" => [
+										"title" => "Clear all",
+										"href" => "cache/clear",
+										"return" => true,
+									],
+									"clear-data" => [
+										"title" => "Clear data",
+										"href" => "cache/clear/data",
+										"return" => true,
+									],
+									"clear-images" => [
+										"title" => "Clear images",
+										"href" => "cache/clear/images",
+										"return" => true,
+									],
+								],
 							],
 							"cron-run" => [
 								"title" => "Run cron",
