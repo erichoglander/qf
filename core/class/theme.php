@@ -71,7 +71,7 @@ class Theme {
 	 * Constructor
 	 * @param \Config_Core      $Config
 	 * @param \Db_Core          $Db
-	 * @param \Io-Core          $Io
+	 * @param \Io_Core          $Io
 	 * @param \Cache_Core       $Cache
 	 * @param \Variable_Core    $Variable
 	 * @param \User_Entity_Core $User
