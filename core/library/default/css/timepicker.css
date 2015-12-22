@@ -17,13 +17,12 @@
 	width: 250px;
 	height: 250px;
 	border-radius: 50%;
-	overflow: hidden;
+	display: none;
 	color: #fff;
-	visibility: hidden;
 	transform: scale(0.1);
-	transition: visibility 0.2s 0s, transform 0.2s cubic-bezier(0.64, 0.57, 0.67, 1.53);
+	transition: transform 0.2s cubic-bezier(0.64, 0.57, 0.67, 1.53);
 	-webkit-transform: scale(0.1);
-	-webkit-transition: visibility 0.2s 0s, -webkit-transform 0.2s cubic-bezier(0.64, 0.57, 0.67, 1.53);
+	-webkit-transition: -webkit-transform 0.2s cubic-bezier(0.64, 0.57, 0.67, 1.53);
 }
 
 .timepicker-hour {
@@ -69,11 +68,7 @@
 .timepicker-minute-open .timepicker-minutes {
 	visibility: visible;
 	transform: scale(1);
-	transition: visibility 0s, transform 0.2s cubic-bezier(0.64, 0.57, 0.67, 1.53);
+	transition: transform 0.2s cubic-bezier(0.64, 0.57, 0.67, 1.53);
 	-webkit-transform: scale(1);
-	-webkit-transition: visibility 0s, -webkit-transform 0.2s cubic-bezier(0.64, 0.57, 0.67, 1.53);
-}
-.timepicker-minute-open .timepicker-minutes {
-	transition: visibility 0s, transform 0.2s 0.2s cubic-bezier(0.64, 0.57, 0.67, 1.53);
-	-webkit-transition: visibility 0s, -webkit-transform 0.2s 0.2s cubic-bezier(0.64, 0.57, 0.67, 1.53);
+	-webkit-transition: -webkit-transform 0.2s cubic-bezier(0.64, 0.57, 0.67, 1.53);
 }

@@ -52,10 +52,10 @@ function timepicker(el) {
 		this.tags.picker.className = "timepicker";
 		var inner = document.createElement("div");
 		inner.className = "timepicker-inner";
-		var hours = document.createElement("div");
-		hours.className = "timepicker-hours";
-		var minutes = document.createElement("div");
-		minutes.className = "timepicker-minutes";
+		this.tags.hour = document.createElement("div");
+		this.tags.hour.className = "timepicker-hours";
+		this.tags.minute = document.createElement("div");
+		this.tags.minute.className = "timepicker-minutes";
 		this.tags.hours = [];
 		this.tags.minutes = [];
 		for (var i=1; i<=24; i++) {
@@ -71,7 +71,7 @@ function timepicker(el) {
 			var y = 50 + d * Math.cos(a);
 			this.tags.hours[i].style.left = x+"%";
 			this.tags.hours[i].style.top = (100-y)+"%";
-			hours.appendChild(this.tags.hours[i]);
+			this.tags.hour.appendChild(this.tags.hours[i]);
 			(function(self, n) {
 				self.tags.hours[i].addEventListener("click", function(){ self.hourClick(n); }, false);
 			}(this, i));
@@ -90,13 +90,13 @@ function timepicker(el) {
 			var y = 50 + d * Math.cos(a);
 			this.tags.minutes[i].style.left = x+"%";
 			this.tags.minutes[i].style.top = (100-y)+"%";
-			minutes.appendChild(this.tags.minutes[i]);
+			this.tags.minute.appendChild(this.tags.minutes[i]);
 			(function(self, n) {
 				self.tags.minutes[i].addEventListener("click", function(){ self.minuteClick(n); }, false);
 			}(this, i));
 		}
-		inner.appendChild(hours);
-		inner.appendChild(minutes);
+		inner.appendChild(this.tags.hour);
+		inner.appendChild(this.tags.minute);
 		this.tags.picker.appendChild(inner);
 		this.tags.wrap.appendChild(this.tags.picker);
 	}
@@ -118,25 +118,58 @@ function timepicker(el) {
 			this.open();
 	}
 	this.isOpen = function() {
-		return (this.tags.wrap.className.match("timepicker-open") ? true : false);
+		return this.tags.wrap.hasClass("timepicker-open");
 	}
 	this.open = function() {
 		this.tags.wrap.addClass("timepicker-open");
 		this.hourOpen();
 	}
 	this.close = function() {
+		this.minuteClose();
+		this.hourClose();
 		this.tags.wrap.removeClass("timepicker-open");
-		this.tags.wrap.removeClass("timepicker-hour-open");
-		this.tags.wrap.removeClass("timepicker-minute-open");
 	}
 
+	this.hourIsOpen = function() {
+		return this.tags.wrap.hasClass("timepicker-hour-open");
+	}
 	this.hourOpen = function() {
-		this.tags.wrap.removeClass("timepicker-minute-open");
-		this.tags.wrap.addClass("timepicker-hour-open");
+		this.minuteClose();
+		this.tagOpen("hour");
+	}
+	this.hourClose = function() {
+		this.tagClose("hour");
 	}
 	this.minuteOpen = function() {
-		this.tags.wrap.removeClass("timepicker-hour-open");
-		this.tags.wrap.addClass("timepicker-minute-open");
+		if (this.hourIsOpen()) {
+			var self = this;
+			var t = parseFloat(getStyle(this.tags.hour, "transition-duration"))*1000;
+			this.hourClose();
+			setTimeout(function() {
+				self.tagOpen("minute");
+			}, t);
+		}
+		else {
+			this.tagOpen("minute");
+		}
+	}
+	this.minuteClose = function() {
+		this.tagClose("minute");
+	}
+	this.tagOpen = function(type) {
+		var self = this;
+		this.tags[type].style.display = "block";
+		setTimeout(function() {
+			self.tags.wrap.addClass("timepicker-"+type+"-open");
+		}, 10);
+	}
+	this.tagClose = function(type) {
+		var self = this;
+		var t = parseFloat(getStyle(this.tags[type], "transition-duration"))*1000;
+		this.tags.wrap.removeClass("timepicker-"+type+"-open");
+		setTimeout(function() {
+			self.tags[type].style.display = "none";
+		}, t);
 	}
 
 	this.hourClick = function(h) {
