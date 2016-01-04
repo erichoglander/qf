@@ -14,6 +14,10 @@ class UserLogin_Form_Core extends Form {
 				$this->setError(t("You have attempted to sign in too many times."));
 			else if ($User->login_error == "inactive")
 				$this->setError(t("Account is inactive."));
+			else if ($User->login_error == "unconfirmed_email")
+				$this->setError(
+					t("Your e-mail address has not been confirmed. To be able to login, confirm your e-mail address.").
+					' <a href="'.url("user/resend-email-confirmation/".$User->id()).'">'.t("Resend confirmation e-mail.").'</a>');
 			else
 				$this->setError(t("Wrong username or password."));
 			return false;

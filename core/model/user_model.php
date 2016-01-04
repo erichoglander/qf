@@ -43,6 +43,13 @@ class User_Model_Core extends Model {
 		$link = SITE_URL.url("user/confirm-email/".$User->id()."/".$code);
 		return $this->sendMail("UserEmailConfirmation", $User->get("email"), ["link" => $link]);
 	}
+	
+	public function resendEmailConfirmation($User, $values) {
+		if ($User->get("email") == $User->get("name"))
+			$User->set("name", $values["email"]);
+		$User->set("email", $values["email"]);
+		return $this->sendEmailConfirmation($User);
+	}
 
 	public function reset($User) {
 		$code = $User->generateResetLink();

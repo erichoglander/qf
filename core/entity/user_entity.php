@@ -96,9 +96,14 @@ class User_Entity_Core extends Entity {
 			addlog("user", "Failed login attempt for ".$name, null, "warning");
 			return false;
 		}
-		if (!$this->allowLogin()) {
+		if ($this->get("status") == 0) {
 			$this->login_error = "inactive";
 			addlog("user", "Login attempt for inactive user ".$this->get("name"), null, "warning");
+			return false;
+		}
+		if ($this->hasUnconfirmedEmail()) {
+			$this->login_error = "unconfirmed_email";
+			addlog("user", "Login attempt for user with unconfirmed email ".$this->get("name"), null, "warning");
 			return false;
 		}
 		if ($this->userFloodProtection()) {
@@ -145,12 +150,8 @@ class User_Entity_Core extends Entity {
 		return false;
 	}
 
-	public function allowLogin() {
-		if ($this->get("status") != 1)
-			return false;
-		if ($this->get("email_confirmation") && REQUEST_TIME - $this->get("email_confirmation_time") > 60*60*24)
-			return false;
-		return true;
+	public function hasUnconfirmedEmail() {
+		return $this->get("email_confirmation") && REQUEST_TIME - $this->get("email_confirmation_time") > 60*60*24;
 	}
 
 	public function verifyResetLink($link) {

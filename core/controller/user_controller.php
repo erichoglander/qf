@@ -129,6 +129,28 @@ class User_Controller_Core extends Controller {
 		return $this->view("confirm_email");
 	}
 	
+	public function resendEmailConfirmationAction($args = []) {
+		if (empty($args[0]))
+			return $this->notFound();
+		$User = $this->getEntity("User", $args[0]);
+		if (!$User->id())
+			return $this->notFound();
+		if (!$User->get("email_confirmation"))
+			return $this->notFound();
+		$Form = $this->getForm("userResendEmailConfirmation", ["User" => $User]);
+		if ($Form->isSubmitted()) {
+			if ($this->Model->resendEmailConfirmation($User, $Form->values())) {
+				setmsg(t("An e-mail has been sent with further instructions."), "success");
+				redirect();
+			}
+			else {
+				$this->defaultError();
+			}
+		}
+		$this->viewData["form"] = $Form->render();
+		return $this->view("resend_email_confirmation");
+	}
+	
 	public function addAction() {
 		$Form = $this->getForm("userEdit");
 		if ($Form->isSubmitted()) {
