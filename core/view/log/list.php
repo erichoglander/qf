@@ -3,6 +3,8 @@ $this->Html->h1 = $this->Html->title = t("Logs");
 $this->Html->breadcrumbs[] = $this->Html->title;
 ?>
 
+<?=$search?>
+
 <table class="table-standard">
 	<thead>
 		<tr>
