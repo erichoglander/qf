@@ -169,8 +169,7 @@ class User_Entity_Core extends Entity {
 	}
 
 	public function verifyEmailConfirmationLink($link) {
-		if (REQUEST_TIME - $this->get("email_confirmation_time") < 60*60*24 &&
-				$this->get("email_confirmation") === $this->hash($link, "qfemailconfirmationlink"))
+		if ($this->get("email_confirmation") === $this->hash($link, "qfemailconfirmationlink"))
 			return true;
 		return false;
 	}

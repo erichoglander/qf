@@ -77,12 +77,13 @@ Element.prototype.getElementByClassName = function(cname) {
 
 Element.prototype.trigger = function(type) {
 	if ("createEvent" in document) {
-    var evt = document.createEvent("HTMLEvents");
-    evt.initEvent(type, false, true);
-    this.dispatchEvent(evt);
+		var evt = document.createEvent("HTMLEvents");
+		evt.initEvent(type, false, true);
+		this.dispatchEvent(evt);
 	}
-	else
-    this.fireEvent("on"+type);
+	else {
+		this.fireEvent("on"+type);
+	}
 }
 
 Element.prototype.expand = function() {
