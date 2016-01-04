@@ -195,14 +195,15 @@ function xss($str) {
 /**
  * Shorten a string in between words
  * @param  string $str
- * @param  int $len
+ * @param  int    $len
  * @return string
  */
 function shorten($str, $len) {
 	if (strlen($str) > $len) {
-		$x = strrpos($str, " ");
-		if ($x > $len-3)
-			return substr($str, 0, $x);
+		$str = trim(substr($str, 0, $len));
+		$x = strrpos($str, " ", -3);
+		if ($x === false)
+			$x = $len-3;
 		$str = substr($str, 0, $x)."...";
 	}
 	return $str;
