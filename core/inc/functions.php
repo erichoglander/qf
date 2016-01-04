@@ -202,7 +202,7 @@ function shorten($str, $len) {
 	if (strlen($str) > $len) {
 		$x = strrpos($str, " ");
 		if ($x > $len-3)
-			return shorten(substr($str, 0, $x));
+			return substr($str, 0, $x);
 		$str = substr($str, 0, $x)."...";
 	}
 	return $str;
