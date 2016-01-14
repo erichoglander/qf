@@ -13,8 +13,36 @@ require_once("core/inc/bootstrap.php");
 if (!IS_CLI)
 	die("Must be run through cli.");
 
-if (!$Db->connected)
-	die("Could not connect to database.\n");
+// Database information
+while (!$Db->connected) {
+  print "Enter database host [localhost]: ";
+  $db_host = trim(fgets(STDIN));
+  if (!$db_host)
+    $db_host = "localhost";
+  print "Enter database username: ";
+  $db_user = trim(fgets(STDIN));
+  print "Enter database password: ";
+  system("stty -echo");
+  $db_pass = trim(fgets(STDIN));
+  system("stty echo");
+  print PHP_EOL;
+  print "Enter database name: ";
+  $db_name = trim(fgets(STDIN));
+  if (!file_exists("extend/inc"))
+    mkdir(DOC_ROOT."/extend/inc", 0774, true);
+  $db = '<?php
+$database = [
+  "host" => "'.$db_host.'",
+  "user" => "'.$db_user.'",
+  "pass" => "'.$db_pass.'",
+  "db" => "'.$db_name.'",
+];';
+  $Db->connect($db_user, $db_pass, $db_name, $db_host);
+  if ($Db->connected)
+    file_put_contents(DOC_ROOT."/extend/inc/database.php", $db);
+  else
+    print "Could not connect to database.".PHP_EOL;
+}
 
 if ($Db->numRows("SHOW TABLES LIKE 'alias'"))
 	die("System is already installed.\n");
