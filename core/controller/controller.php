@@ -112,7 +112,7 @@ class Controller {
 		if ($this->Config->getAutomaticCron()) {
 			$last = $this->Variable->get("cron", 0);
 			if (date("Y-m-d", $last) != date("Y-m-d", REQUEST_TIME)) {
-				$Cron = newClass("Cron", $this->Db);
+				$Cron = $this->getModel("Cron");
 				$time = microtime(true);
 				$Cron->run();
 				$time = round(microtime(true) - $time, 4);
