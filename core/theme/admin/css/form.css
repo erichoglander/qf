@@ -84,6 +84,12 @@ input {
 .form-number {
 	max-width: 100px;
 }
+.form-date {
+	max-width: 120px;
+}
+.form-time {
+	max-width: 120px;
+}
 
 .form-password-generator {
 	cursor: pointer;
