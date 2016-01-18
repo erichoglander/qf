@@ -1,8 +1,12 @@
 var _timepickers = [];
 function timepickerInit() {
 	var els = document.getElementsByClassName("form-time");
-	for (var i=0; i<els.length; i++)
-		_timepickers.push(new timepicker(els[i]));
+	for (var i=0; i<els.length; i++) {
+		if (!els[i].className.match("timepicker-init")) {
+			els[i].addClass("timepicker-init");
+			_timepickers.push(new timepicker(els[i]));
+		}
+	}
 	if (typeof(MutationObserver) == "function") {
 		var observer = new MutationObserver(function(mutations) {
 			mutations.forEach(function(mutation) {
@@ -21,8 +25,10 @@ function timepickerInit() {
 function timepickerObserve(el) {
 	var els = el.getElementsByClassName("form-time");
 	for (var i=0; i<els.length; i++) {
-		if (!els[i].className.match("timepicker-init"))
+		if (!els[i].className.match("timepicker-init")) {
+			els[i].addClass("timepicker-init");
 			_timepickers.push(new timepicker(els[i]));
+		}
 	}
 }
 
@@ -36,7 +42,6 @@ function timepicker(el) {
 
 	this.init = function() {
 		var self = this;
-		this.tags.wrap.addClass("timepicker-init");
 		this.tags.input.addEventListener("click", function(){ self.toggle(); }, false);
 		window.addEventListener("click", function(e){ self.windowClick(e); }, false);
 		if (this.tags.input.value.length) {

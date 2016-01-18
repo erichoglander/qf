@@ -51,7 +51,6 @@ function datepicker(el) {
 
 	this.init = function() {
 		var self = this;
-		this.tags.wrap.addClass("datepicker-init");
 		this.tags.input.addEventListener("click", function(){ self.toggle(); }, false);
 		window.addEventListener("click", function(e){ self.windowClick(e); }, false);
 		if (this.tags.input.value.length) {
