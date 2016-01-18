@@ -1,11 +1,73 @@
 <?php
+/**
+ * Contains the base controller class
+ */
+/**
+ * Base controller
+ */
 class Controller {
 
-	public $args = [];
-	protected $action, $viewData = [];
-	protected $Config, $Db, $Model, $User, $Io;
-	protected $Acl, $Cache, $Variable;
+	/**
+	 * Data passed on to the view
+	 * @var array
+	 */
+	protected $viewData = [];
+	
+	/**
+	 * Config object
+	 * @var \Config_Core
+	 */
+	protected $Config;
+	
+	/**
+	 * Database object
+	 * @var \Db_Core
+	 */
+	protected $Db;
+	
+	/**
+	 * Matching model
+	 * @var \Model
+	 */
+	protected $Model;
+	
+	/**
+	 * User entity
+	 * @var \User_Entity_Core
+	 */
+	protected $User;
+	
+	/**
+	 * Io object
+	 * @var \Io_Core
+	 */
+	protected $Io;
+	
+	/**
+	 * Acl object
+	 * @var \Acl_Core
+	 */
+	protected $Acl;
+	
+	/**
+	 * Cache object
+	 * @var \Cache_Core
+	 */
+	protected $Cache;
+	
+	/**
+	 * Variable object
+	 * @var \Variable_Core
+	 */
+	protected $Variable;
 
+	
+	/**
+	 * Constructor
+	 * @param \Config_Core $Config
+	 * @param \Db_Core     $Db
+	 * @param bool         $init
+	 */
 	public function __construct($Config, $Db, $init = true) {
 		$this->Config = $Config;
 		$this->Db = $Db;
@@ -26,6 +88,12 @@ class Controller {
 		}
 	}
 
+	/**
+	 * Try to execute the given action
+	 * @param  string $action
+	 * @param  array  $args
+	 * @return string
+	 */
 	public function action($action, $args = []) {
 		if (!$this->Db->connected)
 			return $this->databaseFail();
@@ -36,39 +104,80 @@ class Controller {
 			return $this->notFound();
 		return $this->$action($args);
 	}
-
+	
+	/**
+	 * Get the acl for an action of the current controller
+	 * @param  string $action
+	 * @param  array  $args
+	 * @return array|null
+	 */
 	public function acl($action, $args = []) {
 		return null;
 	}
 
+	/**
+	 * 500 Internal error
+	 * @return string
+	 */
 	public function internalError() {
 		header("HTTP/1.1 500 Internal error");
 		return $this->viewBare("500");
 	}
+	
+	/**
+	 * Database connection error
+	 * @return string
+	 */
 	public function databaseFail() {
 		if ($this->Config->getDebug())
 			die(pr($this->Db->getErrors(), 1));
 		return $this->serverBusy();
 	}
+	
+	/**
+	 * 503 Server busy error 
+	 * @return string
+	 */
 	public function serverBusy() {
 		header("HTTP/1.1 503 Service unavailable");
 		return $this->viewBare("503");
 	}
+	
+	/**
+	 * 404 Not found error
+	 * @return string
+	 */
 	public function notFound() {
 		header("HTTP/1.1 404 Not found");
 		return $this->viewDefault("404");
 	}
+	
+	/**
+	 * 403 Access denied error
+	 *
+	 * Redirects user to login page if not logged in
+	 * @return string
+	 */
 	public function accessDenied() {
 		if (!$this->User->id()) 
 			redirect("user/login?redir=".REQUEST_ALIAS);
 		header("HTTP/1.1 403 Forbidden");
 		return $this->viewDefault("403");
 	}
+	
+	/**
+	 * Set a default generic error message
+	 */
 	public function defaultError() {
 		setmsg(t("An error occurred"), "error");
 	}
 
-
+	
+	/**
+	 * Check if current user has access to given uri
+	 * @param  string $uri
+	 * @return bool
+	 */
 	protected function uriAccess($uri) {
 		$CF = newClass("ControllerFactory", $this->Config, $this->Db);
 		$request = $CF->parseUri($uri);
@@ -77,6 +186,10 @@ class Controller {
 		return $this->Acl->access($this->User, $acl, $request["args"]);
 	}
 
+	/**
+	 * Get name of current controller (lower case)
+	 * @return string
+	 */
 	protected function getName() {
 		$class = get_class($this);
 		if ($class == "Controller")
@@ -84,6 +197,12 @@ class Controller {
 		return strtolower(preg_replace("/([a-z])([A-Z])/", "$1_$2", str_replace("_Controller", "", str_replace("_Core", "", $class))));
 	}
 
+	/**
+	 * Get model of given name
+	 * @see newClass()
+	 * @param  string
+	 * @return \Model
+	 */
 	protected function getModel($name) {
 		$arr = explode("_", $name);
 		$cname = "";
@@ -93,6 +212,9 @@ class Controller {
 		return newClass($cname, $this->Config, $this->Db, $this->Io, $this->Cache, $this->Variable, $this->User);
 	}
 
+	/**
+	 * Get current user
+	 */
 	protected function getUser() {
 		$User = $this->getEntity("User");
 		if (!empty($_SESSION["user_id"]))
@@ -100,14 +222,33 @@ class Controller {
 		return $User;
 	}
 
+	/**
+	 * Get entity of given name
+	 * @see newClass()
+	 * @param  string $name
+	 * @param  int    $id
+	 * @return \Entity
+	 */
 	protected function getEntity($name, $id = null) {
 		return newClass($name."_Entity", $this->Db, $id);
 	}
 
+	/**
+	 * Get form of given name
+	 * @see newClass()
+	 * @param  string $name
+	 * @param  array  $vars
+	 * @return \Form
+	 */
 	protected function getForm($name, $vars = []) {
 		return newClass($name."_Form", $this->Db, $this->Io, $this->User, $vars);
 	}
 
+	/**
+	 * Runs automatic cron if enabled and is due
+	 * @see \Config_Core::getAutomaticCron()
+	 * @see \Cron_Model_Core::run()
+	 */
 	protected function automaticCron() {
 		if ($this->Config->getAutomaticCron()) {
 			$last = $this->Variable->get("cron", 0);
@@ -122,6 +263,11 @@ class Controller {
 		}
 	}
 
+	/**
+	 * Load enabled libraries
+	 * @see \Config_Core::getLibraries()
+	 * @see \Library
+	 */
 	protected function loadLibraries() {
 		foreach ($this->Config->getLibraries() as $lib) {
 			$Library = newClass($lib."_Library", $this->Db);
@@ -138,6 +284,10 @@ class Controller {
 		}
 	}
 
+	/**
+	 * Load menus
+	 * @see \Config_Core::getMenus()
+	 */
 	protected function loadMenus() {
 		foreach ($this->Config->getMenus() as $key => $menu) {
 			if (!empty($menu["acl"]) && !$this->Acl->access($this->User, $menu["acl"]))
@@ -148,6 +298,12 @@ class Controller {
 		}
 	}
 
+	/**
+	 * Filter menu based on current user access
+	 * @see uriAccess
+	 * @param  array $menu
+	 * @return array
+	 */
 	protected function menuAccess($menu) {
 		if (array_key_exists("href", $menu)) {
 			if (!$this->uriAccess($menu["href"]))
@@ -167,6 +323,11 @@ class Controller {
 		return $menu;
 	}
 
+	/**
+	 * Get default viewData structure
+	 * @see    viewData
+	 * @return array
+	 */
 	protected function defaultViewData() {
 		$this->viewData["html"] = [
 			"menu" => [],
@@ -176,6 +337,12 @@ class Controller {
 		];
 	}
 
+	/**
+	 * Get rendered view
+	 * @see    \View_Core
+	 * @param  string $name
+	 * @return string
+	 */
 	protected function view($name) {
 		$View = newClass("View", $this->Config, $this->Db, $this->Io, $this->Cache, $this->Variable, $this->User, $this->name, $name, $this->viewData);
 		try {
@@ -186,6 +353,13 @@ class Controller {
 			return $this->internalError();
 		}
 	}
+	
+	/**
+	 * Get rendered default view
+	 * @see    \View_Core
+	 * @param  string $name
+	 * @return string
+	 */
 	protected function viewDefault($name) {
 		ob_clean();
 		$View = newClass("View", $this->Config, $this->Db, $this->Io, $this->Cache, $this->Variable, $this->User, "default", $name, $this->viewData);
@@ -196,6 +370,13 @@ class Controller {
 			die($e->getMessage());
 		}
 	}
+	
+	/**
+	 * Get rendered view without database access
+	 * @see    \View_Core
+	 * @param  string $name
+	 * @return string
+	 */
 	protected function viewBare($name) {
 		ob_clean();
 		$View = newClass("View", null, null, null, null, null, null, "default", $name, $this->viewData);
@@ -208,10 +389,21 @@ class Controller {
 		}
 	}
 
+	/**
+	 * Get viewData as json
+	 * @return string
+	 */
 	protected function json() {
 		unset($this->viewData["html"]);
 		return json_encode($this->viewData);
 	}
+	
+	/**
+	 * Quick way of returning an error message in json
+	 * @param  string $msg
+	 * @param  string $code
+	 * @return string
+	 */
 	protected function jsone($msg, $code = null) {
 		return json_encode(["status" => "error", "error" => $msg, "error_code" => $code]);
 	}
