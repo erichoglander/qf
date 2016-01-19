@@ -106,10 +106,10 @@ class Controller {
 	}
 	
 	/**
-	 * Get the acl for an action of the current controller
+	 * Get the access control list for an action of the current controller
 	 * @param  string $action
 	 * @param  array  $args
-	 * @return array|null
+	 * @return mixed  Array, string, or null
 	 */
 	public function acl($action, $args = []) {
 		return null;

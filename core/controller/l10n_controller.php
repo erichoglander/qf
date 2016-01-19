@@ -1,14 +1,37 @@
 <?php
+/**
+ * Contains the l10n controller
+ */
+/**
+ * Localization controller
+ *
+ * Administration of translations
+ */
 class l10n_Controller_Core extends Controller {
 	
-	public function acl($action) {
+	/**
+	 * The access list
+	 * @param  string $action
+	 * @param  array  $args
+	 * @return array
+	 */
+	public function acl($action, $args = []) {
 		return ["l10nAdmin"];
 	}
 
+	/**
+	 * Redirect to the string translation list
+	 */
 	public function indexAction() {
 		redirect("l10n/list");
 	}
 
+	/**
+	 * Import translations from json
+	 * @see    \l10nStringImport_Form_Core
+	 * @see    \l10n_Model_Core::import()
+	 * @return string
+	 */
 	public function importAction() {
 		$Form = $this->getForm("l10nStringImport");
 		if ($Form->isSubmitted()) {
@@ -28,6 +51,12 @@ class l10n_Controller_Core extends Controller {
 		return $this->view("import");
 	}
 
+	/**
+	 * Export translations as json
+	 * @see    \l10nStringExport_Form_Core
+	 * @see    \l10n_Model_Core::export()
+	 * @return string
+	 */
 	public function exportAction() {
 		$languages = $this->Model->getActiveLanguages();
 		$Form = $this->getForm("l10nStringExport", ["languages" => $languages]);
@@ -44,6 +73,12 @@ class l10n_Controller_Core extends Controller {
 		return $this->view("export");
 	}
 
+	/**
+	 * Scan code for translation requests
+	 * @see    \l10nStringScan_Form_Core
+	 * @see    \l10n_Model_Core::scanAdd()
+	 * @return string
+	 */
 	public function scanAction() {
 		$Form = $this->getForm("l10nStringScan");
 		if ($Form->isSubmitted()) {
@@ -73,6 +108,11 @@ class l10n_Controller_Core extends Controller {
 		return $this->view("scan");
 	}
 
+	/**
+	 * Edit a string translation
+	 * @param  array $args
+	 * @return string
+	 */
 	public function editAction($args = []) {
 		if (empty($args[0]))
 			return $this->notFound();
@@ -96,6 +136,11 @@ class l10n_Controller_Core extends Controller {
 		return $this->view("edit");
 	}
 
+	/**
+	 * Delete a string translation
+	 * @param  array $args
+	 * @return string
+	 */
 	public function deleteAction($args = []) {
 		if (empty($args[0]))
 			return $this->notFound();
@@ -109,7 +154,11 @@ class l10n_Controller_Core extends Controller {
 		redirect("l10n/list");
 	}
 
-	public function listAction($args = []) {
+	/**
+	 * List string translations
+	 * @return string
+	 */
+	public function listAction() {
 		$q = (array_key_exists("l10n_search", $_SESSION) ? $_SESSION["l10n_search"] : null);
 		$Form = $this->getForm("Search", ["q" => $q]);
 		if ($Form->isSubmitted()) {

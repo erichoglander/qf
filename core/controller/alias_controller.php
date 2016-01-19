@@ -1,14 +1,35 @@
 <?php
+/**
+ * Contains the alias controller
+ */
+/**
+ * Alias controller
+ *
+ * Administration of url-aliases
+ */
 class Alias_Controller_Core extends Controller {
 
+	/**
+	 * The access list 
+	 * @param string  $action
+	 * @param array   $args
+	 * @return array
+	 */
 	public function acl($action, $args = []) {
-		return "aliasAdmin";
+		return ["aliasAdmin"];
 	}
 
+	/**
+	 * Redirect to the alias list
+	 */
 	public function indexAction() {
 		redirect("alias/list");
 	}
 
+	/**
+	 * Add an alias
+	 * @return string
+	 */
 	public function addAction() {
 		$Form = $this->getForm("AliasEdit");
 		if ($Form->isSubmitted()) {
@@ -24,8 +45,13 @@ class Alias_Controller_Core extends Controller {
 		return $this->view("add");
 	}
 
+	/**
+	 * Edit an alias
+	 * @param  array  $args
+	 * @return string
+	 */
 	public function editAction($args = []) {
-		if (count($args) < 1)
+		if (empty($args[0]))
 			return $this->notFound();
 		$Alias = $this->getEntity("Alias", $args[0]);
 		if (!$Alias->id())
@@ -44,8 +70,13 @@ class Alias_Controller_Core extends Controller {
 		return $this->view("edit");
 	}
 
+	/**
+	 * Delete and alias
+	 * @param  array  $args
+	 * @return string
+	 */
 	public function deleteAction($args = []) {
-		if (count($args) < 1)
+		if (empty($args[0]))
 			return $this->notFound();
 		$Alias = $this->getEntity("Alias", $args[0]);
 		if (!$Alias->id())
@@ -66,6 +97,10 @@ class Alias_Controller_Core extends Controller {
 		return $this->view("delete");
 	}
 
+	/**
+	 * Alias list
+	 * @return string
+	 */
 	public function listAction() {
 		$values = (array_key_exists("alias_list_search", $_SESSION) ? $_SESSION["alias_list_search"] : []);
 		$Form = $this->getForm("Search", ["q" => (!empty($values["q"]) ? $values["q"] : null)]);

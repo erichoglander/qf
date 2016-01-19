@@ -1,10 +1,25 @@
 <?php
+/**
+ * Contains the cron controller
+ */
+/**
+ * Cron controller
+ */
 class Cron_Controller_Core extends Controller {
 	
-	public function acl($action) {
+	/**
+	 * The access list
+	 * @param  string $action
+	 * @param  array  $args
+	 * @return array
+	 */
+	public function acl($action, $args = []) {
 		return ["cronRun"];
 	}
 
+	/**
+	 * Run cron
+	 */
 	public function indexAction() {
 		$time = microtime(true);
 		$this->Model->run();

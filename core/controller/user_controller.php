@@ -1,6 +1,20 @@
 <?php
+/**
+ * Contains the user controller
+ */
+/**
+ * User controller
+ *
+ * Administer users
+ */
 class User_Controller_Core extends Controller {
 
+	/**
+	 * The access list
+	 * @param  string $action
+	 * @param  array  $args
+	 * @return mixed
+	 */
 	public function acl($action, $args = []) {
 		if ($action == "add" || $action == "edit")
 			return ["userAdmin", "userEdit"];
@@ -19,12 +33,21 @@ class User_Controller_Core extends Controller {
 		return null;
 	}
 
+	/**
+	 * Show login form or redirect to user list
+	 * @return string
+	 */
 	public function indexAction() {
 		if ($this->User->id())
 			redirect("user/list");
 		return $this->loginAction();
 	}
 
+	/**
+	 * Login page
+	 * @see    \UserLogin_Form_Core
+	 * @return string
+	 */
 	public function loginAction() {
 		if ($this->User->id())
 			redirect();
@@ -41,6 +64,9 @@ class User_Controller_Core extends Controller {
 		return $this->view("login");
 	}
 
+	/**
+	 * Logout current user
+	 */
 	public function logoutAction() {
 		if ($this->User->id()) {
 			setmsg(t("You have been signed out"), "success");
@@ -49,6 +75,11 @@ class User_Controller_Core extends Controller {
 		redirect();
 	}
 
+	/**
+	 * Registration page
+	 * @see    \UserRegister_Form_Core
+	 * @return string
+	 */
 	public function registerAction() {
 		if ($this->User->id())
 			redirect();
@@ -76,10 +107,15 @@ class User_Controller_Core extends Controller {
 		return $this->view("register");
 	}
 
+	/**
+	 * Password reset request page
+	 * @see    \UserReset_Form_Core
+	 * @return string
+	 */
 	public function resetAction() {
 		if ($this->User->id())
 			redirect();
-		$Form = $this->getForm("userReset");
+		$Form = $this->getForm("UserReset");
 		if ($Form->isSubmitted()) {
 			$values = $Form->values();
 			$User = $this->getEntity("User");
@@ -96,6 +132,12 @@ class User_Controller_Core extends Controller {
 		return $this->view("reset");
 	}
 
+	/**
+	 * Change password after reset request
+	 * @see    \UserChangePassword_Form_Core
+	 * @param  array  $args
+	 * @return string
+	 */
 	public function changePasswordAction($args = []) {
 		if (count($args) != 2)
 			return $this->notFound();
@@ -118,6 +160,11 @@ class User_Controller_Core extends Controller {
 		return $this->view("change_password");
 	}
 
+	/**
+	 * Confirm user e-mail address
+	 * @param  array  $args
+	 * @return string
+	 */
 	public function confirmEmailAction($args = []) {
 		if (count($args) != 2)
 			return $this->notFound();
@@ -129,6 +176,12 @@ class User_Controller_Core extends Controller {
 		return $this->view("confirm_email");
 	}
 	
+	/**
+	 * Resend e-mail confirmation message
+	 * @see    \UserResendEmailConfirmation_Form_Core
+	 * @param  array  $args
+	 * @return string
+	 */
 	public function resendEmailConfirmationAction($args = []) {
 		if (empty($args[0]))
 			return $this->notFound();
@@ -137,7 +190,7 @@ class User_Controller_Core extends Controller {
 			return $this->notFound();
 		if (!$User->get("email_confirmation"))
 			return $this->notFound();
-		$Form = $this->getForm("userResendEmailConfirmation", ["User" => $User]);
+		$Form = $this->getForm("UserResendEmailConfirmation", ["User" => $User]);
 		if ($Form->isSubmitted()) {
 			if ($this->Model->resendEmailConfirmation($User, $Form->values())) {
 				setmsg(t("An e-mail has been sent with further instructions."), "success");
@@ -151,6 +204,10 @@ class User_Controller_Core extends Controller {
 		return $this->view("resend_email_confirmation");
 	}
 	
+	/**
+	 * Add a user
+	 * @return string
+	 */
 	public function addAction() {
 		$Form = $this->getForm("userEdit");
 		if ($Form->isSubmitted()) {
@@ -167,6 +224,11 @@ class User_Controller_Core extends Controller {
 		return $this->view("add");
 	}
 	
+	/**
+	 * Edit a user
+	 * @param  array  $args
+	 * @return string
+	 */
 	public function editAction($args = []) {
 		if (empty($args[0]))
 			return $this->notFound();
@@ -187,6 +249,10 @@ class User_Controller_Core extends Controller {
 		return $this->view("edit");
 	}
 
+	/**
+	 * Settings page for current user
+	 * @return string
+	 */
 	public function settingsAction() {
 		if (!$this->User->id())
 			redirect("user/login");
@@ -207,6 +273,11 @@ class User_Controller_Core extends Controller {
 		return $this->view("settings");
 	}
 
+	/**
+	 * Delete a user
+	 * @param  array  $args
+	 * @return string
+	 */
 	public function deleteAction($args = []) {
 		$User = $this->getEntity("User", $args[0]);
 		if (!$User->id())
@@ -227,6 +298,10 @@ class User_Controller_Core extends Controller {
 		return $this->view("delete");
 	}
 
+	/**
+	 * Sign in as another user
+	 * @see signbackAction
+	 */
 	public function signinAction($args = []) {
 		$User = $this->getEntity("User", $args[0]);
 		if (!$User->id())
@@ -236,6 +311,10 @@ class User_Controller_Core extends Controller {
 		redirect();
 	}
 	
+	/**
+	 * Sign back in as previous user
+	 * @see signinAction
+	 */
 	public function signbackAction() {
 		$User = $this->Model->signBack();
 		if ($User) {
@@ -247,6 +326,12 @@ class User_Controller_Core extends Controller {
 		}
 	}
 	
+	/**
+	 * Set password for any user
+	 *
+	 * Should be run through CLI
+	 * @return string
+	 */
 	public function setpassAction() {
 		print t("Username").": ";
 		$name = trim(fgets(STDIN));
@@ -264,12 +349,19 @@ class User_Controller_Core extends Controller {
 		return t("Password changed for :name", "en", [":name" => $name]);
 	}
 	
+	/**
+	 * Clear all failed login attempts from database
+	 */
 	public function clearFloodAction() {
 		$this->Model->clearLoginAttempts();
 		setmsg(t("Login attempts cleared"), "success");
 		redirect();
 	}
 
+	/**
+	 * User list
+	 * @return string
+	 */
 	public function listAction() {
 		$values = (array_key_exists("user_list_search", $_SESSION) ? $_SESSION["user_list_search"] : []);
 		$Form = $this->getForm("Search", ["q" => (!empty($values["q"]) ? $values["q"] : null)]);

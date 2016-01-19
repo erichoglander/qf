@@ -1,7 +1,21 @@
 <?php
+/**
+ * Contains the content controller
+ */
+/**
+ * Content controller
+ *
+ * Administration of content
+ */
 class Content_Controller_Core extends Controller {
 	
-	public function acl($action) {
+	/**
+	 * The access list
+	 * @param  string $action
+	 * @param  array  $args
+	 * @return array
+	 */
+	public function acl($action, $args = []) {
 		$acl = ["contentAdmin"];
 		if ($action == "view")
 			$acl[] = "contentView";
@@ -14,6 +28,10 @@ class Content_Controller_Core extends Controller {
 		return $acl;
 	}
 
+	/**
+	 * Add content a piece of content
+	 * @return string
+	 */
 	public function addAction() {
 		$Form = $this->getForm("ContentConfig");
 		if ($Form->isSubmitted()) {
@@ -30,8 +48,13 @@ class Content_Controller_Core extends Controller {
 		return $this->view("add");
 	}
 
+	/**
+	 * Configure a piece of content
+	 * @param  array  $args
+	 * @return string
+	 */
 	public function configAction($args = []) {
-		if (count($args) < 1)
+		if (empty($args[0]))
 			return $this->notFound();
 		$Content = $this->getEntity("Content", $args[0]);
 		if (!$Content->id())
@@ -52,8 +75,13 @@ class Content_Controller_Core extends Controller {
 		return $this->view("config");
 	}
 
+	/**
+	 * Edit a piece of content
+	 * @param  array   $args
+	 * @return string
+	 */
 	public function editAction($args = []) {
-		if (count($args) < 1)
+		if (empty($args[0]))
 			return $this->notFound();
 		$Content = $this->getEntity("Content", $args[0]);
 		if (!$Content->id())
@@ -75,8 +103,13 @@ class Content_Controller_Core extends Controller {
 		return $this->view("edit");
 	}
 
+	/**
+	 * Delete a piece of content
+	 * @param  array  $args
+	 * @return string
+	 */
 	public function deleteAction($args = []) {
-		if (count($args) < 1)
+		if (empty($args[0]))
 			return $this->notFound();
 		$Content = $this->getEntity("Content", $args[0]);
 		if (!$Content->id())
@@ -97,6 +130,10 @@ class Content_Controller_Core extends Controller {
 		return $this->view("edit");
 	}
 
+	/**
+	 * Content list
+	 * @return string
+	 */
 	public function listAction() {
 		$this->viewData["access_config"] = $this->Acl->access($this->User, $this->acl("config"));
 		$this->viewData["access_delete"] = $this->Acl->access($this->User, $this->acl("delete"));

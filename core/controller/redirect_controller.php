@@ -1,14 +1,35 @@
 <?php
+/**
+ * Contains the redirect controller
+ */
+/**
+ * Redirect controller
+ *
+ * Administration of http redirects
+ */
 class Redirect_Controller_Core extends Controller {
 
+	/**
+	 * The access list
+	 * @param  string $action
+	 * @param  array  $args
+	 * @return array
+	 */
 	public function acl($action, $args = []) {
-		return "redirectAdmin";
+		return ["redirectAdmin"];
 	}
 
+	/**
+	 * Redirects to the redirect list
+	 */
 	public function indexAction() {
 		redirect("redirect/list");
 	}
 
+	/**
+	 * Add a redirect
+	 * @return string
+	 */
 	public function addAction() {
 		$Form = $this->getForm("RedirectEdit");
 		if ($Form->isSubmitted()) {
@@ -24,8 +45,13 @@ class Redirect_Controller_Core extends Controller {
 		return $this->view("add");
 	}
 
+	/**
+	 * Edit a redirect
+	 * @param  array  $args
+	 * @return string
+	 */
 	public function editAction($args = []) {
-		if (count($args) < 1)
+		if (empty($args[0]))
 			return $this->notFound();
 		$Redirect = $this->getEntity("Redirect", $args[0]);
 		if (!$Redirect->id())
@@ -44,8 +70,13 @@ class Redirect_Controller_Core extends Controller {
 		return $this->view("edit");
 	}
 
+	/**
+	 * Delete a redirect
+	 * @param  array  $args
+	 * @return string
+	 */
 	public function deleteAction($args = []) {
-		if (count($args) < 1)
+		if (empty($args[0]))
 			return $this->notFound();
 		$Redirect = $this->getEntity("Redirect", $args[0]);
 		if (!$Redirect->id())
@@ -67,6 +98,10 @@ class Redirect_Controller_Core extends Controller {
 		return $this->view("delete");
 	}
 
+	/**
+	 * Redirect list
+	 * @return string
+	 */
 	public function listAction() {
 		$values = (array_key_exists("redirect_list_search", $_SESSION) ? $_SESSION["redirect_list_search"] : []);
 		$Form = $this->getForm("Search", ["q" => (!empty($values["q"]) ? $values["q"] : null)]);

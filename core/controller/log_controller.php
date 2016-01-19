@@ -1,14 +1,34 @@
 <?php
+/**
+ * Contains the log controller
+ */
+/**
+ * Log controller
+ */
 class Log_Controller_Core extends Controller {
 	
+	/**
+	 * The access list
+	 * @param  string $action
+	 * @param  array  $args
+	 * @return array
+	 */
 	public function acl($action, $args = []) {
-		return "logAdmin";
+		return ["logAdmin"];
 	}
 
+	/**
+	 * Redirect to the log list
+	 */
 	public function indexAction() {
 		redirect("log/list");
 	}
 
+	/**
+	 * View a log entry
+	 * @param  array  $args
+	 * @return string
+	 */
 	public function viewAction($args = []) {
 		if (empty($args[0]))
 			return $this->notFound();
@@ -19,6 +39,11 @@ class Log_Controller_Core extends Controller {
 		return $this->view("view");
 	}
 
+	/**
+	 * Delete a log entry
+	 * @param  array  $args
+	 * @return string
+	 */
 	public function deleteAction($args = []) {
 		if (empty($args[0]))
 			return $this->notFound();
@@ -32,6 +57,10 @@ class Log_Controller_Core extends Controller {
 		redirect("log/list");
 	}
 
+	/**
+	 * Log list
+	 * @return string
+	 */
 	public function listAction() {
 		$values = (array_key_exists("log_list_search", $_SESSION) ? $_SESSION["log_list_search"] : []);
 		$Form = $this->getForm("Search", ["q" => (!empty($values["q"]) ? $values["q"] : null)]);

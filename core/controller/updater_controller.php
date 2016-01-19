@@ -1,10 +1,31 @@
 <?php
+/**
+ * Contains the updater controller
+ */
+/**
+ * Updater controller
+ */
 class Updater_Controller_Core extends Controller {
 	
-	public function acl() {
-		return ["Update"];
+	/**
+	 * The access list
+	 * @param  string $action
+	 * @param  array  $args
+	 * @return array
+	 */
+	public function acl($action, $args = []) {
+		return ["update"];
 	}
 
+	/**
+	 * Perform pending updates
+	 *
+	 * Usually only accessible through CLI
+	 * Usually only database updates
+	 * @see    \Updater_Model_Core::getUpdates()
+	 * @see    \Updater_Model_Core::runUpdate()
+	 * @return string
+	 */
 	public function updateAction() {
 		$updates = $this->Model->getUpdates();
 		$n = count($updates);
