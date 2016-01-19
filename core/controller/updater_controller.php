@@ -4,6 +4,7 @@
  */
 /**
  * Updater controller
+ * @author Eric Höglander
  */
 class Updater_Controller_Core extends Controller {
 	

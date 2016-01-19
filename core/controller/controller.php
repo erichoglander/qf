@@ -4,6 +4,7 @@
  */
 /**
  * Base controller
+ * @author Eric Höglander
  */
 class Controller {
 

@@ -6,6 +6,7 @@
  * Redirect controller
  *
  * Administration of http redirects
+ * @author Eric Höglander
  */
 class Redirect_Controller_Core extends Controller {
 

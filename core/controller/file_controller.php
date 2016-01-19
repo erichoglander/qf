@@ -6,6 +6,7 @@
  * File controller
  *
  * Contains non-direct interaction with managed files
+ * @author Eric Höglander
  */
 class File_Controller_Core extends Controller {
 	

@@ -6,6 +6,7 @@
  * Alias controller
  *
  * Administration of url-aliases
+ * @author Eric Höglander
  */
 class Alias_Controller_Core extends Controller {
 

@@ -6,6 +6,7 @@
  * Localization controller
  *
  * Administration of translations
+ * @author Eric Höglander
  */
 class l10n_Controller_Core extends Controller {
 	

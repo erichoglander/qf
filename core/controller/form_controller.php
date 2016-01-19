@@ -6,6 +6,7 @@
  * Form controller
  *
  * Contains asynchronous interactions with forms
+ * @author Eric Höglander
  */
 class Form_Controller_Core extends Controller {
 	

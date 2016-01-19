@@ -6,6 +6,7 @@
  * Cache controller
  * 
  * Administration of caches
+ * @author Eric Höglander
  */
 class Cache_Controller_Core extends Controller {
 	

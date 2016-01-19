@@ -6,6 +6,7 @@
  * Content controller
  *
  * Administration of content
+ * @author Eric Höglander
  */
 class Content_Controller_Core extends Controller {
 	

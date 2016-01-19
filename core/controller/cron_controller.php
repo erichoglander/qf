@@ -4,6 +4,7 @@
  */
 /**
  * Cron controller
+ * @author Eric Höglander
  */
 class Cron_Controller_Core extends Controller {
 	

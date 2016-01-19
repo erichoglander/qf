@@ -6,6 +6,7 @@
  * Page controller
  *
  * Used for custom pages, such as the front page
+ * @author Eric Höglander
  */
 class Page_Controller_Core extends Controller {
 

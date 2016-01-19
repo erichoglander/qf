@@ -6,6 +6,7 @@
  * User controller
  *
  * Administer users
+ * @author Eric Höglander
  */
 class User_Controller_Core extends Controller {
 

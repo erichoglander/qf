@@ -4,6 +4,7 @@
  */
 /**
  * Log controller
+ * @author Eric Höglander
  */
 class Log_Controller_Core extends Controller {
 	
