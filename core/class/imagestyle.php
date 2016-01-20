@@ -158,8 +158,6 @@ class Imagestyle_Core {
 	public function scaleExpand($w, $h, $bg = null) {
 		if (!$this->im)
 			return;
-		if ($w > $this->width && $h > $this->height)
-			return;
 		$src_ratio = $this->width/$this->height;
 		$end_ratio = $w/$h;
 		$x = $y = 0;
