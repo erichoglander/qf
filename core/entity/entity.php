@@ -1,14 +1,56 @@
 <?php
+/**
+ * Contains the base entity class
+ */
+/**
+ * Base entity
+ * @author Eric Höglander
+ */
 class Entity {
 	
+	/**
+	 * If true, try to generate a new url-alias
+	 * @see getCreateAlias
+	 * @var bool
+	 */
 	public $update_alias = false;
 	
+	/**
+	 * Type of entity, is used to set a default schema
+	 * @var string
+	 */
 	protected $type = "default";
+	
+	/**
+	 * The raw field data
+	 * @var array
+	 */
 	protected $fields = [];
-	protected $entities = [];
+	
+	/**
+	 * The database schema
+	 * @var array
+	 */
 	protected $schema;
-	protected $Db, $Io;
+	
+	/**
+	 * Database object
+	 * @var \Db_Core
+	 */
+	protected $Db;
+	
+	/**
+	 * Io object
+	 * @var \Io_Core
+	 */
+	protected $Io;
 
+	
+	/**
+	 * Constructor
+	 * @param  \Db_Core $Db
+	 * @param  int      $id Id of entity to load
+	 */
 	public function __construct($Db, $id = null) {
 		$this->Db = $Db;
 		$this->schema = $this->schema();
@@ -16,10 +58,18 @@ class Entity {
 			$this->load($id);
 	}
 	
+	/**
+	 * Get url path to the entity
+	 * @return string
+	 */
 	public function getPath() {
 		return $this->schema["table"]."/view/".$this->id();
 	}
 
+	/**
+	 * Entity as json-encodable data
+	 * @return array
+	 */
 	public function json() {
 		$json = [
 			"id" => $this->id(),
@@ -29,12 +79,26 @@ class Entity {
 		return $json;
 	}
 
+	/**
+	 * The entity id
+	 * @return int
+	 */
 	public function id() {
 		if (empty($this->fields["id"]))
 			return null;
 		return (int) $this->fields["id"];
 	}
 
+	/**
+	 * Get field value if it exists
+	 *
+	 * Will return formatted value of the specified field
+	 * For instance if the field has type "int", it will always 
+	 * return an integer (or $def) regardless of the raw data
+	 * @param  string $field
+	 * @param  mixed  $def
+	 * @return mixed
+	 */
 	public function get($field, $def = null) {
 		if (!array_key_exists($field, $this->fields))
 			return $def;
@@ -56,6 +120,15 @@ class Entity {
 		return $value;
 	}
 
+	/**
+	 * Set field value
+	 *
+	 * Value will be formatted/cast/sanitized for certain types
+	 * if specified in the schema
+	 * @param  string $field
+	 * @param  mixed  $value
+	 * @return mixed
+	 */
 	public function set($field, $value) {
 		if (is_string($value) && strlen($value) === 0)
 			$value = null;
@@ -82,6 +155,11 @@ class Entity {
 		return $value;
 	}
 
+	/**
+	 * Attempt to load entity from database based on id and $schema
+	 * @param  int $id
+	 * @return bool
+	 */
 	public function load($id) {
 		$row = $this->Db->getRow("SELECT * FROM `".$this->schema["table"]."` WHERE id = :id", [":id" => $id]);
 		if (!$row)
@@ -95,6 +173,10 @@ class Entity {
 		return true;
 	}
 
+	/**
+	 * Attempt to save entity to database based on $schema
+	 * @return bool
+	 */
 	public function save() {
 		$this->set("updated", REQUEST_TIME);
 		if (!$this->id())
@@ -147,6 +229,10 @@ class Entity {
 		return true;
 	}
 
+	/**
+	 * Delete entity from database
+	 * @return bool
+	 */
 	public function delete() {
 		if (!$this->id())
 			return false;
@@ -162,6 +248,12 @@ class Entity {
 		return true;
 	}
 	
+	/**
+	 * Create an url-alias for the entity if possible
+	 * @see    getPath
+	 * @see    getAlias
+	 * @return bool
+	 */
 	public function createAlias() {
 		if (!$this->id() || !is_callable([$this, "getPath"]) || !is_callable([$this, "getAlias"]))
 			return false;
@@ -200,6 +292,12 @@ class Entity {
 		}
 	}
 	
+	/**
+	 * Delete entity url-alias
+	 * @see    getPath
+	 * @see    getAlias
+	 * @return bool
+	 */
 	public function deleteAlias() {
 		if (!$this->id() || !is_callable([$this, "getPath"]) || !is_callable([$this, "getAlias"]))
 			return false;
@@ -207,6 +305,10 @@ class Entity {
 	}
 
 
+	/**
+	 * The database schema
+	 * @return array
+	 */
 	protected function schema() {
 		$schema = [
 			"table" => "",
@@ -231,10 +333,21 @@ class Entity {
 		return $schema;
 	}
 
+	/**
+	 * Get an entity
+	 * @param  string $name
+	 * @param  int    $id
+	 * @return \Entity
+	 */
 	protected function getEntity($name, $id = null) {
 		return newClass($name."_Entity", $this->Db, $id);
 	}
 
+	/**
+	 * Whether or not to generate an url-alias for the entity
+	 * @param  bool $new
+	 * @return bool
+	 */
 	protected function getCreateAlias($new) {
 		return $new || $this->update_alias;
 	}

@@ -1,6 +1,21 @@
 <?php
+/**
+ * Contains l10n string entity
+ */
+/**
+ * l10n string entity
+ *
+ * Used for single string translations
+ * @author Eric Höglander
+ */
 class l10nString_Entity_Core extends l10n_Entity {
 
+	/**
+	 * Load entity from string and language code
+	 * @param  string $string
+	 * @param  string $lang Language code
+	 * @return bool
+	 */
 	public function loadFromString($string, $lang) {
 		$row = $this->Db->getRow("
 				SELECT id FROM `l10n_string`
@@ -16,6 +31,10 @@ class l10nString_Entity_Core extends l10n_Entity {
 	}
 
 	
+	/**
+	 * Database schema
+	 * @return array
+	 */
 	protected function schema() {
 		$schema = parent::schema();
 		$schema["table"] = "l10n_string";

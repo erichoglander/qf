@@ -1,14 +1,38 @@
 <?php
+/**
+ * Contains the redirect entity
+ */
+/**
+ * Redirect entity
+ *
+ * Used to handle stored http redirects
+ * @author Eric Höglander
+ */
 class Redirect_Entity_Core extends Entity  {
 	
+	/**
+	 * Url of the target
+	 * @see url()
+	 * @return string
+	 */
 	public function url() {
 		return url($this->get("target"));
 	}
 	
+	/**
+	 * Uri of the target
+	 * @see uri()
+	 * @return string
+	 */
 	public function uri() {
 		return uri($this->get("target"));
 	}
 	
+	/**
+	 * Load redirect by source uri
+	 * @param  string $source
+	 * @return bool
+	 */
 	public function loadBySource($source) {
 		$row = $this->Db->getRow("
 				SELECT * FROM `redirect`
@@ -23,6 +47,11 @@ class Redirect_Entity_Core extends Entity  {
 		return false;
 	}
 	
+	
+	/**
+	 * Database schema
+	 * @return array
+	 */
 	protected function schema() {
 		$schema = parent::schema();
 		$schema["table"] = "redirect";

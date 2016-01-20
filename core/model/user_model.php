@@ -102,17 +102,18 @@ class User_Model_Core extends Model {
 	}
 	
 	public function editUser($User, $values) {
-		if (!empty($values["roles"])) {
-			foreach ($values["roles"] as &$role) {
-				if (!is_object($role))
-					$role = (object) ["id" => $role];
-			}
-		}
 		foreach ($values as $key => $value)
 			$User->set($key, $value);
 		if ($User->id() == 1)
 			$User->set("status", 1); # admin account cannot be deactivated
-		return $User->save();
+		if (!$User->save())
+			return false;
+		$this->Db->delete("user_role", ["user_id" => $User->id()]);
+		if (!empty($values["roles"])) {
+			foreach ($values["roles"] as $role_id) 
+				$this->Db->insert("user_role", ["user_id" => $User->id(), "role_id" => $role_id]);
+		}
+		return true;
 	}
 
 	public function saveSettings($User, $values) {

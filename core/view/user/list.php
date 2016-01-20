@@ -26,7 +26,7 @@ $this->Html->breadcrumbs[] = t("Users");
 			<td><?=$User->get("email")?></td>
 			<td><?=($User->get("status") ? t("Yes") : t("No"))?></td>
 			<td><?php 
-			foreach ($User->get("roles") as $i => $role) { 
+			foreach ($User->roles() as $i => $role) { 
 				if ($i != 0)
 					print ", ";
 				print t($role->title);

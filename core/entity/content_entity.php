@@ -1,9 +1,33 @@
 <?php
+/**
+ * Contains the content entity
+ */
+/**
+ * Content entity
+ *
+ * Used to create configurable and editable content blocks 
+ * without manual database interaction.
+ * @author Eric Höglander
+ */
 class Content_Entity_Core extends l10n_Entity {
 
-	protected $Acl, $User;
+	/**
+	 * Acl object
+	 * @var \Acl_Core
+	 */
+	protected $Acl;
+	
+	/**
+	 * User entity
+	 * @var \User_Entity_Core
+	 */
+	protected $User;
 
 
+	/**
+	 * Render the content block
+	 * @return string
+	 */
 	public function render() {
 		$data = $this->get("data");
 		$html = '<div class="content-entity content-entity-'.$this->id().'">';
@@ -19,6 +43,10 @@ class Content_Entity_Core extends l10n_Entity {
 		return $html;
 	}
 
+	/**
+	 * The quick edit button
+	 * @return string
+	 */
 	public function editButton() {
 		return 
 			'<a class="edit-btn" href="'.url("content/edit/".$this->id(), true).'">'.
@@ -26,6 +54,10 @@ class Content_Entity_Core extends l10n_Entity {
 			'</a>';
 	}
 
+	/**
+	 * Get field configurations
+	 * @return array
+	 */
 	public function fields() {
 		$arr = [];
 		foreach ($this->get("config")["fields"] as $field) {
@@ -38,6 +70,12 @@ class Content_Entity_Core extends l10n_Entity {
 		return $arr;
 	}
 
+	/**
+	 * Render one field
+	 * @param  string $field
+	 * @param  string $value
+	 * @return string
+	 */
 	public function renderField($field, $value) {
 		if ($field == "text") {
 			return xss($value);
@@ -57,6 +95,10 @@ class Content_Entity_Core extends l10n_Entity {
 	}
 
 
+	/**
+	 * If the current user has permission to edit this piece of content
+	 * @return bool
+	 */
 	protected function editAccess() {
 		if (!$this->Acl) {
 			$this->Acl = newClass("Acl", $this->Db);
@@ -65,6 +107,10 @@ class Content_Entity_Core extends l10n_Entity {
 		return $this->Acl->access($this->User, ["contentAdmin", "contentEdit"]);
 	}
 	
+	/**
+	 * Database schema
+	 * @return array
+	 */
 	protected function schema() {
 		$schema = parent::schema();
 		$schema["table"] = "content";

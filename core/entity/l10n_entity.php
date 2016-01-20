@@ -1,12 +1,43 @@
 <?php
+/**
+ * Contains the l10n entity 
+ */
+/**
+ * l10n entity
+ *
+ * An extension of the base entity to be used as a new base
+ * for translatable entities.
+ * The 'source entity' is the original entity when there was no other translations
+ */
 class l10n_Entity extends Entity {
 
+	/**
+	 * The default language of an entity
+	 * @var string
+	 */
 	public $default_lang = "sv";
 	
-	protected $translations = [];
+	
+	/**
+	 * The entity translations
+	 * @var array
+	 */
+	protected $translations = null;
+	
+	/**
+	 * Whether or not all translations have been fetched
+	 * @var bool
+	 */
 	protected $translations_fetched = false;
 
 
+	/**
+	 * Constructor
+	 * Sets default language from config
+	 * @param \Db_Core $Db
+	 * @param int      $id   Id of entity to load
+	 * @param string   $lang Language code of entity to load
+	 */
 	public function __construct($Db, $id = null, $lang = null) {
 		parent::__construct($Db, null);
 		$Config = newClass("Config");
@@ -15,9 +46,13 @@ class l10n_Entity extends Entity {
 			$this->load($id, $lang);
 	}
 
-	public function json() {
+	/**
+	 * Include translations in the json object
+	 * @return array
+	 */
+	public function json($include_translations = true) {
 		$json = parent::json();
-		if (!empty($this->translations())) {
+		if ($include_translations || !empty($this->translations())) {
 			$json->translations = [];
 			foreach ($this->translations() as $lang => $Entity) {
 				$json->translations[$lang] = $Entity->json();
@@ -26,14 +61,33 @@ class l10n_Entity extends Entity {
 		return $json;
 	}
 	
+	/**
+	 * Get a translation for a field
+	 * @see    \Entity::get()
+	 * @param  string $key
+	 * @param  string $lang Language code
+	 * @param  mixed  $def  Default value
+	 * @return mixed
+	 */
 	public function translate($key, $lang = null, $def = null) {
 		if (!$lang)
 			$lang = LANG;
 		if ($this->translation($lang))
 			return $this->translation($lang)->get($key, $def);
-		return null;
+		return $def;
 	}
 	
+	/**
+	 * Get a translation for a field
+	 *
+	 * Returns current field value if translation is missing
+	 * @see    translate
+	 * @see    \Entity::get()
+	 * @param  string $key
+	 * @param  string $lang Language code
+	 * @param  mixed  $def  Default value
+	 * @return mixed
+	 */
 	public function translateFallback($key, $lang = null, $def = null) {
 		if (!$lang)
 			$lang = LANG;
@@ -43,10 +97,18 @@ class l10n_Entity extends Entity {
 			return $this->get($key, $def);
 	} 
 	
+	/**
+	 * The id of the source entity
+	 * @return int
+	 */
 	public function sid() {
 		return $this->get("sid", $this->id());
 	}
 
+	/**
+	 * Save entity and all translations
+	 * @return bool
+	 */
 	public function saveAll() {
 		if (!$this->save())
 			return false;
@@ -59,13 +121,25 @@ class l10n_Entity extends Entity {
 		return true;
 	}
 
+	/**
+	 * Load entity
+	 *
+	 * If $lang is specified, attempt to load translation of that language
+	 * @param  int    $id
+	 * @param  string $lang Language code
+	 * @return bool
+	 */
 	public function load($id, $lang = null) {
 		if ($lang)
-			$this->loadTranslation($id, $lang);
+			return $this->loadTranslation($id, $lang);
 		else
 			return parent::load($id);
 	}
 
+	/**
+	 * Delete entity and all translations
+	 * @return bool
+	 */
 	public function deleteAll() {
 		foreach ($this->translations() as $Entity) {
 			if (!$Entity->delete(false))
@@ -74,6 +148,14 @@ class l10n_Entity extends Entity {
 		return $this->delete(false);
 	}
 
+	/**
+	 * Delete entity
+	 *
+	 * If specified and entity is the source entity, reassign source entity
+	 * and all source ids of the translation
+	 * @param  bool $change_sid Whether or not to reassign source entity if needed
+	 * @return bool
+	 */
 	public function delete($change_sid = true) {
 		if ($this->get("sid") === null && $change_sid) {
 			$row = $this->Db->getRow("
@@ -89,6 +171,10 @@ class l10n_Entity extends Entity {
 		return parent::delete();
 	}
 	
+	/**
+	 * Create a new translation of entity
+	 * @param $lang Language code
+	 */
 	public function newTranslation($lang) {
 		$class = get_class($this);
 		$this->translations[$lang] = new $class($this->Db);
@@ -96,6 +182,12 @@ class l10n_Entity extends Entity {
 		$this->translations[$lang]->set("lang", $lang);
 	}
 
+	/**
+	 * Load entity of given language
+	 * @param  int    $id
+	 * @param  string $lang Language code
+	 * @return bool
+	 */
 	public function loadTranslation($id, $lang) {
 		$row = $this->Db->getRow(
 				"SELECT id FROM `".$this->schema["table"]."`
@@ -109,6 +201,10 @@ class l10n_Entity extends Entity {
 			return false;
 	}
 
+	/**
+	 * Get all translations of entity
+	 * @return array
+	 */
 	public function translations() {
 		if (!$this->translations_fetched && $this->id()) {
 			$this->translations_fetched = true;
@@ -128,6 +224,11 @@ class l10n_Entity extends Entity {
 		return $this->translations;
 	}
 
+	/**
+	 * Get a specific translation of entity
+	 * @param  string $lang Language code
+	 * @return \l10n_Entity
+	 */
 	public function translation($lang) {
 		if ($this->get("lang") == $lang)
 			return $this;
@@ -154,6 +255,10 @@ class l10n_Entity extends Entity {
 	}
 
 
+	/**
+	 * Database schema
+	 * @return array
+	 */
 	protected function schema() {
 		$schema = parent::schema();
 		$schema["fields"]["sid"] = [

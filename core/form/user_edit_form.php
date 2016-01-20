@@ -31,7 +31,7 @@ class UserEdit_Form_Core extends Form {
 			$rolesop[$row->id] = t($row->title);
 		$roles = [];
 		if ($User) {
-			foreach ($User->get("roles") as $role)
+			foreach ($User->roles() as $role)
 				$roles[] = $role->id;
 		}
 		$structure = [

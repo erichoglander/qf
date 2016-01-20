@@ -1,9 +1,38 @@
 <?php
+/**
+ * Contains the user entity
+ */
+/**
+ * User entity
+ *
+ * A base for all users with password and login management
+ * Built with extending in mind to easily created advanced users
+ * with core functionality taken care of
+ * @author Eric Höglander
+ */
 class User_Entity_Core extends Entity {
 
+	/**
+	 * Stores any login error
+	 * @see authorize
+	 * @var string
+	 */
 	public $login_error;
+	
+	
+	/**
+	 * User roles
+	 * @var array
+	 */
+	protected $roles;
 
 
+	/**
+	 * Save user
+	 *
+	 * Hashes plain-text passwords before saving
+	 * @return bool
+	 */
 	public function save() {
 		if (!$this->get("pass"))
 			unset($this->fields["pass"]); # Don't set an empty password
@@ -11,29 +40,13 @@ class User_Entity_Core extends Entity {
 			$this->set("salt", $this->generateSalt());
 			$this->set("pass", $this->hashPassword($this->get("pass"), $this->get("salt")));
 		}
-		if (!parent::save())
-			return false;
-		$this->Db->delete("user_role", ["user_id" => $this->id()]);
-		if (!empty($this->get("roles"))) {
-			foreach ($this->get("roles") as $role)
-				$this->Db->insert("user_role", ["user_id" => $this->id(), "role_id" => $role->id]);
-		}
-		return true;
+		return parent::save();
 	}
 
-	public function load($id) {
-		if (!parent::load($id))
-			return false;
-		$this->set("roles", $this->Db->getRows(
-				"SELECT `role`.* FROM `role` 
-				INNER JOIN `user_role` ON 
-					`user_role`.role_id = `role`.id
-				WHERE 
-					`user_role`.user_id = :id", 
-				[":id" => $this->id()]));
-		return true;
-	}
-
+	/**
+	 * Readable name of the user
+	 * @return string
+	 */
 	public function name() {
 		if ($this->id())
 			return $this->get("name");
@@ -41,17 +54,42 @@ class User_Entity_Core extends Entity {
 			return "Anonymous";
 	}
 
+	/**
+	 * Check if the user has been assigned the specified role
+	 * @param  string $key
+	 * @return bool
+	 */
 	public function hasRole($key) {
-		$roles = $this->get("roles");
-		if (!empty($roles)) {
-			foreach ($roles as $role) {
-				if ($role->machine_name === $key)
-					return true;
-			}
+		foreach ($this->roles() as $role) {
+			if ($role->machine_name === $key)
+				return true;
 		}
 		return false;
 	}
+	
+	/**
+	 * Get all roles assigned to the user
+	 * @return array
+	 */
+	public function roles() {
+		if ($this->roles === null) {
+			$this->roles = $this->Db->getRows("
+					SELECT `role`.* FROM `user_role`
+					INNER JOIN `role` ON 
+						`role`.id = `user_role`.role_id
+					WHERE
+						`user_role`.user_id = :id",
+					[":id" => $this->id()]);
+		}
+		return $this->roles;
+	}
 
+	/**
+	 * Attempt to load user by username
+	 *
+	 * This method is used when checking if a username is available
+	 * @return string
+	 */
 	public function loadByName($name) {
 		$row = $this->Db->getRow("SELECT id FROM `user` WHERE `name` = :name", [":name" => $name]);
 		if ($row)
@@ -59,6 +97,13 @@ class User_Entity_Core extends Entity {
 		else
 			return false;
 	}
+
+	/**
+	 * Attempt to load user by e-mail
+	 *
+	 * This method is used when checking if an e-mail is available
+	 * @return string
+	 */
 	public function loadByEmail($email) {
 		$row = $this->Db->getRow("SELECT id FROM `user` WHERE `email` = :email", [":email" => $email]);
 		if ($row)
@@ -67,6 +112,9 @@ class User_Entity_Core extends Entity {
 			return false;
 	}
 
+	/**
+	 * Log out current user
+	 */
 	public function logout() {
 		unset($_SESSION["file_uploaded"]);
 		unset($_SESSION["file_upload"]);
@@ -74,6 +122,9 @@ class User_Entity_Core extends Entity {
 		unset($_SESSION["superuser_id"]);
 	}
 
+	/**
+	 * Set login based on the loaded user
+	 */
 	public function login() {
 		$_SESSION["user_id"] = $this->id();
 		$this->set("login", REQUEST_TIME);
@@ -85,6 +136,12 @@ class User_Entity_Core extends Entity {
 				"success");
 	}
 
+	/**
+	 * Attempt to authorize a user based on username and password
+	 * @param  string $name
+	 * @param  string $pass
+	 * @return bool
+	 */
 	public function authorize($name, $pass) {
 		if ($this->ipFloodProtection()) {
 			$this->login_error = "flood";
@@ -119,6 +176,10 @@ class User_Entity_Core extends Entity {
 		return true;
 	}
 
+	/**
+	 * Check for repeated login attempts based on IP address
+	 * @return bool
+	 */
 	public function ipFloodProtection() {
 		$Config = newClass("Config");
 		$n = $this->Db->numRows("
@@ -130,10 +191,15 @@ class User_Entity_Core extends Entity {
 				":ip" => $_SERVER["REMOTE_ADDR"],
 				":time" => REQUEST_TIME - $Config->getFloodProtectionTime()
 			]);
-		if ($n > 3)
+		if ($n > 5)
 			return true;
 		return false;
 	}
+
+	/**
+	 * Check for repeated login attempts based on user id
+	 * @return bool
+	 */
 	public function userFloodProtection() {
 		$Config = newClass("Config");
 		$n = $this->Db->numRows("
@@ -150,10 +216,18 @@ class User_Entity_Core extends Entity {
 		return false;
 	}
 
+	/**
+	 * Check if user has not confirmed the e-mail address
+	 * @return bool
+	 */
 	public function hasUnconfirmedEmail() {
 		return $this->get("email_confirmation") && REQUEST_TIME - $this->get("email_confirmation_time") > 60*60*24;
 	}
 
+	/**
+	 * Attempt to verify a link for resetting password
+	 * @return bool
+	 */
 	public function verifyResetLink($link) {
 		if (REQUEST_TIME - $this->get("reset_time") < 60*60*24 && 
 				$this->get("reset") === $this->hash($link, "qfresetlink"))
@@ -161,6 +235,10 @@ class User_Entity_Core extends Entity {
 		return false;
 	}
 
+	/**
+	 * Generate a code to be used in a link to reset password
+	 * @return string
+	 */
 	public function generateResetLink() {
 		$link = md5(hash("sha512", microtime(true)."qfreset".rand(10001, 20000)));
 		$hash = $this->hash($link, "qfresetlink");
@@ -169,12 +247,20 @@ class User_Entity_Core extends Entity {
 		return $link;
 	}
 
+	/**
+	 * Attempt to verify user e-mail address
+	 * @return bool
+	 */
 	public function verifyEmailConfirmationLink($link) {
 		if ($this->get("email_confirmation") === $this->hash($link, "qfemailconfirmationlink"))
 			return true;
 		return false;
 	}
 
+	/**
+	 * Generate a code to be used in a link to verify user e-mail address
+	 * @return string
+	 */
 	public function generateEmailConfirmationLink() {
 		$link = md5(hash("sha512", "qfconfirm".microtime(true).rand(20001, 30000)));
 		$hash = $this->hash($link, "qfemailconfirmationlink");
@@ -183,22 +269,38 @@ class User_Entity_Core extends Entity {
 		return $link;
 	}
 
-	public function hash($str, $salt, $len = null) {
-		$hash = hash("sha512", $salt.hash("sha512", $str).hash("sha512", $salt."qfpass"));
-		if ($len)
-			$hash = substr($len, 0, $len);
-		return $hash;
+	/**
+	 * Hash a string with a salt
+	 * @param  string $str
+	 * @param  string $salt
+	 * @return string
+	 */
+	public function hash($str, $salt) {
+		return hash("sha512", $salt.hash("sha512", $str).hash("sha512", $salt."qfpass"));
 	}
 
+	/**
+	 * Hash password 
+	 * @see hash
+	 * @return string
+	 */
 	public function hashPassword($pass, $salt) {
 		return "1#".$this->hash($pass, $salt);
 	}
 
 
+	/**
+	 * Generate a salt to be used in hashes
+	 * @return string
+	 */
 	protected function generateSalt() {
 		return hash("sha512", microtime(true).rand(1, 10000)."qfsalt");
 	}
 	
+	/**
+	 * Database schema
+	 * @return array
+	 */
 	protected function schema() {
 		$schema = parent::schema();
 		$schema["table"] = "user";
