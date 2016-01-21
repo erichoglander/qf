@@ -22,7 +22,7 @@ class l10n_Entity extends Entity {
 	 * The entity translations
 	 * @var array
 	 */
-	protected $translations = null;
+	protected $translations = [];
 	
 	/**
 	 * Whether or not all translations have been fetched
