@@ -68,7 +68,7 @@ function timepicker(el) {
 			this.tags.hours[i].className = "timepicker-hour timepicker-hour-"+i;
 			if (i == this.value.h)
 				this.tags.hours[i].className+= " active";
-			this.tags.hours[i].textContent = i;
+			this.tags.hours[i].textContent = i%24;
 			var x = (i > 12 ? i-12 : i);
 			var d = (i > 12 ? 40 : 28);
 			var a = 2 * Math.PI * x / 12;
@@ -107,7 +107,7 @@ function timepicker(el) {
 	}
 
 	this.renderValue = function() {
-		this.tags.input.value = this.addZero(this.value.h)+":"+this.addZero(this.value.m);
+		this.tags.input.value = this.addZero(this.value.h%24)+":"+this.addZero(this.value.m);
 	}
 
 	this.addZero = function(val) {
@@ -148,7 +148,10 @@ function timepicker(el) {
 	this.minuteOpen = function() {
 		if (this.hourIsOpen()) {
 			var self = this;
-			var t = parseFloat(getStyle(this.tags.hour, "transition-duration"))*1000;
+			var t = getStyle(this.tags.hour, "transition-duration");
+			if (!t)
+				t = getStyle(this.tags.hour, "-webkit-transition-duration")
+			t = parseFloat(t)*1000;
 			this.hourClose();
 			setTimeout(function() {
 				self.tagOpen("minute");
@@ -187,9 +190,11 @@ function timepicker(el) {
 	}
 
 	this.windowClick = function(e) {
+		if (!this.isOpen())
+			return;
 		var el = e.target;
-		for (var i=0; el  && i<7; el = el.parentNode, i++) {
-			if (el == this.tags.wrap)
+		for (var i=0; el && i<7; el = el.parentNode, i++) {
+			if (el == this.tags.picker || el == this.tags.input)
 				return;
 		}
 		this.close();

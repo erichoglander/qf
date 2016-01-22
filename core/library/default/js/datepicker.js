@@ -303,6 +303,8 @@ function datepicker(el) {
 	}
 
 	this.windowClick = function(e) {
+		if (!this.isOpen())
+			return;
 		this.checkWrap(e.target);
 		this.checkSelect(e.target);
 	}
@@ -316,8 +318,8 @@ function datepicker(el) {
 		this.selectClose(this.selectActive);
 	}
 	this.checkWrap = function(el) {
-		for (var i=0; el  && i<8; el = el.parentNode, i++) {
-			if (el == this.tags.wrap)
+		for (var i=0; el && i<8; el = el.parentNode, i++) {
+			if (el == this.tags.picker || el == this.tags.input)
 				return;
 		}
 		this.close();
