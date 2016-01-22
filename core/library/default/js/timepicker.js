@@ -173,7 +173,10 @@ function timepicker(el) {
 	}
 	this.tagClose = function(type) {
 		var self = this;
-		var t = parseFloat(getStyle(this.tags[type], "transition-duration"))*1000;
+		var t = getStyle(this.tags[type], "transition-duration");
+		if (!t)
+			t = getStyle(this.tags[type], "-webkit-transition-duration");
+		t = parseFloat(t)*1000;
 		this.tags.wrap.removeClass("timepicker-"+type+"-open");
 		setTimeout(function() {
 			self.tags[type].style.display = "none";
