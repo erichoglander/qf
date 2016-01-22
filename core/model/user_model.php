@@ -1,6 +1,18 @@
 <?php
+/**
+ * Contains the user model
+ */
+/**
+ * User model
+ * @author Eric Höglander
+ */
 class User_Model_Core extends Model {
 
+	/**
+	 * Register a new user
+	 * @see    registerFinalize
+	 * @param  array $values
+	 */
 	public function register($values) {
 		$User = $this->getEntity("User");
 		if (!array_key_exists("name", $values))
@@ -10,6 +22,14 @@ class User_Model_Core extends Model {
 		$User->set("status", 1);
 		return $this->registerFinalize($User, $values);
 	}
+	
+	/**
+	 * Finalize user registration
+	 * @see    \Config_Core::getUserRegistration()
+	 * @param  \User_Entity_Core $User
+	 * @param  array             $values
+	 * @return string Key of the type of registration
+	 */
 	public function registerFinalize($User, $values) {
 		$registration = $this->Config->getUserRegistration();
 		$re = null;
@@ -36,6 +56,12 @@ class User_Model_Core extends Model {
 		return $re;
 	}
 
+	/**
+	 * Send an e-mail to a user to confirm their e-mail address
+	 * @see    \User_Entity_Core::generateEmailConfirmationLink()
+	 * @param  \User_Entity_Core $User
+	 * @return bool
+	 */
 	public function sendEmailConfirmation($User) {
 		$code = $User->generateEmailConfirmationLink();
 		if (!$User->save())
@@ -44,13 +70,28 @@ class User_Model_Core extends Model {
 		return $this->sendMail("UserEmailConfirmation", $User->get("email"), ["link" => $link]);
 	}
 	
+	/**
+	 * Resend an e-mail to a user to confirm their e-mail address
+	 * @see    \User_Entity_Core::generateEmailConfirmationLink()
+	 * @see    \UserEmailConfirmation_Mail_Core
+	 * @param  \User_Entity_Core $User
+	 * @param  array             $values
+	 * @return bool
+	 */
 	public function resendEmailConfirmation($User, $values) {
 		if ($User->get("email") == $User->get("name"))
 			$User->set("name", $values["email"]);
 		$User->set("email", $values["email"]);
 		return $this->sendEmailConfirmation($User);
 	}
-
+	
+	/**
+	 * Send an e-mail to a user to reset their password
+	 * @see    \User_Entity_Core::generateResetLink()
+	 * @see    \UserReset_Mail_Core
+	 * @param  \User_Entity_Core $User
+	 * @return bool
+	 */
 	public function reset($User) {
 		$code = $User->generateResetLink();
 		if (!$User->save())
@@ -59,6 +100,12 @@ class User_Model_Core extends Model {
 		return $this->sendMail("UserReset", $User->get("email"), ["link" => $link]);
 	}
 
+	/**
+	 * Change user password
+	 * @param  \User_Entity_Core $User
+	 * @param  string            $password
+	 * @return bool
+	 */
 	public function changePassword($User, $password) {
 		$User->set("pass", $password);
 		$User->set("reset", "");
@@ -66,17 +113,33 @@ class User_Model_Core extends Model {
 		return $User->save();
 	}
 
+	/**
+	 * Confirm a users e-mail address
+	 * @param  \User_Entity_Core $User
+	 * @return bool
+	 */
 	public function confirmEmail($User) {
 		$User->set("email_confirmation", "");
 		$User->set("email_confirmation_time", 0);
 		return $User->save();
 	}
 	
+	/**
+	 * Sign in as specified user
+	 * 
+	 * Sets current user_id as superuser_id in current session
+	 * @param  \User_Entity_Core $User
+	 */
 	public function signInAs($User) {
 		$_SESSION["superuser_id"] = $this->User->id();
 		$User->login();
 	}
 	
+	/**
+	 * Sign back in as the previous user
+	 * @see    signInAs
+	 * @return \User_Entity_Core
+	 */
 	public function signBack() {
 		if (empty($_SESSION["superuser_id"]))
 			return null;
@@ -88,11 +151,19 @@ class User_Model_Core extends Model {
 		return $User;
 	}
 	
+	/**
+	 * Clear all failed login attempts
+	 */
 	public function clearLoginAttempts() {
 		$this->Db->delete("login_attempt");
 		addlog("User", "Login attempts cleared", null, "success");
 	}
 	
+	/**
+	 * Add a new user
+	 * @see    editUser
+	 * @return \User_Entity_Core
+	 */
 	public function addUser($values) {
 		$User = $this->getEntity("User");
 		if ($this->editUser($User, $values))
@@ -101,6 +172,12 @@ class User_Model_Core extends Model {
 			return null;
 	}
 	
+	/**
+	 * Save user
+	 * @param  \User_Entity_Core $User
+	 * $param  array             $values
+	 * @return bool
+	 */
 	public function editUser($User, $values) {
 		foreach ($values as $key => $value)
 			$User->set($key, $value);
@@ -116,6 +193,12 @@ class User_Model_Core extends Model {
 		return true;
 	}
 
+	/**
+	 * Save user settings
+	 * @param  \User_Entity_Core $User
+	 * @param  array             $values
+	 * @return bool
+	 */
 	public function saveSettings($User, $values) {
 		$change_email = $values["email"] != $User->get("email");
 		if ($change_email && $User->get("email") == $User->get("name") && !array_key_exists("name", $values))
@@ -131,22 +214,32 @@ class User_Model_Core extends Model {
 		return $User->save();
 	}
 
+	/**
+	 * Delete user
+	 * @param  \User_Entity_Core $User
+	 * @return bool
+	 */
 	public function deleteUser($User)  {
 		return $User->delete();
 	}
 
-	public function getUsers($vars = []) {
-		$vars+= [
-			"sort" => "name",
-			"order" => "asc",
-		];
-		$rows = $this->Db->getRows("SELECT id FROM `user` ORDER BY ".$vars["sort"]." ".$vars["order"]);
+	/**
+	 * Get all users
+	 * @return array
+	 */
+	public function getUsers() {
+		$rows = $this->Db->getRows("SELECT id FROM `user` ORDER BY name ASC");
 		$users = [];
 		foreach ($rows as $row)
 			$users[] = $this->getEntity("User", $row->id);
 		return $users;
 	}
 	
+	/**
+	 * Creates an sql-query for a search
+	 * @param  array $values Search parameters
+	 * @return array Contains sql-query and vars
+	 */
 	public function listSearchQuery($values) {
 		$sql = "SELECT id FROM `user`";
 		$vars = [];
@@ -156,10 +249,22 @@ class User_Model_Core extends Model {
 		}
 		return [$sql, $vars];
 	}
+	/**
+	 * Number of users matching a search
+	 * @param  array $values Search parameters
+	 * @return int
+	 */
 	public function listSearchNum($values = []) {
 		list($sql, $vars) = $this->listSearchQuery($values);
 		return $this->Db->numRows($sql, $vars);
 	}
+	/**
+	 * Search for users
+	 * @param  array $values Search parameters
+	 * @param  int   $start
+	 * @param  int   $stop
+	 * @return array
+	 */
 	public function listSearch($values = [], $start = 0, $stop = 30) {
 		$list = [];
 		list($sql, $vars) = $this->listSearchQuery($values);

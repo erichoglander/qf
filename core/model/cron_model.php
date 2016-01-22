@@ -1,4 +1,11 @@
 <?php
+/**
+ * Contains the cron model
+ */
+/**
+ * Cron model
+ * @author Eric Höglander
+ */
 class Cron_Model_Core extends Model {
 	
 	/**

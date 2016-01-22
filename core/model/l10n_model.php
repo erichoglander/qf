@@ -1,6 +1,17 @@
 <?php
+/**
+ * Contains the l10n model
+ */
+/**
+ * l10n model
+ * @author Eric Höglander
+ */
 class l10n_Model_Core extends Model {
 
+	/**
+	 * Get all active languages
+	 * @return array
+	 */
 	public function getActiveLanguages() {
 		$rows = $this->Db->getRows("SELECT * FROM `language` WHERE status = 1");
 		$languages = [];
@@ -9,6 +20,17 @@ class l10n_Model_Core extends Model {
 		return $languages;
 	}
 
+	/**
+	 * Import string translations
+	 *
+	 * Data given in an array of objects, containing
+	 * lang, string, and translations.
+	 * Those translations themselves also containing lang and string.
+	 *
+	 * @see    export
+	 * @param  array $l10n_strings
+	 * @return int   The number of imported strings
+	 */
 	public function import($l10n_strings = []) {
 		$n = 0;
 		foreach ($l10n_strings as $l10n_string) {
@@ -59,6 +81,12 @@ class l10n_Model_Core extends Model {
 		return $n;
 	}
 
+	/**
+	 * Export all string translations to json
+	 * @see    import
+	 * @param  array $values Search parameters
+	 * @return string
+	 */
 	public function export($values) {
 		$l10n_strings = [];
 		$sql = "SELECT id, lang, string FROM `l10n_string` WHERE sid IS NULL";
@@ -87,6 +115,12 @@ class l10n_Model_Core extends Model {
 		return $json;
 	}
 
+	/**
+	 * Save a localized string
+	 * @param  \l10nString_Entity_Core $l10nString
+	 * @param  array                   $values     Associative array of $lang => $string
+	 * @return bool
+	 */
 	public function editString($l10nString, $values) {
 		if (!$l10nString->id())
 			return false;
@@ -112,26 +146,49 @@ class l10n_Model_Core extends Model {
 		return true;
 	}
 
+	/**
+	 * Delete a localized string
+	 * @param  \l10nString_Entity_Core $l10nString
+	 * @return bool
+	 */
 	public function deleteString($l10nString) {
 		return $l10nString->deleteAll();
 	}
 
-	public function searchNum($q = null) {
+	/**
+	 * Creates database query for a string search
+	 * @param  string $q Search string
+	 * @return array  Contains sql-query and vars
+	 */
+	public function searchQuery($q) {
 		$vars = [];
 		$sql = "SELECT * FROM `l10n_string` WHERE sid IS NULL";
 		if ($q) {
 			$sql.= " && string LIKE :q";
 			$vars[":q"] = "%".$q."%";
 		}
+		return [$sql, $vars];
+	}
+	/**
+	 * Number of matches for a search
+	 * @see    searchQuery
+	 * @param  string $q
+	 * @return int
+	 */
+	public function searchNum($q = null) {
+		list($sql, $vars) = $this->searchQuery($q);
 		return $this->Db->numRows($sql, $vars);
 	}
+	/**
+	 * Get localized strings matching a search
+	 * @see    searchQuery
+	 * @param  string $q     Search string
+	 * @param  int    $start
+	 * @param  int    $stop
+	 * @return array
+	 */
 	public function search($q = null, $start = 0, $stop = 30) {
-		$vars = [];
-		$sql = "SELECT id FROM `l10n_string` WHERE sid IS NULL";
-		if ($q) {
-			$sql.= " && string LIKE :q";
-			$vars[":q"] = "%".$q."%";
-		}
+		list($sql, $vars) = $this->searchQuery($q);
 		$sql.= " ORDER BY created DESC";
 		$sql.= " LIMIT ".$start.", ".$stop;
 		$sources = $this->Db->getRows($sql, $vars);
@@ -143,6 +200,12 @@ class l10n_Model_Core extends Model {
 		return $l10n_strings;
 	}
 
+	/**
+	 * Scan code for translation calls and add them to database if needed
+	 * @see    scan
+	 * @param  array $parts Which parts of the codebase to scan
+	 * @return int   $n     Number of strings added to database
+	 */
 	public function scanAdd($parts) {
 		$arr = $this->scan($parts);
 		$n = 0;
@@ -158,6 +221,13 @@ class l10n_Model_Core extends Model {
 		}
 		return $n;
 	}
+	
+	/**
+	 * Scan code for translation calls and return information about the scan
+	 * @see    scan
+	 * @param  array $parts Which parts of the codebase to scan
+	 * @return array
+	 */
 	public function scanInfo($parts) {
 		$arr = $this->scan($parts);
 		$info = ["total" => count($arr), "new" => 0];
@@ -168,6 +238,13 @@ class l10n_Model_Core extends Model {
 		}
 		return $info;
 	}
+	
+	/**
+	 * Scan code for translation calls
+	 * @see    scanFiles
+	 * @param  array $parts Which parts of the codebase to scan
+	 * @return array
+	 */
 	public function scan($parts) {
 		if (in_array("core", $parts))
 			$arr[] = DOC_ROOT."/core";
@@ -177,6 +254,13 @@ class l10n_Model_Core extends Model {
 			return null;
 		return $this->scanFiles($arr);
 	}
+	
+	/**
+	 * Scan folders for translation calls
+	 * @see    scanString
+	 * @param  array $arr Folders to scan
+	 * @return array
+	 */
 	public function scanFiles($arr) {
 		$t = [];
 		foreach ($arr as $file) {
@@ -195,6 +279,12 @@ class l10n_Model_Core extends Model {
 		}
 		return array_unique($t, SORT_REGULAR);
 	}
+	
+	/**
+	 * Scan a string for translation calls
+	 * @param  string $str
+	 * @return array  Data of translation calls with the strings and languages
+	 */
 	public function scanString($str) {
 		$arr = [];
 		$n = preg_match_all("/[^a-z0-9\_\>\$]t\(\"([^\"]+)\"(\,\s*\"([a-z]+)\")?/i", $str, $matches);

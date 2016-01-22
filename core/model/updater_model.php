@@ -1,10 +1,26 @@
 <?php
+/**
+ * Contains the updater model
+ */
+/**
+ * Updater model
+ * @author Eric Höglander
+ */
 class Updater_Model_Core extends Model {
 	
+	/**
+	 * Get path to updates
+	 * @return string
+	 */
 	public function updatesPath() {
 		return DOC_ROOT."/core/update";
 	}
 
+	/**
+	 * Run a specific update
+	 * @param  int  $value
+	 * @return bool
+	 */
 	public function runUpdate($value) {
 		$path = $this->updatesPath()."/update_".$value.".php";
 		if (!file_exists($path))
@@ -21,6 +37,10 @@ class Updater_Model_Core extends Model {
 		return true;
 	}
 	
+	/**
+	 * Get all pending updates
+	 * @return array
+	 */
 	public function getUpdates() {
 		$updates = [];
 		$last = $this->Variable->get("core_update", 0);
@@ -35,6 +55,10 @@ class Updater_Model_Core extends Model {
 		return $updates;
 	}
 
+	/**
+	 * Update any missing translations from file
+	 * @return int|bool Number of translations added. False on failure.
+	 */
 	public function updateTranslations() {
 		$path = DOC_ROOT."/core/update/l10n_strings.json";
 		if (!file_exists($path))

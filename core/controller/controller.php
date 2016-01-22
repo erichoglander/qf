@@ -4,6 +4,16 @@
  */
 /**
  * Base controller
+ *
+ * The controller is to server as the leader for a request
+ * After the controller factory parses the request and contructs
+ * the proper controller object, this is where the request comes.
+ * The controller should do any additional parsing of the request,
+ * then deligate the heavy lifting to the model, and finally,
+ * send that data to the view for rendering and output.
+ * The model may be skipped if no processing needs to be done.
+ * The view may be skipped if the data doesn't need rendering.
+ *
  * @author Eric Höglander
  */
 class Controller {

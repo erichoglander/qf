@@ -108,6 +108,7 @@ class Alias_Model_Core extends Model {
 	}
 	/**
 	 * Search for aliases
+	 * @see    listSearchQuery
 	 * @param  array $values Search parameters
 	 * @param  int   $start
 	 * @param  int   $stop
