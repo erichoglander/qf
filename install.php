@@ -44,6 +44,9 @@ $database = [
     print "Could not connect to database.".PHP_EOL;
 }
 
+if (!file_exists(DOC_ROOT."/extend/.gitignore"))
+	file_put_contents(DOC_ROOT."/extend/.gitignore", "inc/database.php");
+
 if ($Db->numRows("SHOW TABLES LIKE 'alias'"))
 	die("System is already installed.\n");
 
