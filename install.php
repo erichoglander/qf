@@ -29,7 +29,7 @@ while (!$Db->connected) {
   print "Enter database name: ";
   $db_name = trim(fgets(STDIN));
   if (!file_exists("extend/inc"))
-    mkdir(DOC_ROOT."/extend/inc", 0774, true);
+    mkdir(DOC_ROOT."/extend/inc", 0775, true);
   $db = '<?php
 $database = [
   "host" => "'.$db_host.'",
