@@ -1,5 +1,5 @@
 <?php
-class Update_2 extends Update_Core {
+class Update_2_Core extends Update_Core {
 	
 	public function execute() {
 		// Create content table

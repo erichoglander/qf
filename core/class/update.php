@@ -35,4 +35,22 @@ class Update_Core {
 		return true;
 	}
 
+	/**
+	 * What part he update belongs to, core or extend
+	 * @return string
+	 */
+	public function part() {
+		$name = get_class($this);
+		return (strpos($name, "_Core") ? "core" : "extend");
+	}
+
+	/**
+	 * Update number
+	 * @return int
+	 */
+	public function nr() {
+		$name = get_class($this);
+		return (int) str_replace(["Update_", "_Core"], "", $name);
+	}
+
 }

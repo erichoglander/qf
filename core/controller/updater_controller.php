@@ -27,19 +27,26 @@ class Updater_Controller_Core extends Controller {
 	 * @see    \Updater_Model_Core::runUpdate()
 	 * @return string
 	 */
-	public function updateAction() {
+	public function updateAction($args = []) {
 		$updates = $this->Model->getUpdates();
+		$confirm = !empty($args[0]);
 		$n = count($updates);
 		if ($n) {
 			$handle = fopen("php://stdin", "r");
 			print t("There are :n new updates. Continue? (y/n)", "en", [":n" => $n])." ";
-			$line = trim(fgets($handle));
-			if ($line == "y") {
-				foreach ($updates as $update) {
-					if ($this->Model->runUpdate($update))
-						print t("Performed update :update", "en", [":update" => $update]).PHP_EOL;
+			if ($confirm) {
+				print "y".PHP_EOL;
+			}
+			else {
+				$confirm = trim(fgets($handle)) == "y";
+			}
+			if ($confirm) {
+				foreach ($updates as $Update) {
+					$vars = [":update" => $Update->nr(), ":part" => $Update->part()];
+					if ($this->Model->runUpdate($Update))
+						print t("Performed update :part :update", "en", $vars).PHP_EOL;
 					else
-						return t("Update :update failed", "en", [":update" => $update]);
+						return t("Update :part :update failed", "en", $vars);
 				}
 			}
 			else {

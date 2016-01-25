@@ -1,5 +1,5 @@
 <?php
-class Update_3 extends Update_Core {
+class Update_3_Core extends Update_Core {
 	
 	public function execute() {
 		$qs = [
