@@ -70,7 +70,7 @@ class Updater_Model_Core extends Model {
 
 	/**
 	 * Update any missing translations from file
-	 * @return int|bool Number of translations added. False on failure.
+	 * @return int Number of translations added.
 	 */
 	public function updateTranslations() {
 		$parts = ["core", "extend"];
@@ -78,10 +78,10 @@ class Updater_Model_Core extends Model {
 		foreach ($parts as $part) {
 			$path = DOC_ROOT."/".$part."/update/l10n_strings.json";
 			if (!file_exists($path))
-				return false;
+				continue;
 			$json = @json_decode(file_get_contents($path));
 			if (!$json)
-				return false;
+				continue;
 			$l10nModel = $this->getModel("l10n");
 			$n+= $l10nModel->import($json);
 		}

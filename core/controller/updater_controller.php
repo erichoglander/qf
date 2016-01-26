@@ -25,6 +25,7 @@ class Updater_Controller_Core extends Controller {
 	 * Usually only database updates
 	 * @see    \Updater_Model_Core::getUpdates()
 	 * @see    \Updater_Model_Core::runUpdate()
+	 * @param  array $args If first arg is not empty, skip confirmation
 	 * @return string
 	 */
 	public function updateAction($args = []) {

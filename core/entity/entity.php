@@ -88,6 +88,15 @@ class Entity {
 			return null;
 		return (int) $this->fields["id"];
 	}
+	
+	/**
+	 * The entity name derived from class name
+	 * @return string
+	 */
+	public function entityName() {
+		$name = get_class($this);
+		return str_replace(["_Entity", "_Core"], "", $name);
+	}
 
 	/**
 	 * Get field value if it exists
