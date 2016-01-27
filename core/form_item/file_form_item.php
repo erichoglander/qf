@@ -9,6 +9,7 @@ class File_FormItem_Core extends FormItem {
 	public $upload_callback, $remove_callback;
 	public $preview_template;
 	public $filter = "uint";
+	public $multiple_new = true;
 
 
 	public function hasFileItem() {

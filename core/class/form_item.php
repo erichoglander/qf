@@ -29,6 +29,13 @@ class FormItem {
 	 * @var bool
 	 */
 	public $multiple;
+	
+	/**
+	 * If a an empty element should be displayed if there can be multiple unputs
+	 * @see $multiple
+	 * @var bool
+	 */
+	public $multiple_new;
 
 	/**
 	 * If parent element can have multiple inputs
@@ -430,7 +437,7 @@ class FormItem {
 			$this->{$key} = $val;
 		if ($this->multiple) {
 			$value = $this->value();
-			if (empty($value))
+			if (empty($value) || $this->multiple_new)
 				$value[] = null;
 			$this->items = [];
 			$st = $structure;
