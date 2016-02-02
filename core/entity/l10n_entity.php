@@ -45,6 +45,16 @@ class l10n_Entity extends Entity {
 		if ($id)
 			$this->load($id, $lang);
 	}
+	
+	/**
+	 * Set default language for current entity
+	 * @param  string $lang
+	 */
+	public function setLang($lang = null) {
+		if (!$lang)
+			$lang = $this->default_lang;
+		$this->set("lang", $lang);
+	}
 
 	/**
 	 * Include translations in the json object
@@ -173,13 +183,15 @@ class l10n_Entity extends Entity {
 	
 	/**
 	 * Create a new translation of entity
-	 * @param $lang Language code
+	 * @param  $lang Language code
+	 * @return \l10n_Entity The new entity
 	 */
 	public function newTranslation($lang) {
 		$class = get_class($this);
 		$this->translations[$lang] = new $class($this->Db);
 		$this->translations[$lang]->set("sid", $this->sid());
 		$this->translations[$lang]->set("lang", $lang);
+		return $this->translations[$lang];
 	}
 
 	/**
@@ -226,13 +238,14 @@ class l10n_Entity extends Entity {
 
 	/**
 	 * Get a specific translation of entity
-	 * @param  string $lang Language code
+	 * @param  string $lang   Language code
+	 * @param  boolt  $create Create translation if it doesnt exist
 	 * @return \l10n_Entity
 	 */
-	public function translation($lang) {
+	public function translation($lang, $create = false) {
 		if ($this->get("lang") == $lang)
 			return $this;
-		if (!array_key_exists($lang, $this->translations)) {
+		if (!array_key_exists($lang, $this->translations) || (!$this->translations[$lang] && $create)) {
 			$this->translations[$lang] = null;
 			if ($this->id()) {
 				$sid = $this->get("sid");
@@ -248,6 +261,9 @@ class l10n_Entity extends Entity {
 				if ($row) {
 					$class = get_class($this);
 					$this->translations[$lang] = new $class($this->Db, $row->id);
+				}
+				else if ($create) {
+					$this->newTranslation($lang);
 				}
 			}
 		}
