@@ -17,7 +17,18 @@ class l10n_Controller_Core extends Controller {
 	 * @return array
 	 */
 	public function acl($action, $args = []) {
-		return ["l10nAdmin"];
+		$acl = ["l10nAdmin"];
+		if (in_array($action, ["edit", "list"]))
+			$acl[] = "l10nEdit";
+		if (in_array($action, ["delete", "list"]))
+			$acl[] = "l10nDelete";
+		if ($action == "import")
+			$acl[] = "l10nImport";
+		if ($action == "export")
+			$acl[] = "l10nExport";
+		if ($action == "scan")
+			$acl[] = "l10nScan";
+		return $acl;
 	}
 
 	/**

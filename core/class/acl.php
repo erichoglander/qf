@@ -165,6 +165,51 @@ class Acl_Core {
 	protected function l10nAdminAccess($User) {
 		return $User->id() == 1;
 	}
+	/**
+	 * Access to edit translations
+	 * @see    \l10n_Controller_Core::acl()
+	 * @param  \User_Entity_Core $User
+	 * @return bool
+	 */
+	protected function l10nEditAccess($User) {
+		return false;
+	}
+	/**
+	 * Access to delete translations
+	 * @see    \l10n_Controller_Core::acl()
+	 * @param  \User_Entity_Core $User
+	 * @return bool
+	 */
+	protected function l10nDeleteAccess($User) {
+		return false;
+	}
+	/**
+	 * Access to import translations
+	 * @see    \l10n_Controller_Core::acl()
+	 * @param  \User_Entity_Core $User
+	 * @return bool
+	 */
+	protected function l10nImportAccess($User) {
+		return false;
+	}
+	/**
+	 * Access to export translations
+	 * @see    \l10n_Controller_Core::acl()
+	 * @param  \User_Entity_Core $User
+	 * @return bool
+	 */
+	protected function l10nExportAccess($User) {
+		return false;
+	}
+	/**
+	 * Access to scan code for translations
+	 * @see    \l10n_Controller_Core::acl()
+	 * @param  \User_Entity_Core $User
+	 * @return bool
+	 */
+	protected function l10nScanAccess($User) {
+		return false;
+	}
 
 	/**
 	 * Complete url alias admin access
