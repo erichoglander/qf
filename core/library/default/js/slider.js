@@ -357,7 +357,6 @@ function slider(el) {
 	* MOVEMENT
 	*/
 	this.movePart = function(n, dir) {
-		console.log("move part "+n+" "+dir);
 		this.tags.parts[n].wrap.style.left = (this.pages*100*(this.partOffset+(dir == 1 ? 2*dir : dir)))+"%";
 		this.partOffset+= dir;
 		this.partFirst = (this.partFirst+1)%2;
