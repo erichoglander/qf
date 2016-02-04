@@ -43,7 +43,9 @@ class File_FormItem_Core extends FormItem {
 		}
 		else {
 			$data = $this->postValue();
-			if (!empty($data["id"]))
+			if ($this->multiple) 
+				return $data;
+			else if (!empty($data["id"]))
 				return (int) $data["id"];
 			else
 				return null;

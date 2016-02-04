@@ -437,7 +437,7 @@ class FormItem {
 			$this->{$key} = $val;
 		if ($this->multiple) {
 			$value = $this->value();
-			if (empty($value) || $this->multiple_new)
+			if (empty($value) || ($this->multiple_new && !$this->submitted))
 				$value[] = null;
 			$this->items = [];
 			$st = $structure;
