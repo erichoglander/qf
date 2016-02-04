@@ -346,8 +346,12 @@ function uri($path) {
 	else {
 		$row = $Db->getRow("
 				SELECT * FROM `alias`
-				WHERE path = :path && status = 1",
-				["path" => $path]);
+				WHERE 
+					path = :path && 
+					status = 1 &&
+					(lang IS NULL || lang = :lang)",
+				[	":path" => $path,
+					":lang" => LANG]);
 		if ($row)
 			$path = $row->alias;
 	}
