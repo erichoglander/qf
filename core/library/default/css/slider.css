@@ -1,0 +1,48 @@
+.slider {
+	position: relative;
+}
+.slides {
+	position: relative;
+	overflow: hidden;
+}
+.slides > .inner {
+	white-space: nowrap;
+	position: relative;
+}
+
+.slider .part-0 {
+	position: relative;
+}
+.slider .part-1 {
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+}
+
+.slider .slide {
+	box-sizing: border-box;
+	position: absolute;
+	top: 0;
+	height: 100%;
+	width: 100%;
+}
+.slider .part-0 .slide-0 {
+	position: static;
+}
+
+.slider.fade .slide {
+	opacity: 0;
+	visibility: hidden;
+	transition: opacity 1s ease, visibility 1s ease;
+	-webkit-transition: opacity 1s ease, visibility 1s ease;
+	-webkit-transform: translate3d(0,0,0);
+}
+.slider.fade .slide.active {
+	opacity: 1;
+	visibility: visible;
+}
+.slider.fade .part-1 {
+	display: none;
+}
