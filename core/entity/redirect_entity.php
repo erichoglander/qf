@@ -11,6 +11,27 @@
 class Redirect_Entity_Core extends Entity  {
 	
 	/**
+	 * Language object
+	 * @var object
+	 */
+	protected $language;
+	
+	
+	/**
+	 * Get language object, if it exists
+	 * @return object
+	 */
+	public function language() {
+		if ($this->get("lang") && $this->language === null) {
+			$this->language = $this->Db->getRow("
+					SELECT * FROM `language`
+					WHERE lang = :lang",
+					[":lang" => $this->get("lang")]);
+		}
+		return $this->language;
+	}
+	
+	/**
 	 * Url of the target
 	 * @see url()
 	 * @return string
@@ -33,13 +54,15 @@ class Redirect_Entity_Core extends Entity  {
 	 * @param  string $source
 	 * @return bool
 	 */
-	public function loadBySource($source) {
+	public function loadBySource($source, $lang = null) {
 		$row = $this->Db->getRow("
 				SELECT * FROM `redirect`
 				WHERE 
 					status = 1 &&
-					source = :source",
-				[":source" => $source]);
+					source = :source &&
+					(lang IS NULL || lang = :lang)",
+				[	":source" => $source,
+					":lang" => $lang]);
 		if ($row) {
 			$this->load($row->id);
 			return true;
@@ -55,6 +78,9 @@ class Redirect_Entity_Core extends Entity  {
 	protected function schema() {
 		$schema = parent::schema();
 		$schema["table"] = "redirect";
+		$schema["fields"]["lang"] = [
+			"type" => "varchar",
+		];
 		$schema["fields"]["source"] = [
 			"type" => "varchar",
 		];

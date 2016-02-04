@@ -13,6 +13,7 @@ $this->Html->breadcrumbs[] = $this->Html->title;
 			<th><?=t("Source")?></th>
 			<th><?=t("Target")?></th>
 			<th><?=t("Code")?></th>
+			<th><?=t("Language")?></th>
 			<th><?=t("Active")?></th>
 			<th class="actions"><?=t("Actions")?></th>
 		</tr>
@@ -23,6 +24,7 @@ $this->Html->breadcrumbs[] = $this->Html->title;
 			<td><?=xss($Redirect->get("source"))?></td>
 			<td><?=xss($Redirect->get("target"))?></td>
 			<td><?=$Redirect->get("code")?></td>
+			<td><?=($Redirect->language() ? $Redirect->language()->title : t("All"))?></td>
 			<td><?=($Redirect->get("status") ? t("Yes") : t("No"))?></td>
 			<td class="actions">
 				<a href="<?=url("redirect/edit/".$Redirect->id())?>"><?=t("Edit")?></a>

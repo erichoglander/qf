@@ -69,12 +69,14 @@ CREATE TABLE IF NOT EXISTS `alias` (
   `status` tinyint(4) DEFAULT '1',
   `created` int(10) unsigned DEFAULT NULL,
   `updated` int(10) unsigned DEFAULT NULL,
+  `lang` varchar(2) COLLATE utf8_swedish_ci DEFAULT NULL,
   `path` varchar(256) COLLATE utf8_swedish_ci DEFAULT NULL,
   `alias` varchar(256) COLLATE utf8_swedish_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `path` (`path`(255)),
   KEY `alias` (`alias`(255)),
-  KEY `status` (`status`)
+  KEY `status` (`status`),
+  KEY `lang` (`lang`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -219,12 +221,14 @@ CREATE TABLE IF NOT EXISTS `redirect` (
   `status` tinyint(4) NOT NULL DEFAULT '1',
   `created` int(10) unsigned NOT NULL DEFAULT '0',
   `updated` int(10) unsigned NOT NULL DEFAULT '0',
+  `lang` varchar(2) COLLATE utf8_swedish_ci DEFAULT NULL,
   `source` varchar(256) COLLATE utf8_swedish_ci NOT NULL,
   `target` varchar(512) COLLATE utf8_swedish_ci NOT NULL,
   `code` enum('301','302','303','307') COLLATE utf8_swedish_ci NOT NULL DEFAULT '301',
   PRIMARY KEY (`id`),
   KEY `status` (`status`),
-  KEY `source` (`source`(255))
+  KEY `source` (`source`(255)),
+  KEY `lang` (`lang`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -323,7 +327,7 @@ if (!$Db->query($sql))
 print "OK\n";
 
 $Variable = newClass("Variable", $Db);
-$Variable->set("core_update", 3);
+$Variable->set("core_update", 4);
 
 print "Installing updates...\n";
 $doc = $ControllerFactory->executeUri("updater/update");

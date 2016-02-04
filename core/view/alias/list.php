@@ -12,6 +12,7 @@ $this->Html->breadcrumbs[] = $this->Html->title;
 		<tr>
 			<th><?=t("Path")?></th>
 			<th><?=t("Alias")?></th>
+			<th><?=t("Language")?></th>
 			<th><?=t("Active")?></th>
 			<th class="actions"><?=t("Actions")?></th>
 		</tr>
@@ -21,6 +22,7 @@ $this->Html->breadcrumbs[] = $this->Html->title;
 		<tr>
 			<td><?=xss($Alias->get("path"))?></td>
 			<td><?=xss($Alias->get("alias"))?></td>
+			<td><?=($Alias->language() ? $Alias->language()->title : t("All"))?></td>
 			<td><?=($Alias->get("status") ? t("Yes") : t("No"))?></td>
 			<td class="actions">
 				<a href="<?=url("alias/edit/".$Alias->id())?>"><?=t("Edit")?></a>

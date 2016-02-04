@@ -3,7 +3,13 @@ class RedirectEdit_Form_Core extends Form {
 	
 	public function validate($values) {
 		$Redirect = $this->get("Redirect");
-		$row = $this->Db->getRow("SELECT * FROM `redirect` WHERE source = :source", [":source" => $values["source"]]);
+		$row = $this->Db->getRow("
+				SELECT * FROM `redirect` 
+				WHERE 
+					source = :source &&
+					(lang IS NULL || lang = :lang || :lang = '')", 
+				[	":source" => $values["source"],
+					":lang" => $values["lang"]]);
 		if ($row && (!$Redirect || $row->id != $Redirect->id())) {
 			$this->setError(t("Redirect source already exists"), "source");
 			return false;
@@ -13,6 +19,13 @@ class RedirectEdit_Form_Core extends Form {
 
 	public function structure() {
 		$Redirect = $this->get("Redirect");
+		
+		// Languages
+		$rows = $this->Db->getRows("SELECT * FROM `language` ORDER BY title ASC");
+		$lang_op = [];
+		foreach ($rows as $row)
+			$lang_op[$row->lang] = $row->title;
+			
 		return [
 			"name" => "redirect_edit",
 			"items" => [
@@ -41,6 +54,13 @@ class RedirectEdit_Form_Core extends Form {
 					],
 					"required" => true,
 					"value" => ($Redirect ? $Redirect->get("code") : "301"),
+				],
+				"lang" => [
+					"type" => "select",
+					"label" => t("Language"),
+					"options" => $lang_op,
+					"empty_option" => t("- All -"),
+					"value" => ($Redirect ? $Redirect->get("lang") : null),
 				],
 				"status" => [
 					"type" => "checkbox",

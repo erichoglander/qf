@@ -237,7 +237,14 @@ class ControllerFactory_Core {
 		if ($this->Db->connected) {
 			// Alias
 			if ($request["path"]) {
-				$alias = $this->Db->getRow("SELECT * FROM `alias` WHERE status = 1 && alias = :alias", [":alias" => $request["path"]]);
+				$alias = $this->Db->getRow("
+						SELECT * FROM `alias` 
+						WHERE 
+							status = 1 &&
+							alias = :alias &&
+							(lang IS NULL || lang = :lang)", 
+						[	":alias" => $request["path"],
+							":lang" => $request["lang"]]);
 				if ($alias) 
 					$request["path"] = $alias->path;
 			}
@@ -252,11 +259,11 @@ class ControllerFactory_Core {
 			}
 			if (!array_key_exists("uri", $redir)) {
 				$Redirect = newClass("Redirect_Entity", $this->Db);
-				$Redirect->loadBySource($uri);
+				$Redirect->loadBySource($uri, $request["lang"]);
 				if (!$Redirect->id()) {
-					$Redirect->loadBySource($request["path"]);
+					$Redirect->loadBySource($request["path"], $request["lang"]);
 					if (!$Redirect->id())
-						$Redirect->loadBySource($request["alias"]);
+						$Redirect->loadBySource($request["alias"], $request["lang"]);
 				}
 				if ($Redirect->id()) {
 					$redir["uri"] = $Redirect->uri();
