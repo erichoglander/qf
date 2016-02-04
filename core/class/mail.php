@@ -14,12 +14,24 @@ class Mail_Core {
 	 * @var string
 	 */
 	public $from;
+	
+	/**
+	 * Sender name
+	 * @var string
+	 */
+	public $from_name;
 
 	/**
 	 * Receiver e-mail address
 	 * @var string
 	 */
 	public $to;
+	
+	/**
+	 * Receiver name
+	 * @var string
+	 */
+	public $to_name;
 
 	/**
 	 * The e-mail subject
@@ -51,6 +63,18 @@ class Mail_Core {
 	 * @var bool
 	 */
 	public $html = true;
+	
+	/**
+	 * Use an API
+	 * @var string
+	 */
+	public $api = null;
+	
+	/**
+	 * API credentials
+	 * @var string
+	 */
+	public $api_credentials = [];
 
 
 	/**
@@ -99,34 +123,99 @@ class Mail_Core {
 	public function send() {
 
 		if (!$this->from || !$this->to || !$this->message || !$this->subject) {
-			addlog("mail", "Mail failed: Missing parameters", ["from" => $this->from, "to" => $this->to, "message" => $this->message, "subject" => $this->subject]);
+			addlog("mail", "Mail failed: Missing parameters", ["from" => $this->from, "to" => $this->to, "message" => $this->message, "subject" => $this->subject], "error");
 			return false;
 		}
-
-		if ($this->html)
-			$this->setHeader("Content-Type", "text/html; charset=UTF-8");
-
-		$this->setHeader("From", $this->from);
-		$this->setHeader("Reply-To", $this->from);
-		$this->setHeader("Return-Path", $this->from);
-
-		$data = [
-			"headers" => $this->headers,
-			"message" => $this->message,
-		];
-
-		$this->prepareAttachments();
-
-		$subject = "=?UTF-8?B?".base64_encode($this->subject)."?=";
+		
 		$message = $this->message;
 		if ($this->include_signature)
 			$message.= $this->signature();
-		$headers = "";
+		
+		if ($this->api == "mandrill") {
+			
+			if (empty($this->api_credentials["key"])) {
+				addlog("mail", "Mail failed: Missing Mandrill API-key", ["credentials" => $this->api_credentials], "error");
+				return false;
+			}
+			
+			$data = [
+				"subject" => $this->subject,
+				"from_email" => $this->from,
+				"to" => [[
+					"email" => $this->to,
+					"type" => "to",
+				]],
+				"headers" => [
+					"Reply-To" => $this->from,
+				],
+			];
+			if ($this->from_name)
+				$data["from_name"] = $this->from_name;
+			if ($this->to_name)
+				$data["to"]["name"] = $this->to_name;
+			if ($this->html)
+				$data["html"] = $message;
+			else
+				$data["text"] = $message;
+			
+			if (!empty($this->attachments)) {
+				foreach ($this->attachments as $attachment) {
+					$file = @file_get_contents($attachment);
+					$info = pathinfo($attachment);
+					if (strlen($file)) {
+						$data["attachments"][] = [
+							"type" => mime_content_type($attachment),
+							"name" => $info["filename"],
+							"content" => base64_encode($file),
+						];
+					}
+				}
+			}
+			
+			$Mandrill = new Mandrill($this->api_credentials["key"]);
+			$success = true;
+			try {
+				$data["result"] = $Mandrill->messages->send($data);
+				foreach ($data["result"] as $result) {
+					if (in_array($result["status"], ["rejected", "invalid"])) {
+						$success = false;
+						break;
+					}
+				}
+			}
+			catch (Mandrill_Error $e) {
+				$data["error"] = $e->getMessage();
+				$success = false;
+			}
+			
+		}
+		else {
 
-		foreach ($this->headers as $key => $val)
-			$headers.= $key.": ".$val."\r\n";
+			if ($this->html)
+				$this->setHeader("Content-Type", "text/html; charset=UTF-8");
 
-		if (!$this->mail($this->to, $subject, $message, $headers, "-f".$this->from)) {
+			$this->setHeader("From", $this->from);
+			$this->setHeader("Reply-To", $this->from);
+			$this->setHeader("Return-Path", $this->from);
+
+			$data = [
+				"headers" => $this->headers,
+				"message" => $this->message,
+			];
+
+			$this->prepareAttachments();
+
+			$subject = "=?UTF-8?B?".base64_encode($this->subject)."?=";
+			$headers = "";
+
+			foreach ($this->headers as $key => $val)
+				$headers.= $key.": ".$val."\r\n";
+				
+			$success = $this->mail($this->to, $subject, $message, $headers, "-f".$this->from);
+			
+		}
+
+		if (!$success) {
 			addlog("mail", "Mail failed ".$this->to." (".$this->subject.")", $data, "error");
 			return false;
 		}
@@ -194,7 +283,7 @@ class Mail_Core {
 	 * @return bool
 	 */
 	protected function mail($to, $subject, $message, $headers, $params) {
-		return mail($this->to, $subject, $message, $headers, $params);
+		return mail($to, $subject, $message, $headers, $params);
 	}
 
 	/**

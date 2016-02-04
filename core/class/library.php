@@ -50,6 +50,13 @@ class Library {
 	public function __construct($Db) {
 		$this->Db = $Db;
 		$this->name = $this->parseName();
+		$this->loadFiles();
+	}
+	
+	/**
+	 * Load library files
+	 */
+	public function loadFiles() {
 	}
 
 	/**
