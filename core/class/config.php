@@ -71,7 +71,7 @@ class Config_Core {
 	 * @return array
 	 */
 	public function getLibraries() {
-		return ["Default", "JsonToHtml", "FontAwesome", "CKEditor"];
+		return ["Default", "JsonToHtml", "FontAwesome", "CKEditor", "Mandrill"];
 	}
 
 	/**
