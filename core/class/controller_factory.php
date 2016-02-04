@@ -37,10 +37,11 @@ class ControllerFactory_Core {
 	/**
 	 * Takes in an uri, sets some constants, and executes the action
 	 * @param  string $uri
+	 * @param  bool   $raw If true, ignore aliases and redirects
 	 * @return string
 	 */
-	public function executeUri($uri) {
-		$request = $this->parseUri($uri);
+	public function executeUri($uri, $raw = false) {
+		$request = $this->parseUri($uri, $raw);
 		if (!empty($request["redirect"])) {
 			if ($request["redirect"]["code"] == "301")
 				header("HTTP/1.1 301 Moved Permanently");
@@ -185,9 +186,10 @@ class ControllerFactory_Core {
 	/**
 	 * Parses the uri into an array we can use to determine our next move
 	 * @param  string $uri
+	 * @param  bool   $raw If true, ignore aliases and redirects
 	 * @return array Keys: uri, query, lang, base, path, alias, args, redirect
 	 */
-	public function parseUri($uri) {
+	public function parseUri($uri, $raw = false) {
 		
 		// Remove leading slash if there is one
 		$uri = strtolower($uri);
@@ -203,7 +205,7 @@ class ControllerFactory_Core {
 		$redir = [];
 
 		// Language
-		if ($this->Db->connected) {
+		if ($this->Db->connected && !$raw) {
 			if ($this->Config->getLanguageDetection() == "path") {
 				$lang = substr($uri, 0, 2);
 				$language = $this->Db->getRow("
@@ -234,7 +236,7 @@ class ControllerFactory_Core {
 		
 		$request["alias"] = $request["path"];
 			
-		if ($this->Db->connected) {
+		if ($this->Db->connected && !$raw) {
 			// Alias
 			if ($request["path"]) {
 				$alias = $this->Db->getRow("

@@ -20,5 +20,5 @@ if (!$Db->connected)
 $request_uri = "updater/update";
 if (in_array("--confirm", $_SERVER["argv"]))
 	$request_uri.= "/1";
-$doc = $ControllerFactory->executeUri($request_uri);
+$doc = $ControllerFactory->executeUri($request_uri, true);
 print $doc.PHP_EOL;
