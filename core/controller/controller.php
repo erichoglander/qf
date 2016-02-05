@@ -94,7 +94,8 @@ class Controller {
 				$this->automaticCron();
 				$this->defaultViewData();
 				$this->loadLibraries();
-				$this->loadMenus();
+				if (!IS_CLI)
+					$this->loadMenus();
 			}
 		}
 	}
