@@ -293,7 +293,7 @@ class Entity {
 			return true;
 		}
 		else {
-			$this->Db->deleteAlias();
+			$this->deleteAlias();
 			$Alias = $this->getEntity("Alias");
 			$Alias->set("path", $path);
 			$Alias->set("alias", $alias);
