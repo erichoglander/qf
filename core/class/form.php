@@ -11,8 +11,7 @@
  * @see    structure
  * @author Eric Höglander
  */
-class Form
-{
+class Form {
 
     /**
      * HTML attributes for form element
@@ -88,13 +87,12 @@ class Form
 
     /**
      * Constructor
-     * @param \Db_Core $Db
-     * @param \Io_Core $Io
+     * @param \Db_Core          $Db
+     * @param \Io_Core          $Io
      * @param \User_Entity_Core $User
-     * @param array $vars
+     * @param array             $vars
      */
-    public function __construct($Db, $Io, $User, $vars = [])
-    {
+    public function __construct($Db, $Io, $User, $vars = []) {
         $this->Db = $Db;
         $this->Io = $Io;
         $this->User = $User;
@@ -105,8 +103,7 @@ class Form
      * Renders the form
      * @return string
      */
-    public function render()
-    {
+    public function render() {
         $path = $this->templatePath();
         $vars = [
             "items" => $this->renderItems(),
@@ -124,11 +121,10 @@ class Form
     /**
      * Get variable from $vars
      * @param  string $name
-     * @param  string $def Default value is variable isn't set
+     * @param  string $def  Default value is variable isn't set
      * @return mixed
      */
-    public function get($name, $def = null)
-    {
+    public function get($name, $def = null) {
         if (!array_key_exists($name, $this->vars))
             return $def;
         return $this->vars[$name];
@@ -137,10 +133,9 @@ class Form
     /**
      * Sets variable in $vars
      * @param string $name
-     * @param mixed $value
+     * @param mixed  $value
      */
-    public function set($name, $value)
-    {
+    public function set($name, $value) {
         $this->vars[$name] = $value;
         $this->loadStructure();
     }
@@ -149,8 +144,7 @@ class Form
      * Replaces all $vars
      * @param array $vars
      */
-    public function setVars($vars)
-    {
+    public function setVars($vars) {
         $this->vars = $vars;
         $this->loadStructure();
     }
@@ -159,8 +153,7 @@ class Form
      * Fetches all values from elements
      * @return array
      */
-    public function values()
-    {
+    public function values() {
         $value = [];
         foreach ($this->items as $item) {
             if ($item->submit_data) {
@@ -168,7 +161,8 @@ class Form
                 if (is_array($val) && !$item->tree) {
                     foreach ($val as $k => $v)
                         $value[$k] = $v;
-                } else {
+                }
+                else {
                     $value[$item->name] = $val;
                 }
             }
@@ -180,8 +174,7 @@ class Form
      * Validates the form
      * @return bool
      */
-    public function isValidated()
-    {
+    public function isValidated() {
         if (!empty($this->errors))
             return false;
         if (!$this->verifyToken()) {
@@ -202,8 +195,7 @@ class Form
      * @param  array $values
      * @return bool
      */
-    public function validate($values = [])
-    {
+    public function validate($values = []) {
         return true;
     }
 
@@ -212,29 +204,28 @@ class Form
      * @param  bool $validate If true, validates the form first
      * @return bool
      */
-    public function isSubmitted($validate = true)
-    {
-        return isset($_POST["form_" . $this->name]) && (!$validate || $this->isValidated());
+    public function isSubmitted($validate = true) {
+        return isset($_POST["form_".$this->name]) && (!$validate || $this->isValidated());
     }
 
     /**
      * Sets an error message in $errors
-     * @param string $msg Error message
+     * @param string $msg  Error message
      * @param string $name Name of the element
      */
-    public function setError($msg, $name = null)
-    {
+    public function setError($msg, $name = null) {
         if ($name) {
             $arr = explode("[", str_replace("]", "", $name));
             $n = count($arr);
             $item = $this;
-            for ($i = 0; $i < $n; $i++) {
+            for ($i=0; $i<$n; $i++) {
                 if (!isset($item->items[$arr[$i]]))
                     return;
                 $item = $item->items[$arr[$i]];
             }
             $item->setError($msg, $name);
-        } else {
+        }
+        else {
             $this->errors[] = $msg;
         }
     }
@@ -243,8 +234,7 @@ class Form
      * Getter for $errors
      * @return array
      */
-    public function getErrors()
-    {
+    public function getErrors() {
         return $this->errors;
     }
 
@@ -254,25 +244,24 @@ class Form
      * This method should be extended by the specific form
      * <code>
      * return [
-     *    "name" => "my_form",
-     *    "items" => [
-     *        "title" => [
-     *            "type" => "text",
-     *            "label" => "Title",
-     *            "filter" => ["strip_tags", "trim"],
-     *            "required" => true,
-     *            "value" => "Some default title"",
-     *        ],
-     *        "actions" => $this->defaultActions()
-     *    ]
+     * 	"name" => "my_form",
+     * 	"items" => [
+     * 		"title" => [
+     * 			"type" => "text",
+     * 			"label" => "Title",
+     * 			"filter" => ["strip_tags", "trim"],
+     * 			"required" => true,
+     * 			"value" => "Some default title"",
+     * 		],
+     * 		"actions" => $this->defaultActions()
+     * 	]
      * ];
      * </code>
      *
      * @see    loadStructure
      * @return array
      */
-    protected function structure()
-    {
+    protected function structure() {
         return [
             "name" => "default_form",
             "attributes" => [
@@ -287,8 +276,7 @@ class Form
      * Loads the form structure
      * @see structure
      */
-    protected function loadStructure()
-    {
+    protected function loadStructure() {
         $args = func_get_args();
         if (empty($args))
             $structure = $this->structure();
@@ -317,18 +305,17 @@ class Form
      * @param  string $name
      * @param  array $item
      */
-    protected function loadItem($name, $item)
-    {
+    protected function loadItem($name, $item) {
         if (empty($item["type"]))
-            throw new Exception("No type given for form item " . $name);
+            throw new Exception("No type given for form item ".$name);
         $item["name"] = $name;
         $item["submitted"] = $this->isSubmitted(false);
         $item["form_name"] = $this->name;
         $a = explode("_", $item["type"]);
         $cname = "";
         foreach ($a as $b)
-            $cname .= ucwords($b);
-        $cname .= "_FormItem";
+            $cname.= ucwords($b);
+        $cname.= "_FormItem";
         $class = newClass($cname, $this->Db, $this->Io, $item);
         if (!$class)
             $class = new FormItem($this->Db, $this->Io, $item);
@@ -344,8 +331,7 @@ class Form
      * @param  string $cancel Text in cancel button
      * @return array
      */
-    protected function defaultActions($submit = null, $cancel = null)
-    {
+    protected function defaultActions($submit = null, $cancel = null) {
         if (!$submit)
             $submit = t("Save");
         if (!$cancel)
@@ -372,8 +358,7 @@ class Form
      * Check if the form has a file item
      * @return bool
      */
-    protected function hasFileItem()
-    {
+    protected function hasFileItem() {
         if (!empty($this->items)) {
             foreach ($this->items as $item) {
                 if ($item->hasFileItem())
@@ -387,8 +372,7 @@ class Form
      * Verify user form token
      * @return bool
      */
-    protected function verifyToken()
-    {
+    protected function verifyToken() {
         return $_POST["form_token"] === $this->token();
     }
 
@@ -396,10 +380,9 @@ class Form
      * Retrieves user form token
      * @return string
      */
-    protected function token()
-    {
+    protected function token() {
         if (!isset($_SESSION["form_token"]))
-            $_SESSION["form_token"] = substr(hash("sha512", rand(1, 1000) . microtime(true) . "qfformtoken"), 4, 32);
+            $_SESSION["form_token"] = substr(hash("sha512", rand(1,1000).microtime(true)."qfformtoken"), 4, 32);
         return $_SESSION["form_token"];
     }
 
@@ -407,17 +390,16 @@ class Form
      * Get form attributes
      * @return arr
      */
-    protected function getAttributes()
-    {
+    protected	function getAttributes() {
         $attr = [];
         foreach ($this->attributes as $key => $val)
             $attr[$key] = $val;
-        $class = cssClass("form-" . $this->name);
+        $class = cssClass("form-".$this->name);
         $attr["name"] = $this->name;
         if (empty($attr["class"]))
             $attr["class"] = $class;
         else
-            $attr["class"] .= " " . $class;
+            $attr["class"].= " ".$class;
         if ($this->ajax)
             $attr["onsubmit"] = "return formAjaxSubmit(this);";
         return $attr;
@@ -428,13 +410,12 @@ class Form
      * @param  array $attributes
      * @return string
      */
-    protected function attributes($attributes = null)
-    {
+    protected function attributes($attributes = null) {
         if (!$attributes)
             $attributes = $this->getAttributes();
         $attr = "";
         foreach ($attributes as $key => $val)
-            $attr .= $key . '="' . $val . '" ';
+            $attr.= $key.'="'.$val.'" ';
         $attr = substr($attr, 0, -1);
         return $attr;
     }
@@ -443,8 +424,7 @@ class Form
      * Path to template for rendering
      * @return string
      */
-    protected function templatePath()
-    {
+    protected function templatePath() {
         return filePath("template/form/form.php");
     }
 
@@ -452,14 +432,11 @@ class Form
      * Renders all elements
      * @return string
      */
-    protected function renderItems()
-    {
+    protected function renderItems() {
         $items = [];
         foreach ($this->items as $name => $item)
             $items[] = $item->render($name);
         return $items;
     }
 
-}
-
-;
+};
