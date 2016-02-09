@@ -26,17 +26,20 @@ class Content_Entity_Core extends l10n_Entity {
 
 	/**
 	 * Render the content block
+	 * @param  string $lang If empty, use current site language
 	 * @return string
 	 */
-	public function render() {
-		$data = $this->get("data");
+	public function render($lang = null) {
+		if (!$lang)
+			$lang = LANG;
+		$data = $this->translate("data", $lang);
 		$html = '<div class="content-entity content-entity-'.$this->id().'">';
 		if ($this->editAccess())
 			$html.= $this->editButton();
 		$html.= '<div class="inner">';
 		foreach ($this->get("config")["fields"] as $i => $field) {
 			$html.= '<div class="field field-'.$field["type"].' field-'.($i+1).'">';
-			$html.= $this->renderField($field["type"], $data[$i]);
+			$html.= $this->renderField($field["type"], (isset($data[$i]) ? $data[$i] : null));
 			$html.= '</div>';
 		}
 		$html.= '</div></div>';
@@ -52,6 +55,14 @@ class Content_Entity_Core extends l10n_Entity {
 			'<a class="edit-btn" href="'.url("content/edit/".$this->id(), true).'">'.
 				FontAwesome\Icon("pencil").
 			'</a>';
+	}
+	
+	/**
+	 * Whether or not the content can be localized
+	 * @return bool
+	 */
+	public function l10n() {
+		return !empty($this->get("config")["l10n"]);
 	}
 
 	/**

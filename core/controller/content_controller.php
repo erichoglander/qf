@@ -60,6 +60,8 @@ class Content_Controller_Core extends Controller {
 		$Content = $this->getEntity("Content", $args[0]);
 		if (!$Content->id())
 			return $this->notFound();
+		if ($Content->get("sid"))
+			redirect("content/config/".$Content->get("sid"));
 		$Form = $this->getForm("ContentConfig", [
 			"Content" => $Content, 
 		]);
@@ -87,6 +89,8 @@ class Content_Controller_Core extends Controller {
 		$Content = $this->getEntity("Content", $args[0]);
 		if (!$Content->id())
 			return $this->notFound();
+		if ($Content->get("sid"))
+			redirect("content/config/".$Content->get("sid"));
 		$Form = $this->getForm("ContentEdit", [
 			"Content" => $Content, 
 			"config" => $this->Acl->access($this->User, ["contentAdmin", "contentConfig"]),
