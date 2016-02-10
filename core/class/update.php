@@ -12,45 +12,45 @@
  */
 class Update_Core {
 
-	/**
-	 * Database object
-	 * @var \Db_Core
-	 */
-	protected $Db;
-	
+  /**
+   * Database object
+   * @var \Db_Core
+   */
+  protected $Db;
+  
 
-	/**
-	 * Constructor
-	 * @param \Db_Core $Db
-	 */
-	public function __construct($Db) {
-		$this->Db = $Db;
-	}
-	
-	/**
-	 * Run the update
-	 * @return bool
-	 */
-	public function execute() {
-		return true;
-	}
+  /**
+   * Constructor
+   * @param \Db_Core $Db
+   */
+  public function __construct($Db) {
+    $this->Db = $Db;
+  }
+  
+  /**
+   * Run the update
+   * @return bool
+   */
+  public function execute() {
+    return true;
+  }
 
-	/**
-	 * What part he update belongs to, core or extend
-	 * @return string
-	 */
-	public function part() {
-		$name = get_class($this);
-		return (strpos($name, "_Core") ? "core" : "extend");
-	}
+  /**
+   * What part he update belongs to, core or extend
+   * @return string
+   */
+  public function part() {
+    $name = get_class($this);
+    return (strpos($name, "_Core") ? "core" : "extend");
+  }
 
-	/**
-	 * Update number
-	 * @return int
-	 */
-	public function nr() {
-		$name = get_class($this);
-		return (int) str_replace(["Update_", "_Core"], "", $name);
-	}
+  /**
+   * Update number
+   * @return int
+   */
+  public function nr() {
+    $name = get_class($this);
+    return (int) str_replace(["Update_", "_Core"], "", $name);
+  }
 
 }

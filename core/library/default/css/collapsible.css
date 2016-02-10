@@ -1,17 +1,17 @@
 .collapsible-init .no-transition {
-	transition: none !important;
-	-webkit-transition: none !important;
+  transition: none !important;
+  -webkit-transition: none !important;
 }
 .collapsible-content {
-	overflow: hidden;
-	height: 0;
-	transition: height 0.3s ease;
-	-webkit-transition: height 0.3s ease;
+  overflow: hidden;
+  height: 0;
+  transition: height 0.3s ease;
+  -webkit-transition: height 0.3s ease;
 }
 .expanded > .collapsible-content {
-	height: auto;
-	overflow: visible;
+  height: auto;
+  overflow: visible;
 }
 .collapsible-title {
-	cursor: pointer;
+  cursor: pointer;
 }

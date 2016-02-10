@@ -11,7 +11,7 @@
 require_once("core/inc/bootstrap.php");
 
 if (!IS_CLI)
-	die("Must be run through cli.");
+  die("Must be run through cli.");
 
 // Database information
 while (!$Db->connected) {
@@ -45,10 +45,10 @@ $database = [
 }
 
 if (!file_exists(DOC_ROOT."/extend/.gitignore"))
-	file_put_contents(DOC_ROOT."/extend/.gitignore", "inc/database.php");
+  file_put_contents(DOC_ROOT."/extend/.gitignore", "inc/database.php");
 
 if ($Db->numRows("SHOW TABLES LIKE 'alias'"))
-	die("System is already installed.\n");
+  die("System is already installed.\n");
 
 print "Enter admin e-mail: ";
 $email = trim(fgets(STDIN));
@@ -323,7 +323,7 @@ ALTER TABLE `l10n_string`
 
 print "Constructing database... ";
 if (!$Db->query($sql))
-	die("Failed\n");
+  die("Failed\n");
 print "OK\n";
 
 $Variable = newClass("Variable", $Db);

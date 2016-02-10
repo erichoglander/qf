@@ -1,32 +1,32 @@
 .autoselect-hidden {
-	display: none;
+  display: none;
 }
 .autoselect {
-	position: relative;
+  position: relative;
 }
 .autoselect-options {
-	position: absolute;
-	left: 0;
-	top: 100%;
-	min-width: 100%;
-	max-height: 215px;
-	overflow-y: auto;
-	overflow-x: hidden;
-	z-index: 2;
-	opacity: 0;
-	filter: alpha(opacity=0);
-	visibility: hidden;
-	transition: opacity 0.1s ease, visibility 0s 0.1s;
-	-webkit-transition: opacity 0.1s ease, visibility 0s 0.5s;
+  position: absolute;
+  left: 0;
+  top: 100%;
+  min-width: 100%;
+  max-height: 215px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 2;
+  opacity: 0;
+  filter: alpha(opacity=0);
+  visibility: hidden;
+  transition: opacity 0.1s ease, visibility 0s 0.1s;
+  -webkit-transition: opacity 0.1s ease, visibility 0s 0.5s;
 }
 .form-autoselect:focus ~ .autoselect-options {
-	opacity: 1;
-	filter: alpha(opacity=100);
-	visibility: visible;
-	transition-delay: 0s;
+  opacity: 1;
+  filter: alpha(opacity=100);
+  visibility: visible;
+  transition-delay: 0s;
 }
 .autoselect-option {
-	padding: 3px 15px;
-	white-space: nowrap;
-	cursor: pointer;
+  padding: 3px 15px;
+  white-space: nowrap;
+  cursor: pointer;
 }
