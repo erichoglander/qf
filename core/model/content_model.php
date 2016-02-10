@@ -29,12 +29,13 @@ class Content_Model_Core extends Model {
 	 * @return bool
 	 */
 	public function configContent($Content, $values) {
+		$config = $Content->get("config");
 		$Content->set("title", $values["title"]);
-		if (array_key_exists("fields", $values)) {
-			$config = $Content->get("config");
+		if (array_key_exists("l10n", $values)) 
+			$config["l10n"] = $values["l10n"];
+		if (array_key_exists("fields", $values)) 
 			$config["fields"] = $values["fields"];
-			$Content->set("config", $config);
-		}
+		$Content->set("config", $config);
 		return $Content->save();
 	}
 
@@ -46,14 +47,29 @@ class Content_Model_Core extends Model {
 	 */
 	public function editContent($Content, $values) {
 		if ($Content->get("config")) {
-			$data = [];
-			foreach ($Content->get("config")["fields"] as $i => $field) {
-				if (array_key_exists("field_".$i, $values))
-					$data[$i] = $values["field_".$i];
+			if ($Content->l10n()) {
+				foreach ($values as $lang => $vals) {
+					$data = [];
+					$C = $Content->translation($lang, true);
+					foreach ($Content->get("config")["fields"] as $i => $field) {
+						if (array_key_exists("field_".$i, $vals))
+							$data[$i] = $vals["field_".$i];
+					}
+					$C->set("data", $data);
+					$C->save();
+				}
 			}
-			$Content->set("data", $data);
+			else {
+				$data = [];
+				foreach ($Content->get("config")["fields"] as $i => $field) {
+					if (array_key_exists("field_".$i, $values))
+						$data[$i] = $values["field_".$i];
+				}
+				$Content->set("data", $data);
+				$Content->save();
+			}
 		}
-		return $Content->save();
+		return true;
 	}
 
 	/**
@@ -65,12 +81,13 @@ class Content_Model_Core extends Model {
 	}
 
 	/**
-	 * Get all content entities
+	 * Get all  source content entities
 	 * @return array
 	 */
 	public function getContents() {
 		$rows = $this->Db->getRows("
 				SELECT id FROM `content`
+				WHERE sid IS NULL
 				ORDER BY title ASC");
 		$arr = [];
 		foreach ($rows as $row)

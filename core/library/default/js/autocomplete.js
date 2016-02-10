@@ -180,6 +180,7 @@ function autocomplete(el) {
 	
 	this.preview = function() {
 		this.tags.preview.textContent = this.tags.title.value;
+    this.tags.preview.setAttribute("title", this.tags.title.value);
 	}
 	
 	this.remove = function() {

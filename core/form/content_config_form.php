@@ -14,6 +14,11 @@ class ContentConfig_Form_Core extends Form {
 					"filter" => ["strip_tags", "trim"],
 					"focus" => !$Content,
 				],
+				"l10n" => [
+					"type" => "checkbox",
+					"label" => t("Localization"),
+					"value" => ($Content ? $Content->l10n() : null),
+				],
 				"fields" => [
 					"type" => "fieldset",
 					"label" => t("Field config"),
