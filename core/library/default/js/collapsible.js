@@ -129,7 +129,6 @@ function collapsible(el) {
   this.open = function() {
     var self = this;
     this.tags.wrap.removeClass("collapsed");
-    this.tags.wrap.addClass("expanded");
     this.tags.content.style.height = "0px";
     setTimeout(function() {
       self.tags.content.style.height = self.tags.inner.offsetHeight+"px";
@@ -137,6 +136,7 @@ function collapsible(el) {
         self.tags.content.addClass("no-transition");
         self.tags.content.style.height = "auto";
         self.tags.content.style.overflow = "visible";
+        self.tags.wrap.addClass("expanded");
         setTimeout(function() {
           self.tags.content.removeClass("no-transition");
         }, 1);
