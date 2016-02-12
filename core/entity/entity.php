@@ -228,6 +228,14 @@ class Entity {
       foreach ($this->schema["fields"] as $key => $field) {
         if ((!array_key_exists($key, $data) || $data[$key] === null) && array_key_exists("default", $field))
           $data[$key] = $field["default"];
+        // Set files as permanent
+        if ($field["type"] == "file" && $data[$key]) {
+          $File = $this->getEntity("File", $data[$key]);
+          if ($File->get("status") == 0) {
+            $File->set("status", 1);
+            $File->save();
+          }
+        }
       }
       $this->fields["id"] = $this->Db->insert($this->schema["table"], $data);
       if (!$this->id())
