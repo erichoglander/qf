@@ -1,9 +1,9 @@
 .ie-placeholder {
-	display: none;
-	position: absolute;
-	box-sizing: border-box;
-	opacity: 0.5;
+  display: none;
+  position: absolute;
+  box-sizing: border-box;
+  opacity: 0.5;
 }
 .ie-placeholder.active {
-	display: block;
+  display: block;
 }

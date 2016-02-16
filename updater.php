@@ -12,13 +12,13 @@
 require_once("core/inc/bootstrap.php");
 
 if (!IS_CLI)
-	die("Must be run through cli");
+  die("Must be run through cli");
 
 if (!$Db->connected)
-	die("Could not connect to database\n");
+  die("Could not connect to database\n");
 
 $request_uri = "updater/update";
 if (in_array("--confirm", $_SERVER["argv"]))
-	$request_uri.= "/1";
+  $request_uri.= "/1";
 $doc = $ControllerFactory->executeUri($request_uri, true);
 print $doc.PHP_EOL;

@@ -10,12 +10,12 @@
  */
 class Page_Controller_Core extends Controller {
 
-	/**
-	 * The front page
-	 * @return string
-	 */
-	public function indexAction() {
-		return $this->view("index");
-	}
+  /**
+   * The front page
+   * @return string
+   */
+  public function indexAction() {
+    return $this->view("index");
+  }
 
 };

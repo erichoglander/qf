@@ -1,55 +1,55 @@
 .select-custom-hidden {
-	display: none;
+  display: none;
 }
 .select-custom {
-	position: relative;
+  position: relative;
 }
 .select-custom-options {
-	position: absolute;
-	left: 0;
-	top: 100%;
-	display: none;
-	background: #fff;
-	min-width: 100%;
-	max-width: 800px;
-	max-height: 215px;
-	overflow-y: auto;
-	overflow-x: hidden;
-	z-index: 2;
-	display: none;
-	opacity: 0;
-	filter: alpha(opacity=0);
-	transition: opacity 0.1s ease;
-	-webkit-transition: opacity 0.1s ease;
+  position: absolute;
+  left: 0;
+  top: 100%;
+  display: none;
+  background: #fff;
+  min-width: 100%;
+  max-width: 800px;
+  max-height: 215px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 2;
+  display: none;
+  opacity: 0;
+  filter: alpha(opacity=0);
+  transition: opacity 0.1s ease;
+  -webkit-transition: opacity 0.1s ease;
 }
 .select-custom.active .select-custom-options {
-	opacity: 1;
-	filter: alpha(opacity=100);
+  opacity: 1;
+  filter: alpha(opacity=100);
 }
 .select-custom-option {
-	text-overflow: ellipsis;
-	overflow: hidden;
-	padding: 3px 15px;
-	cursor: pointer;
-	white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  padding: 3px 15px;
+  cursor: pointer;
+  white-space: nowrap;
 }
 .select-custom-title {
-	position: relative;
-	cursor: pointer;
-	user-select: none;
-	-moz-user-select: none;
-	-webkit-user-select: none;
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
 }
 .select-custom-title .fa {
-	position: absolute;
-	right: 15px;
-	float: right;
-	line-height: inherit;
+  position: absolute;
+  right: 15px;
+  float: right;
+  line-height: inherit;
 }
 .select-custom-title-inner {
-	display: inline-block;
-	max-width: 90%;
-	text-overflow: ellipsis;
-	overflow: hidden;
-	white-space: nowrap;
+  display: inline-block;
+  max-width: 90%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }

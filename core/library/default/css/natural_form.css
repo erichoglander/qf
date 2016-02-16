@@ -1,37 +1,37 @@
 .natural-form {
-	position: relative;
+  position: relative;
 }
 .natural-form .form-item {
-	display: none;
-	margin: 0;
+  display: none;
+  margin: 0;
 }
 .natural-form .form-item.active {
-	display: block;
+  display: block;
 }
 .natural-form .nf-button {
-	position: absolute;
-	top: 0;
-	right: 0;
-	cursor: pointer;
+  position: absolute;
+  top: 0;
+  right: 0;
+  cursor: pointer;
 }
 .natural-form .progress-bar {
-	height: 3px;
+  height: 3px;
 }
 .natural-form .progress {
-	height: 3px;
-	background: #000;
-	transition: width 0.3s ease;
-	-webkit-transition: width 0.3s ease;
+  height: 3px;
+  background: #000;
+  transition: width 0.3s ease;
+  -webkit-transition: width 0.3s ease;
 }
 .natural-form .progress-current {
-	color: #000;
-	letter-spacing: 2px;
-	text-align: center;
+  color: #000;
+  letter-spacing: 2px;
+  text-align: center;
 }
 .natural-form .form-input-error,
 .natural-form .form-errors {
-	position: absolute;
-	top: 100%;
-	margin-top: 10px;
-	left: 0;
+  position: absolute;
+  top: 100%;
+  margin-top: 10px;
+  left: 0;
 }
