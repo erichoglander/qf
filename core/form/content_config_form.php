@@ -26,6 +26,7 @@ class ContentConfig_Form_Core extends Form {
           "add_button" => t("Add field"),
           "delete_button" => t("Delete field"),
           "value" => ($Content ? $Content->fields() : null),
+					"required" => true,
           "items" => [
             "type" => [
               "type" => "select",
