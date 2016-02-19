@@ -67,6 +67,10 @@ function selectCustom(el) {
   }
 
   this.selectChange = function() {
+    if (this.isDisabled())
+      this.tags.wrap.addClass("disabled");
+    else
+      this.tags.wrap.removeClass("disabled");
     this.renderOptions();
   }
   
@@ -92,6 +96,8 @@ function selectCustom(el) {
       this.open();
   }
   this.open = function() {
+    if (this.isDisabled())
+      return;
     var self = this;
     this.tags.itemsWrap.style.display = "block";
     setTimeout(function() {
@@ -117,6 +123,10 @@ function selectCustom(el) {
     if (this.tags.wrap.hasClass("active"))
       return true;
     return false;
+  }
+  
+  this.isDisabled = function() {
+    return !!this.tags.select.getAttribute("disabled");
   }
   
   this.windowClick = function(e) {
