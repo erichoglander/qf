@@ -160,13 +160,12 @@ class Mail_Core {
       
       if (!empty($this->attachments)) {
         foreach ($this->attachments as $attachment) {
-          $file = @file_get_contents($attachment);
-          $info = pathinfo($attachment);
-          if (strlen($file)) {
+          $file = $this->attachmentData($attachment);
+          if (strlen($file["content"])) {
             $data["attachments"][] = [
-              "type" => mime_content_type($attachment),
-              "name" => $info["filename"],
-              "content" => base64_encode($file),
+              "type" => $file["type"],
+              "name" => $file["name"],
+              "content" => base64_encode($file["content"]),
             ];
           }
         }
@@ -305,17 +304,55 @@ class Mail_Core {
 
       $str = '';
       foreach ($this->attachments as $i => $attachment) {
-        $info = (object) pathinfo($attachment);
-        $file = chunk_split(base64_encode(file_get_contents($attachment)));
-        $str.=
-          PHP_EOL.PHP_EOL.'--'.$tag.
-          PHP_EOL.'Content-Type: '.mime_content_type($attachment).'; name="'.$info->basename.'"'.
-          PHP_EOL.'Content-Transfer-Encoding: base64'.
-          PHP_EOL.'Content-Disposition: attachment; filename='.$info->basename.
-          PHP_EOL.PHP_EOL.$file;
+        $file = $this->attachmentData($attachment);
+        if (strlen($file["content"])) {
+          $content = chunk_split(base64_encode($file["content"]));
+          $str.=
+            PHP_EOL.PHP_EOL.'--'.$tag.
+            PHP_EOL.'Content-Type: '.$file["type"].'; name="'.$file["name"].'"'.
+            PHP_EOL.'Content-Transfer-Encoding: base64'.
+            PHP_EOL.'Content-Disposition: attachment; filename='.$file["name"].
+            PHP_EOL.PHP_EOL.$content;
+        }
       }
       $this->message = $pre.$this->message.$str.$post;
     }
+  }
+  
+  protected function attachmentData($attachment) {
+    $file = [
+      "name" => null,
+      "type" => null,
+      "content" => null,
+    ];
+    if (is_array($attachment)) {
+      if (isset($attachment["path"])) {
+        $file["content"] = @file_get_contents($attachment["path"]);
+      }
+      else if (isset($attachment["content"])) {
+        $file["content"] = $attachment["content"];
+      }
+      if (isset($attachment["name"])) {
+        $file["name"] = $attachment["name"];
+      }
+      else if (isset($attachment["path"])) {
+        $info = pathinfo($attachment["path"]);
+        $file["name"] = $info["filename"];
+      }
+      if (isset($attachment["type"])) {
+        $file["type"] = $attachment["type"];
+      }
+      else if (isset($attachment["path"])) {
+        $file["type"] = mime_content_type($attachment["path"]);
+      }
+    }
+    else {
+      $file["content"] = @file_get_contents($attachment);
+      $info = pathinfo($attachment);
+      $file["type"] = mime_content_type($attachment);
+      $file["name"] = $info["filename"];
+    }
+    return $file;
   }
 
 }
