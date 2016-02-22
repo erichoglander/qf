@@ -26,7 +26,7 @@ class Address_FormItem_Core extends FormItem {
   }
   
   
-  protected function loadStructure($structure) {
+  protected function preStructure(&$structure) {
     if (isset($structure["address_fields"]))
       $this->address_fields = $structure["address_fields"];
     if (isset($structure["address_countries"]))
@@ -100,7 +100,6 @@ class Address_FormItem_Core extends FormItem {
         unset($structure["items"][$key]["label"]);
       }
     }
-    parent::loadStructure($structure);
   }
   
 }
