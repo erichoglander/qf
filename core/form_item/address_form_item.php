@@ -26,13 +26,15 @@ class Address_FormItem_Core extends FormItem {
   }
   
   
+  protected function loadDefault() {
+    $this->address_countries = $this->countries();
+  }
+  
   protected function preStructure(&$structure) {
     if (isset($structure["address_fields"]))
       $this->address_fields = $structure["address_fields"];
     if (isset($structure["address_countries"]))
       $this->address_countries = $structure["address_countries"];
-    else
-      $this->address_countries = $this->countries();
     if (isset($structure["label_placeholder"]))
       $this->label_placeholder = $structure["label_placeholder"];
     
