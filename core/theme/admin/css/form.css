@@ -129,21 +129,6 @@ input {
 .checkbox-label input:checked ~ .checkbox-icon-unchecked {
   display: none;
 }
-.form-item-error .form-label {
-  color: #A94442;
-}
-.form-item-error .form-textfield {
-  border-color: #A94442;
-  box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset;
-}
-.form-item-error .form-textfield:focus {
-  border-color: #843534;
-  box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset, 0px 0px 6px #CE8483;
-}
-
-.form-input-error {
-  color: #A94442;
-}
 
 .form-item-icon .form-input {
   display: table;
@@ -414,6 +399,27 @@ input {
   box-shadow: 0px 1px 0px rgba(255, 255, 255, 0.2) inset, 0px 1px 2px rgba(0, 0, 0, 0.2);
 }
 
+.form-item-error .form-label {
+  color: #A94442;
+}
+.form-item-error .form-textfield {
+  border-color: #A94442;
+  box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset;
+}
+.form-item-error .form-textfield:focus {
+  border-color: #843534;
+  box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset, 0px 0px 6px #CE8483;
+}
+.form-item-child-error {
+  border-color: #A94442;
+}
+
+.form-input-error {
+  color: #A94442;
+}
+
+
+/* FORM SPECIFIC */
 .form-list-search {
   margin-top: 20px;
 }

@@ -279,6 +279,20 @@ class FormItem {
   public function getError() {
     return $this->error;
   }
+  
+  /**
+   * Check if any child item contains an error
+   * @return bool
+   */
+  public function childError() {
+    if ($this->items !== null) {
+      foreach ($this->items as $item) {
+        if ($item->getError() || $item->childError())
+          return true;
+      }
+    }
+    return false;
+  }
 
   /**
    * Returns element value
@@ -658,6 +672,8 @@ class FormItem {
       $class.= " form-item-error";
     if ($this->sortable)
       $class.= " form-item-sortable";
+    if ($this->childError())
+      $class.= " form-item-child-error";
     if (!empty($this->item_class))
       $class.= " ".$this->item_class;
     return $class;
