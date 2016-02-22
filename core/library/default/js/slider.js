@@ -213,8 +213,9 @@ function slider(el) {
     this.oldpart = this.part;
     
     // Slide back
-    if (Math.abs(dx) < 30) 
+    if (Math.abs(dx) < 30) {
       this.slide(Math.round(this.values.left/100)*100, "easeOut", 100);
+    }
     else {
     
       // If we slided forward
@@ -367,6 +368,13 @@ function slider(el) {
   this.slide = function(value, anim, d) {
     if (this.sliding || this.values.left == value)
       return;
+    if (!this.sliding) {
+      if (this.tags.pager.wrap) {
+        if (this.oldpage != this.page)
+          this.tags.pager.pages[this.oldpage].removeClass("active");
+        this.tags.pager.pages[this.page].addClass("active");
+      }
+    }
     this.sliding = true;
     Date.now = Date.now || function() { return +new Date; };
     var self = this;
