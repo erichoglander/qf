@@ -130,6 +130,35 @@ class l10n_Entity extends Entity {
     }
     return true;
   }
+  
+  /**
+   * Save entity
+   * @return bool
+   */
+  public function save() {
+    if (!parent::save())
+      return false;
+    $data = [];
+    $vars = [];
+    foreach ($this->schema["fields"] as $key => $field) {
+      if (!empty($field["sync"])) {
+        $data[] = "`".$key."`=:".$key;
+        $vars[":".$key] = $this->fields[$key];
+      }
+    }
+    if (!empty($data)) {
+      $sql = "
+        UPDATE `".$this->schema["table"]."` 
+        SET ".implode(", ", $data)."
+        WHERE 
+          (sid = :sid || id = :sid) && 
+          id != :id";
+      $vars[":sid"] = $this->sid();
+      $vars[":id"] = $this->id();
+      return $this->Db->query($sql, $vars);
+    }
+    return true;
+  }
 
   /**
    * Load entity
