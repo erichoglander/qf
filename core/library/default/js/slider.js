@@ -116,8 +116,11 @@ function slider(el) {
     this.tags.pager = {
       wrap: this.tags.wrap.getElementByClassName("pager")
     };
-    if (this.tags.pager.wrap)
+    if (this.tags.pager.wrap) {
       this.tags.pager.pages = this.tags.pager.wrap.getElementsByClassName("page");
+      if (this.tags.pager.pages.length)
+        this.tags.pager.pages[0].addClass("active");
+    }
   }
   
   this.bindEvents = function() {
