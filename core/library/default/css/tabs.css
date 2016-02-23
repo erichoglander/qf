@@ -1,0 +1,11 @@
+.tabs-header .tab-btn {
+  display: table-cell;
+  width: 1%;
+  cursor: pointer;
+}
+.tabs-body .tab-body {
+  display: none;
+}
+.tabs-body .tab-body.active {
+  display: block;
+}

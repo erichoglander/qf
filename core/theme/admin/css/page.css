@@ -232,3 +232,24 @@ th a:after {
   background: #337AB7;
   border-color: #337AB7;
 }
+
+
+.tabs-header {
+  margin-bottom: 30px;
+}
+.tabs-header .tab-btn {
+  margin-left: 1px;
+  border-radius: 4px 4px 0 0;
+  border: 1px solid transparent;
+  border-bottom-color: #ddd;
+  padding: 10px 15px;
+  text-align: center;
+}
+.tabs-header .tab-btn.active {
+  background-color: transparent;
+  border-color: #ddd;
+  border-bottom-color: transparent;
+}
+.tabs-header .tab-btn:first-child {
+  margin-left: 0;
+}
