@@ -326,6 +326,7 @@ input {
   color: #C9302C;
   top: 6px;
   right: 12px;
+  z-index: 1;
 }
 .autocomplete-items {
   background: #fff;
