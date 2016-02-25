@@ -201,8 +201,8 @@ class File_FormItem_Core extends FormItem {
     if (!$file_id)
       return null;
     $File = newClass("File_Entity", $this->Db, $file_id);
-        if (!file_exists($File->path()))
-            return null;
+    if (!file_exists($File->path()))
+      return null;
     $path = $this->templatePreviewPath();
     $vars = [
       "size" => filesize($File->path()),
