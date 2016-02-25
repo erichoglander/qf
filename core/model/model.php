@@ -58,7 +58,9 @@ class Model {
    * @param \Variable_Core    $Variable
    * @param \User_Entity_Core $User
    */
-  public function __construct($Config, $Db, $Io, $Cache, $Variable, $User, ...$args) {
+  public function __construct($Config, $Db, $Io, $Cache, $Variable, $User) {
+    $args = func_get_args();
+    array_splice($args, 0, 6);
     $this->Config = $Config;
     $this->Db = $Db;
     $this->Io = $Io;
@@ -126,7 +128,9 @@ class Model {
    * @param  string $name
    * @return \Model
    */
-  protected function newClass($name, ...$args) {
+  protected function newClass($name) {
+    $args = func_get_args();
+    array_splice($args, 0, 1);
     $params = [
       $name,
       $this->Config, 
