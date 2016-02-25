@@ -11,7 +11,7 @@
  * @see  structure
  * @author Eric Höglander
  */
-class Form {
+class Form extends Model {
 
   /**
    * HTML attributes for form element
@@ -66,36 +66,12 @@ class Form {
    */
   protected $suffix;
 
-  /**
-   * Database object
-   * @var \Db_Core
-   */
-  protected $Db;
-
-  /**
-   * Io object
-   * @var \Io_Core
-   */
-  protected $Io;
-
-  /**
-   * User entity
-   * @var \User_Entity_Core
-   */
-  protected $User;
-
 
   /**
    * Constructor
-   * @param \Db_Core      $Db
-   * @param \Io_Core      $Io
-   * @param \User_Entity_Core $User
    * @param array         $vars
    */
-  public function __construct($Db, $Io, $User, $vars = []) {
-    $this->Db = $Db;
-    $this->Io = $Io;
-    $this->User = $User;
+  public function construct($vars = []) {
     $this->setVars($vars);
   }
 

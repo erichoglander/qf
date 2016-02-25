@@ -211,7 +211,7 @@ class Controller {
 
   /**
    * Get model of given name
-   * @see newClass()
+   * @see    newClass()
    * @param  string
    * @return \Model
    */
@@ -236,7 +236,7 @@ class Controller {
 
   /**
    * Get entity of given name
-   * @see newClass()
+   * @see    newClass()
    * @param  string $name
    * @param  int    $id
    * @return \Entity
@@ -247,13 +247,13 @@ class Controller {
 
   /**
    * Get form of given name
-   * @see newClass()
+   * @see    \Model::getForm()
    * @param  string $name
    * @param  array  $vars
    * @return \Form
    */
   protected function getForm($name, $vars = []) {
-    return newClass($name."_Form", $this->Db, $this->Io, $this->User, $vars);
+    return $this->Model->getForm($name, $vars);
   }
 
   /**

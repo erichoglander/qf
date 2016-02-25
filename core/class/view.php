@@ -7,7 +7,7 @@
  * View class
  * @author Eric Höglander
  */
-class View_Core {
+class View_Core extends Model {
   
   /**
    * Name of the controller
@@ -22,42 +22,6 @@ class View_Core {
   protected $name;
 
   /**
-   * Config object
-   * @var \Config_Core
-   */
-  protected $Config;
-
-  /**
-   * Database object
-   * @var \Db_Core
-   */
-  protected $Db;
-
-  /**
-   * Io object
-   * @var \Io_Core
-   */
-  protected $Io;
-
-  /**
-   * Cache object
-   * @var \Cache_Core
-   */
-  protected $Cache;
-
-  /**
-   * Variable object
-   * @var \Variable_Core
-   */
-  protected $Variable;
-
-  /**
-   * User entity
-   * @var \User_Entity_Core
-   */
-  protected $User;
-
-  /**
    * Html object
    * @var \Html_Core
    */
@@ -66,27 +30,15 @@ class View_Core {
 
   /**
    * Constructor
-   * @param \Config_Core      $Config
-   * @param \Db_Core          $Db
-   * @param \Io_Core          $Io
-   * @param \Cache_Core       $Cache
-   * @param \Variable_Core    $Variable
-   * @param \User_Entity_Core $User
-   * @param string            $controller_name
-   * @param string            $name
-   * @param array             $variables
+   * @param string $controller_name
+   * @param string $name
+   * @param array  $variables
    */
-  public function __construct($Config, $Db, $Io, $Cache, $Variable, $User, $controller_name, $name, $variables = []) {
-    $this->Config = $Config;
-    $this->Db = $Db;
-    $this->Io = $Io;
-    $this->Cache = $Cache;
-    $this->Variable = $Variable;
-    $this->User = $User;
+  public function construct($controller_name, $name, $variables = []) {
     $this->controller_name = $controller_name;
     $this->name = $name;
     $this->variables = $variables;
-    if ($Db) {
+    if ($this->Db) {
       $this->Html = newClass("Html", $this->Config, $this->Db, $this->Io, $this->Cache, $this->Variable, $this->User);
       $this->Html->title = ucwords($controller_name)." ".$name;
     }

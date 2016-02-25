@@ -7,13 +7,7 @@
  * Mail message class
  * @author Eric Höglander
  */
-class MailMessage {
-  
-  /**
-   * Database object
-   * @var \Db_Core
-   */
-  protected $Db;
+class MailMessage extends Model {
 
   /**
    * Mail object
@@ -24,12 +18,9 @@ class MailMessage {
 
   /**
    * Constructor
-   * @param \Db_Core $Db
    */
-  public function __construct($Db) {
-    $this->Db = $Db;
-    $this->Config = newClass("Config");
-    $this->Mail = newClass("Mail", $this->Db);
+  public function construct() {
+    $this->Mail = $this->newClass("Mail");
   }
 
   /**

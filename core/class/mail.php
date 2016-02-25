@@ -7,7 +7,7 @@
  * The mail class
  * @author Eric Höglander
  */
-class Mail_Core {
+class Mail_Core extends Model {
 
   /**
    * Sender e-mail address
@@ -78,24 +78,9 @@ class Mail_Core {
 
 
   /**
-   * Config object
-   * @var \Config_Core
-   */
-  protected $Config;
-
-  /**
-   * Database object
-   * @var \Db_Core
-   */
-
-
-  /**
    * Constructor
-   * @param \Db_Core $Db
    */
-  public function __construct($Db) {
-    $this->Db = $Db;
-    $this->Config = newClass("Config");
+  public function construct() {
     $this->setDefault();
     $this->setDefaultHeaders();
   }

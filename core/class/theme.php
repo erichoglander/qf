@@ -10,7 +10,7 @@
  * 
  * @author Eric Höglander
  */
-class Theme {
+class Theme extends Model {
   
   /**
    * Name of the theme
@@ -31,60 +31,11 @@ class Theme {
 
 
   /**
-   * Config object
-   * @var \Config_Core
-   */
-  protected $Config;
-
-  /**
-   * Database object
-   * @var \Db_Core
-   */
-  protected $Db;
-
-  /**
-   * Io object
-   * @var \Io_Core
-   */
-  protected $Io;
-
-  /**
-   * Cache object
-   * @var \Cache_Core
-   */
-  protected $Cache;
-
-  /**
-   * Variable object
-   * @var \Variable_Core
-   */
-  protected $Variable;
-
-  /**
-   * User entity
-   * @var \User_Entity_Core
-   */
-  protected $User;
-
-
-  /**
    * Constructor
-   * @param \Config_Core      $Config
-   * @param \Db_Core          $Db
-   * @param \Io_Core          $Io
-   * @param \Cache_Core       $Cache
-   * @param \Variable_Core    $Variable
-   * @param \User_Entity_Core $User
    */
-  public function __construct($Config, $Db, $Io, $Cache, $Variable, $User) {
+  public function construct() {
     if (!$this->name)
       throw new Exception("Missing theme name.");
-    $this->Config = $Config;
-    $this->Db = $Db;
-    $this->Io = $Io;
-    $this->Cache = $Cache;
-    $this->Variable = $Variable;
-    $this->User = $User;
     $this->loadFiles();
   }
 
@@ -139,36 +90,6 @@ class Theme {
    */
   protected function getTemplate($name) {
     return filePath("theme/".$this->name."/template/".$name.".php");
-  }
-  
-  /**
-   * Returns an entity object
-   * @param  string $name
-   * @param  int    $id
-   * @return \Entity
-   */
-  protected function getEntity($name, $id = null) {
-    return newClass($name."_Entity", $this->Db, $id);
-  }
-  
-  /**
-   * Returns a model object
-   * @param  string $name
-   * @return \Model
-   */
-  protected function getModel($name) {
-    $cname = ucwords($name)."_Model";
-    return newClass($cname, $this->Config, $this->Db, $this->Io, $this->Cache, $this->Variable, $this->User);
-  }
-  
-  /**
-   * Returns a form object
-   * @param  string $name
-   * @param  array  $vars
-   * @return \Form
-   */
-  protected function getForm($name, $vars = []) {
-    return newClass($name."_Form", $this->Db, $this->Io, $this->User, $vars);
   }
 
 };
