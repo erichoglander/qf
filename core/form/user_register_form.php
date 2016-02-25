@@ -11,7 +11,7 @@ class UserRegister_Form_Core extends Form {
         $this->setError(t("Username contains illegal characters"), "name");
         return false;
       }
-      $U = newClass("User_Entity", $this->Db);
+      $U = $this->getEntity("User");
       $U->loadByName($values["name"]);
       if ($U->id()) {
         $this->setError(t("Username is already taken"), "name");
@@ -19,14 +19,14 @@ class UserRegister_Form_Core extends Form {
       }
     }
     else {
-      $U = newClass("User_Entity", $this->Db);
+      $U = $this->getEntity("User");
       $U->loadByName($values["email"]);
       if ($U->id()) {
         $this->setError(t("E-mail is already taken"), "email");
         return false;
       }
     }
-    $U = newClass("User_Entity", $this->Db);
+    $U = $this->getEntity("User");
     $U->loadByEmail($values["email"]);
     if ($U->id()) {
       $this->setError(t("E-mail is already taken"), "email");

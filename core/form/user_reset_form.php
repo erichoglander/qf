@@ -2,7 +2,7 @@
 class UserReset_Form_Core extends Form {
 
   public function validate($values) {
-    $U = newClass("User_Entity", $this->Db);
+    $U = $this->getEntity("User");
     $U->loadByEmail($values["email"]);
     if (!$U->id()) {
       $this->setError(t("There is no registered user with that e-mail address"));

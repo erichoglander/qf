@@ -7,14 +7,14 @@ class UserSettings_Form_Core extends Form {
       $this->setError(t("Passwords mismatch"), "pass");
       return false;
     }
-    $U = newClass("User_Entity", $this->Db);
+    $U = $this->getEntity("User");
     $U->loadByEmail($values["email"]);
     if ($U->id() && $U->id() != $User->id()) {
       $this->setError(t("E-mail unavailable"), "email");
       return false;
     }
     if ($User->get("name") == $User->get("email")) {
-      $U = newClass("User_Entity", $this->Db);
+      $U = $this->getEntity("User");
       $U->loadByName($values["email"]);
       if ($U->id() && $U->id() != $User->id()) {
         $this->setError(t("E-mail unavailable"), "email");

@@ -4,7 +4,7 @@ class UserResendEmailConfirmation_Form_Core extends Form {
   public function validate($values) {
     $User = $this->get("User");
     if ($User->get("email") != $values["email"]) {
-      $U = newClass("User_Entity", $this->Db);
+      $U = $this->getEntity("User");
       if ($U->loadByEmail($values["email"]) || $U->loadByName($values["email"])) {
         $this->setError(t("E-mail is already taken"), "email");
         return false;

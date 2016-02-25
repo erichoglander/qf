@@ -7,13 +7,13 @@ class UserEdit_Form_Core extends Form {
       $this->setError(t("Passwords mismatch"), "pass");
       return false;
     }
-    $U = newClass("User_Entity", $this->Db);
+    $U = $this->getEntity("User");
     $U->loadByName($values["name"]);
     if ($U->id() && (!$User || $U->id() != $User->id())) {
       $this->setError(t("Username unavailable"), "name");
       return false;
     }
-    $U = newClass("User_Entity", $this->Db);
+    $U = $this->getEntity("User");
     $U->loadByEmail($values["email"]);
     if ($U->id() && (!$User || $U->id() != $User->id())) {
       $this->setError(t("E-mail unavailable"), "email");
