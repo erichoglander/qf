@@ -231,14 +231,21 @@ class Html_Core extends Model {
       $html.= '
         <ul class="menu menu-depth-'.$depth.'">';
       foreach ($menu["links"] as $key => $link) {
-        $class = "menu-link";
+        $item_class = ["menu-item", "menu-item-".$key];
+        $link_class = ["menu-link"];
         $title = "";
+        $attr = "";
+        if (!empty($link["class"]))
+          $item_class[] = " ".$link["class"];
         if (!empty($link["faicon"]))
           $title.= FontAwesome\Icon($link["faicon"]);
         if (!empty($link["title"]))
           $title.= xss(t($link["title"]));
-        $html.= '
-          <li class="menu-item menu-item-'.$key.'">';
+        if (!empty($link["attributes"])) {
+          foreach ($link["attributes"] as $a => $v)
+            $attr.= ' '.$a.'="'.$v.'"';
+        }
+        $inner = null;
         if (array_key_exists("href", $link)) {
           $url = $link["href"];
           $x = strpos($url, "?");
@@ -248,17 +255,21 @@ class Html_Core extends Model {
             $path = $url;
           if (!array_key_exists("active", $link) && $path == REQUEST_PATH)
             $link["active"] = true;
-          if (!empty($link["active"]))
-            $class.= " active";
+          if (!empty($link["active"])) {
+            $link_class[] = " active";
+            $item_class[] = " active";
+          }
           if (strpos($url, "http") !== 0 && strpos($url, "#") !== 0 && strpos($url, "/") !== 0)
             $url = url($url, !empty($link["return"]));
-          $html.= '
-            <a href="'.$url.'" class="'.$class.'">'.$title.'</a>';
+          $inner = '
+            <a href="'.$url.'" class="'.implode(" ", $link_class).'">'.$title.'</a>';
         }
         else {
-          $html.= '
-            <span class="'.$class.'">'.$title.'</span>';
+          $inner = '
+            <span class="'.implode(" ", $link_class).'">'.$title.'</span>';
         }
+        $html.= '
+          <li class="'.implode(" ", $item_class).'"'.$attr.'>'.$inner;
         $html.= $this->renderMenuLinks($link, $depth+1);
         $html.= '
           </li>';
