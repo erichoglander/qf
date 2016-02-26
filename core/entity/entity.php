@@ -65,6 +65,18 @@ class Entity {
   public function getPath() {
     return $this->schema["table"]."/view/".$this->id();
   }
+  
+  /**
+   * Get url to the entity
+   * @param  bool   $abs If true, returns absolute path
+   * @return string
+   */
+  public function url($abs = false) {
+    $url = url($this->getPath());
+    if ($abs)
+      $url = SITE_URL.$url;
+    return $url;
+  }
 
   /**
    * Entity as json-encodable data

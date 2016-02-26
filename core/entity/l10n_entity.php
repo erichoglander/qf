@@ -55,6 +55,20 @@ class l10n_Entity extends Entity {
       $lang = $this->default_lang;
     $this->set("lang", $lang);
   }
+  
+  /**
+   * Get url path to the translated entity. Returns source entity url if there is no translation.
+   * @return string
+   */
+	public function translationUrl($lang = null, $abs = false) {
+    if (!$lang)
+      $lang = LANG;
+    $path = ($this->translation($lang) ? $this->translation($lang)->getPath() : $this->getPath());
+		$url = url($path);
+		if ($abs)
+			$url = SITE_URL.$url;
+		return $url;
+	}
 
   /**
    * Include translations in the json object

@@ -250,7 +250,7 @@ class Html_Core extends Model {
             $link["active"] = true;
           if (!empty($link["active"]))
             $class.= " active";
-          if (strpos($url, "http") !== 0 && strpos($url, "#") !== 0)
+          if (strpos($url, "http") !== 0 && strpos($url, "#") !== 0 && strpos($url, "/") !== 0)
             $url = url($url, !empty($link["return"]));
           $html.= '
             <a href="'.$url.'" class="'.$class.'">'.$title.'</a>';
