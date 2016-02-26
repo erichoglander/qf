@@ -53,7 +53,7 @@ class Pager_Core {
    * Constructor
    */
   public function __construct() {
-    $this->setUrl(url(REQUEST_URI));
+    $this->setUrl(BASE_PATH.REQUEST_URI);
   }
 
   /**
