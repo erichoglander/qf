@@ -39,7 +39,7 @@ class View_Core extends Model {
     $this->name = $name;
     $this->variables = $variables;
     if ($this->Db) {
-      $this->Html = newClass("Html", $this->Config, $this->Db, $this->Io, $this->Cache, $this->Variable, $this->User);
+      $this->Html = $this->newClass("Html");
       $this->Html->title = ucwords($controller_name)." ".$name;
     }
   }
@@ -60,6 +60,7 @@ class View_Core extends Model {
       $this->Html->body_class[] = cssClass("page-".$this->controller_name."-".$this->name);
       $this->Html->body_class[] = cssClass("controller-".$this->controller_name);
       $this->Html->body_class[] = cssClass("view-".$this->name);
+      $this->Html->preView();
     }
     $path = $this->path();
     extract($this->variables);

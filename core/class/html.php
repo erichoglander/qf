@@ -269,6 +269,12 @@ class Html_Core extends Model {
     return $html;  
   }
 
+  /**
+   * Called before the view is rendered
+   */
+  public function preView() {
+  }
+  
 
   /**
    * Called before the html part is rendered and before the vars are set
