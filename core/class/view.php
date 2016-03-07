@@ -60,6 +60,7 @@ class View_Core extends Model {
       $this->Html->body_class[] = cssClass("page-".$this->controller_name."-".$this->name);
       $this->Html->body_class[] = cssClass("controller-".$this->controller_name);
       $this->Html->body_class[] = cssClass("view-".$this->name);
+      $this->Html->body_class[] = cssClass("lang-".LANG);
       $this->Html->preView();
     }
     $path = $this->path();

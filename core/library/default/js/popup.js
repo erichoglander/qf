@@ -35,13 +35,13 @@ function popup(el) {
   
   this.move = function(el) {
     el.removeClass("popup");
-    this.create(el.getAttribute("name"));
+    this.create(el.getAttribute("name"), el.getAttribute("close"));
     this.setContent(el);
     if (el.getAttribute("size"))
       this.setSize(el.getAttribute("size"));
   }
   
-  this.create = function(name) {
+  this.create = function(name, close) {
     var self = this;
     this.tags = {
       wrap: document.createElement("div"),
@@ -60,6 +60,7 @@ function popup(el) {
     this.tags.light.className = "popup-light";
     this.tags.inner.className = "popup-inner";
     this.tags.close.className = "popup-close";
+    this.tags.close.innerHTML = close;
     this.tags.close.appendChild(FontAwesome.icon("times"));
     this.tags.wrap.appendChild(this.tags.dark);
     this.tags.wrap.appendChild(this.tags.light);
