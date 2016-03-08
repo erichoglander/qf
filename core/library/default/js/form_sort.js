@@ -62,12 +62,17 @@ function formSort(el) {
   
   this.onMouseDown = function(e) {
     this.dragging = true;
+    this.tags.item.addClass("dragging");
     this.lastXY = getXY(e);
+    this.lastXY.y+= scrollTop();
   }
   
   this.onMouseUp = function(e) {
-    if (this.dragging)
+    if (this.dragging) {
+      this.tags.item.removeClass("dragging");
       this.dragging = false;
+      this.tags.item.style.transform = null;
+    }
   }
   
   this.onMouseMove = function(e) {
@@ -80,7 +85,7 @@ function formSort(el) {
       if (!prev)
         return;
       var y = getTopPos(prev);
-      if (xy.y < y + prev.offsetHeight/2)
+      if (xy.y < y + prev.offsetHeight/2) 
         this.movePrev(prev);
     }
     else if (xy.y > this.lastXY.y) {
@@ -91,6 +96,8 @@ function formSort(el) {
       if (xy.y > y + next.offsetHeight/2)
         this.moveNext(next);
     }
+    var ty = xy.y-getTopPos(this.tags.drag);
+    this.tags.item.style.transform = "translate3d(0, "+ty+"px, 0)";
     this.lastXY = xy;
   }
   
