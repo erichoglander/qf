@@ -68,9 +68,7 @@ function checkboxesSelect(el) {
     this.tags.wrap.removeClass("active");
   }
   this.isOpen = function() {
-    if (this.tags.wrap.hasClass("active"))
-      return true;
-    return false;
+    return this.tags.wrap.hasClass("active");
   }
   
   this.windowClick = function(e) {

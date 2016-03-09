@@ -218,6 +218,25 @@ function formGetForm(el) {
   return el;
 }
 
+function formReset(form) {
+  var skip = ["submit", "button", "image", "hidden"];
+  var box = ["radio", "checkbox"];
+  for (var i=0; i<form.elements.length; i++) {
+    if (box.indexOf(form.elements[i].type) != -1) {
+      if (form.elements[i].checked) {
+        form.elements[i].checked = false;
+        form.elements[i].trigger("click");
+      }
+    }
+    else if (skip.indexOf(form.elements[i].type) == -1) {
+      if (form.elements[i].value.length) {
+        form.elements[i].value = "";
+        form.elements[i].trigger("change");
+      }
+    }
+  }
+}
+
 function formGeneratePassword(el, copy) {
   var item = formGetItem(el);
   el = item.getElementsByTagName("input")[0];
