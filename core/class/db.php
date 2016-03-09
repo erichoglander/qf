@@ -168,11 +168,13 @@ class Db_Core {
   
   /**
    * Executes a query
-   * @param  string $sql
-   * @param  array  $param
+   * @param  string|array $sql
+   * @param  array        $param
    * @return PDOStatement
    */
   public function query($sql, $param = []) {
+    if (is_array($sql))
+      $sql = $this->compileQuery($sql);
     // Replace every array param with multiple primitive params
     foreach ($param as $key => $val) {
       if (is_array($val)) {
@@ -323,6 +325,45 @@ class Db_Core {
   public function getRows($sql, $param = []) {
     $stmt = $this->query($sql, $param);
     return $stmt->fetchAll(PDO::FETCH_OBJ);
+  }
+  
+  /**
+   * Compiles expressions into a query string
+   * @param  array  $ex Expressions
+   * @return string
+   */
+  public function compileQuery($ex) {
+    
+    // Possible expressions
+    $ex+= [
+      "from" => null,
+      "cols" => ["*"],
+      "joins" => [],
+      "where" => [],
+      "group" => [],
+      "having" => [],
+      "order" => [],
+      "limit" => [],
+    ];
+    
+    // Compile query
+    $sql = "";
+    if (!empty($ex["from"]) && !empty($ex["cols"]))
+      $sql.= "SELECT ".implode(", ", $ex["cols"])." FROM ".$ex["from"]; 
+    if (!empty($ex["joins"]))
+      $sql.= "\n".implode("\n", $ex["joins"]);
+    if (!empty($ex["where"]))
+      $sql.= "\nWHERE ".implode(" && ", $ex["where"]);
+    if (!empty($ex["group"]))
+      $sql.= "\nGROUP BY ".implode(", ", $ex["group"]);
+    if (!empty($ex["having"]))
+      $sql.= "\nHAVING ".implode(" && ", $ex["having"]);
+    if (!empty($ex["order"]))
+      $sql.= "\nORDER BY ".implode(", ", $ex["order"]);
+    if (!empty($ex["limit"]))
+      $sql.= "\nLIMIT ".implode(", ", $ex["limit"]);
+    
+    return $sql;
   }
 
 }

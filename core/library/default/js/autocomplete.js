@@ -67,6 +67,7 @@ function autocomplete(el) {
     this.tags.title.addEventListener("blur", function(){ self.onBlur(); }, false);
     this.tags.title.addEventListener("focus", function(){ self.onFocus(); }, false);
     this.tags.remove.addEventListener("click", function(){ self.remove(); }, false);
+    this.tags.value.addEventListener("reset", function(){ self.reset(); }, false);
     
   }
   
@@ -184,12 +185,20 @@ function autocomplete(el) {
   }
   
   this.remove = function() {
+    this.clear();
+    this.tags.title.focus();
+  }
+  
+  this.clear = function() {
     this.tags.value.value = null;
     this.tags.title.value = null;
     this.tags.preview.textContent = "";
     this.tags.wrap.removeClass("has-value");
-    this.tags.title.focus();
     this.tags.value.trigger("change");
+  }
+  
+  this.reset = function() {
+    this.clear();
   }
   
   this.itemUp = function() {

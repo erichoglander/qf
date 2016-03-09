@@ -234,6 +234,7 @@ function formReset(form) {
         form.elements[i].trigger("change");
       }
     }
+    form.elements[i].trigger("reset");
   }
 }
 
