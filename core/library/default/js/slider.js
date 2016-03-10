@@ -80,6 +80,9 @@ function slider(el) {
     };
     this.pages = this.tags.parts[0].slides.length;
     
+    if (this.config.timeout)
+      this.auto();
+    
   }
   
   this.adjustDOM = function() {
