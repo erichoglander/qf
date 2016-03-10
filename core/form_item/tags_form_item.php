@@ -5,7 +5,7 @@ class Tags_FormItem_Core extends FormItem {
   
   
   protected function itemValue() {
-    return array_filter(explode(",", parent::itemValue()));
+    return array_filter($this->Io->filter(explode(",", parent::itemValue()), "trim"));
   }
   
   protected function inputType() {
