@@ -218,14 +218,15 @@ function smoothScroll(stop, d) {
   }
   requestAnimationFrame(scroll);
 }
-function scrollToEl(id) {
-  var el = document.getElementById(id);
+function scrollToEl(el, d) {
+  if (typeof(el) == "string")
+    el = document.getElementById(el);
   if (!el)
     return;
   var y = getTopPos(el);
   if (document.body.className.match("admin-menu"))
     y-= 30;
-  smoothScroll(y);
+  smoothScroll(y, d);
 }
 function ease(t) {
   return (t<.5 ? 4*t*t*t : (t-1)*(2*t-2)*(2*t-2)+1);
