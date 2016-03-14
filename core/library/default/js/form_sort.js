@@ -82,19 +82,19 @@ function formSort(el) {
     xy.y+= scrollTop();
     if (xy.y < this.lastXY.y) {
       var prev = this.getPrev();
-      if (!prev)
-        return;
-      var y = getTopPos(prev);
-      if (xy.y < y + prev.offsetHeight/2) 
-        this.movePrev(prev);
+      if (prev) {
+        var y = getTopPos(prev);
+        if (xy.y < y + prev.offsetHeight/2) 
+          this.movePrev(prev);
+      }
     }
     else if (xy.y > this.lastXY.y) {
       var next = this.getNext();
-      if (!next)
-        return;
-      var y = getTopPos(next);
-      if (xy.y > y + next.offsetHeight/2)
-        this.moveNext(next);
+      if (next) {
+        var y = getTopPos(next);
+        if (xy.y > y + next.offsetHeight/2)
+          this.moveNext(next);
+      }
     }
     var ty = xy.y-getTopPos(this.tags.drag);
     this.tags.item.style.transform = "translate3d(0, "+ty+"px, 0)";
