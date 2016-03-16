@@ -153,7 +153,34 @@ class ControllerFactory_Core {
      */
     define("PRIVATE_PATH", $this->Config->getPrivatePath());
     
-    return $this->executeControllerAction($request["controller"], $request["action"], $request["args"]);
+    // Pass the request on to the controller
+    try {
+      return $this->executeControllerAction($request["controller"], $request["action"], $request["args"]);
+    }
+    // Log or display debugging info
+    catch (Exception $e) {
+      $debug = [
+        "exception" => $e->getMessage(),
+        "request" => $request,
+        "backtrace" => $e->getTrace(),
+      ];
+      if ($this->Config->getDebug()) {
+        return pr($debug, 1);
+      }
+      else {
+        addlog("system", "Exception: ".$e->getMessage(), $debug, "error");
+        return $this->internalError();
+      }
+    }
+  }
+  
+  /**
+   * Return internal error page
+   * @return string
+   */
+  public function internalError() {
+    $Controller = new Controller($this->Config, $this->Db, true);
+    return $Controller->internalError();
   }
 
   /**
