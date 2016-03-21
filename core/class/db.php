@@ -355,7 +355,7 @@ class Db_Core {
     // Compile query
     $sql = "SELECT";
     if (!empty($ex["options"]))
-      $sql.= implode(" ", $ex["options"]);
+      $sql.= " ".implode(" ", $ex["options"]);
     $sql.= " ".implode(", ", $ex["cols"])." FROM ".$ex["from"]; 
     if (!empty($ex["joins"]))
       $sql.= "\n".implode("\n", $ex["joins"]);
