@@ -337,6 +337,7 @@ class Db_Core {
     // Possible expressions
     $ex+= [
       "from" => null,
+      "options" => [],
       "cols" => ["*"],
       "joins" => [],
       "where" => [],
@@ -346,10 +347,16 @@ class Db_Core {
       "limit" => [],
     ];
     
+    if (empty($ex["from"]))
+      throw new Exception("Cannot compile query, missing FROM statement");
+    if (empty($ex["cols"]))
+      throw new Exception("Cannot compile query, missing columns");
+    
     // Compile query
-    $sql = "";
-    if (!empty($ex["from"]) && !empty($ex["cols"]))
-      $sql.= "SELECT ".implode(", ", $ex["cols"])." FROM ".$ex["from"]; 
+    $sql = "SELECT";
+    if (!empty($ex["options"]))
+      $sql.= implode(" ", $ex["options"]);
+    $sql.= " ".implode(", ", $ex["cols"])." FROM ".$ex["from"]; 
     if (!empty($ex["joins"]))
       $sql.= "\n".implode("\n", $ex["joins"]);
     if (!empty($ex["where"]))
