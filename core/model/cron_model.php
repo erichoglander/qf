@@ -28,11 +28,12 @@ class Cron_Model_Core extends Model {
     $deleted = [];
     foreach ($rows as $row) {
       $File = newClass("File_Entity", $this->Db, $row->id);
-      $File->delete();
       $deleted[] = [
+        "id" => $File->id(),
         "name" => $File->get("name"),
         "uri" => $File->get("uri"),
       ];
+      $File->delete();
     }
     if (!empty($deleted)) 
       addlog("file", "Deleted ".count($deleted)." temporary files", $deleted, "success");
