@@ -233,6 +233,9 @@ class ControllerFactory_Core {
 
     // Language
     if ($this->Db->connected && !$raw) {
+      // Path prefix
+      // Ex: mysite.com/en/news/view/132
+      // Ex: mysite.com/sv/news/view/132
       if ($this->Config->getLanguageDetection() == "path") {
         $lang = substr($uri, 0, 2);
         $language = $this->Db->getRow("
@@ -248,6 +251,26 @@ class ControllerFactory_Core {
         }
         else if (!IS_CLI) {
           $redir["uri"] = $this->Config->getDefaultLanguage()."/".$uri;
+        }
+      }
+      // Domain
+      // Ex: mysite.se/news/view/132
+      // Ex: mysite.com/news/view/132
+      // Ex: mysite.fi/news/view/132
+      else if ($this->Config->getLanguageDetection() == "domain") {
+        // Ignore CLI requests
+        if (!IS_CLI) {
+          $domains = $this->Config->getDomains();
+          if ($domains !== null) {
+            foreach ($domains as $lang => $domain) {
+              if ($domain == $_SERVER["HTTP_HOST"]) {
+                if ($lang == "default")
+                  $lang = $this->Config->getDefaultLanguage();
+                $request["lang"] = $lang;
+                break;
+              }
+            }
+          }
         }
       }
     }

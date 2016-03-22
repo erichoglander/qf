@@ -92,9 +92,17 @@ class Config_Core {
 
   /**
    * What type of language detection to use
-   * @return string null or "path"
+   * @return string null, "path", or "domain"
    */
   public function getLanguageDetection() {
+    return null;
+  }
+
+  /**
+   * What domains to use if language detection is set to "domain"
+   * @return array
+   */
+  public function getDomains() {
     return null;
   }
 

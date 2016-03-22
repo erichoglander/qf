@@ -377,6 +377,36 @@ function url($path, $redir = false) {
 }
 
 /**
+ * Returns the localized url if it exists, otherwise it returns the base language url
+ * @param  string $path
+ * @param  string $lang
+ * @return string
+ */
+function l10n_url($path, $lang) {
+  // TODO: Smart way to find l10n url, maybe through l10n_Entity
+  global $Config, $Db;
+  if ($lang == LANG)
+    return url($path);
+  $path = null;
+  if ($Config->getLanguageDetection() == "path") {
+    return BASE_PATH.$lang."/".uri($path);
+  }
+  else if ($Config->getLanguageDetection() == "domain") {
+    $domains = $Config->getDomains();
+    foreach ($domains as $l => $domain) {
+      if ($lang == $l) {
+        $base = HTTP_PROTOCOL."://".$domain;
+        break;
+      }
+    }
+    if (!isset($base))
+      $base = HTTP_PROTOCOL."://".$domains["default"];
+    return $base.url($path);
+  }
+  return url($path);
+}
+
+/**
  * Sets a system message
  * @param  string $msg
  * @param  string $type
