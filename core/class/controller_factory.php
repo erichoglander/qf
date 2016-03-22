@@ -247,11 +247,15 @@ class ControllerFactory_Core {
         if ($language) {
           $uri = substr($uri, 3);
           $request["lang"] = $language->lang;
-          $request["base"].= $language->lang."/";
         }
-        else if (!IS_CLI) {
+        else if (!IS_CLI && $this->Config->getDefaultLanguage() != $lang) {
           $redir["uri"] = $this->Config->getDefaultLanguage()."/".$uri;
         }
+        else {
+          $uri = substr($uri, 3);
+          $request["lang"] = $this->Config->getDefaultLanguage();
+        }
+        $request["base"].= $request["lang"]."/";
       }
       // Domain
       // Ex: mysite.se/news/view/132
