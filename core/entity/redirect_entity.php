@@ -50,6 +50,14 @@ class Redirect_Entity_Core extends Entity  {
   }
   
   /**
+   * If target is an external web apge
+   * @return bool
+   */
+  public function isExternal() {
+    return strpos($this->get("target"), "http") === 0;
+  }
+  
+  /**
    * Load redirect by source uri
    * @param  string $source
    * @return bool

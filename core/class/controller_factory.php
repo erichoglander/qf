@@ -322,16 +322,21 @@ class ControllerFactory_Core {
             $Redirect->loadBySource($request["alias"], $request["lang"]);
         }
         if ($Redirect->id()) {
-          $redir["uri"] = $Redirect->uri();
+          if ($Redirect->isExternal())
+            $redir["url"] = $Redirect->get("target");
+          else
+            $redir["uri"] = $Redirect->uri();
           $redir["code"] = $Redirect->get("code");
         }
       }
       if (!empty($redir)) {
         $request["redirect"] = [
           "location" => 
-            (!empty($redir["protocol"]) ? $redir["protocol"] : HTTP_PROTOCOL)."://".
-            (!empty($redir["host"]) ? $redir["host"] : $_SERVER["HTTP_HOST"])."/".
-            (array_key_exists("uri", $redir) ? $redir["uri"] : $uri),
+            (!empty($redir["url"]) ?
+              $redir["url"] :
+              (!empty($redir["protocol"]) ? $redir["protocol"] : HTTP_PROTOCOL)."://".
+              (!empty($redir["host"]) ? $redir["host"] : $_SERVER["HTTP_HOST"])."/".
+              (array_key_exists("uri", $redir) ? $redir["uri"] : $uri)),
           "code" => (!empty($redir["code"]) ? $redir["code"] : null)
         ];
       }
