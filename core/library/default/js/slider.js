@@ -113,6 +113,9 @@ function slider(el) {
       this.tags.wrap.addClass("fade");
     }
     
+    if (this.tags.parts[0].slides.length < 2)
+      this.tags.wrap.addClass("inactive");
+    
     // Pagination
     this.tags.prev = this.tags.wrap.getElementByClassName("prev");
     this.tags.next = this.tags.wrap.getElementByClassName("next");
@@ -152,7 +155,7 @@ function slider(el) {
   }
   
   this.mouseDown = function(e) {
-    if (e.button && e.button == 2)
+    if (e.button && e.button == 2 || this.pages < 2)
       return;
     var trgt = e.target || e.srcElement;
     if (trgt.tagName && (trgt.tagName == "IMG" || trgt.tagName == "A") && e.preventDefault) {
@@ -178,7 +181,7 @@ function slider(el) {
     }
   }
   this.mouseMove = function(e) {
-    if (!this.mouseIsDown || this.config.transition != "slide")
+    if (!this.mouseIsDown || this.config.transition != "slide" || this.pages < 2)
       return;
     if (e.preventDefault && (e.type != "touchmove" || this.dragging)) 
       e.preventDefault();
@@ -275,7 +278,7 @@ function slider(el) {
   * BUTTON BROWSING
   */
   this.auto = function(t) {
-    if (!this.config.timeout)
+    if (!this.config.timeout || this.pages < 2)
       return;
     var self = this;
     if (this.autoTimeout)
@@ -283,7 +286,7 @@ function slider(el) {
     this.autoTimeout = setTimeout(function(){ self.next(); }, (t ? t : self.config.timeout));
   }
   this.goto = function(n) {
-    if (this.sliding || this.page == n || this.dragging)
+    if (this.sliding || this.page == n || this.dragging || this.pages < 2)
       return;
     if (this.config.transition == "slide") {
       var stop = this.values.left + 100*(this.page-n);
@@ -304,7 +307,7 @@ function slider(el) {
     }
   }
   this.next = function() {
-    if (this.sliding || this.dragging)
+    if (this.sliding || this.dragging || this.pages < 2)
       return;
     if (this.config.transition == "slide") {
       this.oldpage = this.page;
@@ -332,7 +335,7 @@ function slider(el) {
     }
   }
   this.prev = function() {
-    if (this.sliding || this.dragging)
+    if (this.sliding || this.dragging || this.pages < 2)
       return;
     if (this.config.transition == "slide") {
       this.oldpage = this.page;
