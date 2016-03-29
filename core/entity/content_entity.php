@@ -37,10 +37,12 @@ class Content_Entity_Core extends l10n_Entity {
     if ($this->editAccess())
       $html.= $this->editButton();
     $html.= '<div class="inner">';
-    foreach ($this->get("config")["fields"] as $i => $field) {
-      $html.= '<div class="field field-'.$field["type"].' field-'.($i+1).'">';
-      $html.= $this->renderField($field["type"], (isset($data[$i]) ? $data[$i] : null));
-      $html.= '</div>';
+    if (!empty($this->get("config")["fields"])) {
+      foreach ($this->get("config")["fields"] as $i => $field) {
+        $html.= '<div class="field field-'.$field["type"].' field-'.($i+1).'">';
+        $html.= $this->renderField($field["type"], (isset($data[$i]) ? $data[$i] : null));
+        $html.= '</div>';
+      }
     }
     $html.= '</div></div>';
     return $html;
