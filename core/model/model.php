@@ -60,6 +60,8 @@ class Model {
    */
   public function __construct($Config, $Db, $Io, $Cache, $Variable, $User) {
     $args = func_get_args();
+    if (count($args) < 6)
+      throw new Exception("Not enough parameters for Model class ".get_class($this));
     array_splice($args, 0, 6);
     $this->Config = $Config;
     $this->Db = $Db;
