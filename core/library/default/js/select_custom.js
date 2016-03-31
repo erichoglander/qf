@@ -126,7 +126,7 @@ function selectCustom(el) {
   }
   
   this.isDisabled = function() {
-    return !!this.tags.select.getAttribute("disabled");
+    return this.tags.select.getAttribute("disabled") !== null;
   }
   
   this.windowClick = function(e) {

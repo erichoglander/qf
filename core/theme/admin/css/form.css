@@ -309,6 +309,10 @@ input {
   content: "";
 }
 
+.select-custom.disabled .select-custom-title {
+  background: #f8f8f8;
+  color: #555;
+}
 .select-custom-options {
   background: #fff;
   padding: 3px 0;

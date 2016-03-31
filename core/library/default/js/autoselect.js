@@ -49,6 +49,28 @@ function autoselect(el) {
     this.tags.input.addEventListener("keydown", function(e){ self.onKeyDown(e); }, false);
     this.tags.input.addEventListener("keyup", function(e){ self.onKeyUp(e); }, false);
     this.tags.input.addClass("autoselect-init");
+    self.selectChange();
+    if (typeof(MutationObserver) == "function") {
+      var observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+          self.selectChange(mutation.target);
+        });
+      });
+      var config = { childList: true, subtree: true };
+      observer.observe(this.tags.select, config);
+    }
+  }
+
+  this.selectChange = function() {
+    if (this.isDisabled()) {
+      this.tags.input.setAttribute("disabled", true);
+      this.tags.item.addClass("disabled");
+    }
+    else {
+      this.tags.input.removeAttribute("disabled");
+      this.tags.item.removeClass("disabled");
+    }
+    this.renderOptions();
   }
   
   this.renderOptions = function() {
@@ -96,6 +118,10 @@ function autoselect(el) {
       this.tags.select.selectedIndex = 0;
       this.tags.select.trigger("change");
     }
+  }
+  
+  this.isDisabled = function() {
+    return this.tags.select.getAttribute("disabled") !== null;
   }
   
   /*

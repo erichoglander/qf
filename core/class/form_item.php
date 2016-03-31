@@ -89,11 +89,17 @@ class FormItem {
   public $icon;
 
   /**
+   * If true, the element is disabled and returns the predefined value
+   * @var bool
+   */
+  public $disabled = false;
+
+  /**
    * If true, renders tools to sort elements
    * @see $multiple
    * @var bool
    */
-  public $sortable;
+  public $sortable = false;
 
   /**
    * Text of "add item"-button
@@ -575,6 +581,8 @@ class FormItem {
    * @return mixed
    */
   protected function postValue() {
+    if ($this->disabled)
+      return $this->value;
     $data = $_POST;
     if ($this->parent_name) {
       $arr = explode("[", str_replace("]", "", $this->parent_name));
@@ -687,6 +695,8 @@ class FormItem {
     $attr = [];
     $attr["type"] = $this->inputType();
     $attr["name"] = $this->inputName();
+    if ($this->disabled)
+      $attr["disabled"] = true;
     foreach ($this->attributes as $key => $val)
       $attr[$key] = $val;
     if (empty($attr["class"]))
@@ -703,11 +713,14 @@ class FormItem {
    */
   protected function attributes() {
     $attributes = $this->getAttributes();
-    $attr = "";
-    foreach ($attributes as $key => $val)
-      $attr.= $key.'="'.$val.'" ';
-    $attr = substr($attr, 0, -1);
-    return $attr;
+    $attr = [];
+    foreach ($attributes as $key => $val) {
+      if ($val === true)
+        $attr[] = $key;
+      else if ($val !== false)
+        $attr[] = $key.'="'.$val.'"';
+    }
+    return implode(" ", $attr);
   }
 
   /**
