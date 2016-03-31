@@ -71,16 +71,17 @@ class l10n_Entity extends Entity {
 	}
 
   /**
-   * Include translations in the json object
+   * Entity as json-encodable data
+   * @param  bool  $include_translations
+   * @param  bool  $include_id
    * @return array
    */
-  public function json($include_translations = true) {
-    $json = parent::json();
-    if ($include_translations || !empty($this->translations())) {
+  public function json($include_translations = true, $include_id = true) {
+    $json = parent::json($include_id);
+    if ($include_translations) {
       $json->translations = [];
-      foreach ($this->translations() as $lang => $Entity) {
-        $json->translations[$lang] = $Entity->json();
-      }
+      foreach ($this->translations() as $lang => $Entity) 
+        $json->translations[$lang] = $Entity->json(false, $include_id);
     }
     return $json;
   }

@@ -80,12 +80,13 @@ class Entity {
 
   /**
    * Entity as json-encodable data
+   * @param  bool  $include_id
    * @return array
    */
-  public function json() {
-    $json = [
-      "id" => $this->id(),
-    ];
+  public function json($include_id = true) {
+    $json = [];
+    if ($include_id)
+      $json["id"] = $this->id();
     foreach ($this->schema["fields"] as $key => $field) 
       $json[$key] = $this->get($key);
     return $json;
