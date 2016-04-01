@@ -77,7 +77,7 @@ class Sort_Core {
       $url = preg_replace($regex_order, "$1order=".$order, $url);
     else
       $url.= "&order=".$order;
-    return BASE_URL.$url;
+    return BASE_PATH.$url;
   }
   
   /**
