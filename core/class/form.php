@@ -154,7 +154,7 @@ class Form extends Model {
     if (!empty($this->errors))
       return false;
     if (!$this->verifyToken()) {
-      $this->setError(t("Form token expired, please try to submit the form again."));
+      $this->setError(t("Form token expired, please reload the page and try again."));
       return false;
     }
     foreach ($this->items as $name => $item) {
