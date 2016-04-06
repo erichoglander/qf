@@ -8,7 +8,7 @@ class UserLogin_Form_Core extends Form {
       $this->Db->insert("login_attempt", [
         "created" => REQUEST_TIME,
         "ip" => $_SERVER["REMOTE_ADDR"],
-        "user_id" => (int) $User->id(),
+        "user_id" => $User->id(),
       ]);
       if ($User->login_error == "flood")
         $this->setError(t("You have attempted to sign in too many times."));
