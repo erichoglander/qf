@@ -184,7 +184,7 @@ INSERT INTO `language` (`lang`, `title`, `status`) VALUES
 
 CREATE TABLE IF NOT EXISTS `log` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `user_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `user_id` int(10) unsigned DEFAULT NULL,
   `type` enum('info','success','warning','error') COLLATE utf8_swedish_ci NOT NULL DEFAULT 'info',
   `category` varchar(64) COLLATE utf8_swedish_ci NOT NULL,
   `text` longtext COLLATE utf8_swedish_ci NOT NULL,
@@ -192,7 +192,9 @@ CREATE TABLE IF NOT EXISTS `log` (
   `created` int(10) unsigned NOT NULL,
   `ip` varchar(64) COLLATE utf8_swedish_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `created` (`created`)
+  KEY `created` (`created`),
+  KEY `user_id` (`user_id`),
+  KEY `category` (`category`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -203,11 +205,12 @@ CREATE TABLE IF NOT EXISTS `log` (
 
 CREATE TABLE IF NOT EXISTS `login_attempt` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `user_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `user_id` int(10) unsigned DEFAULT NULL,
   `created` int(10) unsigned NOT NULL DEFAULT '0',
   `ip` varchar(64) COLLATE utf8_swedish_ci NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `ip` (`ip`)
+  KEY `ip` (`ip`),
+  KEY `user_id` (`user_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -308,6 +311,18 @@ CREATE TABLE IF NOT EXISTS `variable` (
 --
 
 --
+-- Constraints for table `log`
+--
+ALTER TABLE `log`
+  ADD CONSTRAINT `log_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+
+--
+-- Constraints for table `login_attempt`
+--
+ALTER TABLE `login_attempt`
+  ADD CONSTRAINT `login_attempt_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+
+--
 -- Constraints for table `user_role`
 --
 ALTER TABLE `user_role`
@@ -327,7 +342,7 @@ if (!$Db->query($sql))
 print "OK\n";
 
 $Variable = newClass("Variable", $Db);
-$Variable->set("core_update", 4);
+$Variable->set("core_update", 6);
 
 print "Installing updates...\n";
 $doc = $ControllerFactory->executeUri("updater/update");
