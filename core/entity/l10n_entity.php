@@ -151,12 +151,24 @@ class l10n_Entity extends Entity {
    * @return bool
    */
   public function save() {
+    if ($this->id()) {
+      $original = $this->Db->getRow("
+          SELECT * FROM `".$this->schema["table"]."`
+          WHERE id = :id",
+          [":id" => $this->id()]);
+    }
+    else {
+      $original = null;
+    }
+    
     if (!parent::save())
       return false;
+    
+    // Sync field values if needed
     $data = [];
     $vars = [];
     foreach ($this->schema["fields"] as $key => $field) {
-      if (!empty($field["sync"])) {
+      if (!empty($field["sync"]) && (!$original || $original->{$key} != $this->fields[$key])) {
         $data[] = "`".$key."`=:".$key;
         $vars[":".$key] = $this->fields[$key];
       }
