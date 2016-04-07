@@ -34,6 +34,12 @@ class Entity {
   protected $schema;
   
   /**
+   * Any stored entities
+   * @see getStoredEntity
+   */
+  protected $stored_entities = [];
+  
+  /**
    * Database object
    * @var \Db_Core
    */
@@ -109,6 +115,26 @@ class Entity {
   public function entityName() {
     $name = get_class($this);
     return str_replace(["_Entity", "_Core"], "", $name);
+  }
+  
+  /**
+   * Get an entity from storage if it exists, otherwise fetch it
+   * @param  string  $name
+   * @param  int     $id
+   * @param  bool    $create_new If true, an Entity is always returned
+   * @param  bool    $reload
+   * @return \Entity
+   */
+  public function getStoredEntity($name, $id, $create_new = false, $reload = false) {
+    if (!array_key_exists($name, $this->stored_entities))
+      $this->stored_entities[$name] = [];
+    if (!array_key_exists($id, $this->stored_entities[$name]) || $reload) {
+      $Entity = $this->getEntity($name, $id);
+      if (!$Entity->id() && !$create_new)
+        $Entity = null;
+      $this->stored_entities[$name][$id] = $Entity;
+    }
+    return $this->stored_entities[$name][$id];
   }
 
   /**
