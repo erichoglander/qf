@@ -216,6 +216,12 @@ class FormItem {
    * @var string
    */
   public $item_class;
+  
+  /**
+   * Any extra item class to wrapper of a 'multiple' item
+   * @var string
+   */
+  public $wrap_class;
 
   /**
    * The element structure
@@ -682,8 +688,10 @@ class FormItem {
       $class.= " form-item-sortable";
     if ($this->childError())
       $class.= " form-item-child-error";
-    if (!empty($this->item_class))
+    if (!$this->multiple && !empty($this->item_class))
       $class.= " ".$this->item_class;
+    if ($this->multiple && !empty($this->wrap_class))
+      $class.= " ".$this->wrap_class;
     return $class;
   }
 
