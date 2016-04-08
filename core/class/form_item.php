@@ -829,7 +829,7 @@ class FormItem {
     $data = $this->item_structure;
     $last_item = count($this->items)-1;
     $json = htmlspecialchars(json_encode($data), ENT_QUOTES);
-    return '<input type="button" class="form-button form-add-button btn" value="'.$this->add_button.'" last_item="'.$last_item.'" onclick="formAddButton(this, '.$json.')">';
+    return '<button class="form-button form-add-button btn" last_item="'.$last_item.'" onclick="formAddButton(this, '.$json.')">'.$this->add_button.'</button>';
   }
 
   /**
@@ -840,7 +840,7 @@ class FormItem {
   protected function renderDeleteButton() {
     if (!$this->parent_multiple || !$this->delete_button)
       return null;
-    return '<input type="button" class="form-button form-delete-button btn btn-danger" value="'.$this->delete_button.'" onclick="formDeleteButton(this)">';
+    return '<button class="form-button form-delete-button btn btn-danger" onclick="formDeleteButton(this)">'.$this->delete_button.'</button>';
   }
 
 };
