@@ -82,6 +82,8 @@ function selectCustom(el) {
       this.tags.items[i].className = "select-custom-option";
       if (this.tags.select.options[i].disabled)
         this.tags.items[i].className+= " disabled";
+      if (!this.tags.select.options[i].value.length)
+        this.tags.items[i].className+= " empty";
       this.tags.items[i].innerHTML = this.tags.select.options[i].innerHTML;
       this.tags.itemsWrap.appendChild(this.tags.items[i]);
       (function(self, n) {
@@ -158,6 +160,10 @@ function selectCustom(el) {
       this.tags.title.innerHTML = this.tags.select.options[this.tags.select.selectedIndex].text;
     else 
       this.tags.title.innerHTML = "";
+    if (!this.tags.select.value.length)
+      this.tags.wrap.addClass("empty");
+    else
+      this.tags.wrap.removeClass("empty");
   }
   
   this.init();
