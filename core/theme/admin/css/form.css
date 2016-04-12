@@ -326,6 +326,10 @@ input {
 .select-custom-option.active {
   background: #f5f5f5;
 }
+.select-custom-option.disabled {
+  background: #f8f8f8;
+  color: #888;
+}
 
 .autocomplete-preview {
   white-space: nowrap;
