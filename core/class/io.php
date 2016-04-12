@@ -308,7 +308,7 @@ class Io_Core {
    * @return float
    */
   protected function filterFloat($value) {
-    return (float) $value;
+    return (float) preg_replace("/\s+/", "", str_replace(",", ".", $value));
   }
 
   /**
