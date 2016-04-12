@@ -58,10 +58,10 @@ function selectCustom(el) {
     if (typeof(MutationObserver) == "function") {
       var observer = new MutationObserver(function(mutations) {
         mutations.forEach(function(mutation) {
-          self.selectChange(mutation.target);
+          self.selectChange();
         });
       });
-      var config = { childList: true, subtree: true };
+      var config = { childList: true, subtree: true, attributeFilter: ["disabled"] };
       observer.observe(this.tags.select, config);
     }
   }
@@ -80,6 +80,8 @@ function selectCustom(el) {
     for (var i=0; i<this.tags.select.options.length; i++) {
       this.tags.items[i] = document.createElement("div");
       this.tags.items[i].className = "select-custom-option";
+      if (this.tags.select.options[i].disabled)
+        this.tags.items[i].className+= " disabled";
       this.tags.items[i].innerHTML = this.tags.select.options[i].innerHTML;
       this.tags.itemsWrap.appendChild(this.tags.items[i]);
       (function(self, n) {
@@ -138,6 +140,8 @@ function selectCustom(el) {
   }
   
   this.itemClick = function(n) {
+    if (this.tags.select.options[n].disabled)
+      return;
     this.tags.select.selectedIndex = n;
     this.tags.select.trigger("change");
     this.close();
