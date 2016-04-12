@@ -448,7 +448,7 @@ function clearmsgs() {
 function addlog($category, $text, $data = null, $type = "info") {
   global $Db, $Config;
   $obj = [
-    "user_id" => (!empty($_SESSION["user_id"]) ? $_SESSION["user_id"] : 0),
+    "user_id" => (!empty($_SESSION["user_id"]) ? $_SESSION["user_id"] : null),
     "ip" => (!empty($_SERVER["REMOTE_ADDR"]) ? $_SERVER["REMOTE_ADDR"] : null),
     "created" => REQUEST_TIME,
     "type" => $type,
