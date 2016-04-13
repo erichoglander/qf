@@ -80,11 +80,12 @@ function autoselect(el) {
     this.optionActive = -1;
     for (var i=0; i<this.tags.select.options.length; i++) {
       var match = false;
-      if (!value.length) {
+      var lower = this.tags.select.options[i].text.toLowerCase();
+      if (!value.length || lower.indexOf(value) != -1) {
         match = true;
       }
       else {
-        var arr = this.tags.select.options[i].text.toLowerCase().split(" ");
+        var arr = lower.split(" ");
         for (var j=0; j<arr.length; j++) {
           if (arr[j].substr(0, value.length) == value) {
             match = true;
