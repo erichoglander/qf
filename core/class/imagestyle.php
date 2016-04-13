@@ -56,6 +56,12 @@ class Imagestyle_Core {
    */
   protected $im;
   
+  /**
+   * Which image library to use. GD will be used if null or unknown.
+   * @var string
+   */
+  protected $lib = "gd";
+  
   
   /**
    * Constructor
@@ -63,6 +69,8 @@ class Imagestyle_Core {
    */
   public function __construct($src = null) {
     $this->src = $src;
+    if (class_exists("Imagick"))
+      $this->lib = "imagick";
   }
   
   /**
@@ -93,8 +101,14 @@ class Imagestyle_Core {
       return $target_uri;
     if (!$this->loadSource())
       return null;
-    foreach ($this->styles[$name] as $method => $params)
-      call_user_func_array([$this, $method], $params);
+    foreach ($this->styles[$name] as $method => $params) {
+      $func = $this->lib.ucwords($method);
+      if (!is_callable([$this, $func]))
+        $func = $method;
+      if (!is_callable([$this, $func]))
+        continue;
+      call_user_func_array([$this, $func], $params);
+    }
     if (!file_exists($path."/".$dir))
       mkdir($path."/".$dir, 0774, true);
     if (!$this->save($target_path))
@@ -120,6 +134,7 @@ class Imagestyle_Core {
   
   /**
    * Scale and crop image to cover given dimensions
+   * Library: GD
    * @param int $w
    * @param int $h
    */
@@ -151,6 +166,7 @@ class Imagestyle_Core {
   
   /**
    * Scale image to fit inside given dimensions and expand with a background
+   * Library: GD
    * @param int   $w
    * @param int   $h
    * @param array $bg
@@ -184,7 +200,8 @@ class Imagestyle_Core {
   }
   
   /**
-   * Scale image to fit inside given dimesions
+   * Scale image to fit inside given dimensions
+   * Library: GD
    * @param int $w Max width
    * @param int $h Max height
    */
@@ -216,6 +233,69 @@ class Imagestyle_Core {
   }
   
   /**
+   * Scale and crop image to cover given dimensions
+   * Library: Imagick
+   * @param int $w
+   * @param int $h
+   */
+  public function imagickScaleCrop($w, $h) {
+    if (!$this->im)
+      return;
+    if ($w > $this->width && $h > $this->height)
+      return;
+    $src_ratio = $this->width/$this->height;
+    $end_ratio = $w/$h;
+    $x = $y = 0;
+    if ($src_ratio <= $end_ratio) {
+      $cp_w = $w;
+      $cp_h = $w/$src_ratio;
+      $y = ($cp_h-$h)/2;
+    }
+    else if ($src_ratio > $end_ratio) {
+      $cp_w = $h*$src_ratio;
+      $cp_h = $h;
+      $x = ($cp_w-$w)/2;
+    }
+    $this->im->thumbnailImage($cp_w, $cp_h, false);
+    $this->im->cropImage($w, $h, $x, $y);
+  }
+  
+  /**
+   * Scale image to fit inside given dimensions and expand with a background
+   * Library: Imagick
+   * @param int   $w
+   * @param int   $h
+   * @param array $bg
+   */
+  public function imagickScaleExpand($w, $h, $bg = null) {
+    if (!$this->im)
+      return;
+    if (!empty($bg)) {
+      $str = "#";
+      foreach ($bg as $dec) {
+        $hex = dechex($dec);
+        if (strlen($hex) == 1)
+          $hex = "0".$hex;
+        $str.= $hex;
+      }
+      $this->im->setImageBackgroundColor($str);
+    }
+    $this->im->thumbnailImage($w, $h, true, true);
+  }
+  
+  /**
+   * Scale image to fit inside given dimensions
+   * Library: Imagick
+   * @param int $w Max width
+   * @param int $h Max height
+   */
+  public function imagickScale($w = 0, $h = 0) {
+    if (!$this->im || (!$w && !$h))
+      return;
+    $this->im->thumbnailImage($w, $h, true);
+  }
+  
+  /**
    * Load image
    * @return bool
    */
@@ -223,32 +303,37 @@ class Imagestyle_Core {
     if (!file_exists($this->src))
       return false;
     $this->info = pathinfo(strtolower($this->src));
-    if ($this->info["extension"] == "jpg" || $this->info["extension"] == "jpeg")
-      $this->im = imagecreatefromjpeg($this->src);
-    else if ($this->info["extension"] == "png")
-      $this->im = imagecreatefrompng($this->src);
-    else if ($this->info["extension"] == "gif")
-      $this->im = imagecreatefromgif($this->src);
-    else
-      return false;
-    if (!$this->im) {
-      // Some jpgs are saved as gifs
-      if ($this->info["extension"] == "gif") {
-        $this->im = imagecreatefromjpeg($this->src);
-        if ($this->im)
-          $this->info["extension"] = "jpg";
-      }
-      // And some gifs are saved as jpgs
-      else if ($this->info["extension"] == "jpg" || $this->info["extension"] == "jpeg") {
-        $this->im = imagecreatefromgif($this->src);
-        if ($this->im)
-          $this->info["extension"] = "gif";
-      }
-      if (!$this->im)
-        return false;
-    }
-    $this->setAlpha($this->im);
     list($this->width, $this->height) = getimagesize($this->src);
+    if ($this->lib == "imagick") {
+      $this->im = new Imagick($this->src);
+    }
+    else {
+      if ($this->info["extension"] == "jpg" || $this->info["extension"] == "jpeg")
+        $this->im = imagecreatefromjpeg($this->src);
+      else if ($this->info["extension"] == "png")
+        $this->im = imagecreatefrompng($this->src);
+      else if ($this->info["extension"] == "gif")
+        $this->im = imagecreatefromgif($this->src);
+      else
+        return false;
+      if (!$this->im) {
+        // Some jpgs are saved as gifs
+        if ($this->info["extension"] == "gif") {
+          $this->im = imagecreatefromjpeg($this->src);
+          if ($this->im)
+            $this->info["extension"] = "jpg";
+        }
+        // And some gifs are saved as jpgs
+        else if ($this->info["extension"] == "jpg" || $this->info["extension"] == "jpeg") {
+          $this->im = imagecreatefromgif($this->src);
+          if ($this->im)
+            $this->info["extension"] = "gif";
+        }
+        if (!$this->im)
+          return false;
+      }
+      $this->setAlpha($this->im);
+    }
     return true;
   }
   
@@ -258,20 +343,25 @@ class Imagestyle_Core {
    * @param bool
    */
   public function save($dest) {
-    try {
-      if ($this->info["extension"] == "jpg" || $this->info["extension"] == "jpeg")
-        $this->im = imagejpeg($this->im, $dest, 100);
-      else if ($this->info["extension"] == "png")
-        $this->im = imagepng($this->im, $dest, 1);
-      else if ($this->info["extension"] == "gif")
-        $this->im = imagegif($this->im, $dest);
+    if ($this->lib == "imagick") {
+      return $this->im->writeImage($dest);
     }
-    catch(Exception $e) {
-      return false;
+    else {
+      try {
+        if ($this->info["extension"] == "jpg" || $this->info["extension"] == "jpeg")
+          $this->im = imagejpeg($this->im, $dest, 100);
+        else if ($this->info["extension"] == "png")
+          $this->im = imagepng($this->im, $dest, 1);
+        else if ($this->info["extension"] == "gif")
+          $this->im = imagegif($this->im, $dest);
+      }
+      catch(Exception $e) {
+        return false;
+      }
+      if (!$this->im)
+        return false;
+      return true;
     }
-    if (!$this->im)
-      return false;
-    return true;
   }
   
   
