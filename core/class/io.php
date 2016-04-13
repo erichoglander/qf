@@ -200,6 +200,11 @@ class Io_Core {
   protected function validateUrl($value) {
     if (filter_var($value, FILTER_VALIDATE_URL))
       return true;
+    if (!preg_match("/^[a-z]+\:\/\//", $value)) {
+      $value = "http://".$value;
+      if (filter_var($value, FILTER_VALIDATE_URL))
+        return true;
+    }
     $this->setError(t("Invalid url"));
     return false;
   }
@@ -345,6 +350,17 @@ class Io_Core {
    */
   protected function filterAlphanum($value) {
     return preg_replace("/[^a-z0-9]/i", "", $value);
+  }
+  
+  /**
+   * Filter text as an url and add protocol if needed
+   * @param  string $value
+   * @return string
+   */
+  protected function filterUrl($value) {
+    if (!preg_match("/^[a-z]+\:\/\//", $value))
+      $value = "http://".$value;
+    return filter_var($value, FILTER_VALIDATE_URL);
   }
 
   /**
