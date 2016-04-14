@@ -96,6 +96,8 @@ function autoselect(el) {
       if (match) {
         this.tags.option[i] = document.createElement("div");
         this.tags.option[i].className = "autoselect-option";
+        if (!this.tags.select.options[i].value.length)
+          this.tags.option[i].className+= " empty";
         this.tags.option[i].innerHTML = this.tags.select.options[i].text;
         this.tags.options.appendChild(this.tags.option[i]);
         (function(self, n) {
