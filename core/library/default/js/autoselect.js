@@ -115,7 +115,7 @@ function autoselect(el) {
   }
   
   this.onBlur = function() {
-    if (!this.tags.input.value.length) {
+    if (!this.tags.input.value.length && this.tags.select.selectedIndex != 0) {
       this.tags.select.selectedIndex = 0;
       this.tags.select.trigger("change");
     }
@@ -190,7 +190,7 @@ function autoselect(el) {
   }
   
   this.optionClick = function(n) {
-    this.tags.input.value = this.tags.select.options[n].text;
+    this.tags.input.value = (this.tags.select.value.length ? this.tags.select.options[n].text : "");
     this.tags.input.blur();
     this.tags.select.selectedIndex = n;
     this.tags.select.trigger("change");
