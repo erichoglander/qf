@@ -161,6 +161,7 @@ class ControllerFactory_Core {
     catch (Exception $e) {
       $debug = [
         "exception" => $e->getMessage(),
+        "exception_name" => get_class($e),
         "request" => $request,
         "backtrace" => $e->getTrace(),
       ];
