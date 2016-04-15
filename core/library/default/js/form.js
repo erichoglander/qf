@@ -1,4 +1,4 @@
-function formAjaxSubmit(form) {
+function formAjaxSubmit(form, ajax) {
   if (form.hasClass("loading"))
     return false;
   var obj = {
@@ -41,7 +41,8 @@ function formAjaxSubmit(form) {
       eval(r.eval);
     }
   };
-  var ajax = new xajax();
+  if (!ajax)
+    ajax = new xajax();
   form.addClass("loading");
   ajax.send(url, callback, obj);
   return false;
