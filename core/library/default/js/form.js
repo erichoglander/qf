@@ -21,11 +21,18 @@ function formAjaxSubmit(form) {
       return;
     }
     if (r.form) {
-      var el = document.createElement("div");
-      jsonToHtml(el, r.form);
-      var wrap = form.parentNode;
-      wrap.removeChild(form);
-      wrap.appendChild(el.getElementsByTagName("form")[0]);
+      if (r.form.substr(0, 1) == "{" || r.form.substr(0, 1) == "[") {
+        var el = document.createElement("div");
+        jsonToHtml(el, r.form);
+        var wrap = form.parentNode;
+        wrap.removeChild(form);
+        wrap.appendChild(el.getElementsByTagName("form")[0]);
+      }
+      else if (r.form.substr(0, 1) == "<") {
+        var wrap = form.parentNode;
+        wrap.removeChild(form);
+        wrap.innerHTML+= r.form;
+      }
     }
     if (r.replace) {
       jsonToHtml(r.replace[0], r.replace[1], true);

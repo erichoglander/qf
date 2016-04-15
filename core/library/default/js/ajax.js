@@ -13,7 +13,7 @@ function xajax() {
     this.xmlhttp.onreadystatechange = function(){
       if (thi.xmlhttp.readyState == 4) {
         var response = (thi.xmlhttp.response ? thi.xmlhttp.response : thi.xmlhttp.responseText);
-        if (response && response.substr(0, 1) == "{") {
+        if (response && (response.substr(0, 1) == "{" || response.substr(0, 1) == "[")) {
           var r = eval("(function(){ return "+response+";}())");
           if (!opt.errorHandle && r.status == "error") {
             alert(r.error);
