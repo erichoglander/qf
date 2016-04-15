@@ -37,6 +37,12 @@ class Pager_Core {
   public $get = "page";
   
   /**
+   * Which javascript function to call when clicking a page link
+   * @var string
+   */
+  public $js_callback;
+  
+  /**
    * Number of items
    * @var int
    */
@@ -79,7 +85,13 @@ class Pager_Core {
    * @return string
    */
   public function tag($x, $html, $class = null) {
-    return '<a href="'.$this->url($x).'" class="page'.($class ? " ".$class : "").'">'.$html.'</a>';
+    $str = '<a class="page'.($class ? " ".$class : "").'"';
+    if ($this->js_callback)
+      $str.= ' href="javascript:;" onclick="'.$this->js_callback.'(this, '.$x.')"';
+    else
+      $str.= ' href="'.$this->url($x).'"';
+    $str.= '>'.$html.'</a>';
+    return $str;
   }
 
   /**
