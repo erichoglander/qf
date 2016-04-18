@@ -31,11 +31,18 @@ class FormItem {
   public $multiple;
   
   /**
-   * If a an empty element should be displayed if there can be multiple unputs
+   * If a new item should be displayed even if there are existing items
    * @see $multiple
    * @var bool
    */
   public $multiple_new;
+  
+  /**
+   * If a new item should be displayed if there are none yet
+   * @see $multiple
+   * @var bool
+   */
+  public $multiple_new_empty = true;
 
   /**
    * If parent element can have multiple inputs
@@ -153,6 +160,13 @@ class FormItem {
    * @var string
    */
   public $empty_option;
+  
+  /**
+   * Whether to validate a multiple choice value
+   * @see $options
+   * @var bool
+   */
+  public $validate_option = true;
 
   /**
    * What filter(s) should be applied to the value
@@ -394,7 +408,7 @@ class FormItem {
       }
       if ($this->validation && !$this->emptyValue($value) && !$this->validate($value, $this->validation))
         return false;
-      if ($this->options !== null) {
+      if ($this->options !== null && $this->validate_option) {
         if (!is_array($value))
           $value = [$value];
         foreach ($value as $val) {
@@ -463,7 +477,7 @@ class FormItem {
       $this->{$key} = $val;
     if ($this->multiple) {
       $value = $this->value();
-      if (empty($value) || ($this->multiple_new && !$this->submitted))
+      if (empty($value) && $this->multiple_new_empty || $this->multiple_new && !$this->submitted)
         $value[] = null;
       $this->items = [];
       $st = $structure;
