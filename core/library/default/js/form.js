@@ -361,6 +361,8 @@ function formPopupSubmit(r, item, form, p) {
   if (typeof(r.dom) != "undefined") {
     var div = document.createElement("div");
     jsonToHtml(div, r.dom);
+    if (r.validated) 
+      jsonToHtml(item, r.dom, true);
     var pw = div.getElementByClassName("form-popup-wrap");
     var structure = form.elements['__form_popup_structure'].value;
     form.innerHTML = pw.innerHTML;
@@ -371,31 +373,6 @@ function formPopupSubmit(r, item, form, p) {
     form.appendChild(hidden);
   }
   if (r.validated) {
-    var pw = item.getElementByClassName("form-popup-wrap");
-    form.removeChild(form.elements['__form_popup_structure']);
-    pw.innerHTML = form.innerHTML;
-    var f = formGetForm(item);
-    for (var i=0; i<form.elements.length; i++) {
-      if (typeof(f.elements[form.elements[i].name]) == "undefined")
-        continue;
-      var el = f.elements[form.elements[i].name];
-      el.value = form.elements[i].value;
-      el.checked = form.elements[i].checked;
-      if (el.tagName == "SELECT") {
-        el.trigger("change");
-      }
-      else if (el.tagName == "TEXTAREA") {
-        el.trigger("blur");
-      }
-      else if (el.tagName == "INPUT") {
-        if (el.type == "checkbox" || el.type == "radio") 
-          el.trigger("click");
-        else if (el.type == "hidden")
-          el.trigger("change");
-        else if (el.type == "text")
-          el.trigger("blur");
-      }
-    }
     if (item.getAttribute("callback")) 
       eval("(function(){ return "+item.getAttribute("callback")+";}())");
     p.close();

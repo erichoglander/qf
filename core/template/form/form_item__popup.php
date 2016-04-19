@@ -26,6 +26,7 @@ if ($items !== null) {
 <?php if (!empty($description)) { ?>
   <div class="form-item-description"><?=$description?></div>
 <?php } ?>
+  <?=$preview?>
   <?=$popup_button?>
   <?=$delete_button?>
   <?=$add_button?>
