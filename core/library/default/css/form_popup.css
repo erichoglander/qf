@@ -1,0 +1,6 @@
+.form-popup-wrap {
+  display: none;
+}
+.form-popup .form-popup-wrap {
+  display: block;
+}

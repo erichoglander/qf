@@ -121,6 +121,12 @@ class FormItem {
    * @var string
    */
   public $delete_button = "Remove";
+  
+  /**
+   * Javascript function to call after an item has been dynamically added
+   * @var string
+   */
+  public $add_callback;
 
   /**
    * If input is required
@@ -139,6 +145,12 @@ class FormItem {
    * @var array
    */
   public $attributes = [];
+
+  /**
+   * HTML attributes of the item element
+   * @var array
+   */
+  public $item_attributes = [];
 
   /**
    * Default value
@@ -437,7 +449,7 @@ class FormItem {
       "suffix" => $this->suffix,
       "input_prefix" => $this->input_prefix,
       "input_suffix" => $this->input_suffix,
-      "item_class" => $this->itemClass(),
+      "attributes" => $this->itemAttributes(),
       "items" => $this->renderItems(),
       "input" => $this->renderInput(),
       "add_button" => $this->renderAddButton(),
@@ -445,6 +457,7 @@ class FormItem {
       "icon" => $this->icon,
       "sortable" => $this->sortable,
       "error" => $this->getError(),
+      "multiple" => $this->multiple,
     ];
     if (is_callable([$this, "preRender"]))
       $this->preRender($vars);
@@ -713,7 +726,7 @@ class FormItem {
    * Get an array of HTML attributes for the input element
    * @return array
    */
-  protected  function getAttributes() {
+  protected function getAttributes() {
     $attr = [];
     $attr["type"] = $this->inputType();
     $attr["name"] = $this->inputName();
@@ -735,6 +748,38 @@ class FormItem {
    */
   protected function attributes() {
     $attributes = $this->getAttributes();
+    $attr = [];
+    foreach ($attributes as $key => $val) {
+      if ($val === true)
+        $attr[] = $key;
+      else if ($val !== false)
+        $attr[] = $key.'="'.$val.'"';
+    }
+    return implode(" ", $attr);
+  }
+
+  /**
+   * Get an array of HTML attributes for the item element
+   * @return array
+   */
+  protected function getItemAttributes() {
+    $attr = [];
+    foreach ($this->item_attributes as $key => $val)
+      $attr[$key] = $val;
+    if (empty($attr["class"]))
+      $attr["class"] = $this->itemClass();
+    else
+      $attr["class"].= " ".$this->itemClass();
+    return $attr;
+  }
+
+  /**
+   * Combines the HTML attributes to a string
+   * @see    getAttributes
+   * @return string
+   */
+  protected function itemAttributes() {
+    $attributes = $this->getItemAttributes();
     $attr = [];
     foreach ($attributes as $key => $val) {
       if ($val === true)
@@ -847,10 +892,9 @@ class FormItem {
   protected function renderAddButton() {
     if (!$this->multiple || !$this->add_button) 
       return null;
-    $values = 
     $data = $this->item_structure;
-    $last_item = count($this->items)-1;
     $json = htmlspecialchars(json_encode($data), ENT_QUOTES);
+    $last_item = count($this->items)-1;
     return '<div class="form-button form-add-button btn" last_item="'.$last_item.'" onclick="formAddButton(this, '.$json.')">'.$this->add_button.'</div>';
   }
 

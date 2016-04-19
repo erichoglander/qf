@@ -32,7 +32,25 @@ class Form_Controller_Core extends Controller {
     $json = getjson(true);
     if (empty($json) || empty($json["structure"]))
       return $this->jsone(t("No data"));
-    $this->viewData["dom"] = $this->Model->fileItem($json["structure"]);
+    $FormItem = $this->Model->fileItem($json["structure"]);
+    $this->viewData["dom"] = JsonToHtml\htmlToJson($FormItem->render());
+    if ($FormItem->add_callback)
+      $this->viewData["callback"] = $FormItem->add_callback;
+    return $this->json();
+  }
+  
+  /**
+   * Validate a form item
+   * @return string
+   */
+  public function validateitemAction() {
+    if (empty($_POST) || empty($_POST["__form_popup_structure"]))
+      return $this->jsone(t("No data"));
+    $structure = @json_decode($_POST["__form_popup_structure"], true);
+    $structure["submitted"] = true;
+    $FormItem = $this->Model->fileItem($structure);
+    $this->viewData["validated"] = $FormItem->validated();
+    $this->viewData["dom"] = JsonToHtml\htmlToJson($FormItem->render());
     return $this->json();
   }
   
@@ -49,7 +67,8 @@ class Form_Controller_Core extends Controller {
       return $this->jsone(t("Missing file token"), "missing_token");
     if (empty($_SESSION["file_upload"][$args[0]]))
       return $this->jsone(t("Missing file information"), "missing_file_info");
-    $this->viewData["dom"] = $this->Model->uploadFile($_SESSION["file_upload"][$args[0]]);
+    $FormItem = $this->Model->uploadFile($_SESSION["file_upload"][$args[0]]);
+    $this->viewData["dom"] = JsonToHtml\htmlToJson($FormItem->render());
     return $this->json();
   }
   
@@ -69,7 +88,8 @@ class Form_Controller_Core extends Controller {
     if (empty($args[1]))
       return $this->jsone(t("Missing file ID"), "missing_id");
     $File = $this->getEntity("File", $args[1]);
-    $this->viewData["dom"] = $this->Model->removeFile($_SESSION["file_upload"][$args[0]], $File);
+    $FormItem = $this->Model->removeFile($_SESSION["file_upload"][$args[0]], $File);
+    $this->viewData["dom"] = JsonToHtml\htmlToJson($FormItem->render());
     return $this->json();
   }
 

@@ -6,6 +6,13 @@ class Interval_FormItem_Core extends FormItem {
   public $interval_round = 1;
   public $interval_suffix;
   
+  protected function itemClass() {
+    $class = parent::itemClass();
+    if ($this->template == "dropdown")
+      $class.= " interval-dropdown";
+    return $class;
+  }
+  
   protected function getAttributes() {
     $attr = parent::getAttributes();
     $attr["interval_min"] = $this->interval_min;

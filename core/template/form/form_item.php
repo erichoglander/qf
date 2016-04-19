@@ -1,5 +1,5 @@
 <?=$prefix?>
-<div class="<?=$item_class?>">
+<div <?=$attributes?>>
 <?php if (!empty($label)) { ?>
   <label class="form-label" for="<?=$input_name?>"><?=$label?></label>
 <?php } ?>

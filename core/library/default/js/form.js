@@ -1,4 +1,4 @@
-function formAjaxSubmit(form, ajax) {
+function formAjaxSubmit(form, ajax, cb) {
   if (form.hasClass("loading"))
     return false;
   var obj = {
@@ -40,6 +40,8 @@ function formAjaxSubmit(form, ajax) {
     if (r.eval) {
       eval(r.eval);
     }
+    if (cb)
+      cb(r);
   };
   if (!ajax)
     ajax = new xajax();
@@ -156,7 +158,7 @@ function formFileRemove(button, name, parent_multiple, callback) {
   var item = formGetItem(button);
   if (!id)
     return;
-  var callback = function(r) {
+  var cb = function(r) {
     item.removeClass("loading");
     if (r.error) {
       alert(r.error);
@@ -173,10 +175,12 @@ function formFileRemove(button, name, parent_multiple, callback) {
         item.parentNode.removeChild(item);
       }
     }
+    if (callback)
+      callback(item, r);
   };
   item.addClass("loading");
   var ajax = new xajax();
-  ajax.send(BASE_URL+"form/fileremove/"+token+"/"+id,  callback);
+  ajax.send(BASE_URL+"form/fileremove/"+token+"/"+id,  cb);
 }
 
 function formDeleteButton(el) {
@@ -203,8 +207,18 @@ function formAddButton(el, structure) {
   var callback = function(r) {
     _formAdding = false;
     item.removeClass("loading");
-    if (r.dom) 
+    var new_item;
+    if (typeof(r.dom) != "undefined") {
       jsonToHtml(items, r.dom);
+      for (var i=items.children.length-1; i>=0; i--) {
+        if (items.children[i].hasClass("form-item"))
+          break;
+      }
+      if (i >= 0)
+        new_item = items.children[i];
+    }
+    if (typeof(r.callback) != "undefined")
+      eval("(function(){ return "+r.callback+";}())");
   };
   structure.name = n;
   var data = {
@@ -297,3 +311,93 @@ function formCollapsibleObserve(el) {
   }
 }
 window.addEventListener("load", formCollapsibleInit, false);
+
+
+function formPopupAddOpen(wrap, new_item, r) {
+  new_item.getElementByClassName("form-popup-button").trigger("click");
+}
+function formPopup(item, structure) {
+  var p = new popup();
+  p.temporary = true;
+  var f = formGetForm(item);
+  var form = document.createElement("form");
+  form.setAttribute("name", item.getAttribute("name"));
+  form.setAttribute("size", item.getAttribute("size"));
+  if (item.getAttribute("close"))
+    form.setAttribute("close", item.getAttribute("close"));
+  form.method = "POST";
+  var pw = item.getElementByClassName("form-popup-wrap");
+  var html = pw.innerHTML;
+  // Remove all init-classes
+  html = html.replace(/\s*[a-z\-]+\-init/g, "");
+  form.innerHTML = html;
+  for (var i=0; i<form.elements.length; i++) {
+    form.elements[i].value = f.elements[form.elements[i].name].value;
+    form.elements[i].checked = f.elements[form.elements[i].name].checked;
+  }
+  form.className = "form-popup "+f.className+"-popup";
+  form.action = BASE_URL+"form/validateitem";
+  form.addEventListener("submit", function(e) {
+    e.preventDefault();
+    formAjaxSubmit(form, null, function(r) {
+      formPopupSubmit(r, item, form, p);
+    });
+  }, false);
+  var hidden = document.createElement("input");
+  hidden.type = "hidden";
+  hidden.name = "__form_popup_structure";
+  hidden.value = JSON.stringify(structure);
+  form.appendChild(hidden);
+  p.move(form);
+  p.open();
+}
+function formPopupButton(btn, structure) {
+  formPopup(btn.parentNode, structure);
+}
+function formPopupSubmit(r, item, form, p) {
+  if (form.action.indexOf("upload") !== -1)
+    return;
+  
+  if (typeof(r.dom) != "undefined") {
+    var div = document.createElement("div");
+    jsonToHtml(div, r.dom);
+    var pw = div.getElementByClassName("form-popup-wrap");
+    var structure = form.elements['__form_popup_structure'].value;
+    form.innerHTML = pw.innerHTML;
+    var hidden = document.createElement("input");
+    hidden.type = "hidden";
+    hidden.name = "__form_popup_structure";
+    hidden.value = structure;
+    form.appendChild(hidden);
+  }
+  if (r.validated) {
+    var pw = item.getElementByClassName("form-popup-wrap");
+    form.removeChild(form.elements['__form_popup_structure']);
+    pw.innerHTML = form.innerHTML;
+    var f = formGetForm(item);
+    for (var i=0; i<form.elements.length; i++) {
+      if (typeof(f.elements[form.elements[i].name]) == "undefined")
+        continue;
+      var el = f.elements[form.elements[i].name];
+      el.value = form.elements[i].value;
+      el.checked = form.elements[i].checked;
+      if (el.tagName == "SELECT") {
+        el.trigger("change");
+      }
+      else if (el.tagName == "TEXTAREA") {
+        el.trigger("blur");
+      }
+      else if (el.tagName == "INPUT") {
+        if (el.type == "checkbox" || el.type == "radio") 
+          el.trigger("click");
+        else if (el.type == "hidden")
+          el.trigger("change");
+        else if (el.type == "text")
+          el.trigger("blur");
+      }
+    }
+    if (item.getAttribute("callback")) 
+      eval("(function(){ return "+item.getAttribute("callback")+";}())");
+    p.close();
+  }
+}

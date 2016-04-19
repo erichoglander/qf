@@ -13,6 +13,7 @@ class Default_Library_Core extends Library {
     "css/tooltip.css",
     "css/interval.css",
     "css/popup.css",
+    "css/form_popup.css",
     "css/natural_form.css",
     "css/form_sort.css",
     "css/placeholder.css",

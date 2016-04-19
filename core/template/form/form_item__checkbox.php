@@ -1,5 +1,5 @@
 <?=$prefix?>
-<div class="<?=$item_class?>">
+<div <?=$attributes?>>
 <?php 
 if ($items !== null) {
 ?>

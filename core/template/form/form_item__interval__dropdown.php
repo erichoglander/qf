@@ -1,5 +1,5 @@
 <?=$prefix?>
-<div class="<?=$item_class?> interval-dropdown">
+<div <?=$attributes?>>
 <?php if (!empty($label)) { ?>
   <label class="form-label form-textfield">
     <?=$label?><?=FontAwesome\Icon("angle-down")?>

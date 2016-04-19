@@ -1,21 +1,32 @@
 <?=$prefix?>
 <div <?=$attributes?>>
-<?php if (!empty($label)) { ?>
-  <label class="form-label" for="<?=$input_name?>"><?=$label?></label>
+<?php if (!$multiple) { ?>
+  <div class="form-popup-wrap">
 <?php } ?>
-  <div class="form-items">
-    <div class="inner">
+<?php if (!empty($label)) { ?>
+    <label class="form-label" for="<?=$input_name?>"><?=$label?></label>
+<?php } ?>
 <?php 
 if ($items !== null) {
+?>
+    <div class="form-items">
+      <div class="inner">
+<?php
   foreach ($items as $item) 
     print $item;
+?>
+      </div>
+    </div>
+<?php
 }
 ?>
-    </div>
+<?php if (!$multiple) { ?>
   </div>
+<?php } ?>
 <?php if (!empty($description)) { ?>
   <div class="form-item-description"><?=$description?></div>
 <?php } ?>
+  <?=$popup_button?>
   <?=$delete_button?>
   <?=$add_button?>
   <div class="form-item-loader">

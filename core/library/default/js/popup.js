@@ -32,9 +32,12 @@ function popupObserve(el) {
 function popup(el) {
   
   this.tags = {};
+  this.temporary = false;
   
   this.move = function(el) {
     el.removeClass("popup");
+    if (el.getAttribute("temporary"))
+      this.temporary = true;
     this.create(el.getAttribute("name"), el.getAttribute("close"));
     this.setContent(el);
     if (el.getAttribute("size"))
@@ -71,6 +74,10 @@ function popup(el) {
     document.body.appendChild(this.tags.wrap);
   }
   
+  this.destroy = function() {
+    document.body.removeChild(this.tags.wrap);
+  }
+  
   this.setSize = function(size) {
     this.tags.wrap.className = this.tags.wrap.className.replace(/popup\-size\-[a-z]+/, "popup-size-"+size);
   }
@@ -101,7 +108,12 @@ function popup(el) {
     self.tags.wrap.removeClass("open");
     setTimeout(function() {
       self.tags.wrap.style.display = "none";
+      self.onClose();
     },t);
+  }
+  this.onClose = function() {
+    if (this.temporary)
+      this.destroy();
   }
   
   if (el)
