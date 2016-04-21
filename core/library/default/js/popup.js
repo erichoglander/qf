@@ -83,10 +83,13 @@ function popup(el) {
   }
   
   this.setContent = function(content) {
-    if (typeof(content) == "object")
+    if (typeof(content) == "object") {
+      this.tags.inner.innerHTML = "";
       this.tags.inner.appendChild(content);
-    else
+    }
+    else {
       this.tags.inner.innerHTML = content;
+    }
   }
   
   this.isOpen = function() {
