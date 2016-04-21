@@ -32,7 +32,7 @@ class Form_Controller_Core extends Controller {
     $json = getjson(true);
     if (empty($json) || empty($json["structure"]))
       return $this->jsone(t("No data"));
-    $FormItem = $this->Model->fileItem($json["structure"]);
+    $FormItem = $this->Model->formItem($json["structure"]);
     $this->viewData["dom"] = JsonToHtml\htmlToJson($FormItem->render());
     if ($FormItem->add_callback)
       $this->viewData["callback"] = $FormItem->add_callback;
@@ -48,7 +48,7 @@ class Form_Controller_Core extends Controller {
       return $this->jsone(t("No data"));
     $structure = @json_decode($_POST["__form_popup_structure"], true);
     $structure["submitted"] = true;
-    $FormItem = $this->Model->fileItem($structure);
+    $FormItem = $this->Model->formItem($structure);
     $this->viewData["validated"] = $FormItem->validated();
     $this->viewData["dom"] = JsonToHtml\htmlToJson($FormItem->render());
     return $this->json();

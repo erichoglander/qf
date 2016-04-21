@@ -13,8 +13,21 @@ class Form_Model_Core extends Model {
    * @param  array $structure
    * @return string
    */
-  public function fileItem($structure) {
-    return newClass($structure["form_item_class"], $this->Db, $this->Io, $structure);
+  public function formItem($structure) {
+    if (empty($structure["form_item_class"])) {
+      $a = explode("_", $structure["type"]);
+      $cname = "";
+      foreach ($a as $b)
+        $cname.= ucwords($b);
+      $cname.= "_FormItem";
+      $class = newClass($cname, $this->Db, $this->Io, $structure);
+      if (!$class)
+        $class = new FormItem($this->Db, $this->Io, $structure);
+    }
+    else {
+      $class = newClass($structure["form_item_class"], $this->Db, $this->Io, $structure);
+    }
+    return $class;
   }
   
   /**
