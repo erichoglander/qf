@@ -192,10 +192,10 @@ function autoselect(el) {
   }
   
   this.optionClick = function(n) {
-    this.tags.input.value = (this.tags.select.value.length ? this.tags.select.options[n].text : "");
-    this.tags.input.blur();
     this.tags.select.selectedIndex = n;
     this.tags.select.trigger("change");
+    this.tags.input.value = (this.tags.select.value.length ? this.tags.select.options[n].text : "");
+    this.tags.input.blur();
   }
   
   this.init();

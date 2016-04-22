@@ -183,15 +183,17 @@ function formFileRemove(button, name, parent_multiple, callback) {
   ajax.send(BASE_URL+"form/fileremove/"+token+"/"+id,  cb);
 }
 
-function formDeleteButton(el) {
+function formDeleteButton(el, callback, add_new) {
   var item = formGetItem(el);
+  var parent = formGetItem(item.parentNode);
   item.parentNode.removeChild(item);
-  var parent = formGetItem(el.parentNode);
-  if (parent.getElementsByClassName("form-item").length < 1) {
+  if (add_new && parent.getElementsByClassName("form-item").length < 1) {
     var adds = parent.getElementsByClassName("form-add-button");
     if (adds.length) 
       adds[adds.length-1].trigger("click");
   }
+  if (callback)
+    eval("(function(){ return "+callback+";}())");
 }
 
 var _formAdding = false;

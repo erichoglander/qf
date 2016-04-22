@@ -127,6 +127,12 @@ class FormItem {
    * @var string
    */
   public $add_callback;
+  
+  /**
+   * Javascript function to call after an item has been dynamically removed
+   * @var string
+   */
+  public $delete_callback;
 
   /**
    * If input is required
@@ -906,7 +912,9 @@ class FormItem {
   protected function renderDeleteButton() {
     if (!$this->parent_multiple || !$this->delete_button)
       return null;
-    return '<div class="form-button form-delete-button btn btn-danger" onclick="formDeleteButton(this)">'.$this->delete_button.'</div>';
+    $callback = ($this->delete_callback ? "'".$this->delete_callback."'" : "null");
+    $add = ($this->multiple_new_empty ? "true" : "false");
+    return '<div class="form-button form-delete-button btn btn-danger" onclick="formDeleteButton(this, '.$callback .', '.$add.')">'.$this->delete_button.'</div>';
   }
 
 };
