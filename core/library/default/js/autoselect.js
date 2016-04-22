@@ -105,6 +105,7 @@ function autoselect(el) {
         }(this, i));
       }
     }
+    this.tags.input.value = (this.tags.select.value.length ? this.tags.select.options[this.tags.select.selectedIndex].text : "");
   }
   
   this.onFocus = function() {
