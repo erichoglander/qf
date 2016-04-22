@@ -22,6 +22,8 @@ class Popup_FormItem extends FormItem {
       $vars = [
         "name" => $this->name,
         "parent_name" => $this->parent_name,
+        "label" => $this->label,
+        "structure" => $this->structure,
         "value" => $this->value(),
       ];
       if (is_callable([$this, "preRenderPreview"]))

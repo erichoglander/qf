@@ -333,10 +333,6 @@ function formPopup(item, structure) {
   // Remove all init-classes
   html = html.replace(/\s*[a-z\-]+\-init/g, "");
   form.innerHTML = html;
-  for (var i=0; i<form.elements.length; i++) {
-    form.elements[i].value = f.elements[form.elements[i].name].value;
-    form.elements[i].checked = f.elements[form.elements[i].name].checked;
-  }
   form.className = "form-popup "+f.className+"-popup";
   form.action = BASE_URL+"form/validateitem";
   form.addEventListener("submit", function(e) {
