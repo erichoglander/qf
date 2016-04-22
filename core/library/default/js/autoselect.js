@@ -70,6 +70,7 @@ function autoselect(el) {
       this.tags.input.removeAttribute("disabled");
       this.tags.item.removeClass("disabled");
     }
+    this.tags.input.value = (this.tags.select.value.length ? this.tags.select.options[this.tags.select.selectedIndex].text : "");
     this.renderOptions();
   }
   
@@ -105,7 +106,6 @@ function autoselect(el) {
         }(this, i));
       }
     }
-    this.tags.input.value = (this.tags.select.value.length ? this.tags.select.options[this.tags.select.selectedIndex].text : "");
   }
   
   this.onFocus = function() {
