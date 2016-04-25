@@ -469,6 +469,34 @@ class FormItem {
       $this->preRender($vars);
     return renderTemplate($path, $vars);
   }
+  
+  /**
+   * Renders certain items only
+   * @param  array  $items
+   * @return string
+   */
+  public function renderPartly($items) {
+    $html = "";
+    foreach ($items as $item) {
+      if (!is_array($item)) {
+        $name = $item;
+        $render = true;
+      }
+      else {
+        $name = $item[0];
+        $render = count($item) == 1;
+      }
+      foreach ($this->items as $Item) {
+        if ($Item->name == $name) {
+          if ($render)
+            $html.= $Item->render();
+          else
+            $html.= $Item->renderPartly(array_slice($item, 1));
+        }
+      }
+    }
+    return $html;
+  }
 
 
   /**
