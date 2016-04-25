@@ -10,11 +10,13 @@ class Fieldset_FormItem_Core extends FormItem {
     $this->item_structure["collapsed"] = false;
   }
   
-  protected function preRender(&$vars) {
+  protected function itemClass() {
+    $class = parent::itemClass();
     if ($this->collapsible && !$this->multiple) {
-      $vars["item_class"].= " form-collapsible";
-      $vars["item_class"].= ($this->collapsed && !$this->childError() ? " collapsed" : " expanded");
+      $class.= " form-collapsible";
+      $class.= ($this->collapsed && !$this->childError() ? " collapsed" : " expanded");
     }
+    return $class;
   }
   
 }
