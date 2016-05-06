@@ -5,6 +5,13 @@
     <input type="hidden" name="<?=$name?>[token]" value="<?=$token?>">
     <span><?=$upload_button?></span>
   </div>
+  <?php if ($file_drop) { ?>
+  <div class="form-file-drop" ondrop="<?=$file_drop?>" ondragover="formFileDragOver(this, event)" ondragleave="formFileDragLeave(this, event)">
+    <div class="inner">
+      <?=$drop_markup?>
+    </div>
+  </div>
+  <?php } ?>
   <?php if (!empty($file_extensions)) { ?>
   <div class="form-file-extensions">
     <?=t("Accepted file extensions")?>: <?=implode(", ", $file_extensions)?>

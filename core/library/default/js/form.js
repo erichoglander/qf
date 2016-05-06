@@ -116,14 +116,50 @@ function formFileUpload(el, parent_multiple, callback) {
   el.form.enctype = enctype;
   el.form.target = target;
 }
+function formFileDragOver(el, e) {
+  e.stopPropagation();
+  e.preventDefault();
+  el.addClass("hover");
+}
+function formFileDragLeave(el, e) {
+  e.stopPropagation();
+  e.preventDefault();
+  el.removeClass("hover");
+}
+function formFileDrop(el, e, parent_multiple, callback) {
+  formFileDragLeave(el, e);
+  var item = formGetItem(el);
+  var input = item.getElementByClassName("form-file");
+  var files = e.dataTransfer.files || e.target.files;
+  if (!input || !files.length)
+    return;
+  var name = input.name.substr(0, input.name.length-6);
+  var formData = new FormData(input.form);
+  formData.set(input.name, files[0]);
+  var token = input.form.elements[name+"[token]"].value;
+  var ajax = new xajax();
+  var url = BASE_URL+"form/fileupload/"+token;
+  var cb = function(r) {
+    formFileUploadDone(el, parent_multiple, callback, r);
+  };
+  var data = {
+    method: "POST",
+    post: formData,
+    errorHandle: true
+  };
+  item.addClass("loading");
+  ajax.send(url, cb, data);
+}
+function formFileUploadDone(el, parent_multiple, callback, obj) {
 
-function formFileUploadDone(el, parent_multiple, callback, iframe) {
-
-  var re = iframe.contentDocument.body.innerHTML;
-  var obj = JSON.parse(re);
+  if (typeof(obj.tagName) != "undefined" && obj.tagName == "iframe") {
+    var iframe = obj;
+    var re = iframe.contentDocument.body.innerHTML;
+    obj = JSON.parse(re);
+    iframe.parentNode.removeChild(iframe);
+  }
   var item = formGetItem(el);
 
-  iframe.parentNode.removeChild(iframe);
   el.value = "";
   item.removeClass("loading");
   

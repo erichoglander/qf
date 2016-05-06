@@ -299,6 +299,17 @@ input {
 .form-type-file .form-delete-button {
   display: none;
 }
+.form-file-drop {
+  padding: 15px;
+  margin: 5px 0;
+  color: #31708F;
+  background-color: #D9EDF7;
+  border-color: #BCE8F1;
+  transition: opacity 0.2s ease;
+}
+.form-file-drop.hover {
+  opacity: 0.5;
+}
 
 .form-search .form-item {
   float: left;

@@ -5,6 +5,7 @@ class File_FormItem_Core extends FormItem {
   public $uploaded = null;
   public $upload_button, $remove_button;
   public $file_folder, $file_extensions, $file_dir, $file_max_size;
+  public $file_drop, $drop_markup;
   public $file_blacklist = ["php", "phtml", ".htaccess"];
   public $upload_callback, $remove_callback;
   public $preview_template;
@@ -20,6 +21,8 @@ class File_FormItem_Core extends FormItem {
   protected function loadDefault() {
     $this->upload_button = t("Browse...");
     $this->remove_button = t("Remove file");
+    $this->drop_markup = t("Drag and drop file here");
+    $this->file_drop = false;
     $this->file_dir = "public";
   }
 
@@ -251,6 +254,8 @@ class File_FormItem_Core extends FormItem {
     $vars["preview"] = $this->preview();
     $vars["token"] = $this->fileSession();
     $vars["file_remove"] = "formFileRemove(this, '".$this->inputName()."', ".$this->parentMultiple().", ".$this->removeCallback().")";
+    $vars["file_drop"] = ($this->file_drop ? "formFileDrop(this, event, ".$this->parentMultiple().", ".$this->uploadCallback().")" : null);
+    $vars["drop_markup"] = $this->drop_markup;
   }
 
   protected function getAttributes() {
