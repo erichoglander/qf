@@ -152,7 +152,7 @@ function formFileDrop(el, e, parent_multiple, callback) {
 }
 function formFileUploadDone(el, parent_multiple, callback, obj) {
 
-  if (typeof(obj.tagName) != "undefined" && obj.tagName == "iframe") {
+  if (typeof(obj.tagName) != "undefined" && obj.tagName == "IFRAME") {
     var iframe = obj;
     var re = iframe.contentDocument.body.innerHTML;
     obj = JSON.parse(re);
