@@ -21,7 +21,7 @@ function formAjaxSubmit(form, ajax, cb) {
       return;
     }
     if (r.form) {
-      if (r.form.substr(0, 1) == "{" || r.form.substr(0, 1) == "[") {
+      if (typeof(r.form) == "object") {
         var el = document.createElement("div");
         jsonToHtml(el, r.form);
         var wrap = form.parentNode;
