@@ -28,7 +28,7 @@ function formAjaxSubmit(form, ajax, cb) {
         wrap.removeChild(form);
         wrap.appendChild(el.getElementsByTagName("form")[0]);
       }
-      else if (r.form.substr(0, 1) == "<") {
+      else {
         var wrap = form.parentNode;
         wrap.removeChild(form);
         wrap.innerHTML+= r.form;
