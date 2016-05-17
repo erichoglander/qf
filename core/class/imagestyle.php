@@ -91,9 +91,9 @@ class Imagestyle_Core {
   public function style($name, $save = true) {
     if (!$this->styleExists($name))
       return null;
-    $info = pathinfo(strtolower($this->src));
+    $this->info = pathinfo(strtolower($this->src));
     $dir = "styles/".$name;
-    $fname = $info["basename"];
+    $fname = $this->info["basename"];
     $path = $this->path();
     $uri = $this->uri();
     if ($save) {
@@ -371,11 +371,22 @@ class Imagestyle_Core {
   }
   
   /**
+   * Get content-type based type of image
+   * @return string
+   */
+  public function contentType() {
+    if ($this->lib == "imagick" && $this->im)
+      return "image/".$this->im->getImageFormat();
+    else
+      return "image/".$this->info["extension"];
+  }
+  
+  /**
    * Output image data
    */
   public function output() {
+    header("Content-Type: ".$this->contentType());
     if ($this->lib == "imagick") {
-      header("Content-Type: image/".$this->im->getImageFormat());
       print $this->im;
     }
     else {

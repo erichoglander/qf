@@ -64,9 +64,18 @@ class File_Controller_Core extends Controller {
     if ($File->get("dir") == "private" && !$this->Acl->access($this->User, "filePrivateUri", $File->get("uri")))
       return $this->accessDenied();
     $Imagestyle = newClass("Imagestyle", $File->path());
-    if (!$Imagestyle->style($style, false))
-      return $this->notFound();
-    $Imagestyle->output();
+    if ($File->get("dir") == "private") {
+      if (!$Imagestyle->style($style, false))
+        return $this->notFound();
+      $Imagestyle->output();
+    }
+    else {
+      $uri = $Imagestyle->style($style);
+      if (!$uri)
+        return $this->notFound();
+      header("Content-Type: ".$Imagestyle->contentType());
+      readfile(DOC_ROOT.BASE_PATH.$uri);
+    }
   }
   
 }
