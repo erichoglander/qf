@@ -262,7 +262,7 @@ class Controller {
    * @see \Cron_Model_Core::run()
    */
   protected function automaticCron() {
-    if ($this->Config->getAutomaticCron()) {
+    if (!IS_CLI && $this->Config->getAutomaticCron()) {
       $last = $this->Variable->get("cron", 0);
       if (date("Y-m-d", $last) != date("Y-m-d", REQUEST_TIME)) {
         $Cron = $this->getModel("Cron");
