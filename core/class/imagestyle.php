@@ -84,10 +84,11 @@ class Imagestyle_Core {
   
   /**
    * Perform style operations
-   * @param string $name Name of style
+   * @param  string $name Name of style
+   * @param  bool   $save
    * @return string
    */
-  public function style($name) {
+  public function style($name, $save = true) {
     if (!$this->styleExists($name))
       return null;
     $info = pathinfo(strtolower($this->src));
@@ -95,10 +96,12 @@ class Imagestyle_Core {
     $fname = $info["basename"];
     $path = $this->path();
     $uri = $this->uri();
-    $target_path = $path."/".$dir."/".$fname;
-    $target_uri = $uri."/".$dir."/".$fname;
-    if (file_exists($target_path))
-      return $target_uri;
+    if ($save) {
+      $target_path = $path."/".$dir."/".$fname;
+      $target_uri = $uri."/".$dir."/".$fname;
+      if (file_exists($target_path))
+        return $target_uri;
+    }
     if (!$this->loadSource())
       return null;
     foreach ($this->styles[$name] as $method => $params) {
@@ -109,11 +112,14 @@ class Imagestyle_Core {
         continue;
       call_user_func_array([$this, $func], $params);
     }
-    if (!file_exists($path."/".$dir))
-      mkdir($path."/".$dir, 0774, true);
-    if (!$this->save($target_path))
-      return null;
-    return $target_uri;
+    if ($save) {
+      if (!file_exists($path."/".$dir))
+        mkdir($path."/".$dir, 0774, true);
+      if (!$this->save($target_path))
+        return null;
+      return $target_uri;
+    }
+    return true;
   }
   
   /**
@@ -362,6 +368,30 @@ class Imagestyle_Core {
         return false;
       return true;
     }
+  }
+  
+  /**
+   * Output image data
+   */
+  public function output() {
+    if ($this->lib == "imagick") {
+      header("Content-Type: image/".$this->im->getImageFormat());
+      print $this->im;
+    }
+    else {
+      try {
+        if ($this->info["extension"] == "jpg" || $this->info["extension"] == "jpeg")
+          imagejpeg($this->im, null, 100);
+        else if ($this->info["extension"] == "png")
+          imagepng($this->im, null, 1);
+        else if ($this->info["extension"] == "gif")
+          imagegif($this->im, null);
+      }
+      catch(Exception $e) {
+        print "Could not generate image";
+      }
+    }
+    exit;
   }
   
   

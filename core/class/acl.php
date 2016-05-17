@@ -319,5 +319,14 @@ class Acl_Core {
   protected function filePrivateUriAccess($User, $uri) {
     return true;
   }
+  /**
+   * Access to a imagestyle on demand
+   * @see    \File_Controller_Core::imagestyleAction()
+   * @param  \User_Entity_Core $User
+   * @return bool
+   */
+  protected function fileImagestyleAccess($User) {
+    return true;
+  }
 
 }

@@ -32,15 +32,19 @@ class File_Entity_Core extends Entity {
    * Create an image of given style if the managed file is an image
    * @see    \Imagestyle_Core::style()
    * @param  string $style
+   * @param  bool   $save
    * @return string
    */
-  public function imageStyle($style) {
+  public function imageStyle($style, $save = true) {
     if (!$this->isImage())
       return null;
     if (!$this->Imagestyle)
       $this->Imagestyle = newClass("Imagestyle");
     $this->Imagestyle->src = $this->path();
-    return $this->Imagestyle->style($style);
+    if ($save)
+      return $this->Imagestyle->style($style, $save);
+    else
+      return url("file/imagestyle/".$style."/".$this->get("uri"));
   }
 
   /**
