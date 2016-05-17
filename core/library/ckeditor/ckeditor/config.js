@@ -23,10 +23,10 @@ CKEDITOR.editorConfig = function( config ) {
 	
 	config.format_tags = 'p';
 	
-	config.filebrowserUploadUrl = "/file/ajax/ckeditor";
-	config.filebrowserBrowseUrl = "/file/browser/ckeditor";
-	config.filebrowserImageUploadUrl = "/file/ajax/ckeditor?type=image";
-	config.filebrowserImageBrowseUrl = "/file/browser/ckeditor?type=image";
+	// config.filebrowserUploadUrl = BASE_URL+"file/ajax/ckeditor";
+	// config.filebrowserBrowseUrl = BASE_URL+"file/browser/ckeditor";
+	// config.filebrowserImageUploadUrl = BASE_URL+"file/ajax/ckeditor?type=image";
+	// config.filebrowserImageBrowseUrl = BASE_URL+"file/browser/ckeditor?type=image";
 	config.filebrowserWindowWidth = "880";
 	config.filebrowserWindowHeight = "640";
 	
