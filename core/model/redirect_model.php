@@ -43,7 +43,7 @@ class Redirect_Model_Core extends Model {
    * Get all redirects
    * @return array
    */
-  public function getRedirectes() {
+  public function getRedirects() {
     $rows = $this->Db->getRows("SELECT id FROM `redirect` ORDER BY source ASC");
     $redirects = [];
     foreach ($rows as $row)
