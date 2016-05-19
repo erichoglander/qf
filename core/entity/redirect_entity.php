@@ -43,10 +43,11 @@ class Redirect_Entity_Core extends Entity  {
   /**
    * Uri of the target
    * @see uri()
+   * @param  string $lang
    * @return string
    */
-  public function uri() {
-    return uri($this->get("target"));
+  public function uri($lang = null) {
+    return uri($this->get("target"), $lang);
   }
   
   /**

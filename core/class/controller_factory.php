@@ -326,7 +326,7 @@ class ControllerFactory_Core {
           if ($Redirect->isExternal())
             $redir["url"] = $Redirect->get("target");
           else
-            $redir["uri"] = $Redirect->uri();
+            $redir["uri"] = $Redirect->uri($request["lang"]);
           $redir["code"] = $Redirect->get("code");
         }
       }
