@@ -336,7 +336,8 @@ class ControllerFactory_Core {
             (!empty($redir["url"]) ?
               $redir["url"] :
               (!empty($redir["protocol"]) ? $redir["protocol"] : HTTP_PROTOCOL)."://".
-              (!empty($redir["host"]) ? $redir["host"] : $_SERVER["HTTP_HOST"])."/".
+              (!empty($redir["host"]) ? $redir["host"] : $_SERVER["HTTP_HOST"]).
+              $request["base"].
               (array_key_exists("uri", $redir) ? $redir["uri"] : $uri)),
           "code" => (!empty($redir["code"]) ? $redir["code"] : null)
         ];
