@@ -69,7 +69,19 @@ class Redirect_Entity_Core extends Entity  {
           status = 1 &&
           source = :source &&
           (lang IS NULL || lang = :lang)",
-        [  ":source" => $source,
+        [ ":source" => $source,
+          ":lang" => $lang]);
+    if ($row) {
+      $this->load($row->id);
+      return true;
+    }
+    $row = $this->Db->getRow("
+        SELECT * FROM `redirect`
+        WHERE 
+          status = 1 &&
+          source = :source &&
+          (lang IS NULL || lang = :lang)",
+        [ ":source" => urldecode($source),
           ":lang" => $lang]);
     if ($row) {
       $this->load($row->id);
