@@ -326,9 +326,10 @@ function t($str, $lang = "en", $vars = []) {
  * Fetches alias uri for a path
  * @see uri
  * @param  string $path Ex: news/view/18
+ * @param  string $lang
  * @return string       Ex: blog/my-blog-post
  */
-function uri($path) {
+function uri($path, $lang = null) {
   global $Db;
   $x = strpos($path, "?");
   if ($x) {
@@ -342,14 +343,16 @@ function uri($path) {
     $path = "";
   }
   else {
+    if (!$lang)
+      $lang = LANG;
     $row = $Db->getRow("
         SELECT * FROM `alias`
         WHERE 
           path = :path && 
           status = 1 &&
           (lang IS NULL || lang = :lang)",
-        [  ":path" => $path,
-          ":lang" => LANG]);
+        [ ":path" => $path,
+          ":lang" => $lang]);
     if ($row)
       $path = $row->alias;
   }
