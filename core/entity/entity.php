@@ -160,6 +160,8 @@ class Entity {
         if ($this->schema["fields"][$field]["type"] == "udecimal")
           $value = str_replace("-", "", $value);
         $len = -($this->schema["fields"][$field]["length"][0]+1);
+        if ($value < 0)
+          $len--;
         $value = substr(@number_format($value, $this->schema["fields"][$field]["length"][1], ".", ""), $len);
       }
       if (!empty($this->schema["fields"][$field]["serialize"]))
@@ -201,6 +203,8 @@ class Entity {
         if ($this->schema["fields"][$field]["type"] == "udecimal")
           $value = str_replace("-", "", $value);
         $len = -($this->schema["fields"][$field]["length"][0]+1);
+        if ($value < 0)
+          $len--;
         $value = substr(@number_format($value, $this->schema["fields"][$field]["length"][1], ".", ""), $len);
       }
       else if ($this->schema["fields"][$field]["type"] == "varchar" && isset($this->schema["fields"][$field]["length"]))

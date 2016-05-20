@@ -506,12 +506,15 @@ function refresh() {
 /**
  * Simple http request without options
  * @param  string $url
+ * @param  bool   $binary
  * @return string
  */
-function httpRequest($url) {
+function httpRequest($url, $binary = false) {
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $url);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  if ($binary)
+    curl_setopt($ch, CURLOPT_BINARYTRANSFER, true);
   $re = curl_exec($ch);
   curl_close($ch);
   return $re;
