@@ -152,12 +152,16 @@ class Entity {
       return $def;
     $value = $this->fields[$field];
     if (array_key_exists($field, $this->schema["fields"]) && $value !== null) {
-      if ($this->schema["fields"][$field]["type"] == "int" || 
-          $this->schema["fields"][$field]["type"] == "uint" ||
-          $this->schema["fields"][$field]["type"] == "file")
+      if (in_array($this->schema["fields"][$field]["type"], ["int", "uint", "file"]))
         $value = (int) $value;
-      else if ($this->schema["fields"][$field]["type"] == "float")
+      else if (in_array($this->schema["fields"][$field]["type"], ["float", "ufloat"]))
         $value = (float) $value;
+      else if (in_array($this->schema["fields"][$field]["type"], ["decimal", "udecimal"])) {
+        if ($this->schema["fields"][$field]["type"] == "udecimal")
+          $value = str_replace("-", "", $value);
+        $len = -($this->schema["fields"][$field]["length"][0]+1);
+        $value = substr(@number_format($value, $this->schema["fields"][$field]["length"][1], ".", ""), $len);
+      }
       if (!empty($this->schema["fields"][$field]["serialize"]))
         $value = unserialize($value);
       if (!empty($this->schema["fields"][$field]["json"]))
@@ -185,13 +189,20 @@ class Entity {
         $value = serialize($value);
       if (!empty($this->schema["fields"][$field]["json"]))
         $value = json_encode($value);
-      if ($this->schema["fields"][$field]["type"] == "uint" ||
-          $this->schema["fields"][$field]["type"] == "file")
+      if (in_array($this->schema["fields"][$field]["type"], ["uint", "file"]))
         $value = abs((int) $value);
       else if ($this->schema["fields"][$field]["type"] == "int")
         $value = (int) $value;
+      else if ($this->schema["fields"][$field]["type"] == "ufloat")
+        $value = abs((float) $value);
       else if ($this->schema["fields"][$field]["type"] == "float")
         $value = (float) $value;
+      else if (in_array($this->schema["fields"][$field]["type"], ["decimal", "udecimal"])) {
+        if ($this->schema["fields"][$field]["type"] == "udecimal")
+          $value = str_replace("-", "", $value);
+        $len = -($this->schema["fields"][$field]["length"][0]+1);
+        $value = substr(@number_format($value, $this->schema["fields"][$field]["length"][1], ".", ""), $len);
+      }
       else if ($this->schema["fields"][$field]["type"] == "varchar" && isset($this->schema["fields"][$field]["length"]))
         $value = substr($value, 0, $this->schema["fields"][$field]["length"]);
       else if ($this->schema["fields"][$field]["type"] == "enum") {

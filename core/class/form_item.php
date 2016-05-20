@@ -342,9 +342,10 @@ class FormItem {
    * Returns element value
    * @see    $filter
    * @see    filter
+   * @param  bool $filter whether or not to apply filter
    * @return mixed
    */
-  public function value() {
+  public function value($filter = true) {
     if (!$this->submitted)
       return $this->value;
     if ($this->items !== null) {
@@ -364,7 +365,7 @@ class FormItem {
     }
     else {
       $value = $this->itemValue();
-      if ($this->filter && $this->options === null && !$this->emptyValue($value))
+      if ($filter && $this->filter && $this->options === null && !$this->emptyValue($value))
         $value = $this->filter($value, $this->filter);
     }
     return $value;
@@ -419,7 +420,7 @@ class FormItem {
           return false;
     }
     else {
-      $value = $this->value();
+      $value = $this->value(false);
       if ($req && $this->required && !$this->hasValue()) {
         $this->setError(t("Field is required"));
         return false;
@@ -911,7 +912,7 @@ class FormItem {
       "focus" => $this->focus,
       "empty_option" => $this->empty_option,
       "options" => $this->options(),
-      "value" => $this->value(),
+      "value" => $this->value(false),
     ];
     if (is_callable([$this, "preRenderInput"]))
       $this->preRenderInput($vars);

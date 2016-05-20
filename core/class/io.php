@@ -322,7 +322,7 @@ class Io_Core {
    * @return float
    */
   protected function filterUfloat($value) {
-    return abs((float) $value);
+    return abs($this->filterFloat($value));
   }
 
   /**
