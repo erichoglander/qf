@@ -457,3 +457,10 @@ input {
 .form-list-search .form-item:last-child {
   margin-right: 0;
 }
+.form-list-search .form-type-submit {
+  width: auto;
+}
+
+.form-log-list-search .form-item {
+  max-width: 30%;
+}

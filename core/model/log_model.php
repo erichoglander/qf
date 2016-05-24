@@ -41,16 +41,29 @@ class Log_Model_Core extends Model {
   /**
    * Creates a sql-query for a search
    * @param  array $values
-   * @return array Contains sql-query and vars
+   * @return array
    */
   public function listSearchQuery($values) {
-    $sql = "SELECT id FROM `log`";
-    $vars = [];
+    $query = [
+      "from" => "`log`",
+      "cols" => ["id"],
+      "where" => [],
+      "order" => ["id DESC"],
+      "vars" => [],
+    ];
     if (!empty($values["q"])) {
-      $sql.= " WHERE category LIKE :q";
-      $vars[":q"] = $values["q"]."%";
+      $query["where"][] = "text LIKE :q";
+      $query["vars"][":q"] = "%".$values["q"]."%";
     }
-    return [$sql, $vars];
+    if (!empty($values["type"])) {
+      $query["where"][] = "type = :type";
+      $query["vars"][":type"] = $values["type"];
+    }
+    if (!empty($values["category"])) {
+      $query["where"][] = "category = :category";
+      $query["vars"][":category"] = $values["category"];
+    }
+    return $query;
   }
   /**
    * Number of log entries matching a search
@@ -59,21 +72,18 @@ class Log_Model_Core extends Model {
    * @return int
    */
   public function listSearchNum($values = []) {
-    list($sql, $vars) = $this->listSearchQuery($values);
-    return $this->Db->numRows($sql, $vars);
+    $query = $this->listSearchQuery($values);
+    return $this->Db->numRows($query);
   }
   /**
    * Search for log entries
    * @see    listSearchQuery
    * @param  array $values Search parameters
-   * @param  int   $start
-   * @param  int   $stop
    * @return array
    */
-  public function listSearch($values = [], $start = 0, $stop = 50) {
-    list($sql, $vars) = $this->listSearchQuery($values);
-    $sql.= " ORDER BY id DESC LIMIT ".$start.", ".$stop;
-    $rows = $this->Db->getRows($sql, $vars);
+  public function listSearch($values = []) {
+    $query = $this->listSearchQuery($values);
+    $rows = $this->Db->getRows($query);
     $list = [];
     foreach ($rows as $row)
       $list[] = $this->getEntity("Log", $row->id);

@@ -64,7 +64,7 @@ class Log_Controller_Core extends Controller {
    */
   public function listAction() {
     $values = (array_key_exists("log_list_search", $_SESSION) ? $_SESSION["log_list_search"] : []);
-    $Form = $this->getForm("Search", ["q" => (!empty($values["q"]) ? $values["q"] : null)]);
+    $Form = $this->getForm("LogListSearch", $values);
     if ($Form->isSubmitted()) {
       $_SESSION["log_list_search"] = $Form->values();
       refresh();
@@ -72,7 +72,8 @@ class Log_Controller_Core extends Controller {
     $Pager = newClass("Pager");
     $Pager->ppp = 50;
     $Pager->setNum($this->Model->listSearchNum($values));
-    $this->viewData["logs"] = $this->Model->listSearch($values, $Pager->start(), $Pager->ppp);
+    $values["limit"] = [$Pager->start(), $Pager->ppp];
+    $this->viewData["logs"] = $this->Model->listSearch($values);
     $this->viewData["pager"] = $Pager->render();
     $this->viewData["search"] = $Form->render();
     return $this->view("list");

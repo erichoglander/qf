@@ -173,8 +173,11 @@ class Db_Core {
    * @return PDOStatement
    */
   public function query($sql, $param = []) {
-    if (is_array($sql))
+    if (is_array($sql)) {
+      if (empty($param) && is_array($sql["vars"]))
+        $param = $sql["vars"];
       $sql = $this->compileQuery($sql);
+    }
     // Replace every array param with multiple primitive params
     foreach ($param as $key => $val) {
       if (is_array($val)) {
