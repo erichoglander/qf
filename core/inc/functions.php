@@ -529,3 +529,15 @@ function promptFile($path) {
   readfile($path);
   exit;
 }
+
+/**
+ * Shortcut for JsonToHtml\htmlToJson
+ * @see JsonToHtml\htmlToJson
+ * @param  string $html
+ * @return array
+ */
+function jth($html) {
+  if (function_exists("JsonToHtml\htmlToJson"))
+    return JsonToHtml\htmlToJson();
+  return null;
+}
