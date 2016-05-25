@@ -333,47 +333,7 @@ class l10n_Entity extends Entity {
    * @return bool
    */
   public function createAlias() {
-    if (!$this->id() || !is_callable([$this, "getPath"]) || !is_callable([$this, "getAlias"]))
-      return false;
-    if (!$this->Io)
-      $this->Io = newClass("Io");
-    $alias = $this->Io->filter($this->getAlias(), "alias");
-    $path = $this->getPath();
-    $lang = $this->get("lang", $this->default_lang);
-    if (!$alias || !$path)
-      return false;
-    $q = "
-        SELECT * FROM `alias`
-        WHERE 
-          alias = :alias &&
-          (lang = :lang || lang IS NULL)";
-    $vars = [  
-      ":alias" => $alias,
-      ":lang" => $lang
-    ];
-    $row = $this->Db->getRow($q, $vars);
-    // Find an available alias
-    if ($row && $row->path != $path) {
-      for ($i = 1; $row && $row->path != $path; $i++) {
-        $vars[":alias"] = $alias."-".$i;
-        $row = $this->Db->getRow($q, $vars);
-      }
-      $alias = $a;
-    }
-    if ($row) {
-      if ($row->status == 0)
-        $this->Db->update("alias", ["status" => 1], ["id" => $row->id]);
-      return true;
-    }
-    else {
-      $this->deleteAlias();
-      $this->Db->delete("alias", ["path" => $path, "lang" => $lang]);
-      $Alias = $this->getEntity("Alias");
-      $Alias->set("path", $path);
-      $Alias->set("alias", $alias);
-      $Alias->set("lang", $lang);
-      return $Alias->save();
-    }
+    return parent::createAlias($this->get("lang", $this->default_lang));
   }
   
   /**
@@ -383,9 +343,7 @@ class l10n_Entity extends Entity {
    * @return bool
    */
   public function deleteAlias() {
-    if (!$this->id() || !is_callable([$this, "getPath"]) || !is_callable([$this, "getAlias"]))
-      return false;
-    return $this->Db->delete("alias", ["path" => $this->getPath(), "lang" => $this->get("lang")]);
+    return parent::deleteAlias($this->get("lang"));
   }
 
 

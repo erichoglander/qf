@@ -39,6 +39,39 @@ class Alias_Model_Core extends Model {
   }
   
   /**
+   * Batch create and/or update aliases for an entity type
+   * @param  string $entity_type
+   * @param  string $action create/update/all
+   * @return int
+   */
+  public function batchAliases($entity_type, $action) {
+    $n = 0;
+    $Head = $this->getEntity($entity_type);
+    $rows = $this->Db->getRows("SELECT id FROM `".$Head->tableName()."`");
+    foreach ($rows as $row) {
+      $Entity = $this->getEntity($entity_type, $row->id);
+      $update = $action == "all";
+      if ($action == "delete") {
+        $Entity->deleteAlias();
+        $n++;
+      }
+      else if (in_array($action, ["create", "update"])) {
+        $path = $Entity->getPath();
+        $row = $this->Db->getRow("
+            SELECT * FROM `alias`
+            WHERE path = :path",
+            [":path" => $path]);
+        $update = 
+            $row && $action == "update" || 
+            !$row && $action == "create";
+      }
+      if ($update && $Entity->createAlias())
+        $n++;
+    }
+    return $n;
+  }
+  
+  /**
    * Add a new alias
    * @see    editAlias
    * @param  array $values

@@ -118,6 +118,14 @@ class Entity {
   }
   
   /**
+   * The table name 
+   * @return string
+   */
+  public function tableName() {
+    return $this->schema["table"];
+  }
+  
+  /**
    * Get an entity from storage if it exists, otherwise fetch it
    * @param  string  $name
    * @param  int     $id
@@ -323,9 +331,10 @@ class Entity {
    * Create an url-alias for the entity if possible
    * @see    getPath
    * @see    getAlias
+   * @param  string $lang
    * @return bool
    */
-  public function createAlias() {
+  public function createAlias($lang = null) {
     if (!$this->id() || !is_callable([$this, "getPath"]) || !is_callable([$this, "getAlias"]))
       return false;
     if (!$this->Io)
@@ -334,21 +343,25 @@ class Entity {
     $path = $this->getPath();
     if (!$alias || !$path)
       return false;
-    $row = $this->Db->getRow("
-        SELECT * FROM `alias`
-        WHERE alias = :alias",
-        [":alias" => $alias]);
+    $query = [
+      "from" => "alias",
+      "where" => ["alias = :alias"],
+      "vars" => [":alias" => $alias],
+    ];
+    if ($lang) {
+      $query["where"][] = "(lang IS NULL || lang = :lang)";
+      $query["vars"][":lang"] = $lang;
+    }
+    $row = $this->Db->getRow($query);
     // Find an available alias
     if ($row && $row->path != $path) {
       for ($i = 1; $row && $row->path != $path; $i++) {
-        $a = $alias."-".$i;
-        $row = $this->Db->getRow("
-          SELECT * FROM `alias`
-          WHERE alias = :alias",
-          [":alias" => $a]);
+        $query["vars"][":alias"] = $alias."-".$i;
+        $row = $this->Db->getRow($query);
       }
-      $alias = $a;
+      $alias = $query["vars"][":alias"];
     }
+    // If it exists, just activate it
     if ($row) {
       if ($row->status == 0)
         $this->Db->update("alias", ["status" => 1], ["id" => $row->id]);
@@ -359,6 +372,7 @@ class Entity {
       $Alias = $this->getEntity("Alias");
       $Alias->set("path", $path);
       $Alias->set("alias", $alias);
+      $Alias->set("lang", $lang);
       return $Alias->save();
     }
   }
@@ -367,12 +381,13 @@ class Entity {
    * Delete entity url-alias
    * @see    getPath
    * @see    getAlias
+   * @param  string $lang
    * @return bool
    */
-  public function deleteAlias() {
+  public function deleteAlias($lang = null) {
     if (!$this->id() || !is_callable([$this, "getPath"]) || !is_callable([$this, "getAlias"]))
       return false;
-    return $this->Db->delete("alias", ["path" => $this->getPath()]);
+    return $this->Db->delete("alias", ["path" => $this->getPath(), "lang" => $lang]);
   }
 
 

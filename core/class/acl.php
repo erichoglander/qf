@@ -222,6 +222,16 @@ class Acl_Core {
   }
 
   /**
+   * Batch update url alias access
+   * @see    \Alias_Controller_Core::acl()
+   * @param  \User_Entity_Core $User
+   * @return bool
+   */
+  protected function aliasBatchAccess($User) {
+    return IS_CLI;
+  }
+
+  /**
    * Complete redirect admin access
    * @see    \Redirect_Controller_Core::acl()
    * @param  \User_Entity_Core $User
