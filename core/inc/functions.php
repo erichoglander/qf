@@ -538,6 +538,6 @@ function promptFile($path) {
  */
 function jth($html) {
   if (function_exists("JsonToHtml\htmlToJson"))
-    return JsonToHtml\htmlToJson();
+    return JsonToHtml\htmlToJson($html);
   return null;
 }
