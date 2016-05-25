@@ -410,6 +410,24 @@ function l10n_url($path, $lang) {
 }
 
 /**
+ * Check if current user has access to given uri
+ * @param  string $uri
+ * @return bool
+ */
+function uriAccess($uri) {
+  global $Config, $Db;
+  $Acl = newClass("Acl", $Db);
+  $CF = newClass("ControllerFactory", $Config, $Db);
+  $User = newClass("User_Entity", $Db);
+  if (!empty($_SESSION["user_id"]))
+    $User->load($_SESSION["user_id"]);
+  $request = $CF->parseUri($uri);
+  $Controller = $CF->getController($request["controller"], false);
+  $acl = $Controller->acl($request["action"], $request["args"]);
+  return $Acl->access($User, $acl, $request["args"]);
+}
+
+/**
  * Sets a system message
  * @param  string $msg
  * @param  string $type
@@ -540,4 +558,13 @@ function jth($html) {
   if (function_exists("JsonToHtml\htmlToJson"))
     return JsonToHtml\htmlToJson($html);
   return null;
+}
+
+/**
+ * Displays an icon with a link if user has access to the uri
+ */
+function iconBtn($uri, $icon = "pencil") {
+  if (!uriAccess($uri))
+    return null;
+  return '<a class="icon-btn" href="'.url($uri, true).'">'.FontAwesome\Icon($icon).'</a>';
 }
