@@ -250,7 +250,7 @@ class ControllerFactory_Core {
           $request["lang"] = $language->lang;
         }
         else if (!IS_CLI && $this->Config->getDefaultLanguage() != $lang) {
-          $redir["uri"] = $this->Config->getDefaultLanguage()."/".$uri;
+          $redir["uri"] = $uri;
         }
         else {
           $uri = substr($uri, 3);
