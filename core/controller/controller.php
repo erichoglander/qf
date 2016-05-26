@@ -402,6 +402,23 @@ class Controller {
   }
 
   /**
+   * Get content of rendered view
+   * @see    \View_Core
+   * @param  string $name
+   * @return string
+   */
+  protected function viewContent($name) {
+    $View = newClass("View", $this->Config, $this->Db, $this->Io, $this->Cache, $this->Variable, $this->User, $this->name, $name, $this->viewData);
+    try {
+      return $View->renderContent();
+    }
+    catch (Exception $e) {
+      $this->viewData["console"] = $e->getMessage();
+      return $this->internalError();
+    }
+  }
+
+  /**
    * Get viewData as json
    * @return string
    */

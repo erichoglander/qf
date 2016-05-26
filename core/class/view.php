@@ -63,16 +63,24 @@ class View_Core extends Model {
       $this->Html->body_class[] = cssClass("lang-".LANG);
       $this->Html->preView();
     }
-    $path = $this->path();
-    extract($this->variables);
-    ob_start();
-    include $path;
-    $output = ob_get_clean();
+    $output = $this->renderContent();
     if ($this->Html) {
       $this->Html->content = $output;
       $output = $this->Html->renderHtml();
     }
     return $output;
+  }
+  
+  /**
+   * Renders the view content
+   * @return string
+   */
+  public function renderContent() {
+    $path = $this->path();
+    extract($this->variables);
+    ob_start();
+    include $path;
+    return ob_get_clean();
   }
 
 

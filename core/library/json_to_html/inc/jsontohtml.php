@@ -63,17 +63,8 @@ namespace JsonToHtml {
                   $value.= $c;
               }
               if ($add) {
-                if ($key == "style") {
-                  preg_match_all("/([a-z0-9\-\_]+)\s*\:\s*([a-z0-9\-\_\#\(\)\,\.\ ]+)\s*/is", $value, $styles);
-                  if (!empty($styles)) {
-                    $stack[$i]["style"] = [];
-                    foreach ($styles[1] as $k => $style) 
-                      $stack[$i]["style"][$k] = $styles[2][$k];
-                  }
-                }
-                else if ($key) {
+                if ($key)
                   $stack[$i]["attributes"][$key] = html_entity_decode($value);
-                }
                 $add = false;
                 $key = $value = "";
               }
