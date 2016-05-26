@@ -1,4 +1,4 @@
-function jsonToHtml(parent, json, replace) {
+function jsonToHtml(parent, json, replace, ns) {
   if (replace)
     parent.innerHTML = "";
   if (typeof(json) == "object") {
@@ -10,7 +10,12 @@ function jsonToHtml(parent, json, replace) {
     // Object
     else {
       if (json.tagName) {
-        var el = document.createElement(json.tagName);
+        if (json.tagName == "svg")
+          ns = "http://www.w3.org/2000/svg";
+        if (ns)
+          var el = document.createElementNS(ns, json.tagName);
+        else
+          var el = document.createElement(json.tagName);
         if (json.attributes) {
           for (var attr in json.attributes) {
             if (typeof(json.attributes[attr]) != "undefined") {
@@ -23,7 +28,7 @@ function jsonToHtml(parent, json, replace) {
         }
         if (json.children) {
           for (var i in json.children)
-            jsonToHtml(el, json.children[i]);
+            jsonToHtml(el, json.children[i], false, ns);
         }
         parent.appendChild(el);
       }
