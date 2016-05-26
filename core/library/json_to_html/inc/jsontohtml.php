@@ -5,7 +5,7 @@ namespace JsonToHtml {
     $json = [];
     $stack = [];
     $i = -1;
-    $singleTags = ["input", "img", "br", "hr", "link", "meta", "area", "base", "col", "frame", "param", "isindex", "basefont"];
+    $singleTags = ["input", "img", "br", "hr", "link", "meta", "area", "base", "col", "frame", "param", "isindex", "basefont", "path"];
     while (true) {
       $x = strpos($html, "<");
       // Element
@@ -70,7 +70,7 @@ namespace JsonToHtml {
               }
             }
           }
-          if (in_array($stack[$i]["tagName"], $singleTags)) {
+          if (substr($tag, -2) == "/>" || in_array($stack[$i]["tagName"], $singleTags)) {
             $el = array_pop($stack);
             $i--;
             if ($i == -1) {
