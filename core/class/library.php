@@ -65,8 +65,12 @@ class Library {
    */
   public function getCss() {
     $arr = [];
-    foreach ($this->css as $css)
-      $arr[] = fileUrl("library/".$this->name."/".$css);
+    foreach ($this->css as $css) {
+      if (preg_match("/^([a-z]+\:)?\/\//i", $css))
+        $arr[] = $css;
+      else
+        $arr[] = fileUrl("library/".$this->name."/".$css);
+    }
     return $arr;
   }
 
@@ -76,8 +80,12 @@ class Library {
    */
   public function getJs() {
     $arr = [];
-    foreach ($this->js as $js)
-      $arr[] = fileUrl("library/".$this->name."/".$js);
+    foreach ($this->js as $js) {
+      if (preg_match("/^([a-z]+\:)?\/\//i", $js))
+        $arr[] = $js;
+      else
+        $arr[] = fileUrl("library/".$this->name."/".$js);
+    }
     return $arr;
   }
 
