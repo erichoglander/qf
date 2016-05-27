@@ -86,6 +86,32 @@ Element.prototype.trigger = function(type) {
   }
 }
 
+HTMLElement.prototype.blockAnimate = function(cname) {
+  var el = this;
+  if (this.hasClass(cname)) {
+    var t = getStyle(this, "transition-duration");
+    if (!t)
+      t = 300;
+    else
+      t = parseFloat(t)*1000;
+    this.removeClass(cname);
+    this.setAttribute("block-animate", "");
+    setTimeout(function() {
+      if (el.getAttribute("block-animate") !== null) {
+        el.style.display = "none";
+        el.removeAttribute("block-animate");
+      }
+    },t);
+  }
+  else {
+    this.removeAttribute("block-animate");
+    this.style.display = "block";
+    setTimeout(function() {
+      el.addClass(cname);
+    },1);
+  }
+}
+
 Element.prototype.expand = function() {
   var t = getStyle(this, "transition-duration");
   if (!t)
