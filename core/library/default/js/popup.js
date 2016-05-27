@@ -42,6 +42,8 @@ function popup(el) {
     this.setContent(el);
     if (el.getAttribute("size"))
       this.setSize(el.getAttribute("size"));
+    if (el.getAttribute("auto-open") !== null)
+      this.open();
   }
   
   this.create = function(name, close) {
