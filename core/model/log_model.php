@@ -63,6 +63,8 @@ class Log_Model_Core extends Model {
       $query["where"][] = "category = :category";
       $query["vars"][":category"] = $values["category"];
     }
+    if (!empty($values["limit"]))
+      $query["limit"] = $values["limit"];
     return $query;
   }
   /**
