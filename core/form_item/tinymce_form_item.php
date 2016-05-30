@@ -7,7 +7,7 @@ class Tinymce_FormItem_Core extends FormItem {
   
   public function loadDefault() {
     $this->tinymce_default = [
-      "plugins" => "lists link contextmenu image autoresize paste",
+      "plugins" => "lists link contextmenu autoresize paste",
       "autoresize_top_margin" => 0,
       "autoresize_bottom_margin" => 10,
       "autoresize_min_height" => 100,
