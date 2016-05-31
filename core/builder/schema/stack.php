@@ -157,7 +157,7 @@ class {$name}_Controller extends Controller {
     \${$name} = \$this->getEntity("{$name}", \$args[0]);
     if (!\${$name}->id())
       return \$this->notFound();
-    \$Form = \$this->getForm("Confirm", ["text" => t("Are you sure you want to delete the {$singular}?")]);
+    \$Form = \$this->getForm("Confirm", ["text" => t("Are you sure you want to delete the {$singular_lower}?")]);
     if (\$Form->isSubmitted()) {
       try {
         \$this->Model->delete{$name}(\${$name});

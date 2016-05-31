@@ -55,13 +55,15 @@ class User_Entity_Core extends Entity {
   }
 
   /**
-   * Check if the user has been assigned the specified role
-   * @param  string $key
+   * Check if the user has been assigned (one of) the specified role(s)
+   * @param  mixed $keys
    * @return bool
    */
-  public function hasRole($key) {
+  public function hasRole($keys) {
+    if (!is_array($keys))
+      $keys = [$keys];
     foreach ($this->roles() as $role) {
-      if ($role->machine_name === $key)
+      if (in_array($role->machine_name, $keys))
         return true;
     }
     return false;
