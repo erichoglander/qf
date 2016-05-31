@@ -395,8 +395,15 @@ function formPopupSubmit(r, item, form, p) {
   if (typeof(r.dom) != "undefined") {
     var div = document.createElement("div");
     jsonToHtml(div, r.dom);
-    if (r.validated) 
-      jsonToHtml(item, r.dom, true);
+    if (r.validated)  {
+      var d = document.createElement("div");
+      jsonToHtml(d, r.dom);
+      var new_item = d.children[0];
+      item.innerHTML = "";
+      item.parentNode.insertBefore(new_item, item);
+      item.parentNode.removeChild(item);
+      item = new_item;
+    }
     var pw = div.getElementByClassName("form-popup-wrap");
     var structure = form.elements['__form_popup_structure'].value;
     form.innerHTML = pw.innerHTML;

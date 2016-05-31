@@ -64,7 +64,7 @@ namespace JsonToHtml {
               }
               if ($add) {
                 if ($key)
-                  $stack[$i]["attributes"][$key] = html_entity_decode($value);
+                  $stack[$i]["attributes"][$key] = html_entity_decode($value, ENT_QUOTES);
                 $add = false;
                 $key = $value = "";
               }
