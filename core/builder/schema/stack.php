@@ -238,7 +238,7 @@ class {$name}_Model extends Model {
   }
   
   public function listSearch(\$values) {
-    return \$this->Db->getEntities("{$name}", \$this->listSearchQuery(\$values));
+    return \$this->getEntities("{$name}", \$this->listSearchQuery(\$values));
   }
   
 }
