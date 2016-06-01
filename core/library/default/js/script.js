@@ -108,7 +108,7 @@ HTMLElement.prototype.blockAnimate = function(cname) {
     this.style.display = "block";
     setTimeout(function() {
       el.addClass(cname);
-    },1);
+    },10);
   }
 }
 
