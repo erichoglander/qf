@@ -348,20 +348,42 @@ class Controller {
       "js" => [],
     ];
   }
+  
+  /**
+   * Get view object based on the use
+   * @param  string $name
+   * @param  string $type
+   * @return \View_Core
+   */
+  protected function getView($name, $type = null) {
+    if ($type == "default")
+      $View = newClass("View", $this->Config, $this->Db, $this->Io, $this->Cache, $this->Variable, $this->User, "default", $name, $this->viewData);
+    else if ($type == "bare")
+      $View = newClass("View", null, null, null, null, null, null, "default", $name, $this->viewData);
+    else
+      $View = newClass("View", $this->Config, $this->Db, $this->Io, $this->Cache, $this->Variable, $this->User, $this->name, $name, $this->viewData);
+    return $View;
+  }
 
   /**
    * Get rendered view
    * @see    \View_Core
    * @param  string $name
+   * @param  string $type
    * @return string
    */
-  protected function view($name) {
-    $View = newClass("View", $this->Config, $this->Db, $this->Io, $this->Cache, $this->Variable, $this->User, $this->name, $name, $this->viewData);
+  protected function view($name, $type = null) {
+    if ($type)
+      ob_clean();
+    $View = $this->getView($name, $type);
     try {
       return $View->render();
     }
     catch (Exception $e) {
-      $this->viewData["console"] = $e->getMessage();
+      if ($type == "default")
+        die($e->getMessage());
+      if ($this->Config->getDebug())
+        $this->viewData["console"] = $e->getMessage();
       return $this->internalError();
     }
   }
@@ -373,14 +395,7 @@ class Controller {
    * @return string
    */
   protected function viewDefault($name) {
-    ob_clean();
-    $View = newClass("View", $this->Config, $this->Db, $this->Io, $this->Cache, $this->Variable, $this->User, "default", $name, $this->viewData);
-    try {
-      return $View->render();
-    }
-    catch (Exception $e) {
-      die($e->getMessage());
-    }
+    return $this->view($name, "default");
   }
   
   /**
@@ -390,31 +405,45 @@ class Controller {
    * @return string
    */
   protected function viewBare($name) {
-    ob_clean();
-    $View = newClass("View", null, null, null, null, null, null, "default", $name, $this->viewData);
-    try {
-      return $View->render();
-    }
-    catch (Exception $e) {
-      die($e->getMessage());
-      return $this->internalError();
-    }
+    return $this->view($name, "bare");
   }
 
   /**
    * Get content of rendered view
    * @see    \View_Core
    * @param  string $name
+   * @param  string $type
    * @return string
    */
-  protected function viewContent($name) {
-    $View = newClass("View", $this->Config, $this->Db, $this->Io, $this->Cache, $this->Variable, $this->User, $this->name, $name, $this->viewData);
+  protected function viewContent($name, $type = null) {
+    $View = $this->getView($name, $type);
     try {
       return $View->renderContent();
     }
     catch (Exception $e) {
-      $this->viewData["console"] = $e->getMessage();
+      if ($this->Config->getDebug())
+        $this->viewData["console"] = $e->getMessage();
       return $this->internalError();
+    }
+  }
+
+  /**
+   * Get JSON-encoded view
+   * @see    \View_Core
+   * @param  string $name
+   * @param  string $type
+   * @return string
+   */
+  protected function viewJson($name, $type = null) {
+    $View = $this->getView($name, $type);
+    try {
+      return json_encode([
+        "content" => jth($View->renderContent($name)),
+        "title" => $View->Html->getTitle(),
+      ]);
+    }
+    catch (Exception $e) {
+      return $this->jsone(t("Error"));
     }
   }
 

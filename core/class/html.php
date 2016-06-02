@@ -281,6 +281,16 @@ class Html_Core extends Model {
   }
 
   /**
+   * Get the full page title
+   * @return string
+   */
+  public function getTitle() {
+    if ($this->title_full)
+      return $this->title_full;
+    return $this->title.$this->title_suffix;
+  }
+
+  /**
    * Called before the view is rendered
    */
   public function preView() {
@@ -323,16 +333,6 @@ class Html_Core extends Model {
     foreach ($this->menu as $key => $menu) 
       $menus[$key] = $this->renderMenu($key, $menu);
     return $menus;
-  }
-
-  /**
-   * Get the full page title
-   * @return string
-   */
-  protected function getTitle() {
-    if ($this->title_full)
-      return $this->title_full;
-    return $this->title.$this->title_suffix;
   }
 
   /**

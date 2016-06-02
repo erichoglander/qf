@@ -8,6 +8,12 @@
  * @author Eric Höglander
  */
 class View_Core extends Model {
+
+  /**
+   * Html object
+   * @var \Html_Core
+   */
+  public $Html;
   
   /**
    * Name of the controller
@@ -20,12 +26,6 @@ class View_Core extends Model {
    * @var string
    */
   protected $name;
-
-  /**
-   * Html object
-   * @var \Html_Core
-   */
-  protected $Html;
 
 
   /**
