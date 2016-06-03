@@ -4,6 +4,10 @@ function xajax() {
     this.xmlhttp = new XMLHttpRequest();
   }
   
+  this.isReady = function() {
+    return this.xmlhttp.readyState == 0 || this.xmlhttp.readyState == 4;
+  }
+  
   this.send = function(url, callback, opt) {
     if (!opt)
       opt = {};
