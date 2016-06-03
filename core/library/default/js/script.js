@@ -270,11 +270,29 @@ function bodyHeight() {
     document.documentElement.offsetHeight);
 }
 function getTopPos(el) {
-  for (var y=0; el != null; y += el.offsetTop, el = el.offsetParent);
+  var y = 0;
+  while (el != null) {
+    y+= el.offsetTop;
+    el = el.offsetParent;
+    if (el)
+      y+= parseFloat(getStyle(el, "border-top-width"));
+  }
   return y;
 }
 function getPos(el) {
-  for (var pos={x: 0, y:0}; el != null; pos.x+= el.offsetLeft, pos.y+= el.offsetTop, el = el.offsetParent);
+  var pos = {
+    x: 0, 
+    y: 0
+  };
+  while (el != null) {
+    pos.x+= el.offsetLeft;
+    pos.y+= el.offsetTop;
+    el = el.offsetParent;
+    if (el) {
+      pos.x+= parseFloat(getStyle(el, "border-left-width"));
+      pos.y+= parseFloat(getStyle(el, "border-top-width"));
+    }
+  }
   return pos;
 }
 function getXY(e) {
