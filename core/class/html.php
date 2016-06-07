@@ -342,7 +342,7 @@ class Html_Core extends Model {
    */
   protected function getTheme($theme) {
     $class = ucwords($theme)."_Theme";
-    return newClass($class, $this->Config, $this->Db, $this->Io, $this->Cache, $this->Variable, $this->User);
+    return $this->newClass($class);
   }
 
   /**

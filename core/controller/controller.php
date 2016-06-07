@@ -208,6 +208,28 @@ class Controller {
       return "default";
     return strtolower(preg_replace("/([a-z])([A-Z])/", "$1_$2", str_replace("_Controller", "", str_replace("_Core", "", $class))));
   }
+  
+  /**
+   * Get model extended object of given name
+   * @param  string $name
+   * @return \Model
+   */
+  protected function newClass($name) {
+    $args = func_get_args();
+    array_splice($args, 0, 1);
+    $params = [
+      $name,
+      $this->Config, 
+      $this->Db,
+      $this->Io,
+      $this->Cache,
+      $this->Variable,
+      $this->User,
+      $this->Acl,
+    ];
+    $params = array_merge($params, $args);
+    return call_user_func_array("newClass", $params);
+  }
 
   /**
    * Get model of given name
@@ -221,7 +243,7 @@ class Controller {
     foreach ($arr as $a)
       $cname.= ucwords($a);
     $cname.= "_Model";
-    return newClass($cname, $this->Config, $this->Db, $this->Io, $this->Cache, $this->Variable, $this->User);
+    return $this->newClass($cname);
   }
 
   /**
@@ -357,11 +379,11 @@ class Controller {
    */
   protected function getView($name, $type = null) {
     if ($type == "default")
-      $View = newClass("View", $this->Config, $this->Db, $this->Io, $this->Cache, $this->Variable, $this->User, "default", $name, $this->viewData);
+      $View = $this->newClass("View", "default", $name, $this->viewData);
     else if ($type == "bare")
-      $View = newClass("View", null, null, null, null, null, null, "default", $name, $this->viewData);
+      $View = newClass("View", null, null, null, null, null, null, null, "default", $name, $this->viewData);
     else
-      $View = newClass("View", $this->Config, $this->Db, $this->Io, $this->Cache, $this->Variable, $this->User, $this->name, $name, $this->viewData);
+      $View = $this->newClass("View", $this->name, $name, $this->viewData);
     return $View;
   }
 

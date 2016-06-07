@@ -48,6 +48,13 @@ class Model {
    */
   protected $User;
   
+
+  /**
+   * Access control list
+   * @var \Acl_Core
+   */
+  protected $Acl;
+  
   
   /**
    * Constructor
@@ -57,18 +64,20 @@ class Model {
    * @param \Cache_Core       $Cache
    * @param \Variable_Core    $Variable
    * @param \User_Entity_Core $User
+   * @param \Acl_Core         $Acl
    */
-  public function __construct($Config, $Db, $Io, $Cache, $Variable, $User) {
+  public function __construct($Config, $Db, $Io, $Cache, $Variable, $User, $Acl) {
     $args = func_get_args();
-    if (count($args) < 6)
+    if (count($args) < 7)
       throw new Exception("Not enough parameters for Model class ".get_class($this));
-    array_splice($args, 0, 6);
+    array_splice($args, 0, 7);
     $this->Config = $Config;
     $this->Db = $Db;
     $this->Io = $Io;
     $this->Cache = $Cache;
     $this->Variable = $Variable;
     $this->User = $User;
+    $this->Acl = $Acl;
     if (is_callable([$this, "construct"])) 
       call_user_func_array([$this, "construct"], $args);
   }
@@ -166,6 +175,7 @@ class Model {
       $this->Cache,
       $this->Variable,
       $this->User,
+      $this->Acl,
     ];
     $params = array_merge($params, $args);
     return call_user_func_array("newClass", $params);
