@@ -49,7 +49,7 @@ foreach ($class::input() as $key => $input)
 
 $files = $class::files($args);
 if (Builder::filesExists($files)) {
-  print "One or more files already exists. Overwrite? ";
+  print "One or more files already exists. Continue? ";
   $in = strtolower(trim(fgets(STDIN)));
   if ($in != "y" && $in != "yes")
     die("Aborted\n");

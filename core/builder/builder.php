@@ -86,6 +86,12 @@ class Builder {
   public static function createFiles($files) {
     foreach ($files as $file) {
       $path = self::basePath().$file["path"];
+      if (file_exists($path)) {
+        print $file["path"]." already exists. Overwrite? ";
+        $in = strtolower(trim(fgets(STDIN)));
+        if ($in != "y" && $in != "yes")
+          continue;
+      }
       self::mkdir($path);
       print "Writing to file ".$file["path"]."... ";
       if (!@file_put_contents($path, $file["content"]))
