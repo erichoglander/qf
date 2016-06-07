@@ -126,6 +126,15 @@ class Entity {
   }
   
   /**
+   * Check if entity has a field of given name
+   * @param  string $field
+   * @return bool
+   */
+  public function hasField($name) {
+    return array_key_exists($name, $this->schema["fields"]);
+  }
+  
+  /**
    * Get an entity from storage if it exists, otherwise fetch it
    * @param  string  $name
    * @param  int     $id

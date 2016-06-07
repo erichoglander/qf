@@ -92,5 +92,22 @@ class Form_Controller_Core extends Controller {
     $this->viewData["dom"] = JsonToHtml\htmlToJson($FormItem->render());
     return $this->json();
   }
+  
+  /**
+   * Fetch items for autocomplete
+   * @param  array $args
+   * @return string
+   */
+  public function autocompleteAction($args = []) {
+    if (empty($args[0]))
+      return $this->jsone("Missing entity type");
+    try {
+      $this->viewData["items"] = $this->Model->autocomplete($args[0], $args[1]);
+    }
+    catch (Exception $e) {
+      return $this->jsone($e->getMessage());
+    }
+    return $this->json();
+  }
 
 }

@@ -10,7 +10,7 @@
  * @see    \Form::structure
  * @author Eric Höglander
  */
-class FormItem {
+class FormItem extends Model {
   
   /**
    * Name of the element
@@ -296,15 +296,10 @@ class FormItem {
 
 
   /**
-   * Contructor
-   * @param \Db_Core $Db
-   * @param \Io_Core $Io
-   * @param array    $structure
+   * Constructor
+   * @param array $structure
    */
-  public function __construct($Db, $Io, $structure) {
-    $this->Db = $Db;
-    $this->Io = $Io;
-    $this->empty_option = t("- Choose -");
+  public function construct($structure) {
     $this->loadStructure($structure);
   }
 
@@ -599,9 +594,9 @@ class FormItem {
     foreach ($a as $b)
       $cname.= ucwords($b);
     $cname.= "_FormItem";
-    $class = newClass($cname, $this->Db, $this->Io, $item);
+    $class = $this->newClass($cname, $item);
     if (!$class) 
-      $class = new FormItem($this->Db, $this->Io, $item);
+      $class = $this->newClass("FormItem", $item);
     $this->items[$name] = $class;
   }
 

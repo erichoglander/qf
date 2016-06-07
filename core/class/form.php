@@ -322,9 +322,9 @@ class Form extends Model {
     foreach ($a as $b)
       $cname.= ucwords($b);
     $cname.= "_FormItem";
-    $class = newClass($cname, $this->Db, $this->Io, $item);
-    if (!$class)
-      $class = new FormItem($this->Db, $this->Io, $item);
+    $class = $this->newClass($cname, $item);
+    if (!$class) 
+      $class = $this->newClass("FormItem", $item);
     $this->items[$name] = $class;
   }
 
