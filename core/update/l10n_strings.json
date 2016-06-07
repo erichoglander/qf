@@ -2704,5 +2704,137 @@
                 "updated": "1464180417"
             }
         }
+    },
+    {
+        "lang": "en",
+        "string": "January",
+        "translations": {
+            "sv": {
+                "lang": "sv",
+                "string": "Januari",
+                "updated": "1465292109"
+            }
+        }
+    },
+    {
+        "lang": "en",
+        "string": "February",
+        "translations": {
+            "sv": {
+                "lang": "sv",
+                "string": "Februari",
+                "updated": "1465292109"
+            }
+        }
+    },
+    {
+        "lang": "en",
+        "string": "March",
+        "translations": {
+            "sv": {
+                "lang": "sv",
+                "string": "Mars",
+                "updated": "1465292109"
+            }
+        }
+    },
+    {
+        "lang": "en",
+        "string": "April",
+        "translations": {
+            "sv": {
+                "lang": "sv",
+                "string": "April",
+                "updated": "1465292109"
+            }
+        }
+    },
+    {
+        "lang": "en",
+        "string": "May",
+        "translations": {
+            "sv": {
+                "lang": "sv",
+                "string": "Maj",
+                "updated": "1465292109"
+            }
+        }
+    },
+    {
+        "lang": "en",
+        "string": "June",
+        "translations": {
+            "sv": {
+                "lang": "sv",
+                "string": "Juni",
+                "updated": "1465292109"
+            }
+        }
+    },
+    {
+        "lang": "en",
+        "string": "July",
+        "translations": {
+            "sv": {
+                "lang": "sv",
+                "string": "Juli",
+                "updated": "1465292109"
+            }
+        }
+    },
+    {
+        "lang": "en",
+        "string": "August",
+        "translations": {
+            "sv": {
+                "lang": "sv",
+                "string": "Augusti",
+                "updated": "1465292109"
+            }
+        }
+    },
+    {
+        "lang": "en",
+        "string": "September",
+        "translations": {
+            "sv": {
+                "lang": "sv",
+                "string": "September",
+                "updated": "1465292109"
+            }
+        }
+    },
+    {
+        "lang": "en",
+        "string": "October",
+        "translations": {
+            "sv": {
+                "lang": "sv",
+                "string": "Oktober",
+                "updated": "1465292109"
+            }
+        }
+    },
+    {
+        "lang": "en",
+        "string": "November",
+        "translations": {
+            "sv": {
+                "lang": "sv",
+                "string": "November",
+                "updated": "1465292109"
+            }
+        }
+    },
+    {
+        "lang": "en",
+        "string": "December",
+        "translations": {
+            "sv": {
+                "lang": "sv",
+                "string": "December",
+                "updated": "1465292109"
+            }
+        }
     }
 ]
