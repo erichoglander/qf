@@ -298,6 +298,11 @@ class Imagestyle_Core {
   public function imagickScale($w = 0, $h = 0) {
     if (!$this->im || (!$w && !$h))
       return;
+    $ratio = $this->width/$this->height;
+    if (!$h) 
+      $h = $w/$ratio;
+    else if (!$w) 
+      $w = $h*$ratio;
     $this->im->thumbnailImage($w, $h, true);
   }
   
