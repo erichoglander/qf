@@ -92,7 +92,7 @@ class Form_Model_Core extends Model {
     $query = [
       "from" => $Entity->tableName(),
       "cols" => ["id"],
-      "limit" => [10],
+      "limit" => [15],
     ];
     if ($Entity->hasField("title")) {
       $query["where"][] = "title LIKE :q";
@@ -118,9 +118,41 @@ class Form_Model_Core extends Model {
     if (is_callable([$this, "autocompleteTitle".$entity_type]))
       return call_user_func([$this, "autocompleteTitle".$entity_type], $value);
     $Entity = $this->getEntity($entity_type, $value);
-    if ($Entity->id())
-      return $Entity->get("title", $Entity->id());
-    return null;
+    if (!$Entity->id())
+      return null;
+    return $Entity->get("title", $Entity->id());
+  }
+  
+  /**
+   * Fetch users for autocomplete
+   * @see    \Autocomplete_FormItem_Core
+   * @param  array $q The search string
+   * @return array
+   */
+  public function autocompleteRowsUser($q) {
+    $Entity = $this->getEntity($entity_type);
+    $query = [
+      "from" => "user",
+      "cols" => ["id"],
+      "where" => ["name LIKE :q || email LIKE :q"],
+      "order" => ["id DESC"],
+      "limit" => [15],
+      "vars" => [":q" => $q."%"],
+    ];
+    return $this->Db->getRows($query);
+  }
+  
+  /**
+   * Get the title for an autocompleted value
+   * @see    \Autocomplete_FormItem_Core
+   * @param  array $value
+   * @return string
+   */
+  public function autocompleteTitleUser($value) {
+    $User = $this->getEntity("User", $value);
+    if (!$User->id())
+      return null;
+    return $User->get("name")." - ".$User->get("email");
   }
 
 }
