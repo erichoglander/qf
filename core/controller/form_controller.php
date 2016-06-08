@@ -19,6 +19,8 @@ class Form_Controller_Core extends Controller {
   public function acl($action, $args = []) {
     if ($action == "fileremove")
       return ["formFileRemove"];
+    if ($action == "autocomplete")
+      return ["formAutocomplete"];
     return null;
   }
   

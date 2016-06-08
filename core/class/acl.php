@@ -82,6 +82,17 @@ class Acl_Core {
       return true;
     return false;
   }
+  
+  /**
+   * Access to autocomplete results
+   * @see    \Form_Controller_Core::acl()
+   * @param  \User_Entity_Core $User
+   * @param  array             $args
+   * @return bool
+   */
+  protected function formAutocompleteAccess($User, $args = []) {
+    return $User->id() == 1 || $User->hasRole("administrator");
+  }
 
   /**
    * Complete user admin access
