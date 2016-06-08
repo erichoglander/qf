@@ -2836,5 +2836,16 @@
                 "updated": "1465292109"
             }
         }
+    },
+    {
+        "lang": "en",
+        "string": "Deleted :n files",
+        "translations": {
+            "sv": {
+                "lang": "sv",
+                "string": "Raderade :n filer",
+                "updated": "1465377795"
+            }
+        }
     }
 ]

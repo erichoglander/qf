@@ -22,6 +22,8 @@ class File_Controller_Core extends Controller {
       $acl[] = "filePrivate";
     else if ($action == "imagestyle")
       $acl[] = "fileImagestyle";
+    else if ($action == "cleanup")
+      $acl[] = "fileCleanup";
     return $acl;
   }
   
@@ -76,6 +78,15 @@ class File_Controller_Core extends Controller {
       header("Content-Type: ".$Imagestyle->contentType());
       readfile(DOC_ROOT.BASE_PATH.$uri);
     }
+  }
+  
+  /**
+   * Clean up managed files
+   * @return string
+   */
+  public function cleanupAction() {
+    $n = $this->Model->cleanup();
+    return t("Deleted :n files", "en", [":n" => $n]);
   }
   
 }

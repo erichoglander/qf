@@ -326,9 +326,16 @@ class Acl_Core {
    * @return bool
    */
   protected function filePrivateAccess($User) {
-    if ($User->id() == 1)
-      return true;
-    return false;
+    return $User->id() == 1;
+  }
+  /**
+   * Access to cleanup managed files
+   * @see    \File_Controller_Core::acl()
+   * @param  \User_Entity_Core $User
+   * @return bool
+   */
+  protected function fileCleanupAccess($User) {
+    return IS_CLI;
   }
   /**
    * Access to a private file uri
