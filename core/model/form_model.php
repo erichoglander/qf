@@ -89,6 +89,7 @@ class Form_Model_Core extends Model {
     $query = [
       "from" => $Entity->tableName(),
       "cols" => ["id"],
+      "limit" => [10],
     ];
     if ($Entity->hasField("title")) {
       $query["where"][] = "title LIKE :q";
