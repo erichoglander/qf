@@ -88,6 +88,7 @@ class Form_Model_Core extends Model {
   public function autocompleteRows($entity_type, $q) {
     if (is_callable([$this, "autocompleteRows".$entity_type]))
       return call_user_func([$this, "autocompleteRows".$entity_type], $q);
+    $Entity = $this->getEntity($entity_type);
     $query = [
       "from" => $Entity->tableName(),
       "cols" => ["id"],
