@@ -55,11 +55,11 @@ class Form_Model_Core extends Model {
   }
   
   /**
-   * Fetch rows for autocomplete
+   * Fetch renderable rows for autocomplete
    * @see    \Autocomplete_FormItem_Core
    * @param  array $entity_type
    * @param  array $q The search string
-   * @return string
+   * @return array
    */
   public function autocomplete($entity_type, $q) {
     if (empty($q))
@@ -67,6 +67,25 @@ class Form_Model_Core extends Model {
     $Entity = $this->getEntity($entity_type);
     if (!$Entity)
       throw new Exception(t("Invalid entity type"));
+    $rows = $this->autocompleteRows($entity_type, $q);
+    $arr = [];
+    foreach ($rows as $row) {
+      $arr[] = [
+        "title" => $this->autocompleteTitle($entity_type, $row->id),
+        "value" => $row->id,
+      ];
+    }
+    return $arr;
+  }
+  
+  /**
+   * Fetch database rows with ids for autocomplete
+   * @see    \Autocomplete_FormItem_Core
+   * @param  array $entity_type
+   * @param  array $q The search string
+   * @return array
+   */
+  public function autocompleteRows($entity_type, $q) {
     $query = [
       "from" => $Entity->tableName(),
       "cols" => ["id"],
@@ -81,15 +100,7 @@ class Form_Model_Core extends Model {
       $query["vars"][":q"] = $q."%";
       $query["order"] = ["id DESC"];
     }
-    $rows = $this->Db->getRows($query);
-    $arr = [];
-    foreach ($rows as $row) {
-      $arr[] = [
-        "title" => $this->autocompleteTitle($entity_type, $row->id),
-        "value" => $row->id,
-      ];
-    }
-    return $arr;
+    return $this->Db->getRows($query);
   }
   
   /**
