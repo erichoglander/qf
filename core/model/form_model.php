@@ -86,6 +86,8 @@ class Form_Model_Core extends Model {
    * @return array
    */
   public function autocompleteRows($entity_type, $q) {
+    if (is_callable([$this, "autocompleteRows".$entity_type]))
+      return call_user_func([$this, "autocompleteRows".$entity_type], $q);
     $query = [
       "from" => $Entity->tableName(),
       "cols" => ["id"],
@@ -112,9 +114,11 @@ class Form_Model_Core extends Model {
    * @return string
    */
   public function autocompleteTitle($entity_type, $value) {
+    if (is_callable([$this, "autocompleteTitle".$entity_type]))
+      return call_user_func([$this, "autocompleteTitle".$entity_type], $value);
     $Entity = $this->getEntity($entity_type, $value);
     if ($Entity->id())
-      return xss($Entity->get("title", $Entity->id()));
+      return $Entity->get("title", $Entity->id());
     return null;
   }
 
