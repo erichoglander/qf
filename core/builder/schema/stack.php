@@ -254,7 +254,7 @@ class {$name}Edit_Form extends Form {
   protected function structure() {
     \${$name} = \$this->get("{$name}");
     \$form = [
-      "name" => "{$snake}_edit_form",
+      "name" => "{$snake}_edit",
       "items" => [
         "actions" => \$this->defaultActions(),
       ],
