@@ -9,7 +9,7 @@ class Autocomplete_FormItem_Core extends FormItem {
   
   public function value($filter = true) {
     $value = parent::value($filter);
-    if (!is_array($value))
+    if (!empty($value) && !is_array($value))
       $value = ["value" => $value];
     if (!$this->submitted && !$this->multiple)
       $value["title"] = $this->autocompleteTitle($value);
