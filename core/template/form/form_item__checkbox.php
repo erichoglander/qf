@@ -17,11 +17,12 @@ else {
 ?>
   <div class="form-input">
     <?=$input_prefix?>
-    <?php if (!empty($label)) { ?>
-      <label class="form-label checkbox-label"><?=$input?> <?=$label?></label>
-    <?php } else { ?>
+    <label class="form-label checkbox-label">
       <?=$input?>
-    <?php } ?>
+      <?php if (!empty($label)) { ?>
+        <span class="label-inner"><?=$label?></span>
+      <?php } ?>
+    </label>
     <?php if (!empty($error)) { ?>
     <div class="form-input-error"><?=$error?></div>
     <?php } ?>
