@@ -300,6 +300,7 @@ class FormItem extends Model {
    * @param array $structure
    */
   public function construct($structure) {
+    $this->empty_option = t("- Choose -");
     $this->loadStructure($structure);
   }
 
