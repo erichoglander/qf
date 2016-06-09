@@ -52,5 +52,19 @@ class Update_Core {
     $name = get_class($this);
     return (int) str_replace(["Update_", "_Core"], "", $name);
   }
+  
+  
+  /**
+   * Attempt to execute queries, returns false on first failure
+   * @param  array $queries
+   * @return bool
+   */
+  protected function dbQueries($queries) {
+    foreach ($queries as $query) {
+      if (!$this->Db->query($query))
+        return false;
+    }
+    return true;
+  }
 
 }
