@@ -342,8 +342,6 @@ class FormItem extends Model {
    * @return mixed
    */
   public function value($filter = true) {
-    if (!$this->submitted)
-      return $this->value;
     if ($this->items !== null) {
       $value = [];
       foreach ($this->items as $item) {
@@ -360,6 +358,8 @@ class FormItem extends Model {
       }
     }
     else {
+      if (!$this->submitted)
+        return $this->value;
       $value = $this->itemValue();
       if ($filter && $this->filter && $this->options === null && !$this->emptyValue($value))
         $value = $this->filter($value, $this->filter);
