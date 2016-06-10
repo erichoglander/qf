@@ -18,15 +18,15 @@ class Tinymce_FormItem_Core extends FormItem {
     ];
   }
   
+  public function js() {
+    return ["//cdn.tinymce.com/4/tinymce.min.js"];
+  }
+  
   public function getAttributes() {
     $attr = parent::getAttributes();
     if (empty($attr["id"]))
       $attr["id"] = "tinymce_".str_replace(["[", "]"], ["__", ""], $this->inputName());
     return $attr;
-  }
-  
-  public function tinymceSrc() {
-    return "//cdn.tinymce.com/4/tinymce.min.js";
   }
 
   protected function filter($value, $filter) {
@@ -42,11 +42,6 @@ class Tinymce_FormItem_Core extends FormItem {
     $attr = $this->getAttributes();
     $config["selector"] = "#".$attr["id"];
     $vars["tinymce_config"] = json_encode($config);
-    $vars["tinymce_script"] = null;
-    if (empty($GLOBALS["tinymce_included"])) {
-      $vars["tinymce_script"] = '<script src="'.$this->tinymceSrc().'"></script>';
-      $GLOBALS["tinymce_included"] = true;
-    }
   }
   
 }

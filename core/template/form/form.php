@@ -1,4 +1,5 @@
 <?=$prefix?>
+<?=$js?>
 <div class="form-wrapper">
   <form <?=$attributes?>>
     <?php if (!empty($errors)) { ?>

@@ -419,3 +419,14 @@ function formPopupSubmit(r, item, form, p) {
     p.close();
   }
 }
+
+function formTinymceLoad(src) {
+  var scripts = document.getElementsByTagName("script");
+  for (var i=0; i<scripts.length; i++) {
+    if (scripts[i].src == src)
+      return;
+  }
+  var script = document.createElement("script");
+  script.src = src;
+  document.head.appendChild(script);
+}

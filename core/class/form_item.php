@@ -398,6 +398,19 @@ class FormItem extends Model {
     }
     return false;
   }
+  
+  /**
+   * Any javascript files that need to be loaded with the form
+   * @return array
+   */
+  public function js() {
+    $arr = [];
+    if (!empty($this->items)) {
+      foreach ($this->items as $item)
+        $arr = array_merge($arr, $item->js());
+    }
+    return $arr;
+  }
 
   /**
    * Validates the element and it's children

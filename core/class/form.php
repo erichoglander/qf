@@ -90,6 +90,7 @@ class Form extends Model {
       "prefix" => $this->prefix,
       "suffix" => $this->suffix,
       "ajax" => $this->ajax,
+      "js" => $this->js(),
     ];
     return renderTemplate($path, $vars);
   }
@@ -153,6 +154,22 @@ class Form extends Model {
   public function setVars($vars) {
     $this->vars = $vars;
     $this->loadStructure();
+  }
+  
+  /**
+   * Any javascript files that need to be loaded with the form
+   * @return array
+   */
+  public function js() {
+    $arr = [];
+    if (!empty($this->items)) {
+      foreach ($this->items as $item)
+        $arr = array_merge($arr, $item->js());
+    }
+    $srcs = [];
+    foreach ($arr as $i => $src)
+      $srcs[$src] = '<script src="'.$src.'"></script>';
+    return implode("", $srcs);
   }
 
   /**
