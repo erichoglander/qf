@@ -49,6 +49,12 @@ class Form extends Model {
   protected $ajax = false;
 
   /**
+   * If true, applies a no-input automatic spamfilter
+   * @var bool
+   */
+  protected $spamfilter = false;
+
+  /**
    * Contains error messages
    * @var array
    */
@@ -204,6 +210,10 @@ class Form extends Model {
       $this->setError(t("Form token expired, please reload the page and try again."));
       return false;
     }
+    if (!$this->verifySpamfilter()) {
+      $this->setError(t("Spamfilter activated, please reload the page and try again."));
+      return false;
+    }
     foreach ($this->items as $name => $item) {
       if (!$item->validated())
         return false;
@@ -320,6 +330,19 @@ class Form extends Model {
       $this->loadItem($name, $item);
     if ($this->hasFileItem())
       $this->attributes["enctype"] = "multipart/form-data";
+    // Add no-input spam filter protection
+    // Check for javascript, cookies, and time of submission
+    if ($this->spamfilter) {
+      $id = "sf_".substr($this->token(), 3, 8);
+      $item = [
+        "type" => "markup",
+        "value" => '
+          <input type="hidden" id="'.$id.'" name="_sf" value="'.REQUEST_TIME.'">
+          <script>document.getElementById("'.$id.'").value+= "_sfjs";</script>',
+      ];
+      $_COOKIE["sf"] = 1;
+      $this->loadItem("_sf", $item);
+    }
   }
 
   /**
@@ -397,6 +420,22 @@ class Form extends Model {
    */
   protected function verifyToken() {
     return $_POST["form_token"] === $this->token();
+  }
+
+  /**
+   * Verify spam filter
+   * @return bool
+   */
+  protected function verifySpamfilter() {
+    if (!$this->spamfilter)
+      return true;
+    if (empty($_POST["_sf"]) || empty($_COOKIE["sf"]))
+      return false;
+    if (!preg_match("/^([0-9]+)\_sfjs$/", $_POST["_sf"], $m))
+      return false;
+    if (REQUEST_TIME - $m[0] < 2)
+      return false;
+    return true;
   }
 
   /**

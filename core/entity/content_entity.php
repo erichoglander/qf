@@ -102,7 +102,7 @@ class Content_Entity_Core extends l10n_Entity {
         return null;
       return '<img src="'.$File->url().'" alt="">';
     }
-    if ($field == "editor") {
+    if ($field == "editor" || $field == "tinymce") {
       return $value;
     }
   }

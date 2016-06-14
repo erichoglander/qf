@@ -2847,5 +2847,16 @@
                 "updated": "1465377795"
             }
         }
+    },
+    {
+        "lang": "en",
+        "string": "Spamfilter activated, please reload the page and try again.",
+        "translations": {
+            "sv": {
+                "lang": "sv",
+                "string": "Spamfilter aktiverat, var god ladda om sidan och försök igen.",
+                "updated": "1465886514"
+            }
+        }
     }
 ]

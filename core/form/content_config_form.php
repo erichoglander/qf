@@ -35,6 +35,7 @@ class ContentConfig_Form_Core extends Form {
                 "text" => t("Text"),
                 "textarea" => t("Textarea"),
                 "editor" => t("Editor"),
+                "tinymce" => "TinyMCE",
                 "image" => t("Image"),
               ],
               "required" => true
