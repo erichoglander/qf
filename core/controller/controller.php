@@ -191,6 +191,7 @@ class Controller {
    * @return bool
    */
   protected function uriAccess($uri) {
+    $uri = preg_replace("/\#.*$/", "", $uri);
     $CF = newClass("ControllerFactory", $this->Config, $this->Db);
     $request = $CF->parseUri($uri);
     $Controller = $CF->getController($request["controller"], false);
