@@ -7,6 +7,7 @@ class Color_FormItem_Core extends FormItem {
  
  
   public function loadDefault() {
+    $this->attributes["placeholder"] = t("Choose color...");
     $this->jscolor_default = [
       "required" => false,
       "uppercase" => false,

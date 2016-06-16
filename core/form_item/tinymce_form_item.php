@@ -4,6 +4,7 @@ class Tinymce_FormItem_Core extends FormItem {
   public $tinymce_config = [];
   public $tinymce_default = [];
   public $tinymce_extra = [];
+  public $tinymce_upload = false;
   
   public function loadDefault() {
     $this->tinymce_default = [
@@ -15,6 +16,7 @@ class Tinymce_FormItem_Core extends FormItem {
       "menubar" => false,
       "statusbar" => false,
       "toolbar" => "bold italic | bullist numlist | link",
+      "relative_urls" => false,
     ];
   }
   
@@ -28,6 +30,11 @@ class Tinymce_FormItem_Core extends FormItem {
       $attr["id"] = "tinymce_".str_replace(["[", "]"], ["__", ""], $this->inputName());
     return $attr;
   }
+  
+  public function uploadResponse($File) {
+    return json_encode(["location" => $File->url()]);
+  }
+  
 
   protected function filter($value, $filter) {
     return preg_replace("/<\s*script[^>]+>[^<]+<\s*\/script\s*>/i", "", $value);
@@ -39,9 +46,18 @@ class Tinymce_FormItem_Core extends FormItem {
       foreach ($this->tinymce_extra as $key => $val)
         $config[$key].= $val;
     }
+    if ($this->tinymce_upload) {
+      if (empty($config["images_upload_url"]))
+        $config["images_upload_url"] = url("form/itemupload/tinymce");
+      if (!array_key_exists("paste_data_images", $config))
+        $config["paste_data_images"] = true;
+    }
     $attr = $this->getAttributes();
     $config["selector"] = "#".$attr["id"];
-    $vars["tinymce_config"] = json_encode($config);
+    $json = json_encode($config);
+    $json = str_replace('"<', '', $json);
+    $json = str_replace('>"', '', $json);
+    $vars["tinymce_config"] = $json;
   }
   
 }

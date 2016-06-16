@@ -58,19 +58,19 @@ class Image_FormItem_Core extends File_FormItem_Core {
     }
     else if ($this->image_min_size !== null && $this->image_max_size !== null) {
       return t("Image must be between :minwx:minh and :maxwx:maxh", "en",
-          [  ":minw" => $this->image_min_size[0],
+          [ ":minw" => $this->image_min_size[0],
             ":minh" => $this->image_min_size[1],
             ":maxw" => $this->image_max_size[0],
             ":maxh" => $this->image_max_size[1]]);
     }
     else if ($this->image_min_size !== null) {
       return t("Image must be larger than :wx:h", "en",
-          [  ":w" => $this->image_min_size[0],
+          [ ":w" => $this->image_min_size[0],
             ":h" => $this->image_min_size[1]]);
     }
     else if ($this->image_max_size !== null) {
       return t("Image must be smaller than :wx:h", "en",
-          [  ":w" => $this->image_max_size[0],
+          [ ":w" => $this->image_max_size[0],
             ":h" => $this->image_max_size[1]]);
     }
   }

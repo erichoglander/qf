@@ -2869,5 +2869,16 @@
                 "updated": "1466067471"
             }
         }
+    },
+    {
+        "lang": "en",
+        "string": "Choose color...",
+        "translations": {
+            "sv": {
+                "lang": "sv",
+                "string": "Välj färg...",
+                "updated": "1466067471"
+            }
+        }
     }
 ]

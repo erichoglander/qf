@@ -44,7 +44,8 @@ class Form_Model_Core extends Model {
   /**
    * Get json formatted file form item and remove file
    * @see    \File_FormItem_Core
-   * @param  array $structure
+   * @param  array             $structure
+   * @param  \File_Entity_Core $File
    * @return string
    */
   public function removeFile($structure, $File) {
@@ -52,6 +53,36 @@ class Form_Model_Core extends Model {
     if ($File->get("status") == 0)
       $File->delete();
     return $this->newClass($structure["form_item_class"], $structure);
+  }
+  
+  /**
+   * Upload a file from an editor
+   * @see    \File_FormItem_Core
+   * @param  string $item_type
+   * @return string
+   */
+  public function itemUpload($item_type) {
+    $class = $item_type."_FormItem";
+    $structure = ["type" => $item_type, "name" => "nothing"];
+    $FormItem = $this->newClass($class, $structure);
+    $file = current($_FILES);
+    if (!$FormItem || empty($file))
+      return t("An error occurred");
+    $FileModel = $this->getModel("File");
+    $opt = [
+      "validate" => true,
+      "status" => 1,
+      "folder" => $item_type,
+    ];
+    try {
+      $File = $FileModel->upload($file, $opt);
+    }
+    catch (Exception $e) {
+      return $e->getMessage();
+    }
+    if ($File && is_callable([$FormItem, "uploadResponse"]))
+      return $FormItem->uploadResponse($File);
+    return "OK";
   }
   
   /**

@@ -21,6 +21,8 @@ class Form_Controller_Core extends Controller {
       return ["formFileRemove"];
     if ($action == "autocomplete")
       return ["formAutocomplete"];
+    if ($action == "itemupload")
+      return ["formItemUpload"];
     return null;
   }
   
@@ -93,6 +95,17 @@ class Form_Controller_Core extends Controller {
     $FormItem = $this->Model->removeFile($_SESSION["file_upload"][$args[0]], $File);
     $this->viewData["dom"] = JsonToHtml\htmlToJson($FormItem->render());
     return $this->json();
+  }
+  
+  /**
+   * Upload a file from any form item type
+   * @param  array $args
+   * @return string
+   */
+  public function itemuploadAction($args = []) {
+    if (empty($args[0]))
+      return $this->jsone(t("An error occurred"));
+    return $this->Model->itemUpload($args[0]);
   }
   
   /**

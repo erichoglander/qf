@@ -84,37 +84,18 @@ class File_FormItem_Core extends FormItem {
   protected function validate($values = null) {
     if ($this->isFileUpload()) {
       $file = $this->getFileArray();
-      if (!empty($file["error"])) {
-        $errors = [
-          UPLOAD_ERR_INI_SIZE => t("File is too big (server file limit)"),
-          UPLOAD_ERR_FORM_SIZE => t("File is too big (server form limit)"),
-          UPLOAD_ERR_PARTIAL => t("The file was only partially upload, please try again"),
-          UPLOAD_ERR_NO_FILE => t("No file was uploaded"),
-          UPLOAD_ERR_NO_TMP_DIR => t("Missing temp folder, contact administrator"),
-          UPLOAD_ERR_CANT_WRITE => t("Can't write file to disk, contact administrator"),
-          UPLOAD_ERR_EXTENSION => t("Upload stopped by a php extension"),
-        ];
-        if (isset($errors[$file["error"]]))
-          $this->setError($errors[$file["error"]]);
-        else
-          $this->setError(t("An error occurred while uploading file"));
-        return false;
+      $opt = [
+        "whitelist" => $this->file_extensions,
+        "blacklist" => $this->file_blacklist,
+        "dir" => $this->file_dir,
+        "folder" => $this->file_folder,
+        "max_size" => $this->file_max_size,
+      ];
+      try {
+        $this->getModel("File")->validateUpload($file, $opt);
       }
-      $info = pathinfo($file["name"]);
-      $ext = strtolower($this->Io->filter($info["extension"], "alphanum"));
-      if (!empty($this->file_blacklist) && in_array($ext, $this->file_blacklist)) {
-        $this->setError(t("Unallowed file extension"));
-        return false;
-      }
-      if (!empty($this->file_extensions) && !in_array($ext, $this->file_extensions)) {
-        $this->setError(
-            t("Unallowed file extension. Only :ext", 
-              "en", 
-              [":ext" => implode(", ", $this->file_extensions)]));
-        return false;
-      }
-      if ($this->file_max_size && $this->file_max_size < filesize($file["tmp_name"])) {
-        $this->setError(t("File is too big. Max size is :size", "en", [":size" => formatBytes($this->file_max_size)]));
+      catch (Exception $e) {
+        $this->setError($e->getMessage());
         return false;
       }
       if (is_callable([$this, "fileUploadValidate"]) && !$this->fileUploadValidate($file)) {
@@ -142,31 +123,17 @@ class File_FormItem_Core extends FormItem {
     if (!$this->validate())
       return $this->value;
     $file = $this->getFileArray();
-    $info = pathinfo($file["name"]);
-    $path = ($this->file_dir == "private" ? PRIVATE_PATH : PUBLIC_PATH)."/";
-    $uri = ($this->file_folder ? $this->file_folder."/" : "");
-    $folder = substr($path.$uri, 0, -1);
-    if (!file_exists($folder))
-      mkdir($folder, 0774, true);
-    $name = $this->Io->filter($info["filename"], "filename");
-    $ext = strtolower($this->Io->filter($info["extension"], "alphanum"));
-    for ($fname = $name.".".$ext, $i = 0; file_exists($path.$uri.$fname); $fname = $name."-".$i.".".$ext, $i++);
-    if (!move_uploaded_file($file["tmp_name"], $path.$uri.$fname)) {
-      $this->setError(t("Insufficient directory permissions, contact administrator"));
-      addlog("file", "Insufficient directory permissions", $path.$uri.$fname, "error");
+    $opt = [
+      "dir" => $this->file_dir,
+      "folder" => $this->file_folder,
+    ];
+    try {
+      $File = $this->getModel("File")->upload($file, $opt);
+    }
+    catch (Exception $e) {
+      $this->setError($e->getMessage());
       return $this->value;
     }
-    $File = newClass("File_Entity", $this->Db);
-    $File->set("dir", $this->file_dir);
-    $File->set("name", $name);
-    $File->set("uri", $uri.$fname);
-    $File->set("extension", $ext);
-    $File->set("status", 0);
-    if (!$File->save()) {
-      $this->setError(t("An error occurred while saving file"));
-      return $this->value;
-    }
-    $_SESSION["file_uploaded"][] = $File->id();
     $this->uploaded = $File->id();
     return $File->id();
   }

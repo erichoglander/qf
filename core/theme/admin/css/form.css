@@ -445,6 +445,19 @@ input {
   color: #A94442;
 }
 
+.form-type-color input::-webkit-input-placeholder {
+  color: #000;
+}
+.form-type-color input::-moz-placeholder {
+  color: #000;
+}
+.form-type-color input:-ms-input-placeholder {
+  color: #000;
+}
+.form-type-color input:placeholder-shown {
+  color: #000;
+}
+
 
 /* FORM SPECIFIC */
 .form-list-search {
