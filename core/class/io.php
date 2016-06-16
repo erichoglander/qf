@@ -249,6 +249,18 @@ class Io_Core {
     return false;
   }
 
+  /**
+   * Check if value is a valid hex color
+   * @param  mixed $value
+   * @return bool
+   */
+  protected function validateColorHex($value) {
+    if (preg_match("/^[0-9a-f]{6}$/i", $value))
+      return true;
+    $this->setError(t("Invalid color code"));
+    return false;
+  }
+
 
   /**
    * Removes leading and trailing whitespace

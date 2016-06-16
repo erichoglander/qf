@@ -2858,5 +2858,16 @@
                 "updated": "1465886514"
             }
         }
+    },
+    {
+        "lang": "en",
+        "string": "Invalid color code",
+        "translations": {
+            "sv": {
+                "lang": "sv",
+                "string": "Ogiltig färgkod",
+                "updated": "1466067471"
+            }
+        }
     }
 ]
