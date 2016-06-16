@@ -49,7 +49,7 @@ namespace JsonToHtml {
               else if ($c == "=" && !$q) {
                 $where = "value";
               }
-              else if (($c == " " || $c == ">") && !$q) {
+              else if (in_array($c, [" ", ">", "\n", "\r"]) && !$q) {
                 $where = "key";
                 $add = true;
               }

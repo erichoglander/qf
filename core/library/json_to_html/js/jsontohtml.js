@@ -21,8 +21,12 @@ function jsonToHtml(parent, json, replace, ns) {
             if (typeof(json.attributes[attr]) != "undefined") {
               if (json.attributes[attr] === null)
                 el.setAttribute(attr, "");
-              else
-                el.setAttribute(attr, json.attributes[attr]);
+              else {
+                try {
+                  el.setAttribute(attr, json.attributes[attr]);
+                }
+                catch (e) {}
+              }
             }
           }
         }
