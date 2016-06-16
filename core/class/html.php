@@ -248,19 +248,19 @@ class Html_Core extends Model {
         $inner = null;
         if (array_key_exists("href", $link)) {
           $url = $link["href"];
-          $x = strpos($url, "?");
-          if ($x)
-            $path = substr($url, 0, $x);
-          else
-            $path = $url;
+          $path = preg_replace("/(\?.*)?(\#.*)?$/", "", $url);
           if (!array_key_exists("active", $link) && $path == REQUEST_PATH)
             $link["active"] = true;
           if (!empty($link["active"])) {
             $link_class[] = " active";
             $item_class[] = " active";
           }
-          if (strpos($url, "http") !== 0 && strpos($url, "#") !== 0 && strpos($url, "/") !== 0)
-            $url = url($url, !empty($link["return"]));
+          if (strpos($url, "http") !== 0 && strpos($url, "/") !== 0) {
+            $u = explode("#", $url);
+            $url = url($u[0], !empty($link["return"]));
+            if (isset($u[1]))
+              $url.= "#".$u[1];
+          }
           $inner = '
             <a href="'.$url.'" class="'.implode(" ", $link_class).'">'.$title.'</a>';
         }
