@@ -516,6 +516,7 @@ class FormItem extends Model {
    * @param  array $structure
    */
   protected function loadStructure($structure) {
+    $structure = $this->orderConstruct($structure);
     if (is_callable([$this, "loadDefault"]))
       $this->loadDefault();
     if (is_callable([$this, "preStructure"]))
@@ -936,8 +937,7 @@ class FormItem extends Model {
   protected function renderAddButton() {
     if (!$this->multiple || !$this->add_button) 
       return null;
-    $data = $this->item_structure;
-    $json = htmlspecialchars(json_encode($data), ENT_QUOTES);
+    $json = $this->jsonStructure();
     $last_item = count($this->items)-1;
     return '<div class="form-button form-add-button btn" last_item="'.$last_item.'" onclick="formAddButton(this, '.$json.')">'.$this->add_button.'</div>';
   }
@@ -953,6 +953,60 @@ class FormItem extends Model {
     $callback = ($this->delete_callback ? "'".$this->delete_callback."'" : "null");
     $add = ($this->multiple_new_empty ? "true" : "false");
     return '<div class="form-button form-delete-button btn btn-danger" onclick="formDeleteButton(this, '.$callback .', '.$add.')">'.$this->delete_button.'</div>';
+  }
+  
+  /**
+   * Structure in json format
+   * @return string
+   */
+  protected function jsonStructure() {
+    $data = $this->orderRestructure($this->item_structure);
+    return htmlspecialchars(json_encode($data), ENT_QUOTES);
+  }
+  
+  /**
+   * Restructure certain assoc arrays to numbered arrays to preserve order when json-encoding
+   * @param array
+   * @return array
+   */
+  protected function orderRestructure($data) {
+    $keys = ["options"];
+    foreach ($keys as $key) {
+      if (array_key_exists($key, $data)) {
+        $arr = [];
+        foreach ($data[$key] as $k => $v)
+          $arr[] = ["key" => $k, "value" => $v];
+        $data[$key] = ["#assoc" => $arr];
+      }
+    }
+    if (!empty($data["items"])) {
+      foreach ($data["items"] as $key => $item)
+        $data["items"][$key] = $this->orderRestructure($item);
+    }
+    return $data;
+  }
+  
+  /**
+   * Reverse orderRestructure
+   * @see orderRestructure
+   * @param array
+   * @return array
+   */
+  protected function orderConstruct($data) {
+    $key = "#assoc";
+    foreach ($data as $prop => $value) {
+      if (is_array($value) && array_key_exists($key, $value)) {
+        $arr = [];
+        foreach ($value[$key] as $v)
+          $arr[$v["key"]] = $v["value"];
+        $data[$prop] = $arr;
+      }
+    }
+    if (!empty($data["items"])) {
+      foreach ($data["items"] as $key => $item)
+        $data["items"][$key] = $this->orderConstruct($item);
+    }
+    return $data;
   }
 
 };
