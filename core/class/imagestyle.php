@@ -239,6 +239,39 @@ class Imagestyle_Core {
   }
   
   /**
+   * Add border of given color to image
+   * Library: GD
+   * @param int   $w left/right padding
+   * @param int   $h top/bottom padding
+   * @param array $color
+   */
+  public function border($w, $h, $color) {
+    if (!$this->im || (!$w && !$h))
+      return;
+    if (!$color)
+      $color = [255,255,255];
+    $str = "#";
+    foreach ($color as $dec) {
+      $hex = dechex($dec);
+      if (strlen($hex) == 1)
+        $hex = "0".$hex;
+      $str.= $hex;
+    }
+    $cp_w = $this->width;
+    $cp_h = $this->height;
+    $this->width+= $w*2;
+    $this->height+= $h*2;
+    $im = imagecreatetruecolor($this->width, $this->height);
+    if (!empty($color)) {
+      $color = imagecolorallocate($im, $color[0], $color[1], $color[2]);
+      imagefill($im, 0, 0, $color);
+    }
+    $this->setAlpha($im);
+    imagecopyresampled($im, $this->im, $w, $h, 0, 0, $cp_w, $cp_h, $cp_w, $cp_h);
+    $this->im = $im;
+  }
+  
+  /**
    * Scale and crop image to cover given dimensions
    * Library: Imagick
    * @param int $w
@@ -264,6 +297,8 @@ class Imagestyle_Core {
     }
     $this->im->thumbnailImage($cp_w, $cp_h, false);
     $this->im->cropImage($w, $h, $x, $y);
+    $this->width = $w;
+    $this->height = $h;
   }
   
   /**
@@ -286,7 +321,9 @@ class Imagestyle_Core {
       }
       $this->im->setImageBackgroundColor($str);
     }
-    $this->im->thumbnailImage($w, $h, true, true);
+    $this->width = $w;
+    $this->height = $h;
+    $this->im->thumbnailImage($this->width, $this->height, true, true);
   }
   
   /**
@@ -303,7 +340,33 @@ class Imagestyle_Core {
       $h = $w/$ratio;
     else if (!$w) 
       $w = $h*$ratio;
-    $this->im->thumbnailImage($w, $h, true);
+    $this->width = $w;
+    $this->height = $h;
+    $this->im->thumbnailImage($this->width, $this->height, true);
+  }
+  
+  /**
+   * Add border of given color to image
+   * Library: Imagick
+   * @param int   $w left/right padding
+   * @param int   $h top/bottom padding
+   * @param array $color
+   */
+  public function imagickBorder($w, $h, $color) {
+    if (!$this->im || (!$w && !$h))
+      return;
+    if (!$color)
+      $color = [255,255,255];
+    $str = "#";
+    foreach ($color as $dec) {
+      $hex = dechex($dec);
+      if (strlen($hex) == 1)
+        $hex = "0".$hex;
+      $str.= $hex;
+    }
+    $this->width+= $w*2;
+    $this->height+= $h*2;
+    $this->im->borderImage($str, $w, $h);
   }
   
   /**
