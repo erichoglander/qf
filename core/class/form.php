@@ -55,6 +55,12 @@ class Form extends Model {
   protected $spamfilter = false;
 
   /**
+   * If true, focuses widnow on first item error
+   * @var bool
+   */
+  protected $error_focus = false;
+
+  /**
    * Contains error messages
    * @var array
    */
@@ -462,6 +468,8 @@ class Form extends Model {
       $attr["class"] = $class;
     else
       $attr["class"].= " ".$class;
+    if ($this->error_focus)
+      $attr["error-focus"] = "1";
     if ($this->ajax)
       $attr["onsubmit"] = "return formAjaxSubmit(this);";
     return $attr;

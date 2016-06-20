@@ -26,12 +26,32 @@ function formAjaxSubmit(form, ajax, cb) {
         jsonToHtml(el, r.form);
         var wrap = form.parentNode;
         wrap.removeChild(form);
-        wrap.appendChild(el.getElementsByTagName("form")[0]);
+        var new_form = el.getElementsByTagName("form")[0];
+        wrap.appendChild(new_form);
       }
       else {
         var wrap = form.parentNode;
         wrap.removeChild(form);
         wrap.innerHTML+= r.form;
+        var new_form = wrap.getElementsByTagName("form")[0];
+      }
+      if (new_form.getAttribute("error-focus")) {
+        var el = document.getElementByClassName("form-item-error");
+        if (el) {
+          var y = getTopPos(el);
+          var am = document.getElementById("menu-admin");
+          if (am)
+            y+= am.offsetHeight;
+          var margin = (window.innerHeight-el.offsetHeight)/4;
+          var sy = scrollTop();
+          if (y < sy)
+            smoothScroll(y-margin);
+          else if (y > sy + window.innerHeight)
+            smoothScroll(y-window.innerHeight+margin);
+          var t = el.getElementByClassName("form-textfield");
+          if (t && typeof(t.value) != "undefined" && !t.value.length)
+            t.focus();
+        }
       }
     }
     if (r.replace) {
