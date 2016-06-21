@@ -42,6 +42,8 @@ class Autocomplete_FormItem_Core extends FormItem {
   }
   
   protected function autocompleteTitle($value) {
+    if (empty($value))
+      return null;
     if (array_key_exists("title", $value))
       return $value["title"];
     if ($this->autocomplete_entity) {
