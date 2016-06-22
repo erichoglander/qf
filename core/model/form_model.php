@@ -38,7 +38,9 @@ class Form_Model_Core extends Model {
    */
   public function uploadFile($structure) {
     $structure["submitted"] = true;
-    return $this->newClass($structure["form_item_class"], $structure);
+    $Item = $this->newClass($structure["form_item_class"], $structure);
+    $Item->value(); // Trigger upload
+    return $Item;
   }
   
   /**

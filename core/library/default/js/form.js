@@ -176,9 +176,10 @@ function formFileUploadDone(el, parent_multiple, callback, obj) {
       var parent = formGetItem(item.parentNode);
     var wrap = document.createElement("div");
     jsonToHtml(wrap, obj.dom);
-    item.parentNode.insertBefore(wrap.childNodes[0], item);
+    var new_item = wrap.childNodes[0];
+    item.parentNode.insertBefore(new_item, item);
     item.parentNode.removeChild(item);
-    if (parent_multiple) {
+    if (parent_multiple && !new_item.hasClass("form-item-error")) {
       var btns = parent.getElementsByClassName("form-add-button");
       if (btns.length) {
         btns[btns.length-1].trigger("click");

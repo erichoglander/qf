@@ -81,15 +81,15 @@ class File_Model_Core extends Model {
       UPLOAD_ERR_EXTENSION => t("Upload stopped by a php extension"),
     ];
     if (isset($errors[$file["error"]]))
-      throw new Excpetion($errors[$file["error"]]);
+      $this->fileError($errors[$file["error"]]);
     $info = pathinfo($file["name"]);
     $ext = strtolower($this->Io->filter($info["extension"], "alphanum"));
     if (!empty($opt["blacklist"]) && in_array($ext, $opt["blacklist"]))
-      throw new Exception(t("Unallowed file extension"));
+      $this->fileError(t("Unallowed file extension"));
     if (!empty($opt["whitelist"]) && !in_array($ext, $opt["whitelist"]))
-      throw new Exception(t("Unallowed file extension. Only :ext", "en", [":ext" => implode(", ", $opt["whitelist"])]));
+      $this->fileError(t("Unallowed file extension. Only :ext", "en", [":ext" => implode(", ", $opt["whitelist"])]));
     if ($opt["max_size"] && $opt["max_size"] < filesize($file["tmp_name"]))
-      throw new Exception(t("File is too big. Max size is :size", "en", [":size" => formatBytes($opt["max_size"])]));
+      $this->fileError(t("File is too big. Max size is :size", "en", [":size" => formatBytes($opt["max_size"])]));
   }
   
   /**
@@ -137,6 +137,16 @@ class File_Model_Core extends Model {
     }
     
     return count($rows);
+  }
+  
+  
+  /**
+   * Logs a file error and throws an exception
+   * @param string
+   */
+  protected function fileError($e) {
+    addlog("file", $e, null, "error");
+    throw new Exception($e);
   }
   
 }
