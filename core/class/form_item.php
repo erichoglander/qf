@@ -535,6 +535,8 @@ class FormItem extends Model {
       $this->{$key} = $val;
     if ($this->multiple) {
       $value = $this->value();
+      if ($value === null)
+        $value = [];
       if (empty($value) && $this->multiple_new_empty || $this->multiple_new && !$this->submitted)
         $value[] = null;
       $this->items = [];
