@@ -32,7 +32,10 @@ class Content_Entity_Core extends l10n_Entity {
   public function render($lang = null) {
     if (!$lang)
       $lang = LANG;
-    $data = $this->translate("data", $lang);
+    if ($this->get("config")["l10n"])
+      $data = $this->translate("data", $lang);
+    else
+      $data = $this->get("data");
     $html = '<div class="content-entity content-entity-'.$this->id().'">';
     if ($this->editAccess())
       $html.= $this->editButton();
