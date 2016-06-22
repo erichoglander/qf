@@ -35,24 +35,8 @@ function formAjaxSubmit(form, ajax, cb) {
         wrap.innerHTML+= r.form;
         var new_form = wrap.getElementsByTagName("form")[0];
       }
-      if (new_form.getAttribute("error-focus")) {
-        var el = document.getElementByClassName("form-item-error");
-        if (el) {
-          var y = getTopPos(el);
-          var am = document.getElementById("menu-admin");
-          if (am)
-            y+= am.offsetHeight;
-          var margin = (window.innerHeight-el.offsetHeight)/4;
-          var sy = scrollTop();
-          if (y < sy)
-            smoothScroll(y-margin);
-          else if (y > sy + window.innerHeight)
-            smoothScroll(y-window.innerHeight+margin);
-          var t = el.getElementByClassName("form-textfield");
-          if (t && typeof(t.value) != "undefined" && !t.value.length)
-            t.focus();
-        }
-      }
+      if (new_form.getAttribute("error-focus"))
+        formErrorFocus(new_form);
     }
     if (r.replace) {
       jsonToHtml(r.replace[0], r.replace[1], true);
@@ -450,3 +434,37 @@ function formTinymceLoad(src) {
   script.src = src;
   document.head.appendChild(script);
 }
+
+function formErrorFocus(form) {
+  var el = form.getElementByClassName("form-item-error");
+  if (el) {
+    for (el; el && el.tagName != "FORM" && (!el.offsetParent || !el.hasClass("form-item")); el = el.parentNode);
+    var y = getTopPos(el);
+    var am = document.getElementById("menu-admin");
+    if (am)
+      y+= am.offsetHeight;
+    var margin = (window.innerHeight-el.offsetHeight)/4;
+    var sy = scrollTop();
+    if (y < sy)
+      smoothScroll(y-margin);
+    else if (y > sy + window.innerHeight)
+      smoothScroll(y-window.innerHeight+margin);
+    var t = el.getElementByClassName("form-textfield");
+    if (t && typeof(t.value) != "undefined" && !t.value.length)
+      t.focus();
+    return true;
+  }
+  return false;
+}
+
+function formOnLoad() {
+  var forms = document.getElementsByTagName("form");
+  for (var i=0; i<forms.length; i++) {
+    if (forms[i].getAttribute("error-focus")) {
+      if (formErrorFocus(forms[i]))
+        break;
+    }
+  }
+}
+
+window.addEventListener("load", function(){ formOnLoad(); }, false);
