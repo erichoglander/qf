@@ -28,7 +28,7 @@ class File_FormItem_Core extends FormItem {
 
   protected function isFileUpload() {
     $file = $this->getFileArray();
-    return !empty($file["tmp_name"]) && $this->uploaded === null;
+    return !empty($file["name"]) && $this->uploaded === null;
   }
 
   protected function inputType() {
