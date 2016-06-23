@@ -12,14 +12,15 @@
 class Schema {
   
   /**
-   * The input needed to create the schema
+   * The next input needed to create the schema
    * Each item consisting of:
    *   prompt, the text to display if input is needed
    *   default (optional), the default value if no value is given
-   * @return array
+   * @param  array $args
+   * @return mixed
    */
-  public static function input() {
-    return [];
+  public static function input($args) {
+    return null;
   }
   
   /**
@@ -40,6 +41,26 @@ class Schema {
    */
   public static function mods($args) {
     
+  }
+  
+  /**
+   * Fast way to get an input array for arg()
+   * @param  string $key
+   * @param  string $prompt
+   * @param  string $default
+   * @param  string $type
+   * @return array
+   */
+  public static function arg($key, $prompt, $default = null, $type = null) {
+    $arr = [
+      "key" => $key,
+      "prompt" => $prompt,
+    ];
+    if ($default !== null)
+      $arr["default"] = $default;
+    if ($type !== null)
+      $arr["type"] = $type;
+    return $arr;
   }
   
 }

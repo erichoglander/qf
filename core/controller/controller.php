@@ -132,6 +132,8 @@ class Controller {
    * @return string
    */
   public function internalError() {
+    if (IS_CLI)
+      return "500 Error";
     header("HTTP/1.1 500 Internal error");
     return $this->viewBare("500");
   }
@@ -141,6 +143,8 @@ class Controller {
    * @return string
    */
   public function databaseFail() {
+    if (IS_CLI)
+      return "Database connection failed";
     if ($this->Config->getDebug())
       die(pr($this->Db->getErrors(), 1));
     return $this->serverBusy();
@@ -151,6 +155,8 @@ class Controller {
    * @return string
    */
   public function serverBusy() {
+    if (IS_CLI)
+      return "503 Service unavailable";
     header("HTTP/1.1 503 Service unavailable");
     return $this->viewBare("503");
   }
@@ -160,6 +166,8 @@ class Controller {
    * @return string
    */
   public function notFound() {
+    if (IS_CLI)
+      return "404 Not found";
     header("HTTP/1.1 404 Not found");
     return $this->viewDefault("404");
   }
@@ -171,6 +179,8 @@ class Controller {
    * @return string
    */
   public function accessDenied() {
+    if (IS_CLI)
+      return "403 Access denied";
     if (!$this->User->id()) 
       redirect("user/login?redir=".REQUEST_ALIAS);
     header("HTTP/1.1 403 Forbidden");

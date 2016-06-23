@@ -1,18 +1,26 @@
 <?php
 class Stack extends Schema {
   
-  public static function input() {
-    return [
-      "name" => [
+  public static function input($args) {
+    $arr = [
+      [
+        "key" => "name",
         "prompt" => "Entity class name",
       ],
-      "singular" => [
+      [
+        "key" => "singluar",
         "prompt" => "Singular name of entity",
       ],
-      "plural" => [
+      [
+        "key" => "plural",
         "prompt" => "Plural name of entity",
       ],
     ];
+    $i = count($args);
+    $n = count($arr);
+    if ($i < $n)
+      return $arr[$i];
+    return null;
   }
   
   public static function mods($args) {
@@ -32,6 +40,10 @@ EOD;
     
     if (file_exists($path)) {
       $code = file_get_contents($path);
+      if (strpos($code, "function ".$camel_lower."AdminAccess") !== false) {
+        print "Method exists\n";
+        return;
+      }
     }
     else {
       $code = <<<EOD
@@ -47,8 +59,10 @@ EOD;
       if (strpos($lines[$i], "}") !== false)
         break;
     }
-    if ($i == 0)
-      die("Failed, corrupt acl file\n");
+    if ($i == 0) {
+      print "Failed, corrupt file\n";
+      return;
+    }
     
     $lines = array_merge(
       array_slice($lines, 0, $i-1),
@@ -56,50 +70,57 @@ EOD;
       array_slice($lines, $i-1)
     );
     $code = implode("\n", $lines);
-    if (!@file_put_contents($path, $code))
-      die("Failed, couldnt write to file\n");
+    if (!@file_put_contents($path, $code)) {
+      print "Failed, couldn't write to file\n";
+      return;
+    }
     
     print "OK\n";
   }
   
-  public static function files(&$args) {
+  public static function parseArgs(&$args) {
+    $args["name"] = ucwords($args["name"]);
     $args["snake"] = Builder::camelToSnake($args["name"]);
     $args["camel_lower"] = strtolower($args["name"][0]).substr($args["name"], 1);
     $args["uri"] = str_replace("_", "-", $args["snake"]);
     $args["singular_lower"] = strtolower($args["singular"]);
     $args["plural_lower"] = strtolower($args["plural"]);
+  }
+  
+  public static function files(&$args) {
+    static::parseArgs($args);
     return [
       "controller" => [
         "path" => "controller/".$args["snake"]."_controller.php",
-        "content" => self::fileController($args),
+        "content" => static::fileController($args),
       ],
       "model" => [
         "path" => "model/".$args["snake"]."_model.php",
-        "content" => self::fileModel($args),
+        "content" => static::fileModel($args),
       ],
       "edit_form" => [
         "path" => "form/".$args["snake"]."_edit_form.php",
-        "content" => self::fileEditForm($args),
+        "content" => static::fileEditForm($args),
       ],
       "entity" => [
         "path" => "entity/".$args["snake"]."_entity.php",
-        "content" => self::fileEntity($args),
+        "content" => static::fileEntity($args),
       ],
       "view_add" => [
         "path" => "view/".$args["snake"]."/add.php",
-        "content" => self::fileViewAdd($args),
+        "content" => static::fileViewAdd($args),
       ],
       "view_edit" => [
         "path" => "view/".$args["snake"]."/edit.php",
-        "content" => self::fileViewEdit($args),
+        "content" => static::fileViewEdit($args),
       ],
       "view_delete" => [
         "path" => "view/".$args["snake"]."/delete.php",
-        "content" => self::fileViewDelete($args),
+        "content" => static::fileViewDelete($args),
       ],
       "view_list" => [
         "path" => "view/".$args["snake"]."/list.php",
-        "content" => self::fileViewList($args),
+        "content" => static::fileViewList($args),
       ],
     ];
   }

@@ -94,7 +94,10 @@ class Db_Core {
     }
     else {
       ob_flush();
-      include filePath("view/default/500.php");
+      if (IS_CLI)
+        die("Database query failed\n");
+      else
+        include filePath("view/default/500.php");
       exit;
     }
   }

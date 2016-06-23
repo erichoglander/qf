@@ -33,7 +33,7 @@ class Builder {
    * @return bool
    */
   public static function schemaExists($name) {
-    return file_exists(self::schemaPath($name));
+    return file_exists(static::schemaPath($name));
   }
   
   /**
@@ -41,7 +41,7 @@ class Builder {
    * @param string $name
    */
   public static function schemaLoad($name) {
-    require_once(self::schemaPath($name));
+    require_once(static::schemaPath($name));
   }
   
   /**
@@ -50,7 +50,7 @@ class Builder {
    * @return string
    */
   public static function schemaClass($name) {
-    return self::snakeToCamel($name);
+    return static::snakeToCamel($name);
   }
   
   /**
@@ -72,7 +72,7 @@ class Builder {
    */
   public static function filesExists($files) {
     foreach ($files as $key => $file) {
-      $path = self::basePath().$file["path"];
+      $path = static::basePath().$file["path"];
       if (file_exists($path))
         return $key;
     }
@@ -82,17 +82,18 @@ class Builder {
   /**
    * Create files from associative array
    * @param  array $files
+   * @param  bool  $overwrite
    */
-  public static function createFiles($files) {
+  public static function createFiles($files, $overwrite = false) {
     foreach ($files as $file) {
-      $path = self::basePath().$file["path"];
-      if (file_exists($path)) {
+      $path = static::basePath().$file["path"];
+      if (file_exists($path) && !$overwrite) {
         print $file["path"]." already exists. Overwrite? ";
         $in = strtolower(trim(fgets(STDIN)));
         if ($in != "y" && $in != "yes")
           continue;
       }
-      self::mkdir($path);
+      static::mkdir($path);
       print "Writing to file ".$file["path"]."... ";
       if (!@file_put_contents($path, $file["content"]))
         die("Failed\n");
@@ -126,6 +127,34 @@ class Builder {
    */
   public static function snakeToCamel($str) {
     return str_replace(" ", "", ucwords(str_replace("_", " ", $str)));
+  }
+  
+  /**
+   * Number of next update
+   * @return int
+   */
+  public static function nextUpdate() {
+    $last = 0;
+    $files = glob(DOC_ROOT."/extend/update/update_*.php");
+    foreach ($files as $file) {
+      $info = pathinfo($file);
+      $nr = (int) substr($info["filename"], 7);
+      if ($nr > $last)
+        $last = $nr;
+    }
+    return $last+1;
+  }
+  
+  /**
+   * Set current update number
+   * @param int $nr
+   */
+  public static function setUpdate($nr = null) {
+    global $Db;
+    if (!$nr)
+      $nr = static::nextUpdate();
+    $Variable = newClass("Variable", $Db);
+    $Variable->set("extend_update", $nr);
   }
   
 }

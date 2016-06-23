@@ -9,27 +9,53 @@
  * 
  * @author Eric Höglander
  */
- 
-define("DOC_ROOT", __DIR__);
 
-include "core/inc/constants.php";
-include "core/builder/builder.php";
-include "core/builder/schema.php";
+require_once("core/inc/bootstrap.php");
+require_once("core/builder/builder.php");
+require_once("core/builder/schema.php");
 
-function arg($prompt, $default = null) {
+function arg($prompt, $opt = []) {
+  $opt+= [
+    "type" => null,
+    "options" => null,
+  ];
+  if ($opt["type"] == "bool")
+    $opt["options"] = ["y", "n"];
   if (empty($GLOBALS["stdin_args"])) {
-    print $prompt.($default ? " [".$default."]" : "").": ";
+    print $prompt;
+    if (!empty($opt["options"]))
+      print " (".implode("/", $opt["options"]).")";
+    if (array_key_exists("default", $opt))
+      print " [".$opt["default"]."]";
+    if ($opt["type"] == "bool")
+      print "? ";
+    else
+      print ": ";
     $in = trim(fgets(STDIN));
-    if (!strlen($in))
-      return arg($prompt, $default);
-    if ($in == "quit" || $in == "exit")
-      die("Aborted\n");
-    return $in;
   }
-  return array_shift($GLOBALS["stdin_args"]);
+  else {
+    $in = array_shift($GLOBALS["stdin_args"]);
+    if ($in == "-")
+      $in = "";
+  }
+  $re = false;
+  if (!strlen($in)) {
+    if (array_key_exists("default", $opt))
+      return $opt["default"];
+    $re = true;
+  }
+  if (!$re && !empty($opt["options"]) && !in_array($in, $opt["options"]))
+    $re = true;
+  if ($re)
+    return arg($prompt, $opt);
+  if (in_array($in, [":quit", ":q"]))
+    die("Aborted\n");
+  return $in;
 }
 
 $GLOBALS["stdin_args"] = array_slice($_SERVER["argv"], 1);
+
+print "Builder script. Type :quit at any time to abort.\n";
 
 if (!IS_CLI)
   die("Can only be run through CLI");
@@ -44,18 +70,17 @@ Builder::schemaLoad($name);
 $class = Builder::schemaClass($name);
 
 $args = [];
-foreach ($class::input() as $key => $input)
-  $args[$key] = arg($input["prompt"], (!empty($input["default"]) ? $input["default"] : null));
+while ($input = $class::input($args))
+  $args[$input["key"]] = arg($input["prompt"], $input);
 
 $files = $class::files($args);
 if (Builder::filesExists($files)) {
-  print "One or more files already exists. Continue? ";
-  $in = strtolower(trim(fgets(STDIN)));
-  if ($in != "y" && $in != "yes")
+  $in = arg("One or more files already exists. Overwrite?", ["options" => ["y", "n", "ask"]]);
+  if ($in == "n")
     die("Aborted\n");
 }
 
-Builder::createFiles($files);
+Builder::createFiles($files, $in == "y");
 $class::mods($args);
 
 print "Completed\n";
