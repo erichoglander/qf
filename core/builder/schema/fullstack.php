@@ -41,7 +41,7 @@ class Fullstack extends Stack {
     // Check table
     if (empty($args["table_check"]) && $Db->numRows("SHOW TABLES LIKE :table", [":table" => $args["table"]])) {
       print "Table already exists\n";
-      return $inputs["table"];
+      return static::arg("table", "Table name", Builder::camelToSnake($args["name"]));
     }
     $args["table_check"] = true;
     
