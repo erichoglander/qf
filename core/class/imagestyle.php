@@ -340,6 +340,8 @@ class Imagestyle_Core {
       $h = $w/$ratio;
     else if (!$w) 
       $w = $h*$ratio;
+    if ($w >= $this->width && $h >= $this->height)
+      return;
     $this->width = $w;
     $this->height = $h;
     $this->im->thumbnailImage($this->width, $this->height, true);
