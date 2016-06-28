@@ -113,7 +113,14 @@ class Fullstack extends Stack {
     }
     // Length
     if (in_array($field["type"], ["varchar", "int", "tinyint", "decimal"]) && empty($field["length"])) {
-      return static::farg("length", "Length");
+      $def = null;
+      if ($field["type"] == "int")
+        $def = 11;
+      if ($field["type"] == "tinyint")
+        $def = 4;
+      if ($field["unsigned"] == "y" && in_array($field["type"], ["int", "tinyint"]))
+        $def--;
+      return static::farg("length", "Length", $def);
     }
     // Enum values
     if ($field["type"] == "enum" && empty($field["values"])) {
@@ -199,8 +206,11 @@ class Update_'.Builder::nextUpdate().' extends Update_Core {
     foreach ($args["fields"] as $field) {
       $schema_fields.= $t1.'"'.$field["name"].'" => [';
       $schema_fields.= $t2.'"type" => "'.static::entityType($field).'",';
-      if (!empty($field["length"]))
+      if (!empty($field["length"])) {
+        if (strpos($field["length"], ","))
+          $field["length"] = "[".$field["length"]"]";
         $schema_fields.= $t2.'"length" => '.$field["length"].',';
+      }
       if (!empty($field["values"]))
         $schema_fields.= $t2.'"values" => ["'.implode('", "', $field["values"]).'"],';
       if (!empty($field["serialize"]) && $field["serialize"] == "y")
