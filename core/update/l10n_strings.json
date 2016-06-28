@@ -2880,5 +2880,16 @@
                 "updated": "1466067471"
             }
         }
+    },
+    {
+        "lang": "en",
+        "string": "Default",
+        "translations": {
+            "sv": {
+                "lang": "sv",
+                "string": "Förvald",
+                "updated": "1467094870"
+            }
+        }
     }
 ]

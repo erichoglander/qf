@@ -179,8 +179,10 @@ class User_Model_Core extends Model {
    * @return bool
    */
   public function editUser($User, $values) {
-    foreach ($values as $key => $value)
-      $User->set($key, $value);
+    foreach ($values as $key => $value) {
+      if (!is_array($value))
+        $User->set($key, $value);
+    }
     if ($User->id() == 1)
       $User->set("status", 1); # admin account cannot be deactivated
     if (!$User->save())
@@ -205,8 +207,10 @@ class User_Model_Core extends Model {
     $change_email = $values["email"] != $User->get("email");
     if ($change_email && $User->get("email") == $User->get("name") && !array_key_exists("name", $values))
       $values["name"] = $values["email"];
-    foreach ($values as $key => $value)
-      $User->set($key, $value);
+    foreach ($values as $key => $value) {
+      if (!is_array($value))
+        $User->set($key, $value);
+    }
     if ($change_email && $this->Config->getUserRegistration() == "email_confirmation") {
       if ($this->sendEmailConfirmation($User))
         return "email_confirmation";

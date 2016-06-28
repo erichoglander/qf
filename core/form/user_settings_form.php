@@ -33,21 +33,38 @@ class UserSettings_Form_Core extends Form {
         "email" => [
           "type" => "email",
           "label" => t("Email"),
-          "value" => ($User ? $User->get("email") : null),
+          "value" => $User->get("email"),
           "required" => true,
         ],
-        "pass" => [
-          "type" => "password",
-          "label" => t("Change password"),
-          "icon" => "lock",
-        ],
-        "pass_confirm" => [
-          "type" => "password",
-          "label" => t("Confirm password"),
-          "icon" => "lock",
-        ],
-        "actions" => $this->defaultActions(),
       ],
+    ];
+    if ($this->Config->getLanguageDetection() == "user") {
+      $langs = $this->getModel("l10n")->getActiveLanguages();
+      $lang_op = [];
+      foreach ($langs as $lang)
+        $lang_op[$lang->lang] = xss($lang->title);
+      $structure["items"]+= [
+        "lang" => [
+          "type" => "select",
+          "label" => t("Language"),
+          "empty_option" => t("Default"),
+          "options" => $lang_op,
+          "value" => $User->get("lang"),
+        ],
+      ];
+    }
+    $structure["items"]+= [
+      "pass" => [
+        "type" => "password",
+        "label" => t("Change password"),
+        "icon" => "lock",
+      ],
+      "pass_confirm" => [
+        "type" => "password",
+        "label" => t("Confirm password"),
+        "icon" => "lock",
+      ],
+      "actions" => $this->defaultActions(),
     ];
     return $structure;
   }

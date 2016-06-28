@@ -52,31 +52,48 @@ class UserEdit_Form_Core extends Form {
           "value" => ($User ? $User->get("email") : null),
           "required" => true,
         ],
-        "pass" => [
-          "type" => "password",
-          "label" => t("Password"),
-          "icon" => "lock",
-          "generator" => true,
-          "generator_copy" => "pass_confirm",
-        ],
-        "pass_confirm" => [
-          "type" => "password",
-          "label" => t("Confirm password"),
-          "icon" => "lock",
-        ],
-        "roles" => [
-          "type" => "checkboxes",
-          "label" => t("Roles"),
-          "options" => $rolesop,
-          "value" => $roles,
-        ],
-        "status" => [
-          "type" => "checkbox",
-          "label" => t("Active"),
-          "value" => ($User ? $User->get("status") : 1),
-        ],
-        "actions" => $this->defaultActions(),
       ],
+    ];
+    if ($this->Config->getLanguageDetection() == "user") {
+      $langs = $this->getModel("l10n")->getActiveLanguages();
+      $lang_op = [];
+      foreach ($langs as $lang)
+        $lang_op[$lang->lang] = xss($lang->title);
+      $structure["items"]+= [
+        "lang" => [
+          "type" => "select",
+          "label" => t("Language"),
+          "empty_option" => t("Default"),
+          "options" => $lang_op,
+          "value" => ($User ? $User->get("lang") : null),
+        ],
+      ];
+    }
+    $structure["items"]+= [
+      "pass" => [
+        "type" => "password",
+        "label" => t("Password"),
+        "icon" => "lock",
+        "generator" => true,
+        "generator_copy" => "pass_confirm",
+      ],
+      "pass_confirm" => [
+        "type" => "password",
+        "label" => t("Confirm password"),
+        "icon" => "lock",
+      ],
+      "roles" => [
+        "type" => "checkboxes",
+        "label" => t("Roles"),
+        "options" => $rolesop,
+        "value" => $roles,
+      ],
+      "status" => [
+        "type" => "checkbox",
+        "label" => t("Active"),
+        "value" => ($User ? $User->get("status") : 1),
+      ],
+      "actions" => $this->defaultActions(),
     ];
     return $structure;
   }

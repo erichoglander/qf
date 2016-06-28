@@ -278,6 +278,19 @@ class ControllerFactory_Core {
           }
         }
       }
+      // User settings
+      else if ($this->Config->getLanguageDetection() == "user") {
+        if (!empty($_SESSION["user_id"])) {
+          $row = $this->Db->getRow("
+              SELECT lang FROM `user`
+              WHERE 
+                id = :id &&
+                lang IS NOT NULL",
+              [":id" => $_SESSION["user_id"]]);
+          if ($row)
+            $request["lang"] = $row->lang;
+        }
+      }
     }
       
     $request["path"] = $uri;

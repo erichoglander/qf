@@ -312,6 +312,9 @@ class User_Entity_Core extends Entity {
     $schema["fields"]["email"] = [
       "type" => "varchar",
     ];
+    $schema["fields"]["lang"] = [
+      "type" => "varchar",
+    ];
     $schema["fields"]["login"] = [
       "type" => "uint",
     ];
