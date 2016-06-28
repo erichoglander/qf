@@ -118,6 +118,19 @@ class Controller {
   }
   
   /**
+   * Execute an uri
+   * Typically used when wanting to reuse an action from a different controller
+   * Note that the request constants are already defined and cannot be redefined
+   * @param  string $uri
+   * @return string
+   */
+  public function executeUri($uri) {
+    $CF = newClass("ControllerFactory", $this->Config, $this->Db);
+    $request = $CF->parseUri($uri);
+    return $CF->executeControllerAction($request["controller"], $request["action"], $request["args"]);
+  }
+  
+  /**
    * Get the access control list for an action of the current controller
    * @param  string $action
    * @param  array  $args
