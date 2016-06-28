@@ -208,7 +208,7 @@ class Update_'.Builder::nextUpdate().' extends Update_Core {
       $schema_fields.= $t2.'"type" => "'.static::entityType($field).'",';
       if (!empty($field["length"])) {
         if (strpos($field["length"], ","))
-          $field["length"] = "[".$field["length"]"]";
+          $field["length"] = "[".$field["length"]."]";
         $schema_fields.= $t2.'"length" => '.$field["length"].',';
       }
       if (!empty($field["values"]))
