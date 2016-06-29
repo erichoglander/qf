@@ -198,7 +198,7 @@ class Html_Core extends Model {
       "breadcrumbs" => $this->breadcrumbs,
       "msgs" => getmsgs(),
     ];
-    $this->preRenderHtml($vars);
+    $this->preRenderPage($vars);
     clearmsgs();
     return $this->Theme->render("page", $vars);
   }
