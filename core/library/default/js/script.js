@@ -42,13 +42,25 @@ Element.prototype.hasClass = function(cname) {
 }
 
 if (typeof(document.getElementsByClassName) != "function") {
-  HTMLDocument.prototype.getElementsByClassName = function(cname) {
-    var a = [];
-    var re = new RegExp('(^| )'+cname+'( |$)');
-    var els = this.getElementsByTagName("*");
-    for(var i=0,j=els.length; i<j; i++)
-        if(re.test(els[i].className))a.push(els[i]);
-    return a;
+  if (typeof(HTMLDocument) != "undefined") {
+    HTMLDocument.prototype.getElementsByClassName = function(cname) {
+      var a = [];
+      var re = new RegExp('(^| )'+cname+'( |$)');
+      var els = this.getElementsByTagName("*");
+      for(var i=0,j=els.length; i<j; i++)
+          if(re.test(els[i].className))a.push(els[i]);
+      return a;
+    }
+  }
+  if (typeof(Document) != "undefined") {
+    Document.prototype.getElementsByClassName = function(cname) {
+      var a = [];
+      var re = new RegExp('(^| )'+cname+'( |$)');
+      var els = this.getElementsByTagName("*");
+      for(var i=0,j=els.length; i<j; i++)
+          if(re.test(els[i].className))a.push(els[i]);
+      return a;
+    }
   }
   Element.prototype.getElementsByClassName = function(cname) {
     var a = [];
@@ -62,6 +74,14 @@ if (typeof(document.getElementsByClassName) != "function") {
 
 if (typeof(HTMLDocument) != "undefined") {
   HTMLDocument.prototype.getElementByClassName = function(cname) {
+    var els = this.getElementsByClassName(cname);
+    if (els.length)
+      return els[0];
+    return null;
+  }
+}
+if (typeof(Document) != "undefined") {
+  Document.prototype.getElementByClassName = function(cname) {
     var els = this.getElementsByClassName(cname);
     if (els.length)
       return els[0];
