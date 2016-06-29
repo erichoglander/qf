@@ -1,5 +1,5 @@
 <?php
-class Confirm_Form extends Form {
+class Confirm_Form_Core extends Form {
   
   public function structure() {
     $structure = [
