@@ -1,6 +1,12 @@
+/**
+ * Check if browser is IE9
+ * @return bool
+ */
 function isIE9() {
   return navigator.appVersion.indexOf("MSIE 9") > 0;
 }
+
+// Enable prototypes for IE9
 if (isIE9()) {
   Object.setPrototypeOf = function(obj, proto) {
     for (var prop in proto)
@@ -9,6 +15,10 @@ if (isIE9()) {
   }
 }
 
+/**
+ * Add a css class to element
+ * @param string cname
+ */
 Element.prototype.addClass = function(cname) {
   if (!this.className) {
     this.className = cname;
@@ -21,6 +31,11 @@ Element.prototype.addClass = function(cname) {
     }
   }
 }
+
+/**
+ * Remove a css class from element
+ * @param string cname
+ */
 Element.prototype.removeClass = function(cname) {
   if (this.className) {
     if (this.className == cname) {
@@ -37,12 +52,24 @@ Element.prototype.removeClass = function(cname) {
   }
 }
 
+/**
+ * Check if element has specified css class
+ * @param  string cname
+ * @return bool
+ */
 Element.prototype.hasClass = function(cname) {
   return (this.className.match("(^| )"+cname+"( |$)") ? true : false);
 }
 
+// Add getElementsByClassName() to older browsers
 if (typeof(document.getElementsByClassName) != "function") {
   if (typeof(HTMLDocument) != "undefined") {
+    /**
+     * Get children with class name
+     * @param string cname
+     * @return array
+     */
+
     HTMLDocument.prototype.getElementsByClassName = function(cname) {
       var a = [];
       var re = new RegExp('(^| )'+cname+'( |$)');
@@ -53,6 +80,11 @@ if (typeof(document.getElementsByClassName) != "function") {
     }
   }
   if (typeof(Document) != "undefined") {
+    /**
+     * Get children with class name
+     * @param string cname
+     * @return array
+     */
     Document.prototype.getElementsByClassName = function(cname) {
       var a = [];
       var re = new RegExp('(^| )'+cname+'( |$)');
@@ -62,6 +94,11 @@ if (typeof(document.getElementsByClassName) != "function") {
       return a;
     }
   }
+  /**
+   * Get children with class name
+   * @param string cname
+   * @return array
+   */
   Element.prototype.getElementsByClassName = function(cname) {
     var a = [];
     var re = new RegExp('(^| )'+cname+'( |$)');
@@ -73,6 +110,11 @@ if (typeof(document.getElementsByClassName) != "function") {
 }
 
 if (typeof(HTMLDocument) != "undefined") {
+  /**
+   * Get first child with class name
+   * @param string cname
+   * @return \Element
+   */
   HTMLDocument.prototype.getElementByClassName = function(cname) {
     var els = this.getElementsByClassName(cname);
     if (els.length)
@@ -81,6 +123,11 @@ if (typeof(HTMLDocument) != "undefined") {
   }
 }
 if (typeof(Document) != "undefined") {
+  /**
+   * Get first child with class name
+   * @param  string cname
+   * @return \Element
+   */
   Document.prototype.getElementByClassName = function(cname) {
     var els = this.getElementsByClassName(cname);
     if (els.length)
@@ -88,6 +135,12 @@ if (typeof(Document) != "undefined") {
     return null;
   }
 }
+
+/**
+ * Get first child with class name
+ * @param string cname
+ * @return \Element
+ */
 Element.prototype.getElementByClassName = function(cname) {
   var els = this.getElementsByClassName(cname);
   if (els.length)
@@ -95,6 +148,10 @@ Element.prototype.getElementByClassName = function(cname) {
   return null;
 }
 
+/**
+ * Trigger an event manually
+ * @param string type
+ */
 Element.prototype.trigger = function(type) {
   if ("createEvent" in document) {
     var evt = document.createEvent("HTMLEvents");
@@ -106,10 +163,14 @@ Element.prototype.trigger = function(type) {
   }
 }
 
-HTMLElement.prototype.blockAnimate = function(cname) {
+/**
+ * Animate an element with a class and display none/block at start/end
+ * @param string cname
+ */
+Element.prototype.blockAnimate = function(cname) {
   var el = this;
   if (this.hasClass(cname)) {
-    var t = getStyle(this, "transition-duration");
+    var t = this.getStyle("transition-duration");
     if (!t)
       t = 300;
     else
@@ -132,10 +193,13 @@ HTMLElement.prototype.blockAnimate = function(cname) {
   }
 }
 
+/**
+ * Expand element
+ */
 Element.prototype.expand = function() {
-  var t = getStyle(this, "transition-duration");
+  var t = this.getStyle("transition-duration");
   if (!t)
-    t = getStyle(this, "-webkit-transition-duration");
+    t = this.getStyle("-webkit-transition-duration");
   t = (t ? parseInt(parseFloat(t.replace("s", ""))*1000) : 0);
   var inner;
   for (var i=0; i<this.childNodes.length; i++) {
@@ -161,14 +225,18 @@ Element.prototype.expand = function() {
     }, t);
   }, 1);
 }
+
+/**
+ * Collapse element
+ */
 Element.prototype.collapse = function(height) {
   if (!height)
     height = 0;
   else if (typeof(height) == "number")
     height = height+"px";
-  var t = getStyle(this, "transition-duration");
+  var t = this.getStyle("transition-duration");
   if (!t)
-    t = getStyle(this, "-webkit-transition-duration");
+    t = this.getStyle("-webkit-transition-duration");
   t = (t ? parseInt(parseFloat(t.replace("s", ""))*1000) : 0);
   var inner;
   for (var i=0; i<this.childNodes.length; i++) {
@@ -191,6 +259,12 @@ Element.prototype.collapse = function(height) {
     }, 1);
   }, 1);
 }
+
+/**
+ * Toggle for expand/collapse
+ * @see Element::expand()
+ * @see Element::collapse()
+ */
 Element.prototype.expandCollapse = function(height) {
   if (this.hasClass("active"))
     this.collapse(height);
@@ -198,14 +272,26 @@ Element.prototype.expandCollapse = function(height) {
     this.expand();
 }
 
+// Add addEventListener prototype for older browsers
 if (typeof(window.addEventListener) != "function") {
+  /**
+   * Add an event listener
+   * @param \Event   ev
+   * @param function func
+   * @param bool     nothing Not used in IE implementation
+   */
   Element.prototype.addEventListener = function(ev, func, nothing) {
     window.attachEvent("on"+ev, func);
   }
 }
 
-function getStyle(el, prop) {
-  if (el.currentStyle) {
+/**
+ * Get specific element style
+ * @param  string prop
+ * @return string
+ */
+Element.prototype.getStyle = function(prop) {
+  if (this.currentStyle) {
     var x = prop.indexOf("-");
     while (x != -1) {
       if (x === 0) 
@@ -214,15 +300,26 @@ function getStyle(el, prop) {
         prop = prop.substr(0, x)+prop.substr(x+1,1).toUpperCase()+prop.substr(x+2);
       x = prop.indexOf("-");
     }
-    var y = el.currentStyle[prop];
+    var y = this.currentStyle[prop];
   }
   else if (window.getComputedStyle)
-    var y = document.defaultView.getComputedStyle(el, null).getPropertyValue(prop);
+    var y = document.defaultView.getComputedStyle(this, null).getPropertyValue(prop);
   else
-    var y = el.style[prop];
+    var y = this.style[prop];
   return y;
 }
 
+/**
+ * Get specific element style
+ * Deprecated, exists for backwards compatibility
+ * @param  string prop
+ * @return string
+ */
+function getStyle(el, prop) {
+  return el.getStyle(prop);
+}
+
+// Add animation support
 (function() {
   var lastTime = 0;
   var vendors = ['ms', 'moz', 'webkit', 'o'];
@@ -246,6 +343,11 @@ function getStyle(el, prop) {
   };
 }());
 
+/**
+ * Smoothly scrolls the window
+ * @param  int stop
+ * @param  int d
+ */
 function smoothScroll(stop, d) {
   Date.now = Date.now || function(){ return +new Date; };
   var y = scrollTop();
@@ -264,23 +366,96 @@ function smoothScroll(stop, d) {
   }
   requestAnimationFrame(scroll);
 }
+
+/**
+ * Smoothly scroll to element
+ * @see smoothScroll()
+ * @param \Element el
+ * @param int      d
+ */
 function scrollToEl(el, d) {
   if (typeof(el) == "string")
     el = document.getElementById(el);
   if (!el)
     return;
   var y = getTopPos(el);
-  if (document.body.className.match("admin-menu"))
-    y-= 30;
+  var mt = document.body.getStyle("margin-top");
+  y-= parseInt(mt);
   smoothScroll(y, d);
 }
+
+/** 
+ * Enabler and duration of smooth scroll for anchors
+ * Null disables it, 0 uses default duration in smoothScroll()
+ * @var int
+ */
+var SMOOTH_ANCHOR = null;
+
+/**
+ * Activates smooth scrolling for anchors
+ */
+function smoothAnchorInit() {
+  if (SMOOTH_ANCHOR === null)
+    return;
+  var a = document.getElementsByTagName("a");
+  for (var i=0; i<a.length; i++) {
+    if (a[i].href.indexOf("#") != -1) {
+      (function(el) {
+        el.addEventListener("click", function(e){ smoothAnchor(el.href, e); }, false);
+      }(a[i]));
+    }
+  }
+  if (window.location.hash.length > 1)
+    smoothAnchor(window.location.href);
+}
+
+/**
+ * Smootlhy scroll to an anchor
+ * @param string href
+ * @param \Event e
+ */
+function smoothAnchor(href, e) {
+  var arr = href.split("#");
+  var loc = window.location.href.split("#");
+  if (arr[0] != loc[0])
+    return;
+  var id = arr[1];
+  var el = document.getElementById(id);
+  if (!el) {
+    var as = document.getElementsByTagName("a");
+    for (var i=0; i<as.length; i++) {
+      if (as[i].name == id) {
+        el = as[i];
+        break;
+      }
+    }
+  }
+  if (el)
+    scrollToEl(el, SMOOTH_ANCHOR);
+}
+
+/**
+ * Animation function for an "easing"-curve
+ * @param  float t
+ * @return float
+ */
 function ease(t) {
   return (t<.5 ? 4*t*t*t : (t-1)*(2*t-2)*(2*t-2)+1);
 }
+
+/**
+ * Compatiblity function for body.scrollTop
+ * @return int
+ */
 function scrollTop() {
   var doc = document.documentElement, body = document.body;
   return (doc && doc.scrollTop || body && body.scrollTop  || 0);
 }
+
+/**
+ * Compatibility function for document.body.offsetHeight
+ * @return int
+ */
 function bodyHeight() {
   return Math.max( 
     document.body.scrollHeight, 
@@ -289,33 +464,70 @@ function bodyHeight() {
     document.documentElement.scrollHeight, 
     document.documentElement.offsetHeight);
 }
-function getTopPos(el) {
+
+/**
+ * Get y-position of element relative to the document
+ * @return int
+ */
+Element.prototype.getTopPos = function() {
   var y = 0;
+  var el = this;
   while (el != null) {
     y+= el.offsetTop;
     el = el.offsetParent;
     if (el)
-      y+= parseFloat(getStyle(el, "border-top-width"));
+      y+= parseFloat(el.getStyle("border-top-width"));
   }
   return y;
 }
-function getPos(el) {
+/**
+ * Get y-position of element relative to the document
+ * Deprecated, use Element::getTopPos()
+ * @param  \Element el
+ * @return int
+ */
+function getTopPos(el) {
+  return el.getTopPos();
+}
+
+/**
+ * Get position of element relative to the document
+ * @return object
+ */
+Element.prototype.getPos = function() {
   var pos = {
     x: 0, 
     y: 0
   };
+  var el = this;
   while (el != null) {
     pos.x+= el.offsetLeft;
     pos.y+= el.offsetTop;
     el = el.offsetParent;
     if (el) {
-      pos.x+= parseFloat(getStyle(el, "border-left-width"));
-      pos.y+= parseFloat(getStyle(el, "border-top-width"));
+      pos.x+= parseFloat(el.getStyle("border-left-width"));
+      pos.y+= parseFloat(el.getStyle("border-top-width"));
     }
   }
   return pos;
 }
+
+/**
+ * Get position of an element relative to the document
+ * Deprecated, use Element::getPos()
+ * @param  \Element el
+ * @return object
+ */
+function getPos(el) {
+  return el.getPos();
+}
+
+/**
+ * Get coordinates of an event
+ * @param  mixed  e
+ * @return object
+ */
 function getXY(e) {
-  evt = (e.type == "touchmove" || e.type == "touchstart" ? e.touches[0] : (e.type == "touchend" ? e.changedTouches[0] : e));
+  var evt = (e.type == "touchmove" || e.type == "touchstart" ? e.touches[0] : (e.type == "touchend" ? e.changedTouches[0] : e));
   return {x: evt.clientX, y: evt.clientY};
 }
