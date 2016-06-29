@@ -23,6 +23,7 @@ class Default_Library_Core extends Library {
   public $js = [
     "js/script.js", 
     "js/ajax.js",
+    "js/smooth_anchor.js",
     "js/collapsible.js",
     "js/form.js", 
     "js/timepicker.js", 

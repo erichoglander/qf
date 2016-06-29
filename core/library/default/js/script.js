@@ -384,56 +384,6 @@ function scrollToEl(el, d) {
   smoothScroll(y, d);
 }
 
-/** 
- * Enabler and duration of smooth scroll for anchors
- * Null disables it, 0 uses default duration in smoothScroll()
- * @var int
- */
-var SMOOTH_ANCHOR = null;
-
-/**
- * Activates smooth scrolling for anchors
- */
-function smoothAnchorInit() {
-  if (SMOOTH_ANCHOR === null)
-    return;
-  var a = document.getElementsByTagName("a");
-  for (var i=0; i<a.length; i++) {
-    if (a[i].href.indexOf("#") != -1) {
-      (function(el) {
-        el.addEventListener("click", function(e){ smoothAnchor(el.href, e); }, false);
-      }(a[i]));
-    }
-  }
-  if (window.location.hash.length > 1)
-    smoothAnchor(window.location.href);
-}
-
-/**
- * Smootlhy scroll to an anchor
- * @param string href
- * @param \Event e
- */
-function smoothAnchor(href, e) {
-  var arr = href.split("#");
-  var loc = window.location.href.split("#");
-  if (arr[0] != loc[0])
-    return;
-  var id = arr[1];
-  var el = document.getElementById(id);
-  if (!el) {
-    var as = document.getElementsByTagName("a");
-    for (var i=0; i<as.length; i++) {
-      if (as[i].name == id) {
-        el = as[i];
-        break;
-      }
-    }
-  }
-  if (el)
-    scrollToEl(el, SMOOTH_ANCHOR);
-}
-
 /**
  * Animation function for an "easing"-curve
  * @param  float t
