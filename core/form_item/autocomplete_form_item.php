@@ -51,7 +51,7 @@ class Autocomplete_FormItem_Core extends FormItem {
         return null;
       if (!$this->FormModel)
         $this->FormModel = $this->getModel("Form");
-      return xss($this->FormModel->autocompleteTitle($this->autocomplete_entity, $value["value"]));
+      return xss($this->FormModel->autocompleteTitle(snakeToPascal($this->autocomplete_entity), $value["value"]));
     }
     return null;
   }
