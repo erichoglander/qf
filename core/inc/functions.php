@@ -91,15 +91,40 @@ function newClass($cname) {
 function classToFile($class) {
   return str_replace(["_core", "_theme", "_library"], "", classToDir($class).".php");
 }
-
 /**
  * Transforms a class name to something more fitting a filesystem
+ * @see pascalToSnake()
  * @param  string $class Ex: SomeName_Model
  * @return string        Ex: some_name_model
  */
 function classToDir($class) {
-  return strtolower(preg_replace("/([a-z])([A-Z])/", "$1_$2", $class));
+  return pascalToSnake($class);
 }
+
+/**
+ * Converts string from snake_case to PascalCase
+ * @param  string $str
+ * @param  string $delimiter
+ * @return string
+ */
+function snakeToPascal($str, $delimiter = "_") {
+  $arr = explode($delimiter, $str);
+  $new_str = "";
+  foreach ($arr as $i => $word)
+    $new_str.= ucwords($word);
+  return $new_str;
+}
+
+/**
+ * Converts string from PascalCase or camelCase to snake_case
+ * @param  string $str
+ * @param  string $delimiter
+ * @return string
+ */
+function pascalToSnake($str, $delimiter = "_") {
+  return strtolower(preg_replace("/([a-z])([A-Z])/", "$1".$delimiter."$2", $str));
+}
+
 
 /**
  * Formats a number bytes into a readable format

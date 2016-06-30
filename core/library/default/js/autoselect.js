@@ -75,7 +75,8 @@ function autoselect(el) {
   }
   
   this.renderOptions = function() {
-    var value = this.tags.input.value.toLowerCase();
+    var value = this.tags.input.value.toLowerCase().trim();
+    var arr = value.split(" ");
     this.tags.options.innerHTML = "";
     this.tags.option = [];
     this.optionActive = -1;
@@ -86,15 +87,15 @@ function autoselect(el) {
         match = true;
       }
       else {
-        var arr = lower.split(" ");
+        match = true;
         for (var j=0; j<arr.length; j++) {
-          if (arr[j].substr(0, value.length) == value) {
-            match = true;
+          if (lower.indexOf(arr[j]) == -1) {
+            match = false;
             break;
           }
         }
       }
-      if (match) {
+      if (!this.tags.options[i]) {
         this.tags.option[i] = document.createElement("div");
         this.tags.option[i].className = "autoselect-option";
         if (!this.tags.select.options[i].value.length)
@@ -104,6 +105,14 @@ function autoselect(el) {
         (function(self, n) {
           self.tags.option[n].addEventListener("click", function(){ self.optionClick(n); }, false);
         }(this, i));
+      }
+      if (match) {
+        this.tags.option[i].style.display = "block";
+        this.tags.option[i].addClass("match");
+      }
+      else {
+        this.tags.option[i].style.display = "none";
+        this.tags.option[i].removeClass("match");
       }
     }
   }
@@ -167,22 +176,24 @@ function autoselect(el) {
   
   this.optionUp = function() {
     for (var i=this.optionActive-1; i >= 0; i--) {
-      if (this.tags.option[i]) {
+      if (this.tags.option[i].hasClass("match")) {
         if (this.optionActive != -1)
           this.tags.option[this.optionActive].removeClass("active");
         this.tags.option[i].addClass("active");
         this.optionActive = i;
+        this.optionScroll();
         break;
       }
     }
   }
   this.optionDown = function() {
     for (var i=this.optionActive+1; i < this.tags.select.options.length; i++) {
-      if (this.tags.option[i]) {
+      if (this.tags.option[i].hasClass("match")) {
         if (this.optionActive != -1)
           this.tags.option[this.optionActive].removeClass("active");
         this.tags.option[i].addClass("active");
         this.optionActive = i;
+        this.optionScroll();
         break;
       }
     }
@@ -190,6 +201,16 @@ function autoselect(el) {
   this.optionEnter = function() {
     if (this.optionActive != -1)
       this.optionClick(this.optionActive);
+  }
+  
+  this.optionScroll = function() {
+    if (this.optionActive == -1)
+      return;
+    var option = this.tags.option[this.optionActive];
+    if (option.offsetTop < this.tags.options.scrollTop)
+      this.tags.options.scrollTop = option.offsetTop;
+    else if (option.offsetTop + option.offsetHeight > this.tags.options.scrollTop + this.tags.options.offsetHeight)
+      this.tags.options.scrollTop = option.offsetTop + option.offsetHeight - this.tags.options.offsetHeight;
   }
   
   this.optionClick = function(n) {

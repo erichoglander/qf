@@ -116,9 +116,10 @@ class Form_Controller_Core extends Controller {
   public function autocompleteAction($args = []) {
     if (empty($args[0]))
       return $this->jsone("Missing entity type");
+    $entity_type = snakeToPascal($args[0]);
     $q = (!empty($args[1]) ? urldecode($args[1]) : "");
     try {
-      $this->viewData["items"] = $this->Model->autocomplete($args[0], $q);
+      $this->viewData["items"] = $this->Model->autocomplete($entity_type, $q);
     }
     catch (Exception $e) {
       return $this->jsone($e->getMessage());
