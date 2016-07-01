@@ -420,6 +420,8 @@ function bodyHeight() {
  * @return int
  */
 Element.prototype.getTopPos = function() {
+  if (this.getBoundingClientRect)
+    return this.getBoundingClientRect().top;
   var y = 0;
   var el = this;
   while (el != null) {
@@ -445,6 +447,13 @@ function getTopPos(el) {
  * @return object
  */
 Element.prototype.getPos = function() {
+  if (this.getBoundingClientRect) {
+    var rect = this.getBoundingClientRect();
+    return {
+      x: rect.left,
+      y: rect.top
+    };
+  }
   var pos = {
     x: 0, 
     y: 0
