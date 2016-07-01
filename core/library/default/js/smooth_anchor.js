@@ -17,6 +17,12 @@ var smoothAnchor = {
   duration: 0,
   
   /**
+   * If inited
+   * @var bool
+   */
+  is_init: false,
+  
+  /**
    * Init
    */
   init: function() {
@@ -37,8 +43,26 @@ var smoothAnchor = {
       }, 1000);
     }
     this.check();
-    if (window.location.hash.length > 1)
+    this.checkCurrent();
+    this.is_init = true;
+  },
+  
+  /**
+   * Check for current hash
+   */
+  checkCurrent: function() {
+    if (window.location.hash.length > 1) {
+      window.scrollTo(0,0);
       this.scroll(window.location.href);
+    }
+  },
+  
+  /**
+   * Prevent initial hash scroll
+   */
+  prevent: function() {
+    if (!this.is_init && window.location.hash.length > 1)
+      window.scrollTo(0,0);
   },
   
   /**
@@ -98,4 +122,5 @@ var smoothAnchor = {
   
 };
 
-window.addEventListener("load", function(){ smoothAnchor.init(); }, false);
+window.addEventListener("load", function(){ smoothAnchor.prevent(); }, false);
+document.addEventListener("DOMContentLoaded", function(){ smoothAnchor.init(); }, false);
