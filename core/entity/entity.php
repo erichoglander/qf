@@ -40,6 +40,12 @@ class Entity {
   protected $stored_entities = [];
   
   /**
+   * Set to false on load or save
+   * @var bool
+   */
+  protected $is_new = true;
+  
+  /**
    * Database object
    * @var \Db_Core
    */
@@ -248,6 +254,7 @@ class Entity {
       if ($key == "id" || array_key_exists($key, $this->schema["fields"]))
         $this->fields[$key] = $value;
     }
+    $this->is_new = false;
     if (is_callable([$this, "onLoad"]))
       $this->onLoad();
     return true;
@@ -270,8 +277,7 @@ class Entity {
           $has_file = true;
       }
     }
-    if ($this->id()) {
-      $new = false;
+    if (!$this->is_new) {
       if ($has_file) {
         $row = $this->Db->getRow("SELECT * FROM `".$this->schema["table"]."` WHERE id = :id", [":id" => $this->id()]);
         // Delete old files and set new files as permanent
@@ -295,7 +301,6 @@ class Entity {
         return false;
     }
     else {
-      $new = true;
       foreach ($this->schema["fields"] as $key => $field) {
         if ((!array_key_exists($key, $data) || $data[$key] === null) && array_key_exists("default", $field))
           $data[$key] = $field["default"];
@@ -308,9 +313,14 @@ class Entity {
           }
         }
       }
-      $this->fields["id"] = $this->Db->insert($this->schema["table"], $data);
+      if ($this->id())
+        $data["id"] = $this->id();
+      $id = $this->Db->insert($this->schema["table"], $data);
+      if ($id)
+        $this->set("id", $id);
       if (!$this->id())
         return false;
+      $this->is_new = false;
     }
     if ($this->getCreateAlias($new))
       $this->createAlias();
