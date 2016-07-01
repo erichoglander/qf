@@ -52,8 +52,7 @@ var smoothAnchor = {
         a[i].addClass("smooth-anchor");
         (function(el) {
           el.addEventListener("click", function(e){
-            e.preventDefault();
-            smoothAnchor.scroll(el.href); 
+            smoothAnchor.scroll(el.href, e); 
           }, false);
         }(a[i]));
       }
@@ -63,25 +62,38 @@ var smoothAnchor = {
   /**
    * Scroll to anchor
    * @param string href
+   * @param \Event
    */
-  scroll: function(href) {
+  scroll: function(href, e) {
     var arr = href.split("#");
     var loc = window.location.href.split("#");
     if (arr[0] != loc[0])
       return;
     var id = arr[1];
-    var el = document.getElementById(id);
-    if (!el) {
-      var as = document.getElementsByTagName("a");
-      for (var i=0; i<as.length; i++) {
-        if (as[i].name == id) {
-          el = as[i];
-          break;
+    var y = 0;
+    if (id.length) {
+      var el = document.getElementById(id);
+      if (!el) {
+        var as = document.getElementsByTagName("a");
+        for (var i=0; i<as.length; i++) {
+          if (as[i].name == id) {
+            el = as[i];
+            break;
+          }
         }
       }
+      if (el) {
+        y = getTopPos(el);
+        var mt = document.body.getStyle("margin-top");
+        y-= parseInt(mt);
+      }
     }
-    if (el)
-      scrollToEl(el, this.duration);
+    if (e && y == scrollTop()) {
+      e.preventDefault();
+      if (history.pushState)
+        history.pushState(null, null, "#"+id);
+    }
+    smoothScroll(y, this.duration);
   },
   
 };
