@@ -51,7 +51,10 @@ var smoothAnchor = {
       if (a[i].href.indexOf("#") != -1 && !a[i].hasClass("smooth-anchor")) {
         a[i].addClass("smooth-anchor");
         (function(el) {
-          el.addEventListener("click", function(){ smoothAnchor.scroll(el.href); }, false);
+          el.addEventListener("click", function(e){
+            e.preventDefault();
+            smoothAnchor.scroll(el.href); 
+          }, false);
         }(a[i]));
       }
     }
