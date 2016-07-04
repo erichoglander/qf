@@ -8,7 +8,7 @@ class Stack extends Schema {
         "prompt" => "Entity class name",
       ],
       [
-        "key" => "singluar",
+        "key" => "singular",
         "prompt" => "Singular name of entity",
       ],
       [
