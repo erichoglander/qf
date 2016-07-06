@@ -421,7 +421,7 @@ function bodyHeight() {
  */
 Element.prototype.getTopPos = function() {
   if (this.getBoundingClientRect)
-    return this.getBoundingClientRect().top;
+    return this.getBoundingClientRect().top + document.documentElement.scrollTop;
   var y = 0;
   var el = this;
   while (el != null) {
@@ -450,8 +450,8 @@ Element.prototype.getPos = function() {
   if (this.getBoundingClientRect) {
     var rect = this.getBoundingClientRect();
     return {
-      x: rect.left,
-      y: rect.top
+      x: rect.left + document.documentElement.scrollLeft,
+      y: rect.top + document.documentElement.scrollTop
     };
   }
   var pos = {
