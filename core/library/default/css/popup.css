@@ -60,3 +60,34 @@
   top: 2px;
   font-size: 20px;
 }
+.popup-loader {
+  padding: 80px 0;
+}
+.popup-loader.fa {
+  font-size: 30px;
+  display: block;
+  text-align: center;
+}
+.popup-loader.fa-spin {
+  animation-duration: 1s;
+  -webkit-animation-duration: 1s;
+}
+
+.popup-adaptive {
+  text-align: center;
+}
+.popup-adaptive .popup-light {
+  position: relative;
+  left: auto;
+  width: auto;
+  display: inline-block;
+  max-width: 100%;
+  margin: 0;
+}
+.popup-adaptive .popup-inner img {
+  max-width: 100%;
+  max-height: inherit;
+  width: auto;
+  height: auto;
+  vertical-align: bottom;
+}
