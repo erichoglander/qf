@@ -215,7 +215,7 @@ class Html_Core extends Model {
     if (empty($menu["links"]))
       return null;
     $html = '
-      <div id="menu-'.$key.'" class="menu-wrapper">
+      <div id="menu-'.cssClass($key).'" class="menu-wrapper">
         '.$this->renderMenuLinks($menu).'
       </div>';
     return $html;
@@ -253,6 +253,9 @@ class Html_Core extends Model {
             $link_class[] = " active";
             $item_class[] = " active";
           }
+          if (!empty($link["active_trail"])) {
+            $item_class[] = " active-trail";
+          }
           $inner = '
             <a href="'.$link["href"].'" class="'.implode(" ", $link_class).'">'.$title.'</a>';
         }
@@ -286,15 +289,14 @@ class Html_Core extends Model {
       if (!empty($options["depth"][1]))
         $max = $options["depth"][1]+$min-1;
     }
+    if ($depth == 0)
+      $this->activateMenu($menu);
     if (!empty($menu["links"])) {
       foreach ($menu["links"] as $key => $link) {
         if ($depth == $max)
           unset($menu["links"][$key]["links"]);
         if (array_key_exists("href", $link)) {
           $url = $link["href"];
-          $path = preg_replace("/(\?.*)?(\#.*)?$/", "", $url);
-          if (!array_key_exists("active", $link) && ($path == REQUEST_PATH || $path == REQUEST_URI))
-            $menu["links"][$key]["active"] = true;
           if (strpos($url, "http") !== 0 && strpos($url, "/") !== 0) {
             $u = explode("#", $url);
             $url = url($u[0], !empty($link["return"]));
@@ -304,8 +306,8 @@ class Html_Core extends Model {
           $menu["links"][$key]["href"] = $url;
         }
         if ($depth < $min) {
-          if (!empty($menu["links"][$key]["active"]))
-            return $this->prepareMenu($menu["links"][$key]);
+          if (!empty($menu["links"][$key]["active"]) || !empty($menu["links"][$key]["active_trail"]))
+            return $this->prepareMenu($menu["links"][$key], $options, $depth+1);
         }
         else {
           $menu["links"][$key] = $this->prepareMenu($menu["links"][$key], $options, $depth+1);
@@ -315,6 +317,32 @@ class Html_Core extends Model {
     if ($depth < $min)
       return null;
     return $menu;
+  }
+  
+  /**
+   * Finds active trail in menu
+   */
+  public function activateMenu(&$menu) {
+    // Set active trail
+    $active = false;
+    if (!empty($menu["links"])) {
+      foreach ($menu["links"] as $key => $link) {
+        if (array_key_exists("href", $link)) {
+          $path = preg_replace("/(\?.*)?(\#.*)?$/", "", $link["href"]);
+          if (!array_key_exists("active", $link) && ($path == REQUEST_PATH || $path == REQUEST_URI)) {
+            $menu["links"][$key]["active"] = true;
+            $active = true;
+          }
+        }
+        if (!empty($link["links"])) {
+          if ($this->activateMenu($menu["links"][$key])) {
+            $menu["links"][$key]["active_trail"] = true;
+            $active = true;
+          }
+        }
+      }
+    }
+    return $active;
   }
 
   /**
