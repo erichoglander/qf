@@ -207,9 +207,11 @@ class Html_Core extends Model {
    * Renders a menu
    * @param  string $key
    * @param  array  $menu
+   * @param  array  $options
    * @return string
    */
-  public function renderMenu($key, $menu) {
+  public function renderMenu($key, $menu, $options = []) {
+    $menu = $this->prepareMenu($menu, $options);
     if (empty($menu["links"]))
       return null;
     $html = '
@@ -247,22 +249,12 @@ class Html_Core extends Model {
         }
         $inner = null;
         if (array_key_exists("href", $link)) {
-          $url = $link["href"];
-          $path = preg_replace("/(\?.*)?(\#.*)?$/", "", $url);
-          if (!array_key_exists("active", $link) && $path == REQUEST_PATH)
-            $link["active"] = true;
           if (!empty($link["active"])) {
             $link_class[] = " active";
             $item_class[] = " active";
           }
-          if (strpos($url, "http") !== 0 && strpos($url, "/") !== 0) {
-            $u = explode("#", $url);
-            $url = url($u[0], !empty($link["return"]));
-            if (isset($u[1]))
-              $url.= "#".$u[1];
-          }
           $inner = '
-            <a href="'.$url.'" class="'.implode(" ", $link_class).'">'.$title.'</a>';
+            <a href="'.$link["href"].'" class="'.implode(" ", $link_class).'">'.$title.'</a>';
         }
         else {
           $inner = '
@@ -278,6 +270,51 @@ class Html_Core extends Model {
         </ul>';
     }
     return $html;  
+  }
+  
+  /**
+   * Prepare menu for rendering
+   * @param  array $menu
+   * @param  array $options
+   * @return array
+   */
+  public function prepareMenu($menu, $options = [], $depth = 0) {
+    $min = 0;
+    $max = 99;
+    if (!empty($options["depth"])) {
+      $min = $options["depth"][0];
+      if (!empty($options["depth"][1]))
+        $max = $options["depth"][1]+$min-1;
+    }
+    if (!empty($menu["links"])) {
+      foreach ($menu["links"] as $key => $link) {
+        if ($depth == $max)
+          unset($menu["links"][$key]["links"]);
+        if (array_key_exists("href", $link)) {
+          $url = $link["href"];
+          $path = preg_replace("/(\?.*)?(\#.*)?$/", "", $url);
+          if (!array_key_exists("active", $link) && ($path == REQUEST_PATH || $path == REQUEST_URI))
+            $menu["links"][$key]["active"] = true;
+          if (strpos($url, "http") !== 0 && strpos($url, "/") !== 0) {
+            $u = explode("#", $url);
+            $url = url($u[0], !empty($link["return"]));
+            if (isset($u[1]))
+              $url.= "#".$u[1];
+          }
+          $menu["links"][$key]["href"] = $url;
+        }
+        if ($depth < $min) {
+          if (!empty($menu["links"][$key]["active"]))
+            return $this->prepareMenu($menu["links"][$key]);
+        }
+        else {
+          $menu["links"][$key] = $this->prepareMenu($menu["links"][$key], $options, $depth+1);
+        }
+      }
+    }
+    if ($depth < $min)
+      return null;
+    return $menu;
   }
 
   /**
@@ -330,8 +367,17 @@ class Html_Core extends Model {
    */
   protected function menus() {
     $menus = [];
-    foreach ($this->menu as $key => $menu) 
-      $menus[$key] = $this->renderMenu($key, $menu);
+    foreach ($this->menu as $key => $menu) {
+      if (empty($menu["render"])) {
+        $menus[$key] = $this->renderMenu($key, $menu);
+      }
+      else {
+        foreach ($menu["render"] as $k => $render) {
+          $delta = $key."_".$k;
+          $menus[$delta] = $this->renderMenu($delta, $menu, $render);
+        }
+      }
+    }
     return $menus;
   }
 
