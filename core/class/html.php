@@ -289,8 +289,22 @@ class Html_Core extends Model {
       if (!empty($options["depth"][1]))
         $max = $options["depth"][1]+$min-1;
     }
-    if ($depth == 0)
-      $this->activateMenu($menu);
+    if ($depth == 0) {
+      $menu["active_depth"] = $this->activateMenu($menu);
+      if (!empty($options["view"])) {
+        $vmin = $options["view"][0];
+        $vmax = (!empty($options["view"][1]) ? $options["view"][1]+$min-1 : 99);
+        $in_view = false;
+        foreach ($menu["active_depth"] as $d) {
+          if ($d >= $vmin && $d <= $vmax) {
+            $in_view = true;
+            break;
+          }
+        }
+        if (!$in_view)
+          return null;
+      }
+    }
     if (!empty($menu["links"])) {
       foreach ($menu["links"] as $key => $link) {
         if ($depth == $max)
@@ -322,22 +336,23 @@ class Html_Core extends Model {
   /**
    * Finds active trail in menu
    */
-  public function activateMenu(&$menu) {
+  public function activateMenu(&$menu, $depth = 0) {
     // Set active trail
-    $active = false;
+    $active = [];
     if (!empty($menu["links"])) {
       foreach ($menu["links"] as $key => $link) {
         if (array_key_exists("href", $link)) {
           $path = preg_replace("/(\?.*)?(\#.*)?$/", "", $link["href"]);
           if (!array_key_exists("active", $link) && ($path == REQUEST_PATH || $path == REQUEST_URI)) {
             $menu["links"][$key]["active"] = true;
-            $active = true;
+            $active[] = $depth;
           }
         }
         if (!empty($link["links"])) {
-          if ($this->activateMenu($menu["links"][$key])) {
+          $d = $this->activateMenu($menu["links"][$key], $depth+1);
+          if (!empty($d)) {
             $menu["links"][$key]["active_trail"] = true;
-            $active = true;
+            $active = array_merge($active, $d);
           }
         }
       }
