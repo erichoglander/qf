@@ -223,7 +223,7 @@ Element.prototype.expand = function() {
         el.removeClass("no-transition");
       }, 1);
     }, t);
-  }, 1);
+  }, 10);
 }
 
 /**
@@ -256,8 +256,8 @@ Element.prototype.collapse = function(height) {
     el.removeClass("no-transition");
     setTimeout(function(){
       el.style.height = height;
-    }, 1);
-  }, 1);
+    }, 10);
+  }, 10);
 }
 
 /**

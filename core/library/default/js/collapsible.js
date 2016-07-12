@@ -141,7 +141,7 @@ function collapsible(el) {
           self.tags.content.removeClass("no-transition");
         }, 1);
       }, self.getTransition());
-    }, 1);
+    }, 10);
     if (this.remember) 
       document.cookie = "collapsible-"+this.name+"=open";
   }
@@ -156,8 +156,8 @@ function collapsible(el) {
       self.tags.content.removeClass("no-transition");
       setTimeout(function(){
         self.tags.content.style.height = "0";
-      }, 1);
-    }, 1);
+      }, 10);
+    }, 10);
     if (this.remember) 
       document.cookie = "collapsible-"+this.name+"=closed";
   }
