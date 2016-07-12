@@ -83,7 +83,7 @@ function formSort(el) {
     if (xy.y < this.lastXY.y) {
       var prev = this.getPrev();
       if (prev) {
-        var y = getTopPos(prev);
+        var y = prev.getTopPos();
         if (xy.y < y + prev.offsetHeight/2) 
           this.movePrev(prev);
       }
@@ -91,12 +91,12 @@ function formSort(el) {
     else if (xy.y > this.lastXY.y) {
       var next = this.getNext();
       if (next) {
-        var y = getTopPos(next);
+        var y = next.getTopPos();
         if (xy.y > y + next.offsetHeight/2)
           this.moveNext(next);
       }
     }
-    var ty = xy.y-getTopPos(this.tags.drag);
+    var ty = xy.y-this.tags.drag.getTopPos(false);
     this.tags.item.style.transform = "translate3d(0, "+ty+"px, 0)";
     this.lastXY = xy;
   }

@@ -417,10 +417,13 @@ function bodyHeight() {
 
 /**
  * Get y-position of element relative to the document
+ * @param  bool real
  * @return int
  */
-Element.prototype.getTopPos = function() {
-  if (this.getBoundingClientRect)
+Element.prototype.getTopPos = function(real) {
+  if (typeof(real) == "undefined")
+    real = true;
+  if (real && this.getBoundingClientRect)
     return this.getBoundingClientRect().top + document.documentElement.scrollTop;
   var y = 0;
   var el = this;
@@ -444,10 +447,13 @@ function getTopPos(el) {
 
 /**
  * Get position of element relative to the document
+ * @param  bool real
  * @return object
  */
 Element.prototype.getPos = function() {
-  if (this.getBoundingClientRect) {
+  if (typeof(real) == "undefined")
+    real = true;
+  if (real && this.getBoundingClientRect) {
     var rect = this.getBoundingClientRect();
     return {
       x: rect.left + document.documentElement.scrollLeft,
