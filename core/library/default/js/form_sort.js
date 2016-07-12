@@ -41,10 +41,11 @@ function formSort(el) {
   this.init = function() {
     var self = this;
     this.dragging = false;
-    this.lastXY = {
+    this.startXY = {
       x: 0,
       y: 0
     };
+    this.top = 0;
     this.tags.item = formGetItem(this.tags.wrap);
     this.tags.up = this.tags.wrap.getElementByClassName("form-sortable-up");
     this.tags.down = this.tags.wrap.getElementByClassName("form-sortable-down");
@@ -63,8 +64,7 @@ function formSort(el) {
   this.onMouseDown = function(e) {
     this.dragging = true;
     this.tags.item.addClass("dragging");
-    this.lastXY = getXY(e);
-    this.lastXY.y+= scrollTop();
+    this.startXY = this.getXY(e);
   }
   
   this.onMouseUp = function(e) {
@@ -78,25 +78,31 @@ function formSort(el) {
   this.onMouseMove = function(e) {
     if (!this.dragging)
       return;
-    var xy = getXY(e);
-    xy.y+= scrollTop();
-    if (xy.y < this.lastXY.y) {
+    var xy = this.getXY(e);
+    var dy = xy.y - this.startXY.y;
+    if (dy < 0) {
       var prev = this.getPrev();
       if (prev) {
         var y = prev.getTopPos();
-        if (xy.y < y + prev.offsetHeight/2) 
-          this.movePrev(prev);
+        var dt = prev.offsetTop - this.tags.item.offsetTop;
+        if (dy < dt/2) {
+          if (this.movePrev(prev))
+            this.startXY.y+= dt;
+        }
       }
     }
-    else if (xy.y > this.lastXY.y) {
+    else if (dy > 0) {
       var next = this.getNext();
       if (next) {
         var y = next.getTopPos();
-        if (xy.y > y + next.offsetHeight/2)
-          this.moveNext(next);
+        var dt = next.offsetTop - this.tags.item.offsetTop;
+        if (dy > dt/2) {
+          if (this.moveNext(next))
+            this.startXY.y+= dt;
+        }
       }
     }
-    var ty = xy.y-this.tags.drag.getTopPos(false);
+    var ty = xy.y - this.startXY.y;
     this.tags.item.style.transform = "translate3d(0, "+ty+"px, 0)";
     this.lastXY = xy;
   }
@@ -105,18 +111,20 @@ function formSort(el) {
     if (!next) {
       next = this.getNext();
       if (!next)
-        return;
+        return false;
     }
     next.parentNode.insertBefore(next, this.tags.item);
+    return true;
   }
   
   this.movePrev = function(prev) {
     if (!prev) {
       prev = this.getPrev();
       if (!prev)
-        return;
+        return false;
     }
     prev.parentNode.insertBefore(this.tags.item, prev);
+    return true;
   }
   
   this.getPrev = function() {
@@ -131,6 +139,12 @@ function formSort(el) {
     if (!el || !el.hasClass("form-item"))
       return null;
     return el;
+  }
+  
+  this.getXY = function(e) {
+    var xy = getXY(e);
+    xy.y+= scrollTop();
+    return xy;
   }
   
   this.init();
