@@ -257,7 +257,7 @@ Element.prototype.collapse = function(height) {
     setTimeout(function(){
       el.style.height = height;
     }, 10);
-  }, 10);
+  }, 1);
 }
 
 /**
