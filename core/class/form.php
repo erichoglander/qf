@@ -77,6 +77,12 @@ class Form extends Model {
    * @var string
    */
   protected $suffix;
+  
+  /**
+   * Any js files to be included with form
+   * @var array
+   */
+  protected $js = [];
 
 
   /**
@@ -173,7 +179,7 @@ class Form extends Model {
    * @return array
    */
   public function js() {
-    $arr = [];
+    $arr = $this->js;
     if (!empty($this->items)) {
       foreach ($this->items as $item)
         $arr = array_merge($arr, $item->js());
