@@ -343,10 +343,10 @@ class Html_Core extends Model {
       foreach ($menu["links"] as $key => $link) {
         if (array_key_exists("href", $link)) {
           $path = preg_replace("/(\?.*)?(\#.*)?$/", "", $link["href"]);
-          if (!array_key_exists("active", $link) && ($path == REQUEST_PATH || $path == REQUEST_URI)) {
+          if (!array_key_exists("active", $link) && ($path == REQUEST_PATH || $path == REQUEST_URI))
             $menu["links"][$key]["active"] = true;
+          if (!empty($menu["links"][$key]["active"]))
             $active[] = $depth;
-          }
         }
         if (!empty($link["links"])) {
           $d = $this->activateMenu($menu["links"][$key], $depth+1);
