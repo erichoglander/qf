@@ -83,7 +83,6 @@ function formSort(el) {
     if (dy < 0) {
       var prev = this.getPrev();
       if (prev) {
-        var y = prev.getTopPos();
         var dt = prev.offsetTop - this.tags.item.offsetTop;
         if (dy < dt/2) {
           if (this.movePrev(prev))
@@ -94,7 +93,6 @@ function formSort(el) {
     else if (dy > 0) {
       var next = this.getNext();
       if (next) {
-        var y = next.getTopPos();
         var dt = next.offsetTop - this.tags.item.offsetTop;
         if (dy > dt/2) {
           if (this.moveNext(next))
