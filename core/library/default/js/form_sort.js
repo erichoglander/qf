@@ -84,9 +84,10 @@ function formSort(el) {
       var prev = this.getPrev();
       if (prev) {
         var dt = prev.offsetTop - this.tags.item.offsetTop;
-        if (dy < dt/2) {
+        if (dy < dt) {
+          var top = this.tags.item.getTopPos(false);
           if (this.movePrev(prev))
-            this.startXY.y+= dt;
+            this.startXY.y+= this.tags.item.getTopPos(false) - top;
         }
       }
     }
@@ -94,9 +95,10 @@ function formSort(el) {
       var next = this.getNext();
       if (next) {
         var dt = next.offsetTop - this.tags.item.offsetTop;
-        if (dy > dt/2) {
+        if (dy > dt) {
+          var top = this.tags.item.getTopPos(false);
           if (this.moveNext(next))
-            this.startXY.y+= dt;
+            this.startXY.y+= this.tags.item.getTopPos(false) - top;
         }
       }
     }
