@@ -228,7 +228,7 @@ class ControllerFactory_Core {
       "uri" => $uri,
       "query" => null,
       "lang" => $this->Config->getDefaultLanguage(),
-      "base" => substr($_SERVER["SCRIPT_NAME"], 0, strrpos($_SERVER["SCRIPT_NAME"], "/")+1),
+      "base" => (IS_CLI ? "/" : substr($_SERVER["SCRIPT_NAME"], 0, strrpos($_SERVER["SCRIPT_NAME"], "/")+1)),
     ];
     $redir = [];
 
