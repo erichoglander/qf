@@ -270,6 +270,7 @@ class Entity {
       $this->set("created", REQUEST_TIME);
     $data = [];
     $has_file = false;
+    $new = $this->is_new;
     foreach ($this->schema["fields"] as $key => $field) {
       if (array_key_exists($key, $this->fields)) {
         $data[$key] = $this->fields[$key];
