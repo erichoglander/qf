@@ -200,7 +200,7 @@ class Io_Core {
   protected function validateUrl($value) {
     if (filter_var($value, FILTER_VALIDATE_URL))
       return true;
-    if (!preg_match("/^[a-z]+\:\/\//", $value)) {
+    if (!preg_match("/^[a-z]+\:\/\//", $value) && strpos($value, ".") !== false) {
       $value = "http://".$value;
       if (filter_var($value, FILTER_VALIDATE_URL))
         return true;
