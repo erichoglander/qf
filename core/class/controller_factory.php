@@ -86,7 +86,7 @@ class ControllerFactory_Core {
     define("BASE_URL", $request["base"]);
 
     if (IS_CLI)
-      $base_path = DOC_ROOT."/";
+      $base_path = "/";
     else
       $base_path = substr($_SERVER["SCRIPT_NAME"], 0, strrpos($_SERVER["SCRIPT_NAME"], "/")+1);
     /**
