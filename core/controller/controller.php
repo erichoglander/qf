@@ -89,7 +89,7 @@ class Controller {
       $this->Cache = newClass("Cache", $this->Db);
       $this->Variable = newClass("Variable", $this->Db);
       $this->User = $this->getUser();
-      $this->Model = $this->getModel($this->name);
+      $this->Model = $this->getModel($this->name, true);
       if ($init) {
         $this->automaticCron();
         $this->defaultViewData();
@@ -258,16 +258,20 @@ class Controller {
   /**
    * Get model of given name
    * @see    newClass()
-   * @param  string
+   * @param  string $name
+   * @param  bool   $fallback
    * @return \Model
    */
-  protected function getModel($name) {
+  protected function getModel($name, $fallback = false) {
     $arr = explode("_", $name);
     $cname = "";
     foreach ($arr as $a)
       $cname.= ucwords($a);
     $cname.= "_Model";
-    return $this->newClass($cname);
+    $Model = $this->newClass($cname);
+    if (!$Model && $fallback)
+      $Model = $this->newClass("Model");
+    return $Model;
   }
 
   /**
