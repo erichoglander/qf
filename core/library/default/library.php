@@ -35,6 +35,7 @@ class Default_Library_Core extends Library {
     "js/select_custom.js",
     "js/tooltip.js",
     "js/interval.js",
+    "js/form_slider.js",
     "js/popup.js",
     "js/natural_form.js",
     "js/form_sort.js",
