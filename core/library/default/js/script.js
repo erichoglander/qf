@@ -149,6 +149,16 @@ Element.prototype.getElementByClassName = function(cname) {
 }
 
 /**
+ * Get parent element with class name
+ * @param string cname
+ * @return \Element
+ */
+Element.prototype.getParentByClassName = function(cname) {
+  for (var el = this.parentNode; el && !el.hasClass(cname); el = el.parentNode);
+  return el; 
+}
+
+/**
  * Trigger an event manually
  * @param string type
  */
