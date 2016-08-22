@@ -37,6 +37,7 @@ class ContentConfig_Form_Core extends Form {
                 "editor" => t("Editor"),
                 "tinymce" => "TinyMCE",
                 "image" => t("Image"),
+                "link" => t("Link"),
               ],
               "required" => true
             ],

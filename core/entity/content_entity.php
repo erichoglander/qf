@@ -108,6 +108,37 @@ class Content_Entity_Core extends l10n_Entity {
     if ($field == "editor" || $field == "tinymce") {
       return $value;
     }
+    if ($field == "link") {
+      if (strlen($value)) {
+        if ($value[0] == "/")
+          $value = substr($value, 1);
+        if (preg_match("/^[^\/\.]+\.[^\/\.]+/", $value))
+          $value = "http://".$value;
+        else
+          $value = url($value);
+        return '<a href="'.$value.'"></a>';
+      }
+    }
+    return null;
+  }
+  
+  /**
+   * Get field form item structure
+   * @param  array $field
+   * @param  string $value
+   * @return array
+   */
+  public function fieldFormItem($field, $value = null) {
+    $item = [
+      "type" => $field["type"],
+      "label" => $field["title"],
+      "value" => $value,
+    ];
+    if (in_array($field["type"], ["text", "textarea", "link"]))
+      $item["value"] = xss($value);
+    if ($field["type"] == "link")
+      $item["type"] = "text";
+    return $item;
   }
 
 

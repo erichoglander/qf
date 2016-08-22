@@ -15,13 +15,8 @@ class ContentEdit_Form_Core extends Form {
       if ($Content->l10n()) {
         foreach ($languages as $language) {
           $data = $Content->translate("data", $language->lang);
-          foreach ($Content->get("config")["fields"] as $i => $field) {
-            $items["field_".$i] = [
-              "type" => $field["type"],
-              "label" => $field["title"],
-              "value" => (isset($data[$i]) ? $data[$i] : null),
-            ];
-          }
+          foreach ($Content->get("config")["fields"] as $i => $field)
+            $items["field_".$i] = $Content->fieldFormItem($field, (isset($data[$i]) ? $data[$i] : null));
           $structure["items"][$language->lang] = [
             "type" => "fieldset",
             "collapsible" => true,
@@ -32,13 +27,8 @@ class ContentEdit_Form_Core extends Form {
         }
       }
       else {
-        foreach ($Content->get("config")["fields"] as $i => $field) {
-          $items["field_".$i] = [
-            "type" => $field["type"],
-            "label" => $field["title"],
-            "value" => $Content->get("data")[$i],
-          ];
-        }
+        foreach ($Content->get("config")["fields"] as $i => $field)
+          $items["field_".$i] = $Content->fieldFormItem($field, $Content->get("data")[$i]);
         $structure["items"] = $items;
       }
     }

@@ -2891,5 +2891,16 @@
                 "updated": "1467094870"
             }
         }
+    },
+    {
+        "lang": "en",
+        "string": "Link",
+        "translations": {
+            "sv": {
+                "lang": "sv",
+                "string": "Länk",
+                "updated": "1471868302"
+            }
+        }
     }
 ]
