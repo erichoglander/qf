@@ -140,6 +140,66 @@ class Content_Entity_Core extends l10n_Entity {
       $item["type"] = "text";
     return $item;
   }
+  
+  /**
+   * Save entity
+   */
+  public function save() {
+    // Set files to permanent status
+    if ($this->get("config")["l10n"]) {
+      foreach ($this->translations() as $lang => $Content) {
+        $data = $Content->get("data");
+        foreach ($Content->fields() as $i => $field) {
+          if ($field["type"] == "image" && !empty($data[$i])) {
+            $File = $this->getEntity("File", $data[$i]);
+            if ($File->id() && $File->get("status") == 0) {
+              $File->set("status", 1);
+              $File->save();
+            }
+          }
+        }
+      }
+    }
+    $data = $this->get("data");
+    foreach ($this->fields() as $i => $field) {
+      if ($field["type"] == "image" && !empty($data[$i])) {
+        $File = $this->getEntity("File", $data[$i]);
+        if ($File->id() && $File->get("status") == 0) {
+          $File->set("status", 1);
+          $File->save();
+        }
+      }
+    }
+    return parent::save();
+  }
+  
+  /**
+   * Delete entity
+   */
+  public function delete() {
+    // Delete all files
+    if ($this->get("config")["l10n"]) {
+      foreach ($this->translations() as $lang => $Content) {
+        $data = $Content->get("data");
+        foreach ($Content->fields() as $i => $field) {
+          if ($field["type"] == "image" && !empty($data[$i])) {
+            $File = $this->getEntity("File", $data[$i]);
+            if ($File->id())
+              $File->delete();
+          }
+        }
+      }
+    }
+    $data = $this->get("data");
+    foreach ($this->fields() as $i => $field) {
+      if ($field["type"] == "image" && !empty($data[$i])) {
+        $File = $this->getEntity("File", $data[$i]);
+        if ($File->id())
+          $File->delete();
+      }
+    }
+    return parent::delete();
+  }
 
 
   /**
