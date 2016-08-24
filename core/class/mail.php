@@ -75,6 +75,12 @@ class Mail_Core extends Model {
    * @var string
    */
   public $api_credentials = [];
+  
+  /**
+   * Mandrill data to merge with message
+   * @var array
+   */
+  public $mandrill_data = [];
 
 
   /**
@@ -123,7 +129,7 @@ class Mail_Core extends Model {
         return false;
       }
       
-      $data = [
+      $data = $this->mandrill_data + [
         "subject" => $this->subject,
         "from_email" => $this->from,
         "to" => [[
