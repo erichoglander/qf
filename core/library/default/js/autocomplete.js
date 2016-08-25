@@ -114,7 +114,10 @@ function autocomplete(el) {
     }
   }
   this.onBlur = function() {
-    this.hideItems();
+    // Workaround for idiotic chrome browser
+    setTimeout(function() {
+      this.hideItems();
+    }, 10);
   }
   this.onFocus = function() {
     this.showItems();
