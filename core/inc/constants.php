@@ -11,14 +11,28 @@
 define("REQUEST_TIME", time());
 
 /**
- * Where or not the request is made through cli
+ * Whether or not the request is made through cli
  * @var bool
  */
 define("IS_CLI", !empty($_SERVER["SHELL"]));
 
+
+if (IS_CLI)
+  $base_path = "/";
+else
+  $base_path = substr($_SERVER["SCRIPT_NAME"], 0, strrpos($_SERVER["SCRIPT_NAME"], "/")+1);
+/**
+ * The path before files
+ * 
+ * It's usually the same as BASE_URL, but does
+ * not contain prefixes, so it can be used locate files
+ * @var string
+ */
+define("BASE_PATH", $base_path);
+
 if (!IS_CLI) {
   /**
-   * What http protocol was used for the request, http or https
+   * Which http protocol was used for the request: http or https
    * @var string
    */
   define("HTTP_PROTOCOL", (empty($_SERVER["HTTPS"]) ? "http" : "https"));

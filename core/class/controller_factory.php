@@ -6,8 +6,7 @@
 /**
  * Controller Factory, where the request begins
  * 
- * Parses the uri, selects the controller, 
- * and executes the action
+ * Parses the uri, selects the controller, and executes the action
  * @author Eric Höglander
  */
 class ControllerFactory_Core {
@@ -79,28 +78,15 @@ class ControllerFactory_Core {
      * The path before the uri
      * 
      * If the web is directly under the domain, it will contain "/"
-     * If there is a language prefix it will might "/en/" or "/sv/"
+     * If there is a language prefix it will be "/en/" or "/sv/"
      * Ex: /
      * @var string
      */
     define("BASE_URL", $request["base"]);
 
-    if (IS_CLI)
-      $base_path = "/";
-    else
-      $base_path = substr($_SERVER["SCRIPT_NAME"], 0, strrpos($_SERVER["SCRIPT_NAME"], "/")+1);
-    /**
-     * The path before files
-     * 
-     * It's usually the same as BASE_URL, but does
-     * not contain prefixes, so it can be used locate files
-     * @var string
-     */
-    define("BASE_PATH", $base_path);
-
     /**
      * The alias of the current page. Contains the same value
-     * as REQUEST_PATH if there is not alias
+     * as REQUEST_PATH if there is no alias
      * 
      * Ex: blog/my-first-blog-post
      * @var string
@@ -124,7 +110,7 @@ class ControllerFactory_Core {
     /**
      * Uri of public files. Used in urls
      * 
-     * Ex: files
+     * Ex: /files
      * @var string
      */
     define("PUBLIC_URI", BASE_PATH.$this->Config->getPublicUri());
@@ -132,7 +118,7 @@ class ControllerFactory_Core {
     /**
      * Uri of private files. Used in urls
      * 
-     * Ex: file/private
+     * Ex: /file/private
      * @var string
      */
     define("PRIVATE_URI", BASE_URL.$this->Config->getPrivateUri());
@@ -215,7 +201,7 @@ class ControllerFactory_Core {
    * Parses the uri into an array we can use to determine our next move
    * @param  string $uri
    * @param  bool   $raw If true, ignore aliases and redirects
-   * @return array Keys: uri, query, lang, base, path, alias, args, redirect
+   * @return array  Keys: uri, query, lang, base, path, alias, args, redirect
    */
   public function parseUri($uri, $raw = false) {
     
@@ -224,11 +210,12 @@ class ControllerFactory_Core {
     if (strpos($uri, "/") === 0)
       $uri = substr($uri, 1);
     
+    // Default request values
     $request = [
       "uri" => $uri,
       "query" => null,
       "lang" => $this->Config->getDefaultLanguage(),
-      "base" => (IS_CLI ? "/" : substr($_SERVER["SCRIPT_NAME"], 0, strrpos($_SERVER["SCRIPT_NAME"], "/")+1)),
+      "base" => BASE_PATH,
     ];
     $redir = [];
 

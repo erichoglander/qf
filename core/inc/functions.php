@@ -127,12 +127,13 @@ function pascalToSnake($str, $delimiter = "_") {
 
 
 /**
- * Formats a number bytes into a readable format
+ * Formats a number of bytes into a readable format
  * @param  int $bytes Ex: 2048
  * @return string     Ex: 2kB
  */
 function formatBytes($bytes) {
-  if (!$bytes) return "0B";
+  if (!$bytes) 
+    return "0B";
   $units = Array("B", "kB", "MB", "GB", "TB");
   $pow = floor(log($bytes)/log(1024));
   $bytes/= pow(1024, $pow);
@@ -167,11 +168,11 @@ function decimalInt($value) {
  *
  * Used primarily for formatting stored currency
  * 
- * @param  int $value         Ex: 375
- * @param  int $p            Number of decimals
+ * @param  int     $value    Ex: 375
+ * @param  int     $p        Number of decimals
  * @param  string  $dec      Decimal point
  * @param  string  $thousand Thousand separator
- * @return string
+ * @return string            Ex: 3,75
  */
 function decimalFloat($value, $p = 2, $dec = ",", $thousand = " ") {
   return number_format($value/100, $p, $dec, $thousand);
@@ -195,7 +196,7 @@ function getjson($assoc = false) {
 /**
  * print_r for usage in HTML
  * @param  mixed  $data
- * @param  int $ret If true, returns the output, otherwise prints it
+ * @param  int    $ret  If true, returns the output, otherwise prints it
  * @return string
  */
 function pr($data, $ret = 0) {
@@ -234,7 +235,6 @@ function shorten($str, $len) {
 
 /**
  * Formats a string to suitable css class
- * 
  * @param  string $str Ex: Some weird_String
  * @return string      Ex: some-weird-string
  */
@@ -247,7 +247,7 @@ function cssClass($str) {
 }
 
 /**
- * Created a random hexstring that is hopefully unique
+ * Create a random hexstring that is hopefully unique
  * @return string 12 characters long
  */
 function guid() {
@@ -258,7 +258,7 @@ function guid() {
  * Get absolute file path
  *
  * Returns file in extended directory if it exists
- * otherwise return from core directory
+ * otherwise return file from core directory
  *
  * @see fileUrl()
  * @param  string $path Ex: library/mylib/somefile.php
@@ -295,7 +295,7 @@ function fileUrl($path) {
 }
 
 /**
- * Render atemplate from path
+ * Render a template from path
  * @param  string $include_path
  * @param  array  $vars
  * @return string
@@ -454,8 +454,8 @@ function uriAccess($uri) {
 
 /**
  * Sets a system message
- * @param  string $msg
- * @param  string $type
+ * @param string $msg
+ * @param string $type
  */
 function setmsg($msg, $type = "info") {
   if (!isset($_SESSION["sysmsg"]))
@@ -515,11 +515,8 @@ function addlog($category, $text, $data = null, $type = "info") {
 }
 
 /**
- * Redirects the visitor
- *
- * The function uses url() to redirect the visitor to the formatted url
- *
- * @see url
+ * Redirects the visitor to given url
+ * @see url()
  * @param  string  $url
  * @param  boolean $redir If true, it will redirect to the redir param (if set)
  */
@@ -547,7 +544,7 @@ function refresh() {
 }
 
 /**
- * Simple http request without options
+ * Simple http request with cURL
  * @param  string $url
  * @param  bool   $binary
  * @return string
@@ -565,7 +562,7 @@ function httpRequest($url, $binary = false) {
 
 /**
  * Prompt a file download
- * @param  string $path Path to file
+ * @param string $path Path to file
  */
 function promptFile($path) {
   header("Content-Type: application/octet-stream");
@@ -587,6 +584,11 @@ function jth($html) {
 
 /**
  * Displays an icon with a link if user has access to the uri
+ * @see FontAwesome\Icon
+ * @see uriAccess()
+ * @param  string $uri
+ * @param  string $icon
+ * @return string
  */
 function iconBtn($uri, $icon = "pencil") {
   if (!uriAccess($uri))
