@@ -19,6 +19,12 @@ class Imagestyle_Core {
   public $src;
   
   /**
+   * Saved image path
+   * @var string
+   */
+  public $dest;
+  
+  /**
    * Where to save resulting image
    * @var string public or private
    */
@@ -86,7 +92,7 @@ class Imagestyle_Core {
    * Perform style operations
    * @param  string $name Name of style
    * @param  bool   $save
-   * @return string
+   * @return string|bool  url to image if $save is true
    */
   public function style($name, $save = true) {
     if (!$this->styleExists($name))
@@ -99,8 +105,11 @@ class Imagestyle_Core {
     if ($save) {
       $target_path = $path."/".$dir."/".$fname;
       $target_uri = $uri."/".$dir."/".$fname;
-      if (file_exists($target_path))
+      if (file_exists($target_path)) {
+        list($this->width, $this->height) = getimagesize($target_path);
+        $this->dest = $target_path;
         return $target_uri;
+      }
     }
     if (!$this->loadSource())
       return null;
@@ -419,6 +428,7 @@ class Imagestyle_Core {
    * @param bool
    */
   public function save($dest) {
+    $this->dest = $dest;
     if ($this->lib == "imagick") {
       return $this->im->writeImage($dest);
     }
