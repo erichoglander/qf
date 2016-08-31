@@ -51,7 +51,19 @@ class Mail_Core extends Model {
    * @var boolean
    */
   public $include_signature = true;
-
+  
+  /**
+   * Which (if any) template to use
+   * @var string
+   */
+  public $template;
+  
+  /**
+   * Any variables to use in template
+   * @var string
+   */
+  public $template_vars = [];
+  
   /**
    * File attachments
    * @var array
@@ -68,7 +80,7 @@ class Mail_Core extends Model {
    * Use an API
    * @var string
    */
-  public $api = null;
+  public $api;
   
   /**
    * API credentials
@@ -121,6 +133,22 @@ class Mail_Core extends Model {
     $message = $this->message;
     if ($this->include_signature)
       $message.= $this->signature();
+    
+    if ($this->template) {
+      $path = filePath("template/mail/".$this->template.".php");
+      if ($path) {
+        $vars = [
+          "from" => $this->from,
+          "from_name" => $this->from_name,
+          "to" => $this->to,
+          "to_name" => $this->to_name,
+          "message" => $message,
+          "subject" => $this->subject,
+          "html" => $html,
+        ] + $this->template_vars;
+        $message = renderTemplate($path, $vars);
+      }
+    }
     
     if ($this->api == "mandrill") {
       
