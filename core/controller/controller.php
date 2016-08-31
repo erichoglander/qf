@@ -369,7 +369,7 @@ class Controller {
   protected function menuAccess($menu) {
     if (array_key_exists("href", $menu)) {
       if (!$this->uriAccess($menu["href"]))
-        unset($menu["href"]);
+        return [];
     }
     if (!empty($menu["links"])) {
       foreach ($menu["links"] as $key => $link) {
