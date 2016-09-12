@@ -537,7 +537,7 @@ class FormItem extends Model {
       $value = $this->value();
       if ($value === null)
         $value = [];
-      if (empty($value) && $this->multiple_new_empty || $this->multiple_new && !$this->submitted)
+      if (!$this->submitted && (empty($value) && $this->multiple_new_empty || $this->multiple_new))
         $value[] = null;
       $this->items = [];
       $st = $structure;
