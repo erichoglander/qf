@@ -8,12 +8,25 @@ namespace JsonToHtml {
     $singleTags = ["input", "img", "br", "hr", "link", "meta", "area", "base", "col", "frame", "param", "isindex", "basefont", "path"];
     while (true) {
       $x = strpos($html, "<");
+      // Comment
+      if (strpos($html, "<!--") === 0) {
+        $x = strpos($html, "-->");
+        $value = [
+          "comment" => substr($html, 4, $x-4),
+        ];
+        if ($i == -1)
+          $json[] = $value;
+        else
+          $stack[$i]["children"][] = $value;
+        $html = substr($html, $x+3);
+      }
       // Element
-      if ($x === 0) {
+      else if ($x === 0) {
         $x = strpos($html, ">");
         if ($x === false)
           return null;
         $tag = substr($html, 0, $x+1);
+        // End of tag
         if ($tag[1] == "/") {
           $el = array_pop($stack);
           $i--;
@@ -24,6 +37,7 @@ namespace JsonToHtml {
             $stack[$i]["children"][] = $el;
           }
         }
+        // New tag
         else {
           $stack[++$i] = [
             "tagName" => preg_replace("/^\<\s*([a-z0-9]+).*$/si", "$1", $tag),

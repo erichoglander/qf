@@ -39,6 +39,10 @@ function jsonToHtml(parent, json, replace, ns) {
       else if (json.script) {
         eval(json.script);
       }
+      else if (json.comment) {
+        var comment = document.createComment(json.comment);
+        parent.appendChild(comment);
+      }
     }
   }
   else if (json.length) {
