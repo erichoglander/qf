@@ -254,7 +254,7 @@ class Imagestyle_Core {
    * @param int   $h top/bottom padding
    * @param array $color
    */
-  public function border($w, $h, $color) {
+  public function border($w, $h, $color = null) {
     if (!$this->im || (!$w && !$h))
       return;
     if (!$color)
@@ -363,7 +363,7 @@ class Imagestyle_Core {
    * @param int   $h top/bottom padding
    * @param array $color
    */
-  public function imagickBorder($w, $h, $color) {
+  public function imagickBorder($w, $h, $color = null) {
     if (!$this->im || (!$w && !$h))
       return;
     if (!$color)
