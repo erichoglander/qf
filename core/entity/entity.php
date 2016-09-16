@@ -448,6 +448,31 @@ class Entity {
   protected function getEntity($name, $id = null) {
     return newClass($name."_Entity", $this->Db, $id);
   }
+  
+  /**
+   * Get multiple entities of given name
+   * @see getEntity
+   * @param  string $name
+   * @param  array  $arr Array of integers or objects/arrays with id as property/key
+   * @return array
+   */
+  protected function getEntities($name, $arr = []) {
+    if (empty($arr))
+      return [];
+    $items = [];
+    foreach ($arr as $row) {
+      if (is_numeric($row))
+        $id = $row;
+      else if (is_object($row) && property_exists($row, "id"))
+        $id = $row->id;
+      else if (is_array($row) && array_key_exists("id", $row))
+        $id = $row["id"];
+      else
+        continue;
+      $items[] = $this->getEntity($name, $id);
+    }
+    return $items;
+  }
 
   /**
    * Whether or not to generate an url-alias for the entity
