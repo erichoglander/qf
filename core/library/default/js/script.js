@@ -434,7 +434,7 @@ Element.prototype.getTopPos = function(real) {
   if (typeof(real) == "undefined")
     real = true;
   if (real && this.getBoundingClientRect)
-    return this.getBoundingClientRect().top + document.documentElement.scrollTop;
+    return this.getBoundingClientRect().top + scrollTop();
   var y = 0;
   var el = this;
   while (el != null) {
