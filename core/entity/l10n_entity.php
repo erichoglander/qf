@@ -79,9 +79,9 @@ class l10n_Entity extends Entity {
   public function json($include_translations = true, $include_id = true) {
     $json = parent::json($include_id);
     if ($include_translations) {
-      $json->translations = [];
+      $json["translations"] = [];
       foreach ($this->translations() as $lang => $Entity) 
-        $json->translations[$lang] = $Entity->json(false, $include_id);
+        $json["translations"][$lang] = $Entity->json(false, $include_id);
     }
     return $json;
   }
