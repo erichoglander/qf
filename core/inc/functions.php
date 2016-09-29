@@ -393,6 +393,13 @@ function uri($path, $lang = null) {
  * @return string         Ex: /en/blog/my-blog-post
  */
 function url($path, $redir = false) {
+  if (!strlen($path))
+    return BASE_URL;
+  // Just return absolute urls
+  if (preg_match("/^[a-z]+\:\/\//", $path))
+    return $path;
+  // Remove leading slashes
+  $path = preg_replace("/^[\/]+/", "", $path);
   $url = BASE_URL.uri($path);
   if ($redir) {
     $uri = REQUEST_PATH;
