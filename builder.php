@@ -19,7 +19,7 @@ function arg($prompt, $opt = []) {
     "type" => null,
     "options" => null,
   ];
-  if ($opt["type"] == "bool")
+  if ($opt["type"] == "bool" && empty($opt["options"]))
     $opt["options"] = ["y", "n"];
   if (empty($GLOBALS["stdin_args"])) {
     print $prompt;

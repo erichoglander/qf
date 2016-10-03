@@ -64,7 +64,8 @@ class Fullstack extends Stack {
         $f = substr($key, 6);
         unset($args[$key]);
         if ($val == ":undo") {
-          unset($args["fields"][$n]);
+          $field = [];
+          $args["fields"][$n] = [];
         }
         else {
           if ($val == ":list") {
