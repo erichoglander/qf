@@ -246,7 +246,7 @@ class {$name}_Model extends Model {
       foreach (\$qs as \$i => \$q) {
         \$key = ":q".\$i;
         // \$query["where"][] = "title LIKE ".\$key;
-        // \$query["vars"][\$key] = \$q;
+        // \$query["vars"][\$key] = "%".\$q."%";
       }
     }
     if (!empty(\$values["limit"]))
