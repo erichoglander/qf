@@ -337,7 +337,7 @@ class '.$name.'_Entity extends '.$extend.' {
     // Columns
     $rows[] = "`id` int(10) unsigned NOT NULL AUTO_INCREMENT";
     if ($args["type_default"] == "y" && $args["l10n"] == "y") {
-      $rows[] = "`sid` int(11) DEFAULT NULL";
+      $rows[] = "`sid` int(10) unsigned DEFAULT NULL";
       $rows[] = "`lang` varchar(2) COLLATE ".static::collateSql()." DEFAULT NULL";
     }
     foreach ($args["fields"] as $i => $field) {
