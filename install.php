@@ -265,6 +265,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(64) COLLATE utf8_swedish_ci NOT NULL,
   `email` varchar(128) COLLATE utf8_swedish_ci DEFAULT NULL,
+  `lang` varchar(2) COLLATE utf8_swedish_ci DEFAULT NULL,
   `status` tinyint(4) DEFAULT '1',
   `created` int(11) NOT NULL DEFAULT '0',
   `updated` int(11) NOT NULL DEFAULT '0',
@@ -342,7 +343,7 @@ if (!$Db->query($sql))
 print "OK\n";
 
 $Variable = newClass("Variable", $Db);
-$Variable->set("core_update", 6);
+$Variable->set("core_update", 8);
 
 print "Installing updates...\n";
 $doc = $ControllerFactory->executeUri("updater/update");

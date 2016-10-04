@@ -89,6 +89,38 @@ class Imagestyle_Core {
   }
   
   /**
+   * Return the uri of a specific style of an image
+   * @param  string $name Style name
+   * @param  string $src Original file source
+   * @return string Ex: styles/upload/myfile_18as0c19.jpg
+   */
+  public function styleUri($name, $src) {
+    $info = pathinfo(strtolower($src));
+    $sum = substr(md5(filesize($fname)."_checksum_".$src), 0, 8);
+    return "styles/".$name."/".$info["filename"]."_".$sum.".".$info["extension"];
+  }
+  
+  /**
+   * Return the url of a specific style of an image
+   * @param  string $name Style name
+   * @param  string $src Original file source
+   * @return string
+   */
+  public function styleUrl($name, $src) {
+    return $this->uri()."/".$this->styleUri($name, $src);
+  }
+  
+  /**
+   * Return the path of a specific style of an image
+   * @param  string $name Style name
+   * @param  string $src Original file source
+   * @return string
+   */
+  public function stylePath($name, $src) {
+    return $this->path()."/".$this->styleUri($name, $src);
+  }
+  
+  /**
    * Perform style operations
    * @param  string $name Name of style
    * @param  bool   $save
@@ -98,17 +130,13 @@ class Imagestyle_Core {
     if (!$this->styleExists($name))
       return null;
     $this->info = pathinfo(strtolower($this->src));
-    $dir = "styles/".$name;
-    $fname = $this->info["basename"];
-    $path = $this->path();
-    $uri = $this->uri();
     if ($save) {
-      $target_path = $path."/".$dir."/".$fname;
-      $target_uri = $uri."/".$dir."/".$fname;
+      $target_path = $this->stylePath($name, $this->src);
+      $target_url = $this->styleUrl($name, $this->src);
       if (file_exists($target_path)) {
         list($this->width, $this->height) = getimagesize($target_path);
         $this->dest = $target_path;
-        return $target_uri;
+        return $target_url;
       }
     }
     if (!$this->loadSource())
@@ -122,11 +150,12 @@ class Imagestyle_Core {
       call_user_func_array([$this, $func], $params);
     }
     if ($save) {
-      if (!file_exists($path."/".$dir))
-        mkdir($path."/".$dir, 0774, true);
+      $info = pathinfo($target_path);
+      if (!file_exists($info["dirname"]))
+        mkdir($info["dirname"], 0774, true);
       if (!$this->save($target_path))
         return null;
-      return $target_uri;
+      return $target_url;
     }
     return true;
   }
