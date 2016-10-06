@@ -124,8 +124,12 @@ function slider(el) {
     };
     if (this.tags.pager.wrap) {
       this.tags.pager.pages = this.tags.pager.wrap.getElementsByClassName("page");
-      if (this.tags.pager.pages.length)
+      if (this.tags.pager.pages.length) {
+        this.tags.pager.pages = Array.prototype.slice.call(this.tags.pager.pages);
+        if (this.tags.pager.wrap.hasClass("pager-reverse"))
+          this.tags.pager.pages.reverse();
         this.tags.pager.pages[0].addClass("active");
+      }
     }
   }
   
