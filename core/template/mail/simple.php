@@ -1,4 +1,16 @@
 <?php
+/**
+ * Simple email template
+ *
+ * Template vars:
+ *   logo         url to logo
+ *   logo_width   (optional, recommended) width of logo in px
+ *   logo_height  (optional, recommended) height of logo in px
+ *   top_color    background color the top block
+ *   site_name    the name of the site
+ *   footer       (optional) any extra markup to appear in the footer
+ * @author Eric Höglander
+ */
 if ($logo && substr($logo, 0, 4) != "http")
   $logo = SITE_URL.$logo;
 $logo_attr = "";
