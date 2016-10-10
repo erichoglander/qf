@@ -61,7 +61,7 @@ var smoothAnchor = {
    * Prevent initial hash scroll
    */
   prevent: function() {
-    if (!this.is_init && window.location.hash.length > 1)
+    if (this.active && !this.is_init && window.location.hash.length > 1)
       window.scrollTo(0,0);
   },
   
