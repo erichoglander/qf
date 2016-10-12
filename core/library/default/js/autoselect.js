@@ -127,10 +127,13 @@ function autoselect(el) {
   }
   
   this.onBlur = function() {
-    if (!this.tags.input.value.length && this.tags.select.selectedIndex != 0) {
-      this.tags.select.selectedIndex = 0;
-      this.tags.select.trigger("change");
-    }
+    var self = this;
+    setTimeout(function() {
+      if (!self.tags.input.value.length && self.tags.select.selectedIndex != 0) {
+        self.tags.select.selectedIndex = 0;
+        self.tags.select.trigger("change");
+      }
+    }, 100);
   }
   
   this.isDisabled = function() {
