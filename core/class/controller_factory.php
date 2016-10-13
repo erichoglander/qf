@@ -179,8 +179,11 @@ class ControllerFactory_Core {
    */
   public function executeControllerAction($controller, $action, $args = []) {
     $Controller = $this->getController($controller);
-    if (!is_callable([$Controller, $action."Action"]))
+    if (!is_callable([$Controller, $action."Action"])) {
+      if (!$this->Db->connected)
+        return $Controller->databaseFail();
       return $Controller->notFound();
+    }
     return $Controller->action($action, $args);
   }
 
