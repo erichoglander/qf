@@ -155,7 +155,7 @@ Element.prototype.getElementByClassName = function(cname) {
  */
 Element.prototype.getParentByClassName = function(cname) {
   for (var el = this.parentNode; el && el.tagName && !el.hasClass(cname); el = el.parentNode);
-  if (!el.tagName)
+  if (!el || !el.tagName)
     return null;
   return el; 
 }
