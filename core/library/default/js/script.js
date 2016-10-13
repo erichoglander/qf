@@ -6,6 +6,14 @@ function isIE9() {
   return navigator.appVersion.indexOf("MSIE 9") > 0;
 }
 
+/**
+ * Check if browser is IE
+ * @return bool
+ */
+function isIE() {
+  return navigator.appVersion.indexOf("MSIE") > 0 || navigator.appVersion.indexOf("Trident") > 0;
+}
+
 // Enable prototypes for IE9
 if (isIE9()) {
   Object.setPrototypeOf = function(obj, proto) {

@@ -61,7 +61,7 @@ function selectCustom(el) {
           self.selectChange();
         });
       });
-      var config = { childList: true, subtree: true, attributeFilter: ["disabled"] };
+      var config = { childList: true, subtree: true, attributes: true, attributeFilter: ["disabled"] };
       observer.observe(this.tags.select, config);
     }
   }
