@@ -81,7 +81,8 @@ function popup(el) {
     this.tags.light.className = "popup-light";
     this.tags.inner.className = "popup-inner";
     this.tags.close.className = "popup-close";
-    this.tags.close.innerHTML = close;
+    if (close)
+      this.tags.close.innerHTML = close;
     this.tags.close.appendChild(FontAwesome.icon("times"));
     this.tags.wrap.appendChild(this.tags.dark);
     this.tags.wrap.appendChild(this.tags.light);
