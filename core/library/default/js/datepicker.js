@@ -53,6 +53,11 @@ function datepicker(el) {
     var self = this;
     this.tags.input.addEventListener("click", function(){ self.toggle(); }, false);
     window.addEventListener("click", function(e){ self.windowClick(e); }, false);
+    this.loadInput();
+    this.render();
+  }
+  
+  this.loadInput = function() {
     if (this.tags.input.value.length) {
       var arr = this.tags.input.value.split("-");
       this.value.y = parseInt(arr[0]);
@@ -60,8 +65,11 @@ function datepicker(el) {
       this.value.d = parseInt(arr[2]);
       this.active.y = this.value.y;
       this.active.m = this.value.m;
+      if (this.tags.year)
+        this.tags.year.textContent = this.value.y;
+      if (this.tags.month)
+        this.tags.month.textContent = this.months[this.value.m-1];
     }
-    this.render();
   }
 
   this.render = function() {
@@ -289,6 +297,7 @@ function datepicker(el) {
     return (this.tags.wrap.className.match("datepicker-open") ? true : false);
   }
   this.open = function() {
+    this.loadInput();
     this.renderCal();
     this.tags.wrap.addClass("datepicker-open");
   }
