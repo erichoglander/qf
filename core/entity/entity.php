@@ -243,11 +243,22 @@ class Entity {
 
   /**
    * Attempt to load entity from database based on id and $schema
+   * @see    loadRow
    * @param  int $id
    * @return bool
    */
   public function load($id) {
     $row = $this->Db->getRow("SELECT * FROM `".$this->schema["table"]."` WHERE id = :id", [":id" => $id]);
+    return $this->loadRow($row);
+  }
+
+  /**
+   * Attempt to load entity from a fetched row
+   * @see    load
+   * @param  object $row
+   * @return bool
+   */
+  public function loadRow($row) {
     if (!$row)
       return false;
     foreach ($row as $key => $value) {
