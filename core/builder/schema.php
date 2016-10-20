@@ -63,4 +63,42 @@ class Schema {
     return $arr;
   }
   
+  /**
+   * Get localized string from LANG
+   * Uses english as fallback,
+   * @param  string $token
+   * @param  array  $replacements
+   * @return string
+   */
+  public static function l10n($token, $replacements = []) {
+    $strings = static::l10n_strings();
+    if (!empty($strings[$token])) {
+      $arr = $strings[$token];
+      if (array_key_exists(LANG, $arr))
+        $str = $arr[LANG];
+      else if (array_key_exists("en", $arr))
+        $str = $arr["en"];
+      else
+        return null;
+      foreach ($replacements as $key => $val)
+        $str = str_replace($key, $val, $str);
+      return $str;
+    }
+    return null;
+  }
+  
+  /**
+   * Localized strings
+   * Structure: [
+   *   "my_token" => [
+   *     "en" => "My string",
+   *     "sv" => "Min text",
+   *   ],
+   * ]
+   * @return array
+   */
+  public static function l10n_strings() {
+    return [];
+  }
+  
 }

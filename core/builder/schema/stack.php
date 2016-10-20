@@ -87,6 +87,39 @@ EOD;
     $args["plural_lower"] = strtolower($args["plural"]);
   }
   
+  public static function l10n_strings() {
+    return [
+      "added" => [
+        "en" => ":title added",
+        "sv" => ":title skapad",
+      ],
+      "saved" => [
+        "en" => ":title saved",
+        "sv" => ":title sparad",
+      ],
+      "deleted" => [
+        "en" => ":title deleted",
+        "sv" => ":title raderad",
+      ],
+      "delete_confirm" => [
+        "en" => "Are you sure you want to delete :title?",
+        "sv" => "Är du säker att du vill radera :title?",
+      ],
+      "add" => [
+        "en" => "Add :title",
+        "sv" => "Lägg till :title",
+      ],
+      "edit" => [
+        "en" => "Edit :title",
+        "sv" => "Redigera :title",
+      ],
+      "delete" => [
+        "en" => "Delete :title",
+        "sv" => "Radera :title",
+      ],
+    ];
+  }
+  
   public static function files(&$args) {
     static::parseArgs($args);
     return [
@@ -127,6 +160,11 @@ EOD;
   
   public static function fileController($args) {
     extract($args);
+    $lang = LANG;
+    $added = self::l10n("added", [":title" => $singular]);
+    $saved = self::l10n("saved", [":title" => $singular]);
+    $deleted = self::l10n("deleted", [":title" => $singular]);
+    $delete_confirm = self::l10n("delete_confirm");
     return <<<EOD
 <?php
 class {$name}_Controller extends Controller {
@@ -140,7 +178,7 @@ class {$name}_Controller extends Controller {
     if (\$Form->isSubmitted()) {
       try {
         \$this->Model->add{$name}(\$Form->values());
-        setmsg(t("{$singular} added"), "success");
+        setmsg(t("{$added}", "{$lang}"), "success");
         redirect("{$uri}/list");
       }
       catch (Exception \$e) {
@@ -161,7 +199,7 @@ class {$name}_Controller extends Controller {
     if (\$Form->isSubmitted()) {
       try {
         \$this->Model->edit{$name}(\${$name}, \$Form->values());
-        setmsg(t("{$singular} saved"), "success");
+        setmsg(t("{$saved}", "{$lang}"), "success");
         redirect("{$uri}/list");
       }
       catch (Exception \$e) {
@@ -178,11 +216,11 @@ class {$name}_Controller extends Controller {
     \${$name} = \$this->getEntity("{$name}", \$args[0]);
     if (!\${$name}->id())
       return \$this->notFound();
-    \$Form = \$this->getForm("Confirm", ["text" => t("Are you sure you want to delete the {$singular_lower}?")]);
+    \$Form = \$this->getForm("Confirm", ["text" => t("{$delete_confirm}", "{$lang}", [":title" => \${$name}->id()])]);
     if (\$Form->isSubmitted()) {
       try {
         \$this->Model->delete{$name}(\${$name});
-        setmsg(t("{$singular} deleted"), "success");
+        setmsg(t("{$deleted}", "{$lang}"), "success");
         redirect("{$uri}/list");
       }
       catch (Exception \$e) {
@@ -236,7 +274,7 @@ class {$name}_Model extends Model {
     \${$name}->delete();
   }
   
-  public function listSearchQuery(\$values) {
+  public function listSearchQuery(\$values = []) {
     \$query = [
       "from" => "{$snake}",
       "cols" => ["id"],
@@ -254,11 +292,11 @@ class {$name}_Model extends Model {
     return \$query;
   }
   
-  public function listSearchNum(\$values) {
+  public function listSearchNum(\$values = []) {
     return \$this->Db->numRows(\$this->listSearchQuery(\$values));
   }
   
-  public function listSearch(\$values) {
+  public function listSearch(\$values = []) {
     return \$this->getEntities("{$name}", \$this->Db->getRows(\$this->listSearchQuery(\$values)));
   }
   
@@ -308,10 +346,12 @@ EOD;
   
   public static function fileViewAdd($args) {
     extract($args);
+    $lang = LANG;
+    $add = self::l10n("add", [":title" => $singular_lower]);
     return <<<EOD
 <?php
-\$this->Html->h1 = \$this->Html->title = t("Add {$singular_lower}");
-\$this->Html->breadcrumbs[] = ["{$uri}/list", t("{$plural}")];
+\$this->Html->h1 = \$this->Html->title = t("{$add}", "{$lang}");
+\$this->Html->breadcrumbs[] = ["{$uri}/list", t("{$plural}", "{$lang}")];
 \$this->Html->breadcrumbs[] = \$this->Html->title;
 
 print \$form;
@@ -320,10 +360,12 @@ EOD;
   
   public static function fileViewEdit($args) {
     extract($args);
+    $lang = LANG;
+    $edit = self::l10n("edit", [":title" => $singular_lower]);
     return <<<EOD
 <?php
-\$this->Html->h1 = \$this->Html->title = t("Edit {$singular_lower}");
-\$this->Html->breadcrumbs[] = ["{$uri}/list", t("{$plural}")];
+\$this->Html->h1 = \$this->Html->title = t("{$edit}", "{$lang}");
+\$this->Html->breadcrumbs[] = ["{$uri}/list", t("{$plural}", "{$lang}")];
 \$this->Html->breadcrumbs[] = \$this->Html->title;
 
 print \$form;
@@ -332,10 +374,12 @@ EOD;
   
   public static function fileViewDelete($args) {
     extract($args);
+    $lang = LANG;
+    $delete = self::l10n("delete", [":title" => $singular_lower]);
     return <<<EOD
 <?php
-\$this->Html->h1 = \$this->Html->title = t("Delete {$singular_lower}");
-\$this->Html->breadcrumbs[] = ["{$uri}/list", t("{$plural}")];
+\$this->Html->h1 = \$this->Html->title = t("{$delete}", "{$lang}");
+\$this->Html->breadcrumbs[] = ["{$uri}/list", t("{$plural}", "{$lang}")];
 \$this->Html->breadcrumbs[] = \$this->Html->title;
 
 print \$form;
@@ -344,13 +388,15 @@ EOD;
   
   public static function fileViewList($args) {
     extract($args);
+    $lang = LANG;
+    $add = self::l10n("add", [":title" => $singular_lower]);
     return <<<EOD
 <?php
-\$this->Html->h1 = \$this->Html->title = t("{$plural}");
+\$this->Html->h1 = \$this->Html->title = t("{$plural}", "{$lang}");
 \$this->Html->breadcrumbs[] = \$this->Html->title;
 ?>
 
-<a class="btn btn-primary" href="<?=url("{$uri}/add")?>"><?=t("Add {$singular_lower}")?></a>
+<a class="btn btn-primary" href="<?=url("{$uri}/add")?>"><?=t("{$add}", "{$lang}")?></a>
 
 <?=\$search?>
 

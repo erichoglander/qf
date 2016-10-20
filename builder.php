@@ -59,7 +59,10 @@ print "Builder script. Type :quit at any time to abort.\n";
 
 if (!IS_CLI)
   die("Can only be run through CLI");
-  
+
+$lang = arg("UI language for generated code", ["options" => ["en", "sv"], "default" => "en"]);
+define("LANG", $lang);
+
 do {
   $name = arg("Enter schema");
   if ($name == "list")
