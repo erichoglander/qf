@@ -741,6 +741,16 @@ class FormItem extends Model {
   }
 
   /**
+   * The value to be used for the input element
+   * @see    $parent_name
+   * @see    $name
+   * @return string
+   */
+  protected function inputValue() {
+    return $this->value(false);
+  }
+
+  /**
    * The css classes to be used for the item element
    * @see    $item_class
    * @return string
@@ -924,7 +934,7 @@ class FormItem extends Model {
       "focus" => $this->focus,
       "empty_option" => $this->empty_option,
       "options" => $this->options(),
-      "value" => $this->value(false),
+      "value" => $this->inputValue(),
     ];
     if (is_callable([$this, "preRenderInput"]))
       $this->preRenderInput($vars);
