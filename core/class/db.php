@@ -201,11 +201,12 @@ class Db_Core {
     catch(PDOException $e) {
       $debug = [
         "exception" => $e->getMessage(),
-        "backtrace" => debug_backtrace(),
+        "backtrace" => debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 4),
       ];
       if ($this->exception_depth == 0) {
         $this->exception_depth++;
-        addlog("database", "Exception", $debug, "error");
+        if (!$this->debug)
+          addlog("database", "Exception", $debug, "error");
       }
       $this->error($debug);
     }
@@ -213,10 +214,11 @@ class Db_Core {
     if ($err[0] != 00000) {
       $this->errors[] = $err;
       $debug = [
-        "backtrace" => debug_backtrace(),
+        "backtrace" => debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 4),
         "errorInfo" => $err,
       ];
-      addlog("database", "error ".$err[0], $debug, "error");
+      if (!$this->debug)
+        addlog("database", "error ".$err[0], $debug, "error");
       $this->error($debug);
     }
     return $stmt;
