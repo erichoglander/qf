@@ -177,9 +177,10 @@ class Db_Core {
    */
   public function query($sql, $param = []) {
     if (is_array($sql)) {
-      if (empty($param) && is_array($sql["vars"]))
-        $param = $sql["vars"];
-      $sql = $this->compileQuery($sql);
+      $ex = $sql;
+      $sql = $this->compileQuery($ex);
+      if (empty($param) && !empty($ex["vars"]) && is_array($ex["vars"]))
+        $param = $ex["vars"];
     }
     // Replace every array param with multiple primitive params
     foreach ($param as $key => $val) {
@@ -340,31 +341,98 @@ class Db_Core {
    * @param  array  $ex Expressions
    * @return string
    */
-  public function compileQuery($ex) {
+  public function compileQuery(&$ex) {
     
     // Possible expressions
-    $ex+= [
-      "from" => null,
+    $default = [
+      "type" => "SELECT",
+      "table" => null,
       "options" => [],
       "cols" => ["*"],
+      "values" => [],
       "joins" => [],
       "where" => [],
       "group" => [],
       "having" => [],
       "order" => [],
       "limit" => [],
+      "union" => [],
+      "union_rename" => false,
+      "vars" => [],
     ];
+    $ex+= $default;
     
-    if (empty($ex["from"]))
-      throw new Exception("Cannot compile query, missing FROM statement");
-    if (empty($ex["cols"]))
-      throw new Exception("Cannot compile query, missing columns");
+    // Backwards compatibility
+    if (!empty($ex["from"]))
+      $ex["table"] = $ex["from"];
+    
+    // Query needs either union or table+columns
+    if (empty($ex["union"])) {
+      if (empty($ex["type"]))
+        throw new Exception("Cannot compile query, missing query type");
+      if (empty($ex["table"]))
+        throw new Exception("Cannot compile query, missing table");
+      if (empty($ex["cols"]) && $ex["type"] == "SELECT")
+        throw new Exception("Cannot compile query, missing columns");
+      if (empty($ex["values"]) && in_array($ex["type"], ["INSERT", "UPDATE"]))
+        throw new Exception("Cannot compile query, missing values");
+    }
+    
+    // Wrap single values in arrays
+    foreach ($ex as $key => $val) {
+      if (array_key_exists($key, $default) && 
+          is_array($default[$key]) &&
+          !is_array($val))
+        $ex[$key] = [$val];
+    }
     
     // Compile query
-    $sql = "SELECT";
-    if (!empty($ex["options"]))
-      $sql.= " ".implode(" ", $ex["options"]);
-    $sql.= " ".implode(", ", $ex["cols"])." FROM ".$ex["from"]; 
+    if (!empty($ex["union"])) {
+      $unions = [];
+      foreach ($ex["union"] as $delta => $union) {
+        if (is_array($union)) {
+          $sql = $this->compileQuery($union);
+          // We need to merge vars from all subqueries into one
+          if (!empty($union["vars"])) {
+            if ($ex["union_rename"]) {
+              foreach ($union["vars"] as $key => $val) {
+                $new_key = $key."_u".$delta;
+                $sql = str_replace($key, $new_key, $sql);
+                $ex["vars"][$new_key] = $val;
+              }
+            }
+            else {
+              $ex["vars"]+= $union["vars"];
+            }
+          }
+          $unions[] = $sql;
+        }
+        else {
+          $unions[] = $union;
+        }
+      }
+      $sql = "(".implode(")\nUNION\n(", $unions).")";
+    }
+    else {
+      $sql = $ex["type"];
+      if (!empty($ex["options"]))
+        $sql.= " ".implode(" ", $ex["options"]);
+      if (in_array($ex["type"], ["SELECT", "DELETE"])) {
+        $sql.= " ".implode(", ", $ex["cols"])." FROM ".$ex["table"];
+      }
+      else if ($ex["type"] == "INSERT") {
+        $sql.= " INTO ".$ex["table"];
+        $sql.= "\n(".implode(", ", array_keys($ex["values"])).")";
+        $sql.= "\nVALUES(".implode(", ", array_values($ex["values"])).")";
+      }
+      else if ($ex["type"] == "UPDATE") {
+        $sql.= $ex["table"]." SET ";
+        $arr = [];
+        foreach ($ex["values"] as $key => $val)
+          $arr[] = $key."=".$val;
+        $sql.= implode(", ", $arr);
+      }
+    }
     if (!empty($ex["joins"]))
       $sql.= "\n".implode("\n", $ex["joins"]);
     if (!empty($ex["where"]))
