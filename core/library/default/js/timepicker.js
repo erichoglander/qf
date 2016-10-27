@@ -108,6 +108,7 @@ function timepicker(el) {
 
   this.renderValue = function() {
     this.tags.input.value = this.addZero(this.value.h%24)+":"+this.addZero(this.value.m);
+    this.tags.input.trigger("change");
   }
 
   this.addZero = function(val) {

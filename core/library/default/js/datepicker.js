@@ -273,6 +273,7 @@ function datepicker(el) {
     this.value.m = m;
     this.value.d = d;
     this.tags.input.value = y+"-"+this.addZero(m)+"-"+this.addZero(d);
+    this.tags.input.trigger("change");
   }
   this.chooseMonth = function(m) {
     this.active.m = m;
