@@ -41,9 +41,16 @@ class User_Model_Core extends Model {
     }
     else if ($registration == "admin_approval") {
       $User->set("status", 0);
-      // TODO: Approval mail
-      if ($User->save()) 
+      if ($User->save()) {
         $re = "admin_approval";
+        $to = $this->Config->getUserApprovalEmail();
+        if ($to) {
+          $this->sendMail("UserAdminApproval", $to, [
+            "User" => $User,
+            "link" => SITE_URL.url("user/edit/".$User->id()),
+          ]);
+        }
+      }
     }
     else {
       if ($User->save()) {

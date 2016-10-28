@@ -67,6 +67,15 @@ class Config_Core {
   }
 
   /**
+   * Where to send approval e-mails if user registration is "admin_approval"
+   * @see getUserRegistration
+   * @return string 
+   */
+  public function getUserApprovalEmail() {
+    return "";
+  }
+
+  /**
    * Libraries to be included 
    * @return array
    */
