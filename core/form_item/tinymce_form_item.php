@@ -17,6 +17,7 @@ class Tinymce_FormItem_Core extends FormItem {
       "statusbar" => false,
       "toolbar" => "bold italic | bullist numlist | link",
       "relative_urls" => false,
+      "paste_as_text" => true,
     ];
   }
   
