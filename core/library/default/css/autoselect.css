@@ -19,6 +19,7 @@
   transition: opacity 0.1s ease, visibility 0s 0.1s;
   -webkit-transition: opacity 0.1s ease, visibility 0s 0.1s;
 }
+.form-autoselect.is_mouse_down ~ .autoselect-options,
 .form-autoselect:focus ~ .autoselect-options {
   opacity: 1;
   filter: alpha(opacity=100);

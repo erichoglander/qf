@@ -44,6 +44,7 @@ function autocomplete(el) {
     this.timeoutTime = 400;
     this.timeout = null;
     this.itemActive = -1;
+    this.is_mouse_down = false;
     this.items = [];
     this.uri = this.tags.title.getAttribute("uri");
     this.lastLength = this.tags.title.length;
@@ -68,6 +69,8 @@ function autocomplete(el) {
     this.tags.title.addEventListener("focus", function(){ self.onFocus(); }, false);
     this.tags.remove.addEventListener("click", function(){ self.remove(); }, false);
     this.tags.value.addEventListener("reset", function(){ self.reset(); }, false);
+    this.tags.itemsWrap.addEventListener("mousedown", function(){ self.onMouseDown(); }, false);
+    this.tags.itemsWrap.addEventListener("mouseup", function(){ self.onMouseUp(); }, false);
     
   }
   
@@ -115,13 +118,17 @@ function autocomplete(el) {
   }
   this.onBlur = function() {
     var self = this;
-    // Workaround for idiotic chrome browser
-    setTimeout(function() {
-      self.hideItems();
-    }, 10);
+    if (!this.is_mouse_down)
+      this.hideItems();
   }
   this.onFocus = function() {
     this.showItems();
+  }
+  this.onMouseDown = function() {
+    this.is_mouse_down = true;
+  }
+  this.onMouseUp = function() {
+    this.is_mouse_down = false;
   }
   
   this.removeError = function() {
@@ -165,6 +172,7 @@ function autocomplete(el) {
     this.tags.itemsWrap.innerHTML = "";
     this.itemSetActive(-1);
     this.tags.items = [];
+    this.lastLength = 0;
   }
   this.renderItems = function(items) {
     var self = this;

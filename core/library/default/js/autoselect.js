@@ -41,13 +41,16 @@ function autoselect(el) {
   this.init = function() {
     var self = this;
     this.optionActive = -1;
+    this.is_mouse_down = false;
     this.tags.item = formGetItem(this.tags.input);
     this.tags.select = this.tags.item.getElementsByTagName("select")[0];
-    this.tags.options = this.tags.item.getElementsByClassName("autoselect-options")[0];
+    this.tags.options = this.tags.item.getElementByClassName("autoselect-options");
     this.tags.input.addEventListener("blur", function(){ self.onBlur(); }, false);
     this.tags.input.addEventListener("focus", function(){ self.onFocus(); }, false);
     this.tags.input.addEventListener("keydown", function(e){ self.onKeyDown(e); }, false);
     this.tags.input.addEventListener("keyup", function(e){ self.onKeyUp(e); }, false);
+    this.tags.options.addEventListener("mousedown", function(){ self.onMouseDown(); }, false);
+    this.tags.options.addEventListener("mouseup", function(){ self.onMouseUp(); }, false);
     this.tags.input.addClass("autoselect-init");
     self.selectChange();
     if (typeof(MutationObserver) == "function") {
@@ -128,12 +131,12 @@ function autoselect(el) {
   
   this.onBlur = function() {
     var self = this;
-    setTimeout(function() {
+    if (!this.is_mouse_down) {
       if (!self.tags.input.value.length && self.tags.select.selectedIndex != 0) {
         self.tags.select.selectedIndex = 0;
         self.tags.select.trigger("change");
       }
-    }, 100);
+    }
   }
   
   this.isDisabled = function() {
@@ -175,6 +178,15 @@ function autoselect(el) {
     else {
       this.renderOptions();
     }
+  }
+  
+  this.onMouseDown = function() {
+    this.tags.input.addClass("is_mouse_down");
+    this.is_mouse_down = true;
+  }
+  this.onMouseUp = function() {
+    this.tags.input.removeClass("is_mouse_down");
+    this.is_mouse_down = false;
   }
   
   this.optionUp = function() {
