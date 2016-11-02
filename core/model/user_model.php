@@ -7,6 +7,29 @@
  * @author Eric Höglander
  */
 class User_Model_Core extends Model {
+  
+  
+  /**
+   * Login user based on form values
+   * @see   \User_Controller_Core::loginAction()
+   * @param array $values
+   */
+  public function login($values) {
+    $User = $this->getEntity("User");
+    $User->loadByName($values["name"]);
+    $User->login();
+    $this->postLogin($User);
+  }
+  
+  /**
+   * Called after user has logged in
+   * @see   login
+   * @param \User_Entity_Core $User
+   */
+  public function postLogin($User) {
+    setmsg(t("You have been signed in"), "success");
+    redirect();
+  }
 
   /**
    * Register a new user

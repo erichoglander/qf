@@ -54,12 +54,7 @@ class User_Controller_Core extends Controller {
       redirect();
     $Form = $this->getForm("UserLogin");
     if ($Form->isSubmitted()) {
-      $values = $Form->values();
-      $User = $this->getEntity("User");
-      $User->loadByName($values["name"]);
-      $User->login();
-      setmsg(t("You have been signed in"), "success");
-      redirect();
+      $this->Model->login($Form->values());
     }
     $this->viewData["form"] = $Form->render();
     return $this->view("login");
