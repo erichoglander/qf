@@ -43,6 +43,13 @@ class FormItem extends Model {
    * @var bool
    */
   public $multiple_new_empty = true;
+  
+  /**
+   * Maximum number of items
+   * @see $multiple
+   * @var int
+   */
+  public $multiple_max = null;
 
   /**
    * If parent element can have multiple inputs
@@ -344,6 +351,7 @@ class FormItem extends Model {
   public function value($filter = true) {
     if ($this->items !== null) {
       $value = [];
+      $i = 0;
       foreach ($this->items as $item) {
         if ($item->submit_data) {
           $val = $item->value();
@@ -354,6 +362,9 @@ class FormItem extends Model {
           else {
             $value[$item->name] = $val;
           }
+          $i++;
+          if ($this->multiple_max && $i >= $this->multiple_max)
+            break;
         }
       }
     }
@@ -950,8 +961,11 @@ class FormItem extends Model {
     if (!$this->multiple || !$this->add_button) 
       return null;
     $json = $this->jsonStructure();
-    $last_item = count($this->items)-1;
-    return '<div class="form-button form-add-button btn" last_item="'.$last_item.'" onclick="formAddButton(this, '.$json.')">'.$this->add_button.'</div>';
+    $n = count($this->items);
+    $last_item = $n-1;
+    if ($this->multiple_max && $n >= $this->multiple_max)
+      $style = ' style="display: none;"';
+    return '<div class="form-button form-add-button btn"'.$style.' last_item="'.$last_item.'" onclick="formAddButton(this, '.$json.')">'.$this->add_button.'</div>';
   }
 
   /**
@@ -964,7 +978,8 @@ class FormItem extends Model {
       return null;
     $callback = ($this->delete_callback ? "'".$this->delete_callback."'" : "null");
     $add = ($this->multiple_new_empty ? "true" : "false");
-    return '<div class="form-button form-delete-button btn btn-danger" onclick="formDeleteButton(this, '.$callback .', '.$add.')">'.$this->delete_button.'</div>';
+    $max = ($this->multiple_max ? $this->multiple_max : 0);
+    return '<div class="form-button form-delete-button btn btn-danger" onclick="formDeleteButton(this, '.$callback .', '.$add.', '.$max.')">'.$this->delete_button.'</div>';
   }
   
   /**
