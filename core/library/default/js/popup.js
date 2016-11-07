@@ -58,6 +58,7 @@ function popup(el) {
       this.setSize(el.getAttribute("size"));
     if (el.getAttribute("auto-open") !== null)
       this.open();
+    this.on_close = el.getAttribute("onclose");
   }
   
   this.create = function(name, close) {
@@ -191,6 +192,12 @@ function popup(el) {
   this.onClose = function() {
     if (this.temporary)
       this.destroy();
+    if (this.on_close) {
+      if (typeof(this.on_close) == "string")
+        eval(this.on_close);
+      else
+        this.on_close(this);
+    }
   }
   
   if (el)

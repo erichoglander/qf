@@ -76,6 +76,43 @@ function oldFormHeaders(id) {
   return { "Content-type": "multipart/form-data; boundary=---------------------------"+id };
 }
 
+/**
+ * Upload a Blob in place of an <input type="file">
+ * @param \ELement el
+ * @param \Blob    blob
+ * @param string   filename
+ * @param function callback
+ */
+function formFileBlobUpload(el, blob, filename, callback) {
+  var onchange = el.getAttribute("onchange");
+  var parent_multiple = false;
+  if (onchange) {
+    if (onchange.indexOf("formFileUpload(this, 1") != -1)
+      parent_multiple = true;
+  }
+  
+  var item = formGetItem(el);
+  var simpleName = el.name.replace("[", "--").replace("]", "");
+  var name = el.name.substr(0, el.name.length-6);
+  var token = el.form.elements[name+"[token]"].value;
+  if (!filename) {
+    var m = blob.type.match(/\/(.*)$/);
+    filename = "blob_"+formId()+"."+m[1];
+  }
+  
+  var fd = new FormData();
+  fd.append(el.name, blob, filename);
+  var xmlhttp = new XMLHttpRequest();
+  xmlhttp.onreadystatechange = function() {
+    if (xmlhttp.readyState == 4) {
+      var data = JSON.parse(xmlhttp.response || xmlhttp.responseText);
+      formFileUploadDone(el, parent_multiple, callback, data);
+    }
+  };
+  xmlhttp.open("POST", BASE_URL+"form/fileupload/"+token, true);
+  xmlhttp.send(fd);
+  item.addClass("loading");
+}
 function formFileUpload(el, parent_multiple, callback) {
 
   var item = formGetItem(el);
