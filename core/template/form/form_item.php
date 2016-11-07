@@ -44,7 +44,7 @@ else {
     <?=FontAwesome\Icon("refresh", "fa-spin")?>
   </div>
 <?php if (!empty($sortable)) { ?>
-  <div class="form-sortable">
+  <div class="form-sortable"<?=($sort_callback ? ' sort_callback="'.$sort_callback.'"' : "")?>>
     <div class="form-sortable-up"><?=FontAwesome\Icon("angle-up")?></div>
     <div class="form-sortable-drag"><?=FontAwesome\Icon("arrows")?></div>
     <div class="form-sortable-down"><?=FontAwesome\Icon("angle-down")?></div>

@@ -114,6 +114,7 @@ function formSort(el) {
         return false;
     }
     next.parentNode.insertBefore(next, this.tags.item);
+    this.callback();
     return true;
   }
   
@@ -124,6 +125,7 @@ function formSort(el) {
         return false;
     }
     prev.parentNode.insertBefore(this.tags.item, prev);
+    this.callback();
     return true;
   }
   
@@ -145,6 +147,12 @@ function formSort(el) {
     var xy = getXY(e);
     xy.y+= scrollTop();
     return xy;
+  }
+  
+  this.callback = function() {
+    var callback = this.tags.wrap.getAttribute("sort_callback");
+    if (callback)
+      eval(callback);
   }
   
   this.init();

@@ -114,6 +114,12 @@ class FormItem extends Model {
    * @var bool
    */
   public $sortable = false;
+  
+  /**
+   * Javascript function to call after an item has been moved
+   * @var string
+   */
+  public $sort_callback;
 
   /**
    * Text of "add item"-button
@@ -483,6 +489,7 @@ class FormItem extends Model {
       "delete_button" => $this->renderDeleteButton(),
       "icon" => $this->icon,
       "sortable" => $this->sortable,
+      "sort_callback" => $this->sort_callback,
       "error" => $this->getError(),
       "multiple" => $this->multiple,
     ];
