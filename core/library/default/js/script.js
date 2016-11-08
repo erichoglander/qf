@@ -531,3 +531,62 @@ function getXY(e, include_scroll) {
   }
   return xy;
 }
+
+/**
+ * Requests full screen
+ */
+if (typeof(Element.prototype.requestFullscreen) == "undefined") {
+  Element.prototype.requestFullscreen = function() {
+    var fn = [
+      "mozRequestFullScreen", 
+      "webkitRequestFullscreen", "webkitRequestFullScreen", 
+      "msRequestFullscreen", "msRequestFullScreen",
+      "oRequestFullscreen", "oRequestFullScreen"
+    ];
+    for (var i=0; i<fn.length; i++) {
+      if (typeof(this[fn[i]]) == "function") {
+        this[fn[i]]();
+        break;
+      }
+    }
+  }
+}
+
+/**
+ * Exits full screen
+ */
+if (typeof(document.exitFullscreen) == "undefined") {
+  HTMLDocument.prototype.exitFullscreen = function() {
+    var fn = [
+      "cancelFullscreen", "mozCancelFullScreen",
+      "webkitCancelFullscreen", "webkitExitFullscreen", 
+      "msCancelFullscreen", "msExitFullscreen",
+      "oCancelFullscreen", "oExitFullscreen"
+    ];
+    for (var i=0; i<fn.length; i++) {
+      if (typeof(this[fn[i]]) == "function") {
+        this[fn[i]]();
+        break;
+      }
+    }
+  }
+}
+
+/**
+ * Current fullscreen element
+ * @return \Element
+ */
+HTMLDocument.prototype.getFullscreenElement = function() {
+  var fn = [
+    "fullscreenElement",
+    "mozFullScreenElement", 
+    "webkitFullscreenElement", 
+    "msFullscreenElement",
+    "oFullscreenElement",
+  ];
+  for (var i=0; i<fn.length; i++) {
+    if (typeof(this[fn[i]]) != "undefined")
+      return this[fn[i]];
+  }
+  return null;
+}

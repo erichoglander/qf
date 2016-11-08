@@ -284,8 +284,7 @@ function formDeleteButton(el, callback, add_new, max) {
   var readd = false;
   if (max && max > itemwrap.children.length && add && add.style.display) {
     add.style.display = null;
-    if (add.add_failed)
-      readd = true;
+    readd = true;
   }
   if (add_new && add && (!itemwrap.children.length || readd))
     add.trigger("click");
@@ -301,11 +300,8 @@ function formAddButton(el, structure) {
   var items = item.getElementByClassName("form-items").getElementByClassName("inner");
   var max = (structure.multiple_max ? structure.multiple_max : 0);
   var nth = items.children.length+1;
-  if (max && nth > max) {
-    el.add_failed = true;
+  if (max && nth > max)
     return;
-  }
-  el.add_failed = false;
   _formAdding = true;
   var n = parseInt(el.getAttribute("last_item"))+1;
   el.setAttribute("last_item", n);
