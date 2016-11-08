@@ -141,6 +141,18 @@ class Entity {
   }
   
   /**
+   * HTML-safe value
+   * @see get
+   * @see xss()
+   * @param  string $field
+   * @param  mixed $def
+   * @return mixed
+   */
+  public function safe($field, $def = null) {
+    return xss($this->get($field, $def));
+  }
+  
+  /**
    * Get an entity from storage if it exists, otherwise fetch it
    * @param  string  $name
    * @param  int     $id
