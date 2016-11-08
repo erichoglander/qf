@@ -423,6 +423,15 @@ function scrollTop() {
 }
 
 /**
+ * Compatiblity function for body.scrollLeft
+ * @return int
+ */
+function scrollLeft() {
+  var doc = document.documentElement, body = document.body;
+  return (doc && doc.scrollLeft || body && body.scrollLeft  || 0);
+}
+
+/**
  * Compatibility function for document.body.offsetHeight
  * @return int
  */
@@ -476,8 +485,8 @@ Element.prototype.getPos = function() {
   if (real && this.getBoundingClientRect) {
     var rect = this.getBoundingClientRect();
     return {
-      x: rect.left + document.documentElement.scrollLeft,
-      y: rect.top + document.documentElement.scrollTop
+      x: rect.left + scrollLeft(),
+      y: rect.top + scrollTop()
     };
   }
   var pos = {
@@ -510,9 +519,15 @@ function getPos(el) {
 /**
  * Get coordinates of an event
  * @param  mixed  e
+ * @param  bool   include_scroll
  * @return object
  */
-function getXY(e) {
+function getXY(e, include_scroll) {
   var evt = (e.type == "touchmove" || e.type == "touchstart" ? e.touches[0] : (e.type == "touchend" ? e.changedTouches[0] : e));
-  return {x: evt.clientX, y: evt.clientY};
+  var xy = {x: evt.clientX, y: evt.clientY};
+  if (include_scroll) {
+    xy.x+= scrollLeft();
+    xy.y+= scrollTop();
+  }
+  return xy;
 }
