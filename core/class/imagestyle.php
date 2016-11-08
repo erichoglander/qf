@@ -209,6 +209,43 @@ class Imagestyle_Core {
   }
   
   /**
+   * Scale and crop image to cover given dimensions
+   * Will scale and crop to given aspect ratio if image is smaller
+   * Library: GD
+   * @see scaleCrop
+   * @param int $w
+   * @param int $h
+   */
+  public function scaleCropRatio($w, $h) {
+    if (!$this->im)
+      return;
+    if ($w < $this->width && $h < $this->height) {
+      $this->scaleCrop($w, $h);
+      return;
+    }
+    $src_ratio = $this->width/$this->height;
+    $end_ratio = $w/$h;
+    $x = $y = 0;
+    // If the target image is wider
+    if ($src_ratio <= $end_ratio) {
+      $w = $this->width;
+      $h = $w/$end_ratio;
+      $y = ($this->height-$h)/2;
+    }
+    else if ($src_ratio > $end_ratio) {
+      $h = $this->height;
+      $w = $h*$end_ratio;
+      $x = ($this->width-$w)/2;
+    }
+    $im = imagecreatetruecolor($w, $h);
+    $this->setAlpha($im);
+    imagecopyresampled($im, $this->im, 0, 0, $x, $y, $this->width, $this->height, $this->width, $this->height);
+    $this->width = $w;
+    $this->height = $h;
+    $this->im = $im;
+  }
+  
+  /**
    * Scale image to fit inside given dimensions and expand with a background
    * Library: GD
    * @param int   $w
@@ -334,6 +371,40 @@ class Imagestyle_Core {
       $x = ($cp_w-$w)/2;
     }
     $this->im->thumbnailImage($cp_w, $cp_h, false);
+    $this->im->cropImage($w, $h, $x, $y);
+    $this->width = $w;
+    $this->height = $h;
+  }
+  
+  /**
+   * Scale and crop image to cover given dimensions
+   * Will scale and crop to given aspect ratio if image is smaller
+   * Library: Imagick
+   * @see imagickScaleCrop
+   * @param int $w
+   * @param int $h
+   */
+  public function imagickScaleCropRatio($w, $h) {
+    if (!$this->im)
+      return;
+    if ($w < $this->width && $h < $this->height) {
+      $this->imagickScaleCrop($w, $h);
+      return;
+    }
+    $src_ratio = $this->width/$this->height;
+    $end_ratio = $w/$h;
+    $x = $y = 0;
+    // If the target image is wider
+    if ($src_ratio <= $end_ratio) {
+      $w = $this->width;
+      $h = $w/$end_ratio;
+      $y = ($this->height-$h)/2;
+    }
+    else if ($src_ratio > $end_ratio) {
+      $h = $this->height;
+      $w = $h*$end_ratio;
+      $x = ($this->width-$w)/2;
+    }
     $this->im->cropImage($w, $h, $x, $y);
     $this->width = $w;
     $this->height = $h;
