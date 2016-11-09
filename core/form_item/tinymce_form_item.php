@@ -18,11 +18,14 @@ class Tinymce_FormItem_Core extends FormItem {
       "toolbar" => "bold italic | bullist numlist | link",
       "relative_urls" => false,
       "paste_as_text" => true,
+      "images_upload_credentials" => true,
+      "image_dimensions" => false,
+      "object_resizing" => false,
     ];
   }
   
   public function js() {
-    return ["//cdn.tinymce.com/4/tinymce.min.js"];
+    return ["//cdn.tinymce.com/4/tinymce.min.js", fileUrl("library/tinymce/js/file.js")];
   }
   
   public function getAttributes() {
@@ -50,6 +53,8 @@ class Tinymce_FormItem_Core extends FormItem {
     if ($this->tinymce_upload) {
       if (empty($config["images_upload_url"]))
         $config["images_upload_url"] = url("form/itemupload/tinymce");
+      if (empty($config["file_browser_callback"]))
+        $config["file_browser_callback"] = "<tinymceFileBrowserCallback>";
       if (!array_key_exists("paste_data_images", $config))
         $config["paste_data_images"] = true;
     }
