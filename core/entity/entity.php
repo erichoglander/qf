@@ -165,6 +165,8 @@ class Entity {
       $this->stored_entities[$name] = [];
     if (!array_key_exists($id, $this->stored_entities[$name]) || $reload) {
       $Entity = $this->getEntity($name, $id);
+      if (!$Entity)
+        throw new Exception("Unknown entity: ".$name);
       if (!$Entity->id() && !$create_new)
         $Entity = null;
       $this->stored_entities[$name][$id] = $Entity;
