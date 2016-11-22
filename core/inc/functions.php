@@ -388,20 +388,27 @@ function uri($path, $lang = null) {
  * Returns the formatted url for a path
  * @see uri()
  * @see redirect()
- * @param  string  $path  Ex: news/view/18
- * @param  boolean $redir If true, returns visitor to current page on redirect()
- * @return string         Ex: /en/blog/my-blog-post
+ * @param  string  $path    Ex: news/view/18
+ * @param  mixed   $options
+ * @return string           Ex: /en/blog/my-blog-post
  */
-function url($path, $redir = false) {
+function url($path, $options = []) {
   if (!strlen($path))
     return BASE_URL;
   // Just return absolute urls
   if (preg_match("/^[a-z]+\:\/\//", $path))
     return $path;
+  if (!is_array($options))
+    $options = ["redir" => true];
   // Remove leading slashes
   $path = preg_replace("/^[\/]+/", "", $path);
-  $url = BASE_URL.uri($path);
-  if ($redir) {
+  $uri = uri($path);
+  if (!empty($options["lang"]))
+    $url = langBaseUrl($options["lang"]);
+  else
+    $url = BASE_URL;
+  $url.= $uri;
+  if (!empty($options["redir"])) {
     $uri = REQUEST_PATH;
     if (QUERY_STRING)
       $uri.= "?".QUERY_STRING;
@@ -418,13 +425,23 @@ function url($path, $redir = false) {
  * @return string
  */
 function l10n_url($path, $lang) {
-  // TODO: Smart way to find l10n url, maybe through l10n_Entity
   global $Config, $Db;
   if ($lang == LANG)
     return url($path);
+  // TODO: Smart way to find l10n url, maybe through l10n_Entity
   $path = null;
+  return langBaseUrl($lang).uri($path);
+}
+
+/**
+ * Returns the base language url
+ * @param  string $lang
+ * @return string
+ */
+function langBaseUrl($lang) {
+  global $Config;
   if ($Config->getLanguageDetection() == "path") {
-    return BASE_PATH.$lang."/".uri($path);
+    return BASE_PATH.$lang."/";
   }
   else if ($Config->getLanguageDetection() == "domain") {
     $domains = $Config->getDomains();
@@ -436,9 +453,9 @@ function l10n_url($path, $lang) {
     }
     if (!isset($base))
       $base = HTTP_PROTOCOL."://".$domains["default"];
-    return $base.url($path);
+    return $base."/";
   }
-  return url($path);
+  return SITE_URL;
 }
 
 /**

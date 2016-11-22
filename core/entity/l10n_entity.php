@@ -64,8 +64,8 @@ class l10n_Entity extends Entity {
     if (!$lang)
       $lang = LANG;
     $path = ($this->translation($lang) ? $this->translation($lang)->getPath() : $this->getPath());
-		$url = url($path);
-		if ($abs)
+		$url = url($path, ["lang" => $lang]);
+		if ($abs && strpos($url, "http") !== 0)
 			$url = SITE_URL.$url;
 		return $url;
 	}
