@@ -402,12 +402,10 @@ function url($path, $options = []) {
     $options = ["redir" => true];
   // Remove leading slashes
   $path = preg_replace("/^[\/]+/", "", $path);
-  $uri = uri($path);
   if (!empty($options["lang"]))
-    $url = langBaseUrl($options["lang"]);
-  else
-    $url = BASE_URL;
-  $url.= $uri;
+    $url = langBaseUrl($options["lang"]).uri($path, $options["lang"]);
+  else 
+    $url = BASE_URL.uri($path);
   if (!empty($options["redir"])) {
     $uri = REQUEST_PATH;
     if (QUERY_STRING)
