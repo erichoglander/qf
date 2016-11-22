@@ -398,7 +398,7 @@ function url($path, $options = []) {
   // Just return absolute urls
   if (preg_match("/^[a-z]+\:\/\//", $path))
     return $path;
-  if (!is_array($options))
+  if ($options && !is_array($options))
     $options = ["redir" => true];
   // Remove leading slashes
   $path = preg_replace("/^[\/]+/", "", $path);
