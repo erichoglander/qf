@@ -467,16 +467,17 @@ function langBaseUrl($lang) {
 /**
  * Check if current user has access to given uri
  * @param  string $uri
+ * @param  bool   $raw
  * @return bool
  */
-function uriAccess($uri) {
+function uriAccess($uri, $raw = false) {
   global $Config, $Db;
   $Acl = newClass("Acl", $Db);
   $CF = newClass("ControllerFactory", $Config, $Db);
   $User = newClass("User_Entity", $Db);
   if (!empty($_SESSION["user_id"]))
     $User->load($_SESSION["user_id"]);
-  $request = $CF->parseUri($uri);
+  $request = $CF->parseUri($uri, $raw);
   $Controller = $CF->getController($request["controller"], false);
   $acl = $Controller->acl($request["action"], $request["args"]);
   return $Acl->access($User, $acl, $request["args"]);

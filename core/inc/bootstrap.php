@@ -11,6 +11,10 @@
 session_start();
 error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT);
 
+// Proxy support
+if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == "https")
+  $_SERVER['HTTPS'] = "on";
+
 /**
  * Document root
  *
