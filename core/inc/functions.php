@@ -329,18 +329,26 @@ function tpl($name, $vars = null) {
  * @return str
  */
 function t($str, $lang = "en", $vars = []) {
-  global $Db;
-  $l10nString = newClass("l10nString_Entity", $Db);
-  if (!$l10nString->loadFromString($str, $lang)) {
-    $l10nString->set("lang", $lang);
-    $l10nString->set("string", $str);
-    $l10nString->set("input_type", "code");
-    $l10nString->save();
+  static $cache = [];
+  if (isset($cache[$lang][$str][LANG])) {
+    $str = $cache[$lang][$str][LANG];
   }
   else {
-    $Translation = $l10nString->translation(LANG);
-    if ($Translation)
-      $str = $Translation->get("string");
+    global $Db;
+    $l10nString = newClass("l10nString_Entity", $Db);
+    if (!$l10nString->loadFromString($str, $lang)) {
+      $l10nString->set("lang", $lang);
+      $l10nString->set("string", $str);
+      $l10nString->set("input_type", "code");
+      $l10nString->save();
+    }
+    else {
+      $Translation = $l10nString->translation(LANG);
+      if ($Translation) {
+        $cache[$lang][$str][LANG] = $Translation->get("string");
+        $str = $Translation->get("string");
+      }
+    }
   }
   if (!empty($vars))
     $str = str_replace(array_keys($vars), array_values($vars), $str);
