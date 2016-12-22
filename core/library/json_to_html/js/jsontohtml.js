@@ -48,6 +48,7 @@ function jsonToHtml(parent, json, replace, ns) {
   else if (json.length) {
     var e = document.createElement("div");
     e.innerHTML = json.replace("&nbsp;", "\u00A0");
-    parent.appendChild(document.createTextNode(e.childNodes[0].nodeValue));
+    for (var i=0; i<e.childNodes.length; i++)
+      parent.appendChild(document.createTextNode(e.childNodes[i].nodeValue));
   }
 }
