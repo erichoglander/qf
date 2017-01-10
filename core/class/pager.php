@@ -60,6 +60,15 @@ class Pager_Core {
    */
   public function __construct() {
     $this->setUrl(BASE_PATH.REQUEST_URI);
+    $this->page = $this->queryPage();
+  }
+  
+  /**
+   * Get page number from query string
+   * @return string
+   */
+  public function queryPage() {
+    return (empty($_GET[$this->get]) ? 0 : abs((int) $_GET[$this->get]));
   }
 
   /**
@@ -120,8 +129,6 @@ class Pager_Core {
     $this->page = (empty($_GET[$this->get]) ? 0 : abs((int) $_GET[$this->get]));
     if ($this->page < 1)
       $this->page = 1;
-    else if ($this->page > $this->pages)
-      $this->page = $this->pages;
   }
   
   /**
