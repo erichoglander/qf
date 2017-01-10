@@ -126,7 +126,7 @@ class Pager_Core {
   public function setNum($num) {
     $this->num = $num;
     $this->pages = (int) max(1, ceil($this->num/$this->ppp));
-    $this->page = (empty($_GET[$this->get]) ? 0 : abs((int) $_GET[$this->get]));
+    $this->page = $this->queryPage();
     if ($this->page < 1)
       $this->page = 1;
   }
