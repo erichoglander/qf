@@ -68,7 +68,7 @@ class Pager_Core {
    * @return string
    */
   public function queryPage() {
-    return (empty($_GET[$this->get]) ? 0 : abs((int) $_GET[$this->get]));
+    return (empty($_GET[$this->get]) ? 1 : max(1, abs((int) $_GET[$this->get])));
   }
 
   /**
