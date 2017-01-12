@@ -41,17 +41,7 @@ class ControllerFactory_Core {
    */
   public function executeUri($uri, $raw = false) {
     $request = $this->parseUri($uri, $raw);
-    if (!empty($request["redirect"])) {
-      if ($request["redirect"]["code"] == "301")
-        header("HTTP/1.1 301 Moved Permanently");
-      else if ($request["redirect"]["code"] == "302")
-        header("HTTP/1.1 302 Moved");
-      else if ($request["redirect"]["code"] == "303")
-        header("HTTP/1.1 302 See Other");
-      else if ($request["redirect"]["code"] == "307")
-        header("HTTP/1.1 302 Temporary Redirect");
-      redirect($request["redirect"]["location"]);
-    }
+    
     /**
      * The requested uri without leading slash
      * 
@@ -83,6 +73,21 @@ class ControllerFactory_Core {
      * @var string
      */
     define("BASE_URL", $request["base"]);
+    
+    // Do the redirect now, if there is one
+    if (!empty($request["redirect"])) {
+      if (!empty($request["redirect"]["code"])) {
+        if ($request["redirect"]["code"] == "301")
+          header("HTTP/1.1 301 Moved Permanently");
+        else if ($request["redirect"]["code"] == "302")
+          header("HTTP/1.1 302 Moved");
+        else if ($request["redirect"]["code"] == "303")
+          header("HTTP/1.1 302 See Other");
+        else if ($request["redirect"]["code"] == "307")
+          header("HTTP/1.1 302 Temporary Redirect");
+      }
+      redirect($request["redirect"]["location"]);
+    }
 
     /**
      * The alias of the current page. Contains the same value
