@@ -61,6 +61,17 @@ Element.prototype.removeClass = function(cname) {
 }
 
 /**
+ * Toggle a css class on element
+ * @param string cname
+ */
+Element.prototype.toggleClass = function(cname) {
+  if (this.hasClass(cname))
+    this.removeClass(cname);
+  else
+    this.addClass(cname);
+}
+
+/**
  * Check if element has specified css class
  * @param  string cname
  * @return bool
