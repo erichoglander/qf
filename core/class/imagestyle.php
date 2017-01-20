@@ -152,7 +152,7 @@ class Imagestyle_Core {
     if ($save) {
       $info = pathinfo($target_path);
       if (!file_exists($info["dirname"]))
-        mkdir($info["dirname"], 0774, true);
+        mkdir($info["dirname"], 0775, true);
       if (!$this->save($target_path))
         return null;
       return $target_url;

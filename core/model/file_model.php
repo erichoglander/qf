@@ -40,7 +40,7 @@ class File_Model_Core extends Model {
     $uri = ($opt["folder"] ? $opt["folder"]."/" : "");
     $folder = substr($path.$uri, 0, -1);
     if (!file_exists($folder))
-      mkdir($folder, 0774, true);
+      mkdir($folder, 0775, true);
     $name = $this->Io->filter($info["filename"], "filename");
     $ext = strtolower($this->Io->filter($info["extension"], "alphanum"));
     for ($fname = $name.".".$ext, $i = 0; file_exists($path.$uri.$fname); $fname = $name."-".$i.".".$ext, $i++);
