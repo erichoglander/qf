@@ -186,6 +186,14 @@ class FormItem extends Model {
   public $options;
 
   /**
+   * Disabled options
+   * 
+   * Used for elements such as checkboxes, radios, and select
+   * @var array
+   */
+  public $disabled_options;
+
+  /**
    * The empty option text
    * @see $options
    * @var string
@@ -954,6 +962,7 @@ class FormItem extends Model {
       "focus" => $this->focus,
       "empty_option" => $this->empty_option,
       "options" => $this->options(),
+      "disabled_options" => $this->disabled_options,
       "value" => $this->inputValue(),
     ];
     if (is_callable([$this, "preRenderInput"]))
