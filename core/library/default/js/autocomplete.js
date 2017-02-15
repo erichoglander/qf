@@ -57,6 +57,9 @@ function autocomplete(el) {
     this.tags.remove = this.tags.wrap.getElementsByClassName("autocomplete-remove")[0];
     this.tags.items = [];
     
+    if (this.tags.title.disabled)
+      this.tags.wrap.addClass("autocomplete-disabled");
+    
     if (this.tags.title.getAttribute("onchange")) {
       this.tags.value.setAttribute("onchange", this.tags.title.getAttribute("onchange"));
       this.tags.title.removeAttribute("onchange");
@@ -197,6 +200,8 @@ function autocomplete(el) {
   }
   
   this.remove = function() {
+    if (this.tags.title.disabled)
+      return;
     this.clear();
     this.tags.title.focus();
   }

@@ -963,6 +963,7 @@ class FormItem extends Model {
       "empty_option" => $this->empty_option,
       "options" => $this->options(),
       "disabled_options" => $this->disabled_options,
+      "disabled" => $this->disabled,
       "value" => $this->inputValue(),
     ];
     if (is_callable([$this, "preRenderInput"]))

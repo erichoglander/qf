@@ -365,6 +365,13 @@ input {
 .autocomplete-item.active {
   background: #f5f5f5;
 }
+.autocomplete-disabled .autocomplete-preview {
+  background: #f8f8f8;
+  color: #555;
+}
+.autocomplete-disabled .autocomplete-remove {
+  display: none;
+}
 
 .autoselect-options {
   background: #fff;
