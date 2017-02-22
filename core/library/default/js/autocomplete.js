@@ -151,7 +151,7 @@ function autocomplete(el) {
     var q = this.tags.title.value.trim();
     if (!q.length)
       return;
-    var url = BASE_URL+this.uri+"/"+q;
+    var url = BASE_URL+this.uri+"/"+encodeURIComponent(q);
     this.ajax.send(
       url,
       function(r){ 
