@@ -22,11 +22,10 @@ pre {
   margin: 0px 0px 10px;
   font-size: 13px;
   color: #333;
-  word-break: break-all;
-  word-wrap: break-word;
   background-color: #F5F5F5;
   border: 1px solid #CCC;
   border-radius: 4px;
+  overflow: auto;
 }
 
 a:link, a:visited {
