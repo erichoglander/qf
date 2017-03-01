@@ -7,6 +7,7 @@ class Popup_FormItem extends FormItem {
   public $popup_close;
   public $popup_size = "medium";
   public $popup_button;
+  public $popup_label;
   public $preview_template;
   
   
@@ -54,6 +55,7 @@ class Popup_FormItem extends FormItem {
   protected function preRender(&$vars) {
     $vars["preview"] = $this->preview();
     $vars["popup_button"] = $this->renderPopupButton();
+    $vars["popup_label"] = $this->popup_label;
   }
 
   protected function templatePreviewPath() {

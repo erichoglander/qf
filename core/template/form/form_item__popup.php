@@ -1,10 +1,13 @@
 <?=$prefix?>
 <div <?=$attributes?>>
+<?php if (!empty($label)) { ?>
+    <label class="form-label" for="<?=$input_name?>"><?=$label?></label>
+<?php } ?>
 <?php if (!$multiple) { ?>
   <div class="form-popup-wrap">
 <?php } ?>
-<?php if (!empty($label)) { ?>
-    <label class="form-label" for="<?=$input_name?>"><?=$label?></label>
+<?php if (!empty($popup_label)) { ?>
+    <label class="form-label" for="<?=$input_name?>"><?=$popup_label?></label>
 <?php } ?>
 <?php 
 if ($items !== null) {
