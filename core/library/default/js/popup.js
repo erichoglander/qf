@@ -177,6 +177,9 @@ function popup(el) {
     setTimeout(function() {
       self.adjustPosition();
       self.tags.wrap.addClass("open");
+      var focus = self.tags.wrap.getElementByClassName("popup-focus");
+      if (focus)
+        focus.focus();
     }, 1);
   }
   this.close = function() {
