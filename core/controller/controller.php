@@ -206,6 +206,33 @@ class Controller {
   public function defaultError() {
     setmsg(t("An error occurred"), "error");
   }
+  
+  /**
+   * Redirects current page to it's alias
+   */
+  public function redirectToAlias($code = 301) {
+    if (IS_FRONT_PAGE || REQUEST_PATH != REQUEST_ALIAS)
+      return;
+    $alias = $this->Db->getRow("
+        SELECT * FROM `alias` 
+        WHERE 
+          status = 1 &&
+          path = :path &&
+          (lang IS NULL || lang = :lang)", 
+        [ ":path" => REQUEST_PATH,
+          ":lang" => LANG]);
+    if ($alias) {
+      if ($code == "301")
+        header("HTTP/1.1 301 Moved Permanently");
+      else if ($code == "302")
+        header("HTTP/1.1 302 Moved");
+      else if ($code == "303")
+        header("HTTP/1.1 302 See Other");
+      else if ($code == "307")
+        header("HTTP/1.1 302 Temporary Redirect");
+      redirect($alias->alias, false);
+    }
+  }
 
   
   /**
