@@ -52,12 +52,18 @@ class Theme extends Model {
     $this->preRender($part, $vars);
     if ($part == "html") {
       foreach ($this->css as $css) {
-        $url = fileUrl("theme/".$this->name."/css/".$css);
+        if (strpos($css, "http") === 0)
+          $url = $css;
+        else
+          $url = fileUrl("theme/".$this->name."/css/".$css);
         if ($url)
           $vars["css"][] = $url;
       }
       foreach ($this->js as $js) {
-        $url = fileUrl("theme/".$this->name."/js/".$js);
+        if (strpos($js, "http") === 0)
+          $url = $js;
+        else
+          $url = fileUrl("theme/".$this->name."/js/".$js);
         if ($url)
           $vars["js"][] = $url;
       }

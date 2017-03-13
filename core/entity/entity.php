@@ -315,7 +315,10 @@ class Entity {
             }
             if ($data[$key]) {
               $File = $this->getEntity("File", $data[$key]);
-              if ($File->get("status") == 0) {
+              if (!$File->id()) {
+                $data[$key] = $this->fields[$key] = null;
+              }
+              else if ($File->get("status") == 0) {
                 $File->set("status", 1);
                 $File->save();
               }
@@ -333,7 +336,10 @@ class Entity {
         // Set files as permanent
         if ($field["type"] == "file" && $data[$key]) {
           $File = $this->getEntity("File", $data[$key]);
-          if ($File->get("status") == 0) {
+          if (!$File->id()) {
+            $data[$key] = $this->fields[$key] = null;
+          }
+          else if ($File->get("status") == 0) {
             $File->set("status", 1);
             $File->save();
           }
