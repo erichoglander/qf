@@ -546,6 +546,29 @@ function addlog($category, $text, $data = null, $type = "info") {
 }
 
 /**
+ * Attempt to set HTTP header based on code
+ * @param int $code
+ */
+function setHeaderFromCode($code) {
+  if ($code == 301)
+    header("HTTP/1.1 301 Moved Permanently");
+  else if ($code == 302)
+    header("HTTP/1.1 302 Moved");
+  else if ($code == 303)
+    header("HTTP/1.1 302 See Other");
+  else if ($code == 307)
+    header("HTTP/1.1 302 Temporary Redirect");
+  else if ($code == 403)
+    header("HTTP/1.1 403 Forbidden");
+  else if ($code == 404)
+    header("HTTP/1.1 404 Not found");
+  else if ($code == 500)
+    header("HTTP/1.1 500 Internal error");
+  else if ($code == 503)
+    header("HTTP/1.1 503 Service unavailable");
+}
+
+/**
  * Redirects the visitor to given url
  * @see url()
  * @param  string  $url

@@ -76,16 +76,8 @@ class ControllerFactory_Core {
     
     // Do the redirect now, if there is one
     if (!empty($request["redirect"])) {
-      if (!empty($request["redirect"]["code"])) {
-        if ($request["redirect"]["code"] == "301")
-          header("HTTP/1.1 301 Moved Permanently");
-        else if ($request["redirect"]["code"] == "302")
-          header("HTTP/1.1 302 Moved");
-        else if ($request["redirect"]["code"] == "303")
-          header("HTTP/1.1 302 See Other");
-        else if ($request["redirect"]["code"] == "307")
-          header("HTTP/1.1 302 Temporary Redirect");
-      }
+      if (!empty($request["redirect"]["code"]))
+        setHeaderFromCode($request["redirect"]["code"]);
       redirect($request["redirect"]["location"]);
     }
 

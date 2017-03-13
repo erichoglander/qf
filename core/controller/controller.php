@@ -147,7 +147,7 @@ class Controller {
   public function internalError() {
     if (IS_CLI)
       return "500 Error";
-    header("HTTP/1.1 500 Internal error");
+    setHeaderFromCode(500);
     return $this->viewBare("500");
   }
   
@@ -170,7 +170,7 @@ class Controller {
   public function serverBusy() {
     if (IS_CLI)
       return "503 Service unavailable";
-    header("HTTP/1.1 503 Service unavailable");
+    setHeaderFromCode(503);
     return $this->viewBare("503");
   }
   
@@ -181,7 +181,7 @@ class Controller {
   public function notFound() {
     if (IS_CLI)
       return "404 Not found";
-    header("HTTP/1.1 404 Not found");
+    setHeaderFromCode(404);
     return $this->viewDefault("404");
   }
   
@@ -196,6 +196,7 @@ class Controller {
       return "403 Access denied";
     if (!$this->User->id()) 
       redirect("user/login?redir=".REQUEST_ALIAS);
+    setHeaderFromCode(403);
     header("HTTP/1.1 403 Forbidden");
     return $this->viewDefault("403");
   }
@@ -209,8 +210,10 @@ class Controller {
   
   /**
    * Redirects current page to it's alias
+   * @param bool $all_languages If true, checks aliases for other languages if none exists for current language
+   * @param int  $code Http code for the redirect
    */
-  public function redirectToAlias($code = 301) {
+  public function redirectToAlias($all_languages = true, $code = 301) {
     if (IS_FRONT_PAGE || REQUEST_PATH != REQUEST_ALIAS)
       return;
     $alias = $this->Db->getRow("
@@ -222,15 +225,22 @@ class Controller {
         [ ":path" => REQUEST_PATH,
           ":lang" => LANG]);
     if ($alias) {
-      if ($code == "301")
-        header("HTTP/1.1 301 Moved Permanently");
-      else if ($code == "302")
-        header("HTTP/1.1 302 Moved");
-      else if ($code == "303")
-        header("HTTP/1.1 302 See Other");
-      else if ($code == "307")
-        header("HTTP/1.1 302 Temporary Redirect");
+      setHeaderFromCode($code);
       redirect($alias->alias, false);
+    }
+    
+    // Try for an alias in a different language
+    if ($all_languages) {
+      $alias = $this->Db->getRow("
+          SELECT * FROM `alias` 
+          WHERE 
+            status = 1 &&
+            path = :path", 
+          [ ":path" => REQUEST_PATH]);
+      if ($alias) {
+        setHeaderFromCode($code);
+        header("Location: ".langBaseUrl($alias->lang).$alias->alias);
+      }
     }
   }
 
