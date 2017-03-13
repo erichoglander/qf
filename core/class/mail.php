@@ -69,6 +69,12 @@ class Mail_Core extends Model {
    * @var array
    */
   public $attachments = [];
+  
+  /**
+   * Image attachments
+   * @var array
+   */
+  public $images = [];
 
   /**
    * If true, send e-mail as HTML
@@ -182,6 +188,19 @@ class Mail_Core extends Model {
           $file = $this->attachmentData($attachment);
           if (strlen($file["content"])) {
             $data["attachments"][] = [
+              "type" => $file["type"],
+              "name" => $file["name"],
+              "content" => base64_encode($file["content"]),
+            ];
+          }
+        }
+      }
+      
+      if (!empty($this->images)) {
+        foreach ($this->images as $image) {
+          $file = $this->attachmentData($image);
+          if (strlen($file["content"])) {
+            $data["images"][] = [
               "type" => $file["type"],
               "name" => $file["name"],
               "content" => base64_encode($file["content"]),
