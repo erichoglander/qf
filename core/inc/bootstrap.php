@@ -15,6 +15,9 @@ error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT);
 if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == "https")
   $_SERVER['HTTPS'] = "on";
 
+// Set internal encoding to UTF-8
+mb_internal_encoding("UTF-8");
+
 /**
  * Document root
  *

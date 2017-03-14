@@ -540,7 +540,10 @@ class Controller {
    */
   protected function json() {
     unset($this->viewData["html"]);
-    return json_encode($this->viewData);
+    $json = json_encode($this->viewData);
+    if ($json === false)
+      throw new Exception("Json encoding error: ".json_last_error_msg());
+    return $json;
   }
   
   /**
