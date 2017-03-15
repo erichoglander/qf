@@ -87,9 +87,10 @@ class Form extends Model {
 
   /**
    * Constructor
-   * @param array         $vars
+   * @param array $vars
    */
   public function construct($vars = []) {
+    $this->attributes["action"] = BASE_URL.REQUEST_URI;
     $this->setVars($vars);
   }
 
