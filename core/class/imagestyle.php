@@ -355,12 +355,21 @@ class Imagestyle_Core {
   public function imagickScaleCrop($w, $h) {
     if (!$this->im)
       return;
-    if ($w > $this->width && $h > $this->height)
+    if ($w >= $this->width && $h >= $this->height)
       return;
     $src_ratio = $this->width/$this->height;
     $end_ratio = $w/$h;
     $x = $y = 0;
-    if ($src_ratio <= $end_ratio) {
+    $cp_w = $cp_h = null;
+    if ($this->width < $w) {
+      $y = ($this->height-$h)/2;
+      $w = $this->width;
+    }
+    else if ($this->height < $h) {
+      $x = ($this->width-$w)/2;
+      $h = $this->height;
+    }
+    else if ($src_ratio <= $end_ratio) {
       $cp_w = $w;
       $cp_h = $w/$src_ratio;
       $y = ($cp_h-$h)/2;
@@ -370,7 +379,8 @@ class Imagestyle_Core {
       $cp_h = $h;
       $x = ($cp_w-$w)/2;
     }
-    $this->im->thumbnailImage($cp_w, $cp_h, false);
+    if ($cp_w && $cp_h)
+      $this->im->thumbnailImage($cp_w, $cp_h, false);
     $this->im->cropImage($w, $h, $x, $y);
     $this->width = $w;
     $this->height = $h;
