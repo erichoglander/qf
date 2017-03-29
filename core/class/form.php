@@ -90,7 +90,7 @@ class Form extends Model {
    * @param array $vars
    */
   public function construct($vars = []) {
-    $this->attributes["action"] = BASE_URL.REQUEST_URI;
+    $this->attributes["action"] = BASE_PATH.REQUEST_URI;
     $this->setVars($vars);
   }
 
