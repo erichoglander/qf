@@ -156,6 +156,15 @@ function slider(el) {
         }(i));
       }
     }
+    var as = this.tags.slides.getElementsByTagName("a");
+    for (var i=0; i<as.length; i++) {
+      (function(a) {
+        a.addEventListener("click", function(e) {
+          if (self.sliding)
+            e.preventDefault();
+        }, false);
+      }(as[i]));
+    }
   }
   
   this.mouseDown = function(e) {
@@ -238,21 +247,18 @@ function slider(el) {
         var x = Math.ceil(this.values.left/100)*100;
         var n = -1;
       }
-      
-      var p = this.page+n;
-      
-      // If we skipped forward a part
-      if (p > this.pages-1) {
+      var xi = -x;
+      left = parseInt(this.tags.parts[this.part].wrap.style.left);
+      left = (left ? left : 0);
+      this.page = (xi-left)/100;
+      if (this.page < 0) {
         this.part = (this.part+1)%2;
-        this.page = p%this.pages;
+        this.page+= this.pages;
       }
-      // Backwards
-      else if (p < 0) {
+      else if (this.page >= this.pages) {
         this.part = (this.part+1)%2;
-        this.page = (p+this.pages)%this.pages;
+        this.page = this.page%this.pages;
       }
-      else
-        this.page = p;
         
       this.slide(x, "easeOut");
     }
