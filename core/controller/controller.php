@@ -404,6 +404,8 @@ class Controller {
    * @return array
    */
   protected function menuAccess($menu) {
+    if (!empty($menu["always_show"]))
+      return $menu;
     if (array_key_exists("href", $menu)) {
       if (!$this->uriAccess($menu["href"]))
         return [];
