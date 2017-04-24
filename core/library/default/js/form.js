@@ -146,6 +146,8 @@ function formFileUpload(el, parent_multiple, callback) {
   // Send form
   if (typeof(el.form.submit) == "function")
     el.form.submit();
+  else if (typeof(el.form.submit.length) != "undefined")
+    el.form.submit[0].click();
   else
     el.form.submit.click();
   
