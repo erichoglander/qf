@@ -316,15 +316,27 @@ class ControllerFactory_Core {
       }
       if (!array_key_exists("uri", $redir)) {
         $Redirect = newClass("Redirect_Entity", $this->Db);
-        $Redirect->loadBySource($uri, $request["lang"]);
-        if (!$Redirect->id()) {
-          $Redirect->loadBySource($request["path"], $request["lang"]);
-          if (!$Redirect->id())
-            $Redirect->loadBySource($request["alias"], $request["lang"]);
+        $tries = [$uri];
+        if ($request["path"] != $uri)
+          $tries[] = $request["path"];
+        if ($request["alias"] != $request["path"] && $request["alias"] != $uri)
+          $tries[] = $request["alias"];
+        $arr = $tries;
+        foreach ($arr as $i => $try) {
+          array_splice($tries, $i, 0, [HTTP_PROTOCOL."://".$_SERVER["HTTP_HOST"].BASE_PATH.$try]);
+          array_splice($tries, $i*2+1, 0, [$_SERVER["HTTP_HOST"].BASE_PATH.$try]);
+        }
+        foreach ($tries as $try) {
+          $Redirect->loadBySource($try, $request["lang"]);
+          if ($Redirect->id())
+            break;
+          $Redirect->loadByRegexp($try, $request["lang"]);
+          if ($Redirect->id())
+            break;
         }
         if ($Redirect->id()) {
           if ($Redirect->isExternal())
-            $redir["url"] = $Redirect->get("target");
+            $redir["url"] = $Redirect->target();
           else
             $redir["uri"] = $Redirect->uri($request["lang"]);
           $redir["code"] = $Redirect->get("code");

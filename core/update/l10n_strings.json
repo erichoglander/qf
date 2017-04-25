@@ -2902,5 +2902,27 @@
                 "updated": "1471868302"
             }
         }
+    },
+    {
+        "lang": "en",
+        "string": "Type",
+        "translations": {
+            "sv": {
+                "lang": "sv",
+                "string": "Typ",
+                "updated": "1493108596"
+            }
+        }
+    },
+    {
+        "lang": "en",
+        "string": "Regular expression",
+        "translations": {
+            "sv": {
+                "lang": "sv",
+                "string": "Reguljärt uttryck",
+                "updated": "1493108596"
+            }
+        }
     }
 ]

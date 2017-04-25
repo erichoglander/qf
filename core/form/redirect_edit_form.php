@@ -33,7 +33,7 @@ class RedirectEdit_Form_Core extends Form {
           "type" => "text",
           "label" => t("Source"),
           "required" => true,
-          "value" => ($Redirect ? $Redirect->get("source") : null),
+          "value" => ($Redirect ? $Redirect->safe("source") : null),
           "focus" => true,
         ],
         "target" => [
@@ -41,7 +41,7 @@ class RedirectEdit_Form_Core extends Form {
           "label" => t("Target"),
           "description" => xss(t("Enter <front> for the front page")),
           "required" => true,
-          "value" => ($Redirect ? $Redirect->get("target") : null),
+          "value" => ($Redirect ? $Redirect->safe("target") : null),
         ],
         "code" => [
           "type" => "select",
@@ -61,6 +61,17 @@ class RedirectEdit_Form_Core extends Form {
           "options" => $lang_op,
           "empty_option" => t("- All -"),
           "value" => ($Redirect ? $Redirect->get("lang") : null),
+        ],
+        "type" => [
+          "type" => "select",
+          "label" => t("Type"),
+          "options" => [
+            "normal" => t("Normal"),
+            "regexp" => t("Regular expression"),
+          ],
+          "empty_option" => Null,
+          "required" => true,
+          "value" => ($Redirect ? $Redirect->get("type") : "normal"),
         ],
         "status" => [
           "type" => "checkbox",
