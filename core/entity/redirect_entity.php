@@ -11,11 +11,11 @@
 class Redirect_Entity_Core extends Entity  {
   
   /**
-   * The loaded source
+   * The evaluated regexp target
    * @see loadByRegExp
    * @var array
    */
-  protected $loaded_source;
+  protected $regexp_target;
   
   /**
    * Language object
@@ -71,11 +71,8 @@ class Redirect_Entity_Core extends Entity  {
    * For type 'regexp' this will return the evaluated regexp with matches
    */
   public function target() {
-    if ($this->get("type") == "regexp") {
-      if (!$this->loaded_source)
-        throw new Exception("Cannot find redirect regexp target without a loaded source");
-      return preg_replace("/".$this->get("source")."/i", $this->get("target"), $this->loaded_source);
-    }
+    if ($this->get("type") == "regexp" && $this->regexp_target)
+      return $this->regexp_target;
     return $this->get("target");
   }
   
@@ -127,7 +124,12 @@ class Redirect_Entity_Core extends Entity  {
             ":lang" => $lang]);
       if ($row) {
         $this->loadRow($row);
-        $this->loaded_source = $try;
+        $target = $this->get("target");
+        if (preg_match("/".$this->get("source")."/i", $try, $matches)) {
+          foreach ($matches as $i => $match)
+            $target = str_replace('$'.$i, $match, $target);
+          $this->regexp_target = $target;
+        }
         return true;
       }
     }
