@@ -322,9 +322,13 @@ class ControllerFactory_Core {
         if ($request["alias"] != $request["path"] && $request["alias"] != $uri)
           $tries[] = $request["alias"];
         $arr = $tries;
-        foreach ($arr as $i => $try) {
-          array_splice($tries, $i, 0, [HTTP_PROTOCOL."://".$_SERVER["HTTP_HOST"].BASE_PATH.$try]);
-          array_splice($tries, $i*2+1, 0, [$_SERVER["HTTP_HOST"].BASE_PATH.$try]);
+        if (!IS_CLI) {
+          $protocol = (isset($redir["protocol"]) ? $redir["protocol"] : $_SERVER["HTTP_HOST"]);
+          $host = (isset($redir["host"]) ? $redir["host"] : $_SERVER["HTTP_HOST"]);
+          foreach ($arr as $i => $try) {
+            array_splice($tries, $i, 0, [$protocol."://".$host.BASE_PATH.$try]);
+            array_splice($tries, $i*2+1, 0, [$host.BASE_PATH.$try]);
+          }
         }
         foreach ($tries as $try) {
           $Redirect->loadBySource($try, $request["lang"]);
