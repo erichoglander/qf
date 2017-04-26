@@ -86,6 +86,10 @@ class Redirect_Entity_Core extends Entity  {
    */
   public function loadBySource($source, $lang = null) {
     $tries = [$source, urldecode($source)];
+    if (substr($source, -1) == "/")
+      $tries[] = substr($source, 0, -1);
+    else
+      $tries[] = $source.= "/";
     foreach ($tries as $try) {
       $row = $this->Db->getRow("
           SELECT * FROM `redirect`
