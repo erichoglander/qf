@@ -4,6 +4,7 @@ class Address_FormItem_Core extends FormItem {
   public $address_fields = ["line", "postal_code", "locality", "country"];
   public $address_country = "SE";
   public $address_countries;
+  public $address_attributes;
   public $label_placeholder = false;
   
   
@@ -35,6 +36,8 @@ class Address_FormItem_Core extends FormItem {
       $this->address_fields = $structure["address_fields"];
     if (isset($structure["address_countries"]))
       $this->address_countries = $structure["address_countries"];
+    if (isset($structure["address_attributes"]))
+      $this->address_attributes = $structure["address_attributes"];
     if (isset($structure["label_placeholder"]))
       $this->label_placeholder = $structure["label_placeholder"];
     
@@ -100,6 +103,14 @@ class Address_FormItem_Core extends FormItem {
           $structure["items"][$key]["attributes"]["placeholder"] = $item["label"];
         }
         unset($structure["items"][$key]["label"]);
+      }
+    }
+    if (!empty($this->address_attributes)) {
+      foreach ($this->address_attributes as $key => $attributes) {
+        if (isset($structure["items"][$key])) {
+          foreach ($attributes as $k => $attr)
+            $structure["items"][$key]["attributes"][$k] = $attr;
+        }
       }
     }
   }
