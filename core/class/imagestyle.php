@@ -379,13 +379,14 @@ class Imagestyle_Core {
       $cp_h = $h;
       $x = ($cp_w-$w)/2;
     }
-    if (strtolower($this->im->getImageFormat()) == "gif") {
+    if ($this->im->getImageFormat() == "GIF") {
       $image = $this->im->coalesceImages();
       foreach ($image as $frame) {
         if ($cp_w && $cp_h)
           $frame->thumbnailImage($cp_w, $cp_h, false);
         $frame->cropImage($w, $h, $x, $y);
       }
+      $this->im = $image->deconstructImages();
     }
     else {
       if ($cp_w && $cp_h)
@@ -425,10 +426,11 @@ class Imagestyle_Core {
       $w = $h*$end_ratio;
       $x = ($this->width-$w)/2;
     }
-    if (strtolower($this->im->getImageFormat()) == "gif") {
+    if ($this->im->getImageFormat() == "GIF") {
       $image = $this->im->coalesceImages();
       foreach ($image as $frame)
         $frame->cropImage($w, $h, $x, $y);
+      $this->im = $image->deconstructImages();
     }
     else {
       $this->im->cropImage($w, $h, $x, $y);
@@ -457,10 +459,11 @@ class Imagestyle_Core {
       }
       $this->im->setImageBackgroundColor($str);
     }
-    if (strtolower($this->im->getImageFormat()) == "gif") {
+    if ($this->im->getImageFormat() == "GIF") {
       $image = $this->im->coalesceImages();
       foreach ($image as $frame)
         $frame->thumbnailImage($w, $h, true, true);
+      $this->im = $image->deconstructImages();
     }
     else {
       $this->im->thumbnailImage($w, $h, true, true);
@@ -485,10 +488,11 @@ class Imagestyle_Core {
       $w = $h*$ratio;
     if ($w >= $this->width && $h >= $this->height)
       return;
-    if (strtolower($this->im->getImageFormat()) == "gif") {
+    if ($this->im->getImageFormat() == "GIF") {
       $image = $this->im->coalesceImages();
       foreach ($image as $frame)
         $frame->thumbnailImage($w, $h, true);
+      $this->im = $image->deconstructImages();
     }
     else {
       $this->im->thumbnailImage($w, $h, true);
@@ -571,7 +575,7 @@ class Imagestyle_Core {
   public function save($dest) {
     $this->dest = $dest;
     if ($this->lib == "imagick") {
-      if (strtolower($this->im->getImageFormat()) == "gif")
+      if ($this->im->getImageFormat() == "GIF")
         return $this->im->writeImages($dest, true);
       else
         return $this->im->writeImage($dest);
