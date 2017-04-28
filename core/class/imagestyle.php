@@ -379,9 +379,19 @@ class Imagestyle_Core {
       $cp_h = $h;
       $x = ($cp_w-$w)/2;
     }
-    if ($cp_w && $cp_h)
-      $this->im->thumbnailImage($cp_w, $cp_h, false);
-    $this->im->cropImage($w, $h, $x, $y);
+    if (strtolower($this->im->getImageFormat()) == "gif") {
+      $image = $this->im->coalesceImages();
+      foreach ($image as $frame) {
+        if ($cp_w && $cp_h)
+          $frame->thumbnailImage($cp_w, $cp_h, false);
+        $frame->cropImage($w, $h, $x, $y);
+      }
+    }
+    else {
+      if ($cp_w && $cp_h)
+        $this->im->thumbnailImage($cp_w, $cp_h, false);
+      $this->im->cropImage($w, $h, $x, $y);
+    }
     $this->width = $w;
     $this->height = $h;
   }
@@ -415,7 +425,14 @@ class Imagestyle_Core {
       $w = $h*$end_ratio;
       $x = ($this->width-$w)/2;
     }
-    $this->im->cropImage($w, $h, $x, $y);
+    if (strtolower($this->im->getImageFormat()) == "gif") {
+      $image = $this->im->coalesceImages();
+      foreach ($image as $frame)
+        $frame->cropImage($w, $h, $x, $y);
+    }
+    else {
+      $this->im->cropImage($w, $h, $x, $y);
+    }
     $this->width = $w;
     $this->height = $h;
   }
@@ -440,9 +457,16 @@ class Imagestyle_Core {
       }
       $this->im->setImageBackgroundColor($str);
     }
+    if (strtolower($this->im->getImageFormat()) == "gif") {
+      $image = $this->im->coalesceImages();
+      foreach ($image as $frame)
+        $frame->thumbnailImage($w, $h, true, true);
+    }
+    else {
+      $this->im->thumbnailImage($w, $h, true, true);
+    }
     $this->width = $w;
     $this->height = $h;
-    $this->im->thumbnailImage($this->width, $this->height, true, true);
   }
   
   /**
@@ -461,9 +485,16 @@ class Imagestyle_Core {
       $w = $h*$ratio;
     if ($w >= $this->width && $h >= $this->height)
       return;
+    if (strtolower($this->im->getImageFormat()) == "gif") {
+      $image = $this->im->coalesceImages();
+      foreach ($image as $frame)
+        $frame->thumbnailImage($w, $h, true);
+    }
+    else {
+      $this->im->thumbnailImage($w, $h, true);
+    }
     $this->width = $w;
     $this->height = $h;
-    $this->im->thumbnailImage($this->width, $this->height, true);
   }
   
   /**
@@ -540,7 +571,10 @@ class Imagestyle_Core {
   public function save($dest) {
     $this->dest = $dest;
     if ($this->lib == "imagick") {
-      return $this->im->writeImage($dest);
+      if (strtolower($this->im->getImageFormat()) == "gif")
+        return $this->im->writeImages($dest, true);
+      else
+        return $this->im->writeImage($dest);
     }
     else {
       try {
@@ -566,7 +600,7 @@ class Imagestyle_Core {
    */
   public function contentType() {
     if ($this->lib == "imagick" && $this->im)
-      return "image/".$this->im->getImageFormat();
+      return "image/".strtolower($this->im->getImageFormat());
     else
       return "image/".$this->info["extension"];
   }
