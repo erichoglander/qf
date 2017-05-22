@@ -21,6 +21,7 @@ class Tinymce_FormItem_Core extends FormItem {
       "images_upload_credentials" => true,
       "image_dimensions" => false,
       "object_resizing" => false,
+      "branding" => false,
     ];
   }
   
