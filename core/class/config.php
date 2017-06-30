@@ -165,7 +165,16 @@ class Config_Core {
    * @return int
    */
   public function getFloodProtectionTime() {
-    return 60*60*12;
+    return 60*60*5;
+  }
+  
+  /**
+   * Number of tries for failed login attempts
+   * @see \User_Entity_Core::userFloodProtection()
+   * @return int
+   */
+  public function getFloodProtectionTries() {
+    return 20;
   }
 
   /**

@@ -193,7 +193,7 @@ class User_Entity_Core extends Entity {
         ":ip" => $_SERVER["REMOTE_ADDR"],
         ":time" => REQUEST_TIME - $Config->getFloodProtectionTime()
       ]);
-    if ($n > 5)
+    if ($n > $Config->getFloodProtectionTries())
       return true;
     return false;
   }
@@ -213,7 +213,7 @@ class User_Entity_Core extends Entity {
         ":id" => $this->id(),
         ":time" => REQUEST_TIME - $Config->getFloodProtectionTime(),
       ]);
-    if ($n > 5)
+    if ($n > $Config->getFloodProtectionTries())
       return true;
     return false;
   }
