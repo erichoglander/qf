@@ -400,7 +400,7 @@ class FormItem extends Model {
    */
   public function hasValue() {
     if ($this->items === null) {
-      return !$this->emptyValue($this->value());
+      return !$this->emptyValue($this->value(false));
     }
     else {
       foreach ($this->items as $item) 
