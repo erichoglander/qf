@@ -5,6 +5,7 @@ class Address_FormItem_Core extends FormItem {
   public $address_country = "SE";
   public $address_countries;
   public $address_attributes;
+  public $address_properties;
   public $label_placeholder = false;
   
   
@@ -34,6 +35,8 @@ class Address_FormItem_Core extends FormItem {
   protected function preStructure(&$structure) {
     if (isset($structure["address_fields"]))
       $this->address_fields = $structure["address_fields"];
+    if (isset($structure["address_properties"]))
+      $this->address_properties = $structure["address_properties"];
     if (isset($structure["address_countries"]))
       $this->address_countries = $structure["address_countries"];
     if (isset($structure["address_attributes"]))
@@ -110,6 +113,14 @@ class Address_FormItem_Core extends FormItem {
         if (isset($structure["items"][$key])) {
           foreach ($attributes as $k => $attr)
             $structure["items"][$key]["attributes"][$k] = $attr;
+        }
+      }
+    }
+    if (!empty($this->address_properties)) {
+      foreach ($this->address_properties as $key => $properties) {
+        if (isset($structure["items"][$key])) {
+          foreach ($properties as $k => $prop)
+            $structure["items"][$key][$k] = $prop;
         }
       }
     }
