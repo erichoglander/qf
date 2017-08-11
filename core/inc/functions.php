@@ -540,9 +540,7 @@ function addlog($category, $text, $data = null, $type = "info") {
     $obj["data"] = serialize($string);
   }
   $Db->insert("log", $obj);
-  $row = $Db->getRow("SELECT COUNT(id) as num FROM `log`");
-  if ($row && $row->num > $Config->getMaxLogs())
-    $Db->query("DELETE FROM `log` ORDER BY id ASC LIMIT 1");
+  $Db->query("DELETE FROM `log` ORDER BY id ASC LIMIT ".$Config->getMaxLogs().", 1");
 }
 
 /**
