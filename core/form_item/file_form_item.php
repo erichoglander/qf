@@ -7,6 +7,7 @@ class File_FormItem_Core extends FormItem {
   public $file_folder, $file_extensions, $file_dir, $file_max_size;
   public $file_drop, $drop_markup;
   public $file_blacklist = ["php", "phtml", ".htaccess"];
+  public $file_upload_opt = [];
   public $upload_callback, $remove_callback;
   public $preview_template;
   public $filter = "uint";
@@ -127,6 +128,8 @@ class File_FormItem_Core extends FormItem {
       "dir" => $this->file_dir,
       "folder" => $this->file_folder,
     ];
+    if (!empty($this->file_upload_opt))
+      $opt+= $this->file_upload_opt;
     try {
       $File = $this->getModel("File")->upload($file, $opt);
     }
