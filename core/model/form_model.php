@@ -123,7 +123,7 @@ class Form_Model_Core extends Model {
       return call_user_func([$this, "autocompleteRows".$entity_type], $q);
     $Entity = $this->getEntity($entity_type);
     $query = [
-      "from" => $Entity->tableName(),
+      "from" => "`".$Entity->tableName()."`",
       "cols" => ["id"],
       "limit" => [15],
     ];
