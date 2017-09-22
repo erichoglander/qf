@@ -176,7 +176,7 @@ class Content_Entity_Core extends l10n_Entity {
   /**
    * Delete entity
    */
-  public function delete() {
+  public function delete($change_sid = true) {
     // Delete all files
     if ($this->get("config")["l10n"]) {
       foreach ($this->translations() as $lang => $Content) {
@@ -198,7 +198,7 @@ class Content_Entity_Core extends l10n_Entity {
           $File->delete();
       }
     }
-    return parent::delete();
+    return parent::delete($change_sid);
   }
 
 

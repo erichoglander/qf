@@ -332,7 +332,7 @@ class l10n_Entity extends Entity {
    * @see    getAlias
    * @return bool
    */
-  public function createAlias() {
+  public function createAlias($lang = null) {
     return parent::createAlias($this->get("lang", $this->default_lang));
   }
   
@@ -342,7 +342,7 @@ class l10n_Entity extends Entity {
    * @see    getAlias
    * @return bool
    */
-  public function deleteAlias() {
+  public function deleteAlias($lang = null) {
     return parent::deleteAlias($this->get("lang"));
   }
 

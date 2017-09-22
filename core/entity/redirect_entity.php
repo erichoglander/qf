@@ -43,8 +43,8 @@ class Redirect_Entity_Core extends Entity  {
    * @see url()
    * @return string
    */
-  public function url() {
-    return url($this->target());
+  public function url($abs = false) {
+    return ($abs ? SITE_URL : "").url($this->target());
   }
   
   /**
