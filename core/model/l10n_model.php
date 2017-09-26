@@ -287,11 +287,14 @@ class l10n_Model_Core extends Model {
    */
   public function scanString($str) {
     $arr = [];
-    $n = preg_match_all("/[^a-z0-9\_\>\$]t\(\"([^\"]+)\"(\,\s*\"([a-z]+)\")?/i", $str, $matches);
+    $n = preg_match_all("/[^a-z0-9\_\>\$]t\(([\"|\'])([^\"]+)[\"|\'](\,\s*[\"|\']([a-z]+)[\"|\'])?/i", $str, $matches);
     if (!$n) 
       return null;
-    foreach ($matches[1] as $i => $string) {
-      $lang = (empty($matches[3][$i]) ? "en" : $matches[3][$i]);
+    foreach ($matches[2] as $i => $string) {
+      $lang = (empty($matches[4][$i]) ? "en" : $matches[4][$i]);
+      // Fix whitespace characters
+      if ($matches[1][$i] == '"')
+        $string = str_replace(["\\r", "\\n", "\\t"], ["\r", "\n", "\t"], $string);
       $arr[] = (object) [
         "string" => $string,
         "lang" => $lang,

@@ -23,7 +23,7 @@ class l10nStringEdit_Form_Core extends Form {
         $structure["items"][$language->lang] = [
           "type" => "textarea",
           "label" => $language->title,
-          "value" => ($l10nString->translation($language->lang) ? $l10nString->translation($language->lang)->get("string") : null),
+          "value" => ($l10nString->translation($language->lang) ? $l10nString->translation($language->lang)->safe("string") : null),
           "focus" => ($i == 0),
           "filter" => "trim",
         ];
