@@ -19,6 +19,108 @@ class l10n_Model_Core extends Model {
       $languages[$row->lang] = $row;
     return $languages;
   }
+  
+  public function import($values) {
+    if (!empty($values["file"])) {
+      $File = $this->getEntity("File", $values["file"]);
+      $json = @json_decode(file_get_contents($File->path()));
+      if (empty($json))
+        throw new Exception(t("File contains invalid JSON"));
+      return $this->importJson($json);
+    }
+    else if (!empty($values["paste_data"])) {
+      return $this->importPasted($values["paste_data"]);
+    }
+    throw new Exception(t("Invalid data source"));
+  }
+  
+  public function importPasted($raw) {
+    $n = 0;
+    $rows = $this->split($raw, "\n");
+    $header = array_shift($rows);
+    $langs = $this->split($header, "\t");
+    foreach ($langs as $i => $lang) {
+      $lang = trim($lang);
+      $langs[$i] = $lang;
+      $row = $this->Db->getRow("SELECT * FROM `language` WHERE lang = :lang", [":lang" => $lang]);
+      if (!$row)
+        throw new Exception(t("Unknown language code :lang", "en", [":lang" => $lang]));
+    }
+    foreach ($rows as $row) {
+      $strings = $this->split($row, "\t", null);
+      $Source = null;
+      foreach ($langs as $i => $lang) {
+        $str = trim($strings[$i]);
+        $row = $this->Db->getRow("
+            SELECT * FROM `l10n_string`
+            WHERE
+              sid IS NULL &&
+              lang = :lang &&
+              string = :string",
+            [ ":lang" => $lang,
+              ":string" => $str]);
+        if ($row) {
+          $Source = $this->getEntity("l10nString");
+          $Source->loadRow($row);
+          break;
+        }
+      }
+      
+      if (!$Source) {
+        foreach ($langs as $i => $lang) {
+          if (!empty($strings[$i])) {
+            $str = trim($strings[$i]);
+            $Source = $this->getEntity("l10nString");
+            $Source->set("string", $str);
+            $Source->set("input_type", "import");
+            $Source->set("lang", $lang);
+            $Source->save();
+            break;
+          }
+        }
+      }
+      if (!$Source)
+        continue;
+      
+      foreach ($langs as $i => $lang) {
+        if (!empty($strings[$i])) {
+          $str = trim($strings[$i]);
+          if ($Source->get("lang") != $lang) {
+            $String = $Source->translation($lang, true);
+            if ($String->get("string") != $str) {
+              $String->set("string", $str);
+              $String->set("input_type", "import");
+              $String->save();
+              $n++;
+            }
+          }
+        }
+      }
+    }
+    return $n;
+  }
+  
+  public function split($input, $delimiter, $enclosure = '"') {
+    $arr = [];
+    $len = strlen($input);
+    $in_enclosure = false;
+    $str = "";
+    for ($i=0; $i<$len; $i++) {
+      $c = $input[$i];
+      if ($c == $enclosure) {
+        $in_enclosure = !$in_enclosure;
+      }
+      else if ($c == $delimiter && !$in_enclosure) {
+        $arr[] = $str;
+        $str = "";
+      }
+      else {
+        $str.= $c;
+      }
+    }
+    $arr[] = $str;
+    return $arr;
+  }
 
   /**
    * Import string translations
@@ -31,7 +133,7 @@ class l10n_Model_Core extends Model {
    * @param  array $l10n_strings
    * @return int   The number of imported strings
    */
-  public function import($l10n_strings = []) {
+  public function importJson($l10n_strings = []) {
     $n = 0;
     foreach ($l10n_strings as $l10n_string) {
       if (empty($l10n_string->string) || empty($l10n_string->lang))
@@ -82,12 +184,15 @@ class l10n_Model_Core extends Model {
   }
 
   /**
-   * Export all string translations to json
+   * Export all string translations
    * @see    import
    * @param  array $values Search parameters
    * @return string
    */
-  public function export($values) {
+  public function export($values = []) {
+    $values+= [
+      "format" => "json_min",
+    ];
     $l10n_strings = [];
     $sql = "SELECT id, lang, string FROM `l10n_string` WHERE sid IS NULL";
     $rows = $this->Db->getRows($sql);
@@ -100,19 +205,87 @@ class l10n_Model_Core extends Model {
       foreach ($rows as $row) {
         $row->translations = [];
         $translations = $this->Db->getRows($sql, [":id" => $row->id]);
-        if (!empty($translations)) {
-          unset($row->id);
-          foreach ($translations as $translation)
-            $row->translations[$translation->lang] = $translation;
-          $l10n_strings[] = $row;
-        }
+        foreach ($translations as $translation)
+          $row->translations[$translation->lang] = $translation;
+        unset($row->id);
+        $l10n_strings[] = $row;
       }
     }
-    if (empty($values["min"]))
-      $json = json_encode($l10n_strings, JSON_PRETTY_PRINT);
-    else
-      $json = json_encode($l10n_strings);
-    return $json;
+    if ($values["format"] == "json_pretty") {
+      return json_encode($l10n_strings, JSON_PRETTY_PRINT);
+    }
+    else if ($values["format"] == "json_min") {
+      return json_encode($l10n_strings);
+    }
+    else if ($values["format"] == "xml") {
+      
+      $rows = [];
+      
+      // Get languages
+      $langs = [];
+      if (!empty($values["languages"])) {
+        $langs = $values["languages"];
+      }
+      else  {
+        $languages = $this->Db->getRows("SELECT lang FROM `language` WHERE status = 1");
+        foreach ($languages as $lang)
+          $langs[] = $lang->lang;
+      }
+      foreach ($langs as $lang)
+        $rows[0][$lang] = $lang;
+      
+      // Transform string data into rows
+      foreach ($l10n_strings as $string) {
+        $row = [];
+        $row[$string->lang] = $string->string;
+        foreach ($string->translations as $str)
+          $row[$str->lang] = $str->string;
+        $rows[] = $row;
+      }
+      
+      // Compile data to xml
+      $data = "";
+      foreach ($rows as $row) {
+        $data.= '
+            <Row>';
+        foreach ($langs as $lang) {
+          if (!empty($row[$lang])) {
+            $str = xss($row[$lang]);
+            $str = preg_replace("/\r?\n/", "&#10;", $str);
+          }
+          else {
+            $str = null;
+          }
+          $data.= '
+              <Cell ss:StyleID="s62"><Data ss:Type="String">'.$str.'</Data></Cell>';
+        }
+        $data.= '
+            </Row>';
+      }
+      $xml = ' <?xml version="1.0"?>
+        <?mso-application progid="Excel.Sheet"?>
+        <Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+         xmlns:o="urn:schemas-microsoft-com:office:office"
+         xmlns:x="urn:schemas-microsoft-com:office:excel"
+         xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+         xmlns:html="http://www.w3.org/TR/REC-html40">
+         <Styles>
+          <Style ss:ID="s62">
+           <Alignment ss:Vertical="Bottom" ss:WrapText="1"/>
+          </Style>
+         </Styles>
+         <Worksheet ss:Name="Default">
+          <Table>
+           <Column ss:AutoFitWidth="0" ss:Width="250"/>
+           <Column ss:AutoFitWidth="0" ss:Width="250"/>
+           <Column ss:AutoFitWidth="0" ss:Width="250"/>
+            '.$data.'
+          </Table>
+         </Worksheet>
+        </Workbook>';
+      return $xml;
+    }
+    return null;
   }
 
   /**
@@ -125,6 +298,8 @@ class l10n_Model_Core extends Model {
     if (!$l10nString->id())
       return false;
     foreach ($values as $lang => $string) {
+      if (empty($string))
+        continue;
       if (!$l10nString->translation($lang)) {
         $l10nString->newTranslation($lang);
         $l10nString->translation($lang)->set("lang", $lang);

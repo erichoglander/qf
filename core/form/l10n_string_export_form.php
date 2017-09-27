@@ -18,8 +18,9 @@ class l10nStringExport_Form_Core extends Form {
           "options" => [
             "import" => t("Imported"),
             "manual" => t("Manual"),
+            "code" => t("Code"),
           ],
-          "value" => ["import", "manual"]
+          "value" => ["import", "manual", "code"]
         ],
         "language" => [
           "type" => "checkboxes",
@@ -28,10 +29,14 @@ class l10nStringExport_Form_Core extends Form {
           "value" => $languagesval,
           "required" => true,
         ],
-        "min" => [
-          "type" => "checkbox",
-          "label" => t("Minimized"),
-          "value" => true,
+        "format" => [
+          "type" => "select",
+          "label" => t("Format"),
+          "options" => [
+            "json_pretty" => "JSON",
+            "json_min" => "JSON (minified)",
+            "xml" => "XML",
+          ],
         ],
         "actions" => $this->defaultActions(t("Export")),
       ],

@@ -2924,5 +2924,49 @@
                 "updated": "1493108596"
             }
         }
+    },
+    {
+        "lang": "en",
+        "string": "Format",
+        "translations": {
+            "sv": {
+                "lang": "sv",
+                "string": "Format",
+                "updated": "1506502638"
+            }
+        }
+    },
+    {
+        "lang": "en",
+        "string": "Translations copied from Excel",
+        "translations": {
+            "sv": {
+                "lang": "sv",
+                "string": "Översättningar kopierade från Excel",
+                "updated": "1506502638"
+            }
+        }
+    },
+    {
+        "lang": "en",
+        "string": "Invalid data source",
+        "translations": {
+            "sv": {
+                "lang": "sv",
+                "string": "Ogiltig datakälla",
+                "updated": "1506502638"
+            }
+        }
+    },
+    {
+        "lang": "en",
+        "string": "Unknown language code :lang",
+        "translations": {
+            "sv": {
+                "lang": "sv",
+                "string": "Okänd språkkod :lang",
+                "updated": "1506502638"
+            }
+        }
     }
 ]

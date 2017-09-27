@@ -201,98 +201,98 @@ class Config_Core {
             "href" => "user/settings",
           ],
           "user" => [
-            "title" => "Users",
+            "title" => t("Users"),
             "href" => "user/list",
             "links" => [
               "user-add" => [
-                "title" => "Add user",
+                "title" => t("Add user"),
                 "href" => "user/add",
               ],
             ],
           ],
           "content" => [
-            "title" => "Content",
+            "title" => t("Content"),
             "href" => "content/list",
             "links" => [
               "content-add" => [
-                "title" => "Add content",
+                "title" => t("Add content"),
                 "href" => "content/add",
               ],
             ],
           ],
           "system" => [
-            "title" => "System",
+            "title" => t("System"),
             "links" => [
               "alias" => [
-                "title" => "Aliases",
+                "title" => t("Aliases"),
                 "href" => "alias/list",
                 "links" => [
                   "alias-add" => [
-                    "title" => "Add alias",
+                    "title" => t("Add alias"),
                     "href" => "alias/add",
                   ],
                 ],
               ],
               "redirect" => [
-                "title" => "Redirects",
+                "title" => t("Redirects"),
                 "href" => "redirect/list",
                 "links" => [
                   "redirect-add" => [
-                    "title" => "Add redirect",
+                    "title" => t("Add redirect"),
                     "href" => "redirect/add",
                   ],
                 ],
               ],
               "l10n" => [
-                "title" => "Localization",
+                "title" => t("Localization"),
                 "href" => "l10n/list",
                 "links" => [
                   "scan" => [
-                    "title" => "Scan code",
+                    "title" => t("Scan code"),
                     "href" => "l10n/scan",
                   ],
                   "export" => [
-                    "title" => "Export",
+                    "title" => t("Export"),
                     "href" => "l10n/export",
                   ],
                   "import" => [
-                    "title" => "Import",
+                    "title" => t("Import"),
                     "href" => "l10n/import",
                   ],
                 ],
               ],
               "logs" => [
-                "title" => "Logs",
+                "title" => t("Logs"),
                 "href" => "log/list",
               ],
               "cache" => [
-                "title" => "Cache",
+                "title" => t("Cache"),
                 "href" => "cache/list",
                 "links" => [
                   "clear" => [
-                    "title" => "Clear all",
+                    "title" => t("Clear all"),
                     "href" => "cache/clear",
                     "return" => true,
                   ],
                   "clear-data" => [
-                    "title" => "Clear data",
+                    "title" => t("Clear data"),
                     "href" => "cache/clear/data",
                     "return" => true,
                   ],
                   "clear-images" => [
-                    "title" => "Clear images",
+                    "title" => t("Clear images"),
                     "href" => "cache/clear/images",
                     "return" => true,
                   ],
                 ],
               ],
               "cron-run" => [
-                "title" => "Run cron",
+                "title" => t("Run cron"),
                 "href" => "cron",
                 "return" => true,
               ],
               "user-clear-flood" => [
-                "title" => "Clear login attempts",
+                "title" => t("Clear login attempts"),
                 "href" => "user/clear-flood",
               ],
             ],

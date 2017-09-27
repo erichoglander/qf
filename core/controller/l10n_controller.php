@@ -47,16 +47,13 @@ class l10n_Controller_Core extends Controller {
   public function importAction() {
     $Form = $this->getForm("l10nStringImport");
     if ($Form->isSubmitted()) {
-      $values = $Form->values();
-      $File = $this->getEntity("File", $values["file"]);
-      $json = @json_decode(file_get_contents($File->path()));
-      if ($json) {
-        $n = $this->Model->import($json);
+      try {
+        $n = $this->Model->import($Form->values());
         setmsg(t(":n translations imported", "en", [":n" => $n]), "success");
         refresh();
       }
-      else {
-        $this->defaultError();
+      catch (Exception $e) {
+        setmsg($e->getMessage(), "error");
       }
     }
     $this->viewData["form"] = $Form->render();
@@ -77,7 +74,10 @@ class l10n_Controller_Core extends Controller {
       $json = $this->Model->export($values);
       header_remove("Content-Type");
       header("Content-Type: application/octet-stream");
-      header("Content-Disposition: filename=l10n_strings.json");
+      if ($values["format"] == "xml")
+        header("Content-Disposition: filename=l10n_strings.xml");
+      else
+        header("Content-Disposition: filename=l10n_strings.json");
       print $json;
       exit;
     }

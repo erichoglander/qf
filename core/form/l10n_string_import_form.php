@@ -9,7 +9,10 @@ class l10nStringImport_Form_Core extends Form {
           "type" => "file",
           "label" => t("Translation file"),
           "file_extensions" => ["json"],
-          "required" => true,
+        ],
+        "paste_data" => [
+          "type" => "textarea",
+          "label" => t("Translations copied from Excel"),
         ],
         "actions" => $this->defaultActions("Import"),
       ],

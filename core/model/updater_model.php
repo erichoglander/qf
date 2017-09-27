@@ -83,7 +83,7 @@ class Updater_Model_Core extends Model {
       if (!$json)
         continue;
       $l10nModel = $this->getModel("l10n");
-      $n+= $l10nModel->import($json);
+      $n+= $l10nModel->importJson($json);
     }
     return $n;
   }

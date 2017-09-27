@@ -25,7 +25,7 @@ class UserEdit_Form_Core extends Form {
   
   protected function structure() {
     $User = $this->get("User");
-    $role_rows = $this->Db->getRows("SELECT * FROM `role` ORDER BY title ASC");
+    $role_rows = $this->Db->getRows("SELECT * FROM `role` ORDER BY id ASC");
     $rolesop = [];
     foreach ($role_rows as $row)
       $rolesop[$row->id] = t($row->title);

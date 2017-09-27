@@ -242,7 +242,7 @@ class Html_Core extends Model {
         if (!empty($link["faicon"]))
           $title.= FontAwesome\Icon($link["faicon"]);
         if (!empty($link["title"]))
-          $title.= xss(t($link["title"]));
+          $title.= xss($link["title"]);
         if (!empty($link["attributes"])) {
           foreach ($link["attributes"] as $a => $v)
             $attr.= ' '.$a.'="'.$v.'"';
