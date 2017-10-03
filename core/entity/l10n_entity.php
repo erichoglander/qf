@@ -274,15 +274,19 @@ class l10n_Entity extends Entity {
    * @return array
    */
   public function translations() {
-    if (!$this->translations_fetched && $this->id()) {
+    if (!$this->translations_fetched && $this->sid()) {
       $this->translations_fetched = true;
-      $rows = $this->Db->getRows(
-          "SELECT id, lang FROM `".$this->schema["table"]."` 
-          WHERE 
-            (sid = :sid || id = :sid) &&
-            id != :id", 
-          [  ":sid" => $this->sid(),
-            ":id" => $this->id()]);
+      $query = [
+        "cols" => ["id", "lang"],
+        "table" => $this->schema["table"],
+        "where" => ["(sid = :sid || id = :sid)"],
+        "vars" => [":sid" => $this->sid()],
+      ];
+      if ($this->id()) {
+        $query["where"][] = "id != :id";
+        $query["vars"][":id"] = $this->id();
+      }
+      $rows = $this->Db->getRows($query);
       $this->translations = [];
       foreach ($rows as $row) {
         $class = get_class($this);
@@ -303,17 +307,24 @@ class l10n_Entity extends Entity {
       return $this;
     if (!array_key_exists($lang, $this->translations) || (!$this->translations[$lang] && $create)) {
       $this->translations[$lang] = null;
-      if ($this->id()) {
-        $sid = $this->get("sid");
-        $row = $this->Db->getRow("
-            SELECT id, lang FROM `".$this->schema["table"]."`
-            WHERE
-              (sid = :sid || id = :sid) &&
-              id != :id &&
-              lang = :lang",
-            [  ":sid" => $this->sid(),
-              ":id" => $this->id(),
-              ":lang" => $lang]);
+      if ($this->sid()) {
+        $query = [
+          "cols" => ["id", "lang"],
+          "table" => $this->schema["table"],
+          "where" => [
+            "(sid = :sid || id = :sid)",
+            "lang = :lang",
+          ],
+          "vars" => [
+            ":sid" => $this->sid(),
+            ":lang" => $lang,
+          ],
+        ];
+        if ($this->id()) {
+          $query["where"][] = "id != :id";
+          $query["vars"][":id"] = $this->id();
+        };
+        $row = $this->Db->getRow($query);
         if ($row) {
           $class = get_class($this);
           $this->translations[$lang] = new $class($this->Db, $row->id);
