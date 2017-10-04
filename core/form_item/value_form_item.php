@@ -9,7 +9,7 @@ class Value_FormItem_Core extends FormItem {
     return $this->value;
   }
 
-  public function validated() {
+  public function validated($req = true) {
     return true;
   }
 

@@ -7,7 +7,7 @@ class Button_FormItem_Core extends FormItem {
     return parent::inputClass()." btn";
   }
   
-  public function value() {
+  public function value($filter = true) {
     return $this->value;
   }
 
