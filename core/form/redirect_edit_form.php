@@ -1,7 +1,7 @@
 <?php
 class RedirectEdit_Form_Core extends Form {
   
-  public function validate($values) {
+  public function validate($values = []) {
     $Redirect = $this->get("Redirect");
     $row = $this->Db->getRow("
         SELECT * FROM `redirect` 

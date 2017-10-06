@@ -1,7 +1,7 @@
 <?php
 class UserEdit_Form_Core extends Form {
 
-  public function validate($values) {
+  public function validate($values = []) {
     $User = $this->get("User");
     if ($values["pass"] != $values["pass_confirm"]) {
       $this->setError(t("Passwords mismatch"), "pass");

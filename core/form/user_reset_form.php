@@ -1,7 +1,7 @@
 <?php
 class UserReset_Form_Core extends Form {
 
-  public function validate($values) {
+  public function validate($values = []) {
     $U = $this->getEntity("User");
     $U->loadByEmail($values["email"]);
     if (!$U->id()) {

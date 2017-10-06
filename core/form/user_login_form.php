@@ -2,7 +2,7 @@
 class UserLogin_Form_Core extends Form {
 
 
-  public function validate($values) {
+  public function validate($values = []) {
     $User = $this->getEntity("User");
     if (!$User->authorize($values["name"], $values["pass"])) {
       $this->Db->insert("login_attempt", [

@@ -1,7 +1,7 @@
 <?php
 class AliasEdit_Form_Core extends Form {
   
-  public function validate($values) {
+  public function validate($values = []) {
     $Alias = $this->get("Alias");
     $row = $this->Db->getRow("
         SELECT * FROM `alias` 

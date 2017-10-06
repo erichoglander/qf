@@ -1,7 +1,7 @@
 <?php
 class UserResendEmailConfirmation_Form_Core extends Form {
   
-  public function validate($values) {
+  public function validate($values = []) {
     $User = $this->get("User");
     if ($User->get("email") != $values["email"]) {
       $U = $this->getEntity("User");
