@@ -483,9 +483,9 @@ class Imagestyle_Core {
       return;
     $ratio = $this->width/$this->height;
     if (!$h) 
-      $h = $w/$ratio;
+      $h = ceil($w/$ratio);
     else if (!$w) 
-      $w = $h*$ratio;
+      $w = ceil($h*$ratio);
     if ($w >= $this->width && $h >= $this->height)
       return;
     if ($this->im->getImageFormat() == "GIF") {
