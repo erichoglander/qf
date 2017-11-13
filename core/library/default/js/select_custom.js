@@ -38,8 +38,12 @@ function selectCustom(el) {
     wrap: el
   };
   
+  this.with_val = false;
+  
   this.init = function() {
     var self = this;
+    if (this.tags.wrap.classList.contains("with-val"))
+      this.with_val = true;
     this.tags.titleWrap = this.tags.wrap.getElementsByClassName("select-custom-title")[0];
     this.tags.title = this.tags.titleWrap.getElementsByClassName("select-custom-title-inner")[0];
     this.tags.itemsWrap = this.tags.wrap.getElementByClassName("select-custom-options");
@@ -84,6 +88,8 @@ function selectCustom(el) {
         this.tags.items[i].className+= " disabled";
       if (!this.tags.select.options[i].value.length)
         this.tags.items[i].className+= " empty";
+      else if (this.with_val)
+        this.tags.items[i].className+= " val-"+this.tags.select.options[i].value;
       this.tags.items[i].innerHTML = this.tags.select.options[i].innerHTML;
       this.tags.itemsWrap.appendChild(this.tags.items[i]);
       (function(self, n) {
@@ -156,14 +162,20 @@ function selectCustom(el) {
       else
         this.tags.items[i].removeClass("active");
     }
-    if (this.tags.select.selectedIndex != -1) 
+    if (this.tags.select.selectedIndex != -1)
       this.tags.title.innerHTML = this.tags.select.options[this.tags.select.selectedIndex].text;
     else 
       this.tags.title.innerHTML = "";
-    if (!this.tags.select.value.length)
+    if (!this.tags.select.value.length) {
       this.tags.wrap.addClass("empty");
-    else
+      if (this.with_val)
+        this.tags.titleWrap.className = this.tags.wrap.className.replace(/val\-[^\ ]+/, "");
+    }
+    else {
       this.tags.wrap.removeClass("empty");
+      if (this.with_val)
+        this.tags.titleWrap.addClass("val-"+this.tags.select.value);
+    }
   }
   
   this.init();

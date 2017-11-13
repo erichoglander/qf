@@ -1,4 +1,4 @@
-<div class="select-custom">
+<div class="select-custom <?=($val_class ? "with-val" : "")?>">
   <div class="select-custom-title form-textfield">
     <span class="select-custom-title-inner">
       <?=(array_key_exists($value, $options) ? $options[$value] : null)?>
