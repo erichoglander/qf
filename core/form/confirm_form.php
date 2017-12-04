@@ -24,7 +24,7 @@ class Confirm_Form_Core extends Form {
               "type" => "button",
               "value" => $this->get("cancel", t("No")),
               "attributes" => [
-                "onclick" => "window.history.go(-1)",
+                "onclick" => $this->get("oncancel", "window.history.go(-1)"),
               ],
             ],
           ]
