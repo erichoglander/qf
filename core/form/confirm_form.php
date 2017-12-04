@@ -1,9 +1,9 @@
 <?php
 class Confirm_Form_Core extends Form {
-  
+
   public function structure() {
     $structure = [
-      "name" => "confirm",
+      "name" => $this->get("name", "confirm"),
       "items" => [
         "text" => [
           "type" => "markup",
