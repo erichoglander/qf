@@ -4,6 +4,7 @@ class Confirm_Form_Core extends Form {
   public function structure() {
     $structure = [
       "name" => $this->get("name", "confirm"),
+      "ajax" => $this->get("ajax", false),
       "items" => [
         "text" => [
           "type" => "markup",
