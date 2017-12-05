@@ -8,7 +8,7 @@
  *
  * Access control list
  * Sets access/permissions
- * 
+ *
  * @author Eric Höglander
  */
 class Acl_Core {
@@ -67,7 +67,7 @@ class Acl_Core {
   protected function updateAccess($User) {
     return IS_CLI;
   }
-  
+
   /**
    * Access to remove a file from a form
    * @see    \Form_Controller_Core::acl()
@@ -82,7 +82,7 @@ class Acl_Core {
       return true;
     return false;
   }
-  
+
   /**
    * Access to autocomplete results
    * @see    \Form_Controller_Core::acl()
@@ -93,7 +93,7 @@ class Acl_Core {
   protected function formAutocompleteAccess($User, $args = []) {
     return $User->id() == 1 || $User->hasRole("administrator");
   }
-  
+
   /**
    * Access to upload file from a form item
    * @see    \Form_Controller_Core::acl()
@@ -290,7 +290,7 @@ class Acl_Core {
    * @return bool
    */
   protected function cacheClearAccess($User) {
-    return $User->id() == 1;
+    return $User->id() == 1 || IS_CLI;
   }
 
   /**
@@ -329,7 +329,7 @@ class Acl_Core {
   protected function contentDeleteAccess($User) {
     return $User->id() == 1;
   }
-  
+
   /**
    * Access to private files
    * @see    \File_Controller_Core::acl()

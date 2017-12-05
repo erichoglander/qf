@@ -4,12 +4,12 @@
  */
 /**
  * Cache controller
- * 
+ *
  * Administration of caches
  * @author Eric Höglander
  */
 class Cache_Controller_Core extends Controller {
-  
+
   /**
    * The access list
    * @param  string $action
@@ -32,6 +32,8 @@ class Cache_Controller_Core extends Controller {
       $this->Cache->clearImageStyles();
     else
       $this->Cache->clear();
+    if (IS_CLI)
+      return t("Cache cleared!");
     setmsg(t("Cache cleared!"), "success");
     redirect();
   }
