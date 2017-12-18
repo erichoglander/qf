@@ -5,7 +5,7 @@
 
 /**
  * Controller Factory, where the request begins
- * 
+ *
  * Parses the uri, selects the controller, and executes the action
  * @author Eric Höglander
  */
@@ -41,10 +41,10 @@ class ControllerFactory_Core {
    */
   public function executeUri($uri, $raw = false) {
     $request = $this->parseUri($uri, $raw);
-    
+
     /**
      * The requested uri without leading slash
-     * 
+     *
      * Ex: controller/action/arg1
      * @var string
      */
@@ -52,7 +52,7 @@ class ControllerFactory_Core {
 
     /**
      * The query string without leading question mark
-     * 
+     *
      * Ex: param1=foo&param2=bar
      * @var string
      */
@@ -66,14 +66,14 @@ class ControllerFactory_Core {
 
     /**
      * The path before the uri
-     * 
+     *
      * If the web is directly under the domain, it will contain "/"
      * If there is a language prefix it will be "/en/" or "/sv/"
      * Ex: /
      * @var string
      */
     define("BASE_URL", $request["base"]);
-    
+
     // Do the redirect now, if there is one
     if (!empty($request["redirect"])) {
       if (!empty($request["redirect"]["code"]))
@@ -84,7 +84,7 @@ class ControllerFactory_Core {
     /**
      * The alias of the current page. Contains the same value
      * as REQUEST_PATH if there is no alias
-     * 
+     *
      * Ex: blog/my-first-blog-post
      * @var string
      */
@@ -92,7 +92,7 @@ class ControllerFactory_Core {
 
     /**
      * The system path of the current page. Does not contain query string.
-     * 
+     *
      * Ex: blog/view/13
      * @var string
      */
@@ -106,7 +106,7 @@ class ControllerFactory_Core {
 
     /**
      * Uri of public files. Used in urls
-     * 
+     *
      * Ex: /files
      * @var string
      */
@@ -114,7 +114,7 @@ class ControllerFactory_Core {
 
     /**
      * Uri of private files. Used in urls
-     * 
+     *
      * Ex: /file/private
      * @var string
      */
@@ -122,7 +122,7 @@ class ControllerFactory_Core {
 
     /**
      * Full path of public files.
-     * 
+     *
      * Ex: /usr/share/nginx/mysite/web/files
      * @var string
      */
@@ -130,12 +130,12 @@ class ControllerFactory_Core {
 
     /**
      * Full path of private files.
-     * 
+     *
      * Ex: /usr/share/nginx/mysite/private
      * @var string
      */
     define("PRIVATE_PATH", $this->Config->getPrivatePath());
-    
+
     // Pass the request on to the controller
     try {
       return $this->executeControllerAction($request["controller"], $request["action"], $request["args"]);
@@ -144,6 +144,7 @@ class ControllerFactory_Core {
     catch (Exception $e) {
       $debug = [
         "exception" => $e->getMessage(),
+        "exception_code" => $e->getCode(),
         "exception_name" => get_class($e),
         "request" => $request,
         "backtrace" => $e->getTrace(),
@@ -157,7 +158,7 @@ class ControllerFactory_Core {
       }
     }
   }
-  
+
   /**
    * Return internal error page
    * @return string
@@ -204,12 +205,12 @@ class ControllerFactory_Core {
    * @return array  Keys: uri, query, lang, base, path, alias, args, redirect
    */
   public function parseUri($uri, $raw = false) {
-    
+
     // Remove leading slash if there is one
     $uri = strtolower($uri);
     if (strpos($uri, "/") === 0)
       $uri = substr($uri, 1);
-    
+
     // Default request values
     $request = [
       "uri" => $uri,
@@ -227,8 +228,8 @@ class ControllerFactory_Core {
       if ($this->Config->getLanguageDetection() == "path") {
         $lang = substr($uri, 0, 2);
         $language = $this->Db->getRow("
-          SELECT * FROM `language` 
-          WHERE 
+          SELECT * FROM `language`
+          WHERE
             lang = :lang &&
             status = 1",
           [":lang" => $lang]);
@@ -270,7 +271,7 @@ class ControllerFactory_Core {
         if (!empty($_SESSION["user_id"])) {
           $row = $this->Db->getRow("
               SELECT lang FROM `user`
-              WHERE 
+              WHERE
                 id = :id &&
                 lang IS NOT NULL",
               [":id" => $_SESSION["user_id"]]);
@@ -279,7 +280,7 @@ class ControllerFactory_Core {
         }
       }
     }
-      
+
     $request["path"] = $uri;
 
     // Query string
@@ -288,21 +289,21 @@ class ControllerFactory_Core {
       $request["query"] = substr($request["path"], $x+1);
       $request["path"] = substr($request["path"], 0, $x);
     }
-    
+
     $request["alias"] = $request["path"];
-      
+
     if ($this->Db->connected && !$raw) {
       // Alias
       if ($request["path"]) {
         $alias = $this->Db->getRow("
-            SELECT * FROM `alias` 
-            WHERE 
+            SELECT * FROM `alias`
+            WHERE
               status = 1 &&
               alias = :alias &&
-              (lang IS NULL || lang = :lang)", 
+              (lang IS NULL || lang = :lang)",
             [  ":alias" => $request["path"],
               ":lang" => $request["lang"]]);
-        if ($alias) 
+        if ($alias)
           $request["path"] = $alias->path;
       }
 
@@ -311,7 +312,7 @@ class ControllerFactory_Core {
         if ($this->Config->getHttps() && HTTP_PROTOCOL != "https")
           $redir["protocol"] = "https";
         $sub = $this->Config->getSubdomain();
-        if ($sub && strpos($_SERVER["HTTP_HOST"], $sub.".") !== 0) 
+        if ($sub && strpos($_SERVER["HTTP_HOST"], $sub.".") !== 0)
           $redir["host"] = $sub.".".$_SERVER["HTTP_HOST"];
       }
       if (!array_key_exists("uri", $redir)) {
@@ -348,7 +349,7 @@ class ControllerFactory_Core {
       }
       if (!empty($redir)) {
         $request["redirect"] = [
-          "location" => 
+          "location" =>
             (!empty($redir["url"]) ?
               $redir["url"] :
               (!empty($redir["protocol"]) ? $redir["protocol"] : HTTP_PROTOCOL)."://".
@@ -359,10 +360,10 @@ class ControllerFactory_Core {
         ];
       }
     }
-    
+
     $params = explode("/", $request["path"]);
-    
-    // Controller 
+
+    // Controller
     if (!empty($params[0])) {
       $controller = strtolower($params[0]);
       $arr = explode("-", $controller);
@@ -374,7 +375,7 @@ class ControllerFactory_Core {
     else {
       $request["controller"] = "page";
     }
-    
+
     // Action
     if (!empty($params[1])) {
       $action = strtolower($params[1]);
