@@ -10,7 +10,7 @@ function popupInit() {
     var observer = new MutationObserver(function(mutations) {
       mutations.forEach(function(mutation) {
         popupObserve(mutation.target);
-      });    
+      });
     });
     var config = { childList: true, subtree: true };
     observer.observe(document.body, config);
@@ -30,13 +30,13 @@ function popupObserve(el) {
 }
 
 function popup(el) {
-  
+
   this.tags = {};
   this.temporary = false;
   this.loader = FontAwesome.icon("refresh fa-spin popup-loader");
   this.adaptive_height = false;
   this.margin = 20;
-  
+
   this.onResize = function() {
     if (this.adaptive && this.tags.inner) {
       var h = window.innerHeight;
@@ -47,7 +47,7 @@ function popup(el) {
       this.tags.inner.style.maxHeight = h+"px";
     }
   }
-  
+
   this.move = function(el) {
     el.removeClass("popup");
     if (el.getAttribute("temporary"))
@@ -60,7 +60,7 @@ function popup(el) {
       this.open();
     this.on_close = el.getAttribute("onclose");
   }
-  
+
   this.create = function(name, close) {
     var self = this;
     this.tags = {
@@ -96,15 +96,15 @@ function popup(el) {
     if (this.adaptive)
       window.addEventListener("resize", function(){ self.onResize(); }, false);
   }
-  
+
   this.destroy = function() {
     document.body.removeChild(this.tags.wrap);
   }
-  
+
   this.setSize = function(size) {
     this.tags.wrap.className = this.tags.wrap.className.replace(/popup\-size\-[a-z]+/, "popup-size-"+size);
   }
-  
+
   this.setContent = function(content) {
     if (typeof(content) == "object") {
       this.tags.inner.innerHTML = "";
@@ -114,7 +114,7 @@ function popup(el) {
       this.tags.inner.innerHTML = content;
     }
   }
-  
+
   this.loadContent = function(content) {
     var self = this;
     if (typeof(content) == "string") {
@@ -156,18 +156,18 @@ function popup(el) {
     }
     this.open();
   }
-  
+
   this.adjustPosition = function() {
-    var top = 
+    var top =
       scrollTop() +
-      Math.max(this.margin, 
+      Math.max(this.margin,
         ( window.innerHeight -
-          this.tags.light.offsetHeight + 
+          this.tags.light.offsetHeight +
           parseInt(document.body.getStyle("margin-top"))
         )/2);
     this.tags.light.style.top = top+"px";
   }
-  
+
   this.isOpen = function() {
     return this.tags.wrap.hasClass("open");
   }
@@ -202,10 +202,10 @@ function popup(el) {
         this.on_close(this);
     }
   }
-  
+
   if (el)
     this.move(el);
-  
+
 }
 
 function popupLoad(content, opt) {
@@ -214,9 +214,11 @@ function popupLoad(content, opt) {
   if (!opt)
     opt = {};
   var p = new popup();
-  p.temporary = true;
-  p.adaptive = true;
-  p.create("load", opt.close ? opt.close : null);
+  p.temporary = opt.hasOwnProperty("temporary") ? opt.temporary : true;
+  p.adaptive = opt.hasOwnProperty("adaptive") ? opt.adaptive : true;
+  var name = opt.hasOwnProperty("name") ? opt.name : "load";
+  var close = opt.hasOwnProperty("close") ? opt.close : null;
+  p.create(name, close);
   if (opt.size)
     p.setSize(opt.size);
   p.loadContent(content);
