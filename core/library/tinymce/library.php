@@ -1,6 +1,6 @@
 <?php
 class Tinymce_Library_Core extends Library {
-  
-  public $js = ["https://cdn.tinymce.com/4/tinymce.min.js"];
-  
+
+  public $js = ["//cdnjs.cloudflare.com/ajax/libs/tinymce/4.7.6/tinymce.min.js"];
+
 }

@@ -6,12 +6,12 @@
 /**
  * Form item class
  *
- * @see    \Form 
+ * @see    \Form
  * @see    \Form::structure
  * @author Eric Höglander
  */
 class FormItem extends Model {
-  
+
   /**
    * Name of the element
    * @var string
@@ -29,21 +29,21 @@ class FormItem extends Model {
    * @var bool
    */
   public $multiple;
-  
+
   /**
    * If a new item should be displayed even if there are existing items
    * @see $multiple
    * @var bool
    */
   public $multiple_new;
-  
+
   /**
    * If a new item should be displayed if there are none yet
    * @see $multiple
    * @var bool
    */
   public $multiple_new_empty = true;
-  
+
   /**
    * Maximum number of items
    * @see $multiple
@@ -114,7 +114,7 @@ class FormItem extends Model {
    * @var bool
    */
   public $sortable = false;
-  
+
   /**
    * Javascript function to call after an item has been moved
    * @var string
@@ -134,13 +134,13 @@ class FormItem extends Model {
    * @var string
    */
   public $delete_button = "Remove";
-  
+
   /**
    * Javascript function to call after an item has been dynamically added
    * @var string
    */
   public $add_callback;
-  
+
   /**
    * Javascript function to call after an item has been dynamically removed
    * @var string
@@ -179,7 +179,7 @@ class FormItem extends Model {
 
   /**
    * Possible value options
-   * 
+   *
    * Used for elements such as checkboxes, radios, and select
    * @var array
    */
@@ -187,7 +187,7 @@ class FormItem extends Model {
 
   /**
    * Disabled options
-   * 
+   *
    * Used for elements such as checkboxes, radios, and select
    * @var array
    */
@@ -199,7 +199,7 @@ class FormItem extends Model {
    * @var string
    */
   public $empty_option;
-  
+
   /**
    * Whether to validate a multiple choice value
    * @see $options
@@ -269,7 +269,7 @@ class FormItem extends Model {
    * @var string
    */
   public $item_class;
-  
+
   /**
    * Any extra item class to wrapper of a 'multiple' item
    * @var string
@@ -340,7 +340,7 @@ class FormItem extends Model {
   public function getError() {
     return $this->error;
   }
-  
+
   /**
    * Check if any child item contains an error
    * @return bool
@@ -403,7 +403,7 @@ class FormItem extends Model {
       return !$this->emptyValue($this->value(false));
     }
     else {
-      foreach ($this->items as $item) 
+      foreach ($this->items as $item)
         if ($item->hasValue())
           return true;
     }
@@ -423,7 +423,7 @@ class FormItem extends Model {
     }
     return false;
   }
-  
+
   /**
    * Any javascript files that need to be loaded with the form
    * @return array
@@ -505,7 +505,7 @@ class FormItem extends Model {
       $this->preRender($vars);
     return renderTemplate($path, $vars);
   }
-  
+
   /**
    * Renders certain items only
    * @param  array  $items
@@ -563,8 +563,8 @@ class FormItem extends Model {
       $value = $this->value();
       if ($value === null)
         $value = [];
-      if (!$this->submitted && 
-          (empty($value) && $this->multiple_new_empty || $this->multiple_new) && 
+      if (!$this->submitted &&
+          (empty($value) && $this->multiple_new_empty || $this->multiple_new) &&
           (!$this->multiple_max || count($value) < $this->multiple_max))
         $value[] = null;
       $this->items = [];
@@ -640,7 +640,7 @@ class FormItem extends Model {
       $cname.= ucwords($b);
     $cname.= "_FormItem";
     $class = $this->newClass($cname, $item);
-    if (!$class) 
+    if (!$class)
       $class = $this->newClass("FormItem", $item);
     $this->items[$name] = $class;
   }
@@ -977,7 +977,7 @@ class FormItem extends Model {
    * @return string
    */
   protected function renderAddButton() {
-    if (!$this->multiple || !$this->add_button) 
+    if (!$this->multiple || !$this->add_button)
       return null;
     $json = $this->jsonStructure();
     $n = count($this->items);
@@ -1000,7 +1000,7 @@ class FormItem extends Model {
     $max = ($this->multiple_max ? $this->multiple_max : 0);
     return '<div class="form-button form-delete-button btn btn-danger" onclick="formDeleteButton(this, '.$callback .', '.$add.', '.$max.')">'.$this->delete_button.'</div>';
   }
-  
+
   /**
    * Structure in json format
    * @return string
@@ -1009,7 +1009,7 @@ class FormItem extends Model {
     $data = $this->orderRestructure($this->item_structure);
     return htmlspecialchars(json_encode($data), ENT_QUOTES);
   }
-  
+
   /**
    * Restructure certain assoc arrays to numbered arrays to preserve order when json-encoding
    * @param array
@@ -1031,7 +1031,7 @@ class FormItem extends Model {
     }
     return $data;
   }
-  
+
   /**
    * Reverse orderRestructure
    * @see orderRestructure

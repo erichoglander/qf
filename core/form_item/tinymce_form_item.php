@@ -1,11 +1,11 @@
 <?php
 class Tinymce_FormItem_Core extends FormItem {
-  
+
   public $tinymce_config = [];
   public $tinymce_default = [];
   public $tinymce_extra = [];
   public $tinymce_upload = false;
-  
+
   public function loadDefault() {
     $this->tinymce_default = [
       "plugins" => "lists link contextmenu autoresize paste",
@@ -24,27 +24,27 @@ class Tinymce_FormItem_Core extends FormItem {
       "branding" => false,
     ];
   }
-  
+
   public function js() {
-    return ["//cdn.tinymce.com/4/tinymce.min.js", fileUrl("library/tinymce/js/file.js")];
+    return ["//cdnjs.cloudflare.com/ajax/libs/tinymce/4.7.6/tinymce.min.js", fileUrl("library/tinymce/js/file.js")];
   }
-  
+
   public function getAttributes() {
     $attr = parent::getAttributes();
     if (empty($attr["id"]))
       $attr["id"] = "tinymce_".str_replace(["[", "]"], ["__", ""], $this->inputName());
     return $attr;
   }
-  
+
   public function uploadResponse($File) {
     return json_encode(["location" => $File->url()]);
   }
-  
+
 
   protected function filter($value, $filter) {
     return preg_replace("/<\s*script[^>]+>[^<]+<\s*\/script\s*>/i", "", $value);
   }
-  
+
   protected function preRenderInput(&$vars) {
     $config = $this->tinymce_config+$this->tinymce_default;
     if (!empty($this->tinymce_extra)) {
@@ -66,5 +66,5 @@ class Tinymce_FormItem_Core extends FormItem {
     $json = str_replace('>"', '', $json);
     $vars["tinymce_config"] = $json;
   }
-  
+
 }
