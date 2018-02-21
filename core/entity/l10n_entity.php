@@ -1,6 +1,6 @@
 <?php
 /**
- * Contains the l10n entity 
+ * Contains the l10n entity
  */
 /**
  * l10n entity
@@ -16,14 +16,14 @@ class l10n_Entity extends Entity {
    * @var string
    */
   public $default_lang = "sv";
-  
-  
+
+
   /**
    * The entity translations
    * @var array
    */
   protected $translations = [];
-  
+
   /**
    * Whether or not all translations have been fetched
    * @var bool
@@ -45,7 +45,7 @@ class l10n_Entity extends Entity {
     if ($id)
       $this->load($id, $lang);
   }
-  
+
   /**
    * Set default language for current entity
    * @param  string $lang
@@ -55,7 +55,7 @@ class l10n_Entity extends Entity {
       $lang = $this->default_lang;
     $this->set("lang", $lang);
   }
-  
+
   /**
    * Get url path to the translated entity. Returns source entity url if there is no translation.
    * @return string
@@ -80,12 +80,12 @@ class l10n_Entity extends Entity {
     $json = parent::json($include_id);
     if ($include_translations) {
       $json["translations"] = [];
-      foreach ($this->translations() as $lang => $Entity) 
+      foreach ($this->translations() as $lang => $Entity)
         $json["translations"][$lang] = $Entity->json(false, $include_id);
     }
     return $json;
   }
-  
+
   /**
    * Get a translation for a field
    * @see    \Entity::get()
@@ -101,7 +101,7 @@ class l10n_Entity extends Entity {
       return $this->translation($lang)->get($key, $def);
     return $def;
   }
-  
+
   /**
    * Get a translation for a field
    *
@@ -120,8 +120,8 @@ class l10n_Entity extends Entity {
       return $this->translation($lang)->get($key, $def);
     else
       return $this->get($key, $def);
-  } 
-  
+  }
+
   /**
    * The id of the source entity
    * @return int
@@ -145,7 +145,7 @@ class l10n_Entity extends Entity {
     }
     return true;
   }
-  
+
   /**
    * Save entity
    * @return bool
@@ -160,10 +160,10 @@ class l10n_Entity extends Entity {
     else {
       $original = null;
     }
-    
+
     if (!parent::save())
       return false;
-    
+
     // Sync field values if needed
     $data = [];
     $vars = [];
@@ -175,10 +175,10 @@ class l10n_Entity extends Entity {
     }
     if (!empty($data)) {
       $sql = "
-        UPDATE `".$this->schema["table"]."` 
+        UPDATE `".$this->schema["table"]."`
         SET ".implode(", ", $data)."
-        WHERE 
-          (sid = :sid || id = :sid) && 
+        WHERE
+          (sid = :sid || id = :sid) &&
           id != :id";
       $vars[":sid"] = $this->sid();
       $vars[":id"] = $this->id();
@@ -236,7 +236,7 @@ class l10n_Entity extends Entity {
     }
     return parent::delete();
   }
-  
+
   /**
    * Create a new translation of entity
    * @param  $lang Language code
@@ -247,6 +247,10 @@ class l10n_Entity extends Entity {
     $this->translations[$lang] = new $class($this->Db);
     $this->translations[$lang]->set("sid", $this->sid());
     $this->translations[$lang]->set("lang", $lang);
+    foreach ($this->schema["fields"] as $key => $field) {
+      if (!empty($field["sync"]))
+        $this->translations[$lang]->set($key, $this->get($key));
+    }
     return $this->translations[$lang];
   }
 
@@ -336,7 +340,7 @@ class l10n_Entity extends Entity {
     }
     return $this->translations[$lang];
   }
-  
+
   /**
    * Create an url-alias for the entity if possible
    * @see    getPath
@@ -346,7 +350,7 @@ class l10n_Entity extends Entity {
   public function createAlias($lang = null) {
     return parent::createAlias($this->get("lang", $this->default_lang));
   }
-  
+
   /**
    * Delete entity url-alias
    * @see    getPath
