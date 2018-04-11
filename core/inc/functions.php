@@ -323,15 +323,16 @@ function tpl($name, $vars = null) {
 
 /**
  * Translates a string
- * @param  string $str  String to be translated
- * @param  string $lang The language of the string
- * @param  array  $vars Replacements for the string
+ * @param  string $str     String to be translated
+ * @param  string $lang    The language of the string
+ * @param  array  $vars    Replacements for the string
+ * @param  string $to_lang The language to translate to
  * @return str
  */
-function t($str, $lang = "en", $vars = []) {
+function t($str, $lang = "en", $vars = [], $to_lang = LANG) {
   static $cache = [];
-  if (isset($cache[$lang][$str][LANG])) {
-    $str = $cache[$lang][$str][LANG];
+  if (isset($cache[$lang][$str][$to_lang])) {
+    $str = $cache[$lang][$str][$to_lang];
   }
   else {
     global $Db;
@@ -343,9 +344,9 @@ function t($str, $lang = "en", $vars = []) {
       $l10nString->save();
     }
     else {
-      $Translation = $l10nString->translation(LANG);
+      $Translation = $l10nString->translation($to_lang);
       if ($Translation) {
-        $cache[$lang][$str][LANG] = $Translation->get("string");
+        $cache[$lang][$str][$to_lang] = $Translation->get("string");
         $str = $Translation->get("string");
       }
     }
