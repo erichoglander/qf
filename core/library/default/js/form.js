@@ -7,6 +7,17 @@ function formAjaxSubmit(form, ajax, cb) {
   };
   if (typeof(FormData) != "undefined") {
     obj.post = new FormData(form);
+
+    // Safari empty file bug workaround
+    try {
+      if (typeof(obj.post.entries) != "undefined") {
+        for (var pair of obj.post.entries()) {
+          if (pair[1] instanceof File && pair[1].name == '' && pair[1].size == 0)
+            obj.post.delete(pair[0]);
+        }
+      }
+    }
+    catch (e) {}
   }
   else {
     var id = formId();
@@ -90,7 +101,7 @@ function formFileBlobUpload(el, blob, filename, callback) {
     if (onchange.indexOf("formFileUpload(this, 1") != -1)
       parent_multiple = true;
   }
-  
+
   var item = formGetItem(el);
   var simpleName = el.name.replace("[", "--").replace("]", "");
   var name = el.name.substr(0, el.name.length-6);
@@ -99,7 +110,7 @@ function formFileBlobUpload(el, blob, filename, callback) {
     var m = blob.type.match(/\/(.*)$/);
     filename = "blob_"+formId()+"."+m[1];
   }
-  
+
   var fd = new FormData();
   fd.append(el.name, blob, filename);
   var xmlhttp = new XMLHttpRequest();
@@ -118,31 +129,31 @@ function formFileUpload(el, parent_multiple, callback) {
   var item = formGetItem(el);
   var simpleName = el.name.replace("[", "--").replace("]", "");
   var name = el.name.substr(0, el.name.length-6);
-  
+
   // Save current values
   var action = el.form.action;
   var onsubmit = el.form.onsubmit;
   var enctype = el.form.enctype;
   var target = el.form.target;
   var token = el.form.elements[name+"[token]"].value;
-  
+
   // Create iframe
   var iframe = document.createElement("iframe");
   iframe.name = "form-file-iframe-"+simpleName;
   iframe.className = "form-file-iframe";
   iframe.id = iframe.name;
   iframe.style.display = "none";
-  
+
   // Set form options
   el.form.action = BASE_URL+"form/fileupload/"+token;
   el.form.onsubmit = "";
   el.form.enctype = "multipart/form-data";
   el.form.target = iframe.name;
-  
+
   // Insert frame and add listener
   el.parentNode.appendChild(iframe);
   iframe.addEventListener("load", function(){ formFileUploadDone(el, parent_multiple, callback, iframe); }, false);
-  
+
   // Send form
   if (typeof(el.form.submit) == "function")
     el.form.submit();
@@ -150,9 +161,9 @@ function formFileUpload(el, parent_multiple, callback) {
     el.form.submit[0].click();
   else
     el.form.submit.click();
-  
+
   item.addClass("loading");
-  
+
   // Reset form options
   el.form.action = action;
   el.form.onsubmit = onsubmit;
@@ -203,16 +214,16 @@ function formFileUploadDone(el, parent_multiple, callback, obj) {
   }
   var item = formGetItem(el);
   var new_item = null;
-  
+
   el.value = "";
   item.removeClass("loading");
-  
+
   if (obj.error) {
     alert(obj.error);
     return;
   }
   if (obj.dom) {
-    if (parent_multiple) 
+    if (parent_multiple)
       var parent = formGetItem(item.parentNode);
     var wrap = document.createElement("div");
     jsonToHtml(wrap, obj.dom);
@@ -276,13 +287,13 @@ function formDeleteButton(el, callback, add_new, max) {
   var itemwrap = item.parentNode;
   var parent = formGetItem(itemwrap);
   itemwrap.removeChild(item);
-  
+
   // Fetch add button
   var adds = parent.getElementsByClassName("form-add-button");
   var add = null;
   if (adds.length && adds[adds.length-1].parentNode == parent)
     add = adds[adds.length-1];
-  
+
   var readd = false;
   if (max && max > itemwrap.children.length && add && add.style.display) {
     add.style.display = null;
@@ -383,7 +394,7 @@ function formGeneratePassword(el, copy) {
   inp.style.left = "-10000px";
   document.body.appendChild(inp);
   inp.select();
-  if (!document.execCommand("copy")) 
+  if (!document.execCommand("copy"))
     prompt("Copy password: Ctrl+C, Enter", pass);
   document.body.removeChild(inp);
 }
@@ -398,7 +409,7 @@ function formCollapsibleInit() {
     var observer = new MutationObserver(function(mutations) {
       mutations.forEach(function(mutation) {
         formCollapsibleObserve(mutation.target);
-      });    
+      });
     });
     var config = { childList: true, subtree: true };
     observer.observe(document.body, config);
@@ -459,7 +470,7 @@ function formPopupButton(btn, structure) {
 function formPopupSubmit(r, item, form, p) {
   if (form.action.indexOf("upload") !== -1)
     return;
-  
+
   if (typeof(r.dom) != "undefined") {
     var div = document.createElement("div");
     jsonToHtml(div, r.dom);
@@ -482,7 +493,7 @@ function formPopupSubmit(r, item, form, p) {
     form.appendChild(hidden);
   }
   if (r.validated) {
-    if (item.getAttribute("callback")) 
+    if (item.getAttribute("callback"))
       eval("(function(){ return "+item.getAttribute("callback")+";}())");
     p.close();
   }
