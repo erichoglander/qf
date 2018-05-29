@@ -9,7 +9,7 @@
  * @author Eric Höglander
  */
 class l10n_Controller_Core extends Controller {
-  
+
   /**
    * The access list
    * @param  string $action
@@ -106,7 +106,7 @@ class l10n_Controller_Core extends Controller {
         else if ($values["action"] == "info") {
           $re = $this->Model->scanInfo($values["parts"]);
           if ($re !== null) {
-            setmsg(t(":total strings found and :new new", "en", 
+            setmsg(t(":total strings found and :new new", "en",
                 [  ":total" => $re["total"],
                   ":new" => $re["new"]]), "success");
           }
@@ -176,7 +176,7 @@ class l10n_Controller_Core extends Controller {
     if ($Form->isSubmitted()) {
       $values = $Form->values();
       $_SESSION["l10n_search"] = $values["q"];
-      refresh();
+      redirect("l10n/list");
     }
     $Pager = newClass("Pager");
     $Pager->setNum($this->Model->searchNum($q));

@@ -19,7 +19,7 @@ class l10n_Model_Core extends Model {
       $languages[$row->lang] = $row;
     return $languages;
   }
-  
+
   public function import($values) {
     if (!empty($values["file"])) {
       $File = $this->getEntity("File", $values["file"]);
@@ -33,7 +33,7 @@ class l10n_Model_Core extends Model {
     }
     throw new Exception(t("Invalid data source"));
   }
-  
+
   public function importPasted($raw) {
     $n = 0;
     $rows = $this->split($raw, "\n");
@@ -65,7 +65,7 @@ class l10n_Model_Core extends Model {
           break;
         }
       }
-      
+
       if (!$Source) {
         foreach ($langs as $i => $lang) {
           if (!empty($strings[$i])) {
@@ -81,7 +81,7 @@ class l10n_Model_Core extends Model {
       }
       if (!$Source)
         continue;
-      
+
       foreach ($langs as $i => $lang) {
         if (!empty($strings[$i])) {
           $str = trim($strings[$i]);
@@ -99,7 +99,7 @@ class l10n_Model_Core extends Model {
     }
     return $n;
   }
-  
+
   public function split($input, $delimiter, $enclosure = '"') {
     $arr = [];
     $len = strlen($input);
@@ -139,8 +139,8 @@ class l10n_Model_Core extends Model {
       if (empty($l10n_string->string) || empty($l10n_string->lang))
         continue;
       $source = $this->Db->getRow("
-          SELECT id FROM `l10n_string` 
-          WHERE 
+          SELECT id FROM `l10n_string`
+          WHERE
             lang = :lang &&
             string = :string &&
             sid IS NULL",
@@ -160,7 +160,7 @@ class l10n_Model_Core extends Model {
         if (empty($translation->string))
           continue;
         if ($source && $l10nString->translation($lang)) {
-          if ($l10nString->translation($lang)->get("string") == $translation->string) 
+          if ($l10nString->translation($lang)->get("string") == $translation->string)
             continue;
           if ($l10nString->translation($lang)->get("input_type") == "manual")
             continue;
@@ -198,7 +198,7 @@ class l10n_Model_Core extends Model {
     $rows = $this->Db->getRows($sql);
     if (!empty($rows)) {
       $sql = "SELECT lang, string, updated FROM `l10n_string` WHERE sid = :id";
-      if (!empty($values["input_type"])) 
+      if (!empty($values["input_type"]))
         $sql.= " && input_type IN ('".implode("','", $values["input_type"])."')";
       if (!empty($values["language"]))
         $sql.= " && lang IN ('".implode("','", $values["language"])."')";
@@ -218,9 +218,9 @@ class l10n_Model_Core extends Model {
       return json_encode($l10n_strings);
     }
     else if ($values["format"] == "xml") {
-      
+
       $rows = [];
-      
+
       // Get languages
       $langs = [];
       if (!empty($values["languages"])) {
@@ -233,7 +233,7 @@ class l10n_Model_Core extends Model {
       }
       foreach ($langs as $lang)
         $rows[0][$lang] = $lang;
-      
+
       // Transform string data into rows
       foreach ($l10n_strings as $string) {
         $row = [];
@@ -242,7 +242,7 @@ class l10n_Model_Core extends Model {
           $row[$str->lang] = $str->string;
         $rows[] = $row;
       }
-      
+
       // Compile data to xml
       $data = "";
       foreach ($rows as $row) {
@@ -337,11 +337,19 @@ class l10n_Model_Core extends Model {
    */
   public function searchQuery($q) {
     $vars = [];
-    $sql = "SELECT * FROM `l10n_string` WHERE sid IS NULL";
+    $sql = "
+        SELECT source.* FROM `l10n_string` as source
+        LEFT JOIN `l10n_string` as trans ON
+          trans.sid = source.id
+        WHERE source.sid IS NULL";
     if ($q) {
-      $sql.= " && string LIKE :q";
+      $sql.= " && (
+          source.string LIKE :q ||
+          trans.string LIKE :q
+      )";
       $vars[":q"] = "%".$q."%";
     }
+    $sql.= " GROUP BY source.id";
     return [$sql, $vars];
   }
   /**
@@ -396,7 +404,7 @@ class l10n_Model_Core extends Model {
     }
     return $n;
   }
-  
+
   /**
    * Scan code for translation calls and return information about the scan
    * @see    scan
@@ -413,7 +421,7 @@ class l10n_Model_Core extends Model {
     }
     return $info;
   }
-  
+
   /**
    * Scan code for translation calls
    * @see    scanFiles
@@ -429,7 +437,7 @@ class l10n_Model_Core extends Model {
       return null;
     return $this->scanFiles($arr);
   }
-  
+
   /**
    * Scan folders for translation calls
    * @see    scanString
@@ -440,6 +448,8 @@ class l10n_Model_Core extends Model {
     $t = [];
     foreach ($arr as $file) {
       if (is_dir($file)) {
+        if (strpos($file, "core/builder/schema") !== false)
+          continue;
         $files = glob($file."/*");
         $t = array_merge($t, $this->scanFiles($files));
       }
@@ -454,7 +464,7 @@ class l10n_Model_Core extends Model {
     }
     return array_unique($t, SORT_REGULAR);
   }
-  
+
   /**
    * Scan a string for translation calls
    * @param  string $str
@@ -463,7 +473,7 @@ class l10n_Model_Core extends Model {
   public function scanString($str) {
     $arr = [];
     $n = preg_match_all("/[^a-z0-9\_\>\$]t\(([\"|\'])([^\"]+)[\"|\'](\,\s*[\"|\']([a-z]+)[\"|\'])?/i", $str, $matches);
-    if (!$n) 
+    if (!$n)
       return null;
     foreach ($matches[2] as $i => $string) {
       $lang = (empty($matches[4][$i]) ? "en" : $matches[4][$i]);
@@ -477,5 +487,5 @@ class l10n_Model_Core extends Model {
     }
     return $arr;
   }
-  
+
 }
