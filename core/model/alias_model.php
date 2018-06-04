@@ -7,7 +7,7 @@
  * @author Eric Höglander
  */
 class Alias_Model_Core extends Model {
-  
+
   /**
    * Attempts to create an alias
    * @param  string $path
@@ -37,19 +37,28 @@ class Alias_Model_Core extends Model {
       return null;
     return $Alias;
   }
-  
+
   /**
    * Batch create and/or update aliases for an entity type
    * @param  string $entity_type
    * @param  string $action create/update/all
+   * @param  string $lang
    * @return int
    */
-  public function batchAliases($entity_type, $action) {
+  public function batchAliases($entity_type, $action, $lang = null) {
     $n = 0;
     $Head = $this->getEntity($entity_type);
-    $rows = $this->Db->getRows("SELECT id FROM `".$Head->tableName()."`");
+    $query = [
+      "table" => $Head->tableName(),
+    ];
+    if ($lang) {
+      $query["where"][] = "lang = :lang";
+      $query["vars"][":lang"] = $lang;
+    }
+    $rows = $this->Db->getRows($query);
     foreach ($rows as $row) {
-      $Entity = $this->getEntity($entity_type, $row->id);
+      $Entity = $this->getEntity($entity_type);
+      $Entity->loadRow($row);
       $update = $action == "all";
       if ($action == "delete") {
         $Entity->deleteAlias();
@@ -57,20 +66,26 @@ class Alias_Model_Core extends Model {
       }
       else if (in_array($action, ["create", "update"])) {
         $path = $Entity->getPath();
-        $row = $this->Db->getRow("
-            SELECT * FROM `alias`
-            WHERE path = :path",
-            [":path" => $path]);
-        $update = 
-            $row && $action == "update" || 
+        $q = [
+          "table" => "alias",
+          "where" => ["path = :path"],
+          "vars" => [":path" => $path],
+        ];
+        if ($lang) {
+          $q["where"][] = "(lang = :lang || lang IS NULL)";
+          $q["vars"][":lang"] = $lang;
+        }
+        $row = $this->Db->getRow($q);
+        $update =
+            $row && $action == "update" ||
             !$row && $action == "create";
       }
-      if ($update && $Entity->createAlias())
+      if ($update && $Entity->createAlias($lang))
         $n++;
     }
     return $n;
   }
-  
+
   /**
    * Add a new alias
    * @see    editAlias
@@ -114,7 +129,7 @@ class Alias_Model_Core extends Model {
       $aliases[] = $this->getEntity("Alias", $row->id);
     return $aliases;
   }
-  
+
   /**
    * Database query for alias search
    * @param  array $values Search parameters

@@ -11,7 +11,7 @@
 class Alias_Controller_Core extends Controller {
 
   /**
-   * The access list 
+   * The access list
    * @param string  $action
    * @param array   $args
    * @return array
@@ -28,33 +28,41 @@ class Alias_Controller_Core extends Controller {
   public function indexAction() {
     redirect("alias/list");
   }
-  
+
   /**
    * Batch update aliases for a certain entity type
-   * @param  array $args 
+   * @param  array $args
    * @return string
    */
   public function batchAction($args = []) {
     if (empty($args[0]))
       return t("Specify an entity type");
+
     try {
       $Entity = $this->getEntity($args[0]);
     }
     catch (Exception $e) {
       return t("Unknown entity type");
     }
+
     $action = "all";
     if (!empty($args[1])) {
       $action = $args[1];
       if (!in_array($action, ["all", "create", "update", "delete"]))
         return t("Unknown action");
     }
+
+    $lang = null;
+    if (!empty($args[2]))
+      $lang = $args[2];
+
     try {
-      $n = $this->Model->batchAliases($args[0], $action);
+      $n = $this->Model->batchAliases($args[0], $action, $lang);
     }
     catch (Exception $e) {
       return $e->getMessage();
     }
+
     if ($action == "delete")
       return t("Deleted :n aliases.", "en", [":n" => $n]);
     return t("Updated :n aliases.", "en", [":n" => $n]);
