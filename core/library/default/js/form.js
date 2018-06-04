@@ -11,7 +11,9 @@ function formAjaxSubmit(form, ajax, cb) {
     // Safari empty file bug workaround
     try {
       if (typeof(obj.post.entries) != "undefined") {
-        for (var pair of obj.post.entries()) {
+        var it = obj.post.entries();
+        for (var item = it.next(); !item.done; item = it.next()) {
+          var pair = item.value;
           if (pair[1] instanceof File && pair[1].name == '' && pair[1].size == 0)
             obj.post.delete(pair[0]);
         }
