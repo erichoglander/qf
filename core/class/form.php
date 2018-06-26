@@ -77,7 +77,7 @@ class Form extends Model {
    * @var string
    */
   protected $suffix;
-  
+
   /**
    * Any js files to be included with form
    * @var array
@@ -113,7 +113,7 @@ class Form extends Model {
     ];
     return renderTemplate($path, $vars);
   }
-  
+
   /**
    * Renders certain items only
    * @param  array  $items
@@ -174,7 +174,7 @@ class Form extends Model {
     $this->vars = $vars;
     $this->loadStructure();
   }
-  
+
   /**
    * Any javascript files that need to be loaded with the form
    * @return array
@@ -197,15 +197,17 @@ class Form extends Model {
    */
   public function values() {
     $value = [];
-    foreach ($this->items as $item) {
-      if ($item->submit_data) {
-        $val = $item->value();
-        if (is_array($val) && !$item->tree) {
-          foreach ($val as $k => $v)
-            $value[$k] = $v;
-        }
-        else {
-          $value[$item->name] = $val;
+    if (!empty($this->items)) {
+      foreach ($this->items as $item) {
+        if ($item->submit_data) {
+          $val = $item->value();
+          if (is_array($val) && !$item->tree) {
+            foreach ($val as $k => $v)
+              $value[$k] = $v;
+          }
+          else {
+            $value[$item->name] = $val;
+          }
         }
       }
     }
@@ -376,7 +378,7 @@ class Form extends Model {
       $cname.= ucwords($b);
     $cname.= "_FormItem";
     $class = $this->newClass($cname, $item);
-    if (!$class) 
+    if (!$class)
       $class = $this->newClass("FormItem", $item);
     $this->items[$name] = $class;
   }
@@ -511,8 +513,10 @@ class Form extends Model {
    */
   protected function renderItems() {
     $items = [];
-    foreach ($this->items as $name => $item)
-      $items[] = $item->render($name);
+    if (!empty($this->items)) {
+      foreach ($this->items as $name => $item)
+        $items[] = $item->render($name);
+    }
     return $items;
   }
 
