@@ -356,6 +356,24 @@ class FormItem extends Model {
   }
 
   /**
+   * Get form item and children errors
+   * @return array
+   */
+  public function getAllErrors() {
+    $arr = [];
+    if ($this->error)
+      $arr[$this->inputName()] = $this->error;
+    if ($this->items !== null) {
+      foreach ($this->items as $name => $item) {
+        $errors = $item->getAllErrors();
+        if (!empty($errors))
+          $arr+= $errors;
+      }
+    }
+    return $arr;
+  }
+
+  /**
    * Returns element value
    * @see    $filter
    * @see    filter

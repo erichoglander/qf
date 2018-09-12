@@ -287,6 +287,22 @@ class Form extends Model {
   }
 
   /**
+   * Get form and form item errors
+   * @return array
+   */
+  public function getAllErrors() {
+    $arr = [];
+    if (!empty($this->errors))
+      $arr["_self"] = $this->errors;
+    foreach ($this->items as $name => $item) {
+      $errors = $item->getAllErrors();
+      if (!empty($errors))
+        $arr+= $errors;
+    }
+    return $arr;
+  }
+
+  /**
    * The main structure of the form
    *
    * This method should be extended by the specific form
