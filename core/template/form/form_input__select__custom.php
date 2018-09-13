@@ -1,7 +1,7 @@
 <div class="select-custom <?=($val_class ? "with-val" : "")?>">
   <div class="select-custom-title form-textfield">
     <span class="select-custom-title-inner">
-      <?=(array_key_exists($value, $options) ? $options[$value] : null)?>
+      <?=(@array_key_exists($value, $options) ? $options[$value] : null)?>
     </span>
     <?=FontAwesome\Icon("angle-down")?>
   </div>
@@ -15,7 +15,7 @@
   <div class="select-custom-hidden">
     <select <?=$attributes?>>
     <?php foreach ($options as $key => $val) { ?>
-      <option 
+      <option
         value="<?=$key?>"
         <?=($key == $value && strlen($key) == strlen($value) ? "selected": "")?>
         <?=(isset($disabled_options) && in_array($key, $disabled_options) ? "disabled" : "")?>>
