@@ -26,7 +26,7 @@ class Tinymce_FormItem_Core extends FormItem {
   }
 
   public function js() {
-    return ["//cdnjs.cloudflare.com/ajax/libs/tinymce/4.7.6/tinymce.min.js", fileUrl("library/tinymce/js/file.js")];
+    return ["//cdnjs.cloudflare.com/ajax/libs/tinymce/4.8.3/tinymce.min.js", fileUrl("library/tinymce/js/file.js")];
   }
 
   public function getAttributes() {
