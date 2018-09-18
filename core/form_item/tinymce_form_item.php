@@ -5,6 +5,7 @@ class Tinymce_FormItem_Core extends FormItem {
   public $tinymce_default = [];
   public $tinymce_extra = [];
   public $tinymce_upload = false;
+  public $tinymce_init = true;
 
   public function loadDefault() {
     $this->tinymce_default = [
@@ -65,6 +66,8 @@ class Tinymce_FormItem_Core extends FormItem {
     $json = str_replace('"<', '', $json);
     $json = str_replace('>"', '', $json);
     $vars["tinymce_config"] = $json;
+    $vars["tinymce_init"] = $tinymce_init;
+    $vars["tinymce_id"] = $attr["id"];
   }
 
 }
