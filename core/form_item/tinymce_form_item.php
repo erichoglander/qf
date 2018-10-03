@@ -66,7 +66,7 @@ class Tinymce_FormItem_Core extends FormItem {
     $json = str_replace('"<', '', $json);
     $json = str_replace('>"', '', $json);
     $vars["tinymce_config"] = $json;
-    $vars["tinymce_init"] = $tinymce_init;
+    $vars["tinymce_init"] = $this->tinymce_init;
     $vars["tinymce_id"] = $attr["id"];
   }
 
