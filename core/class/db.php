@@ -212,7 +212,7 @@ class Db_Core {
       $this->error($debug);
     }
     $err = $stmt->errorInfo();
-    if ($err[0] != 00000) {
+    if ($err[0] != "00000") {
       $this->errors[] = $err;
       $debug = [
         "backtrace" => debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 4),
