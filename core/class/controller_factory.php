@@ -264,6 +264,17 @@ class ControllerFactory_Core {
               }
             }
           }
+          $domains = $this->Config->getDomainsLanguage();
+          if ($domains !== null) {
+            foreach ($domains as $domain => $lang) {
+              if ($domain == $_SERVER["HTTP_HOST"]) {
+                if ($lang == "default")
+                  $lang = $this->Config->getDefaultLanguage();
+                $request["lang"] = $lang;
+                break;
+              }
+            }
+          }
         }
       }
       // User settings

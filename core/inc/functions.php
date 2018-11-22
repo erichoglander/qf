@@ -3,7 +3,7 @@
  * A number of default functions
  *
  * Includes both necessary functions and helper functions
- * 
+ *
  * @author Eric Höglander
  */
 
@@ -11,7 +11,7 @@
  * Autoloader for classses
  *
  * Includes the necessary file based on class name
- * 
+ *
  * @param  string $class
  */
 function classAutoload($class) {
@@ -42,7 +42,7 @@ function classAutoload($class) {
       $epath = DOC_ROOT."/extend/".$dir."/".$fdir."/".$dir.".php";
       if (file_exists($cpath))
         require_once($cpath);
-      if (file_exists($epath)) 
+      if (file_exists($epath))
         require_once($epath);
       return;
     }
@@ -62,7 +62,7 @@ spl_autoload_register("classAutoload");
  * If no extended class is found, the object
  * is created from the core class
  * Ex: newClass("Io") might create class from Io or Io_Core
- * 
+ *
  * @param  string $cname The class name
  * @return object        A class object
  */
@@ -132,7 +132,7 @@ function pascalToSnake($str, $delimiter = "_") {
  * @return string     Ex: 2kB
  */
 function formatBytes($bytes) {
-  if (!$bytes) 
+  if (!$bytes)
     return "0B";
   $units = Array("B", "kB", "MB", "GB", "TB");
   $pow = floor(log($bytes)/log(1024));
@@ -144,7 +144,7 @@ function formatBytes($bytes) {
  * Turns a readable number into an integer
  *
  * Used primarily to store currency without getting rounding errors
- * 
+ *
  * @param  string $value Ex: 3,75
  * @return int           Ex: 375
  */
@@ -167,7 +167,7 @@ function decimalInt($value) {
  * Turns an integer inte a readable format
  *
  * Used primarily for formatting stored currency
- * 
+ *
  * @param  int     $value    Ex: 375
  * @param  int     $p        Number of decimals
  * @param  string  $dec      Decimal point
@@ -279,7 +279,7 @@ function filePath($path) {
  *
  * Returns file in extended directory if it exists
  * otherwise return from core directory
- * 
+ *
  * @see filePath()
  * @param  string $path Ex: library/mylib/somefile.png
  * @return string       Ex: /extend/library/mylib/somefile.png
@@ -381,8 +381,8 @@ function uri($path, $lang = null) {
       $lang = LANG;
     $row = $Db->getRow("
         SELECT * FROM `alias`
-        WHERE 
-          path = :path && 
+        WHERE
+          path = :path &&
           status = 1 &&
           (lang IS NULL || lang = :lang)",
         [ ":path" => $path,
@@ -413,7 +413,7 @@ function url($path, $options = []) {
   $path = preg_replace("/^[\/]+/", "", $path);
   if (!empty($options["lang"]))
     $url = langBaseUrl($options["lang"]).uri($path, $options["lang"]);
-  else 
+  else
     $url = BASE_URL.uri($path);
   if (!empty($options["redir"])) {
     $uri = REQUEST_PATH;
@@ -452,10 +452,21 @@ function langBaseUrl($lang) {
   }
   else if ($Config->getLanguageDetection() == "domain") {
     $domains = $Config->getDomains();
-    foreach ($domains as $l => $domain) {
-      if ($lang == $l) {
-        $base = HTTP_PROTOCOL."://".$domain;
-        break;
+    if ($domains !== null) {
+      foreach ($domains as $l => $domain) {
+        if ($lang == $l) {
+          $base = HTTP_PROTOCOL."://".$domain;
+          break;
+        }
+      }
+    }
+    $domains = $Config->getDomainsLanguage();
+    if ($domains !== null) {
+      foreach ($domains as $domain => $l) {
+        if ($lang == $l) {
+          $base = HTTP_PROTOCOL."://".$domain;
+          break;
+        }
       }
     }
     if (!isset($base))
@@ -517,7 +528,7 @@ function clearmsgs() {
  * Add a log entry
  *
  * Ex: addlog("myclass", "Something bad happened", ["foo" => "bar"], "error");
- * 
+ *
  * @param  string $category
  * @param  string $text
  * @param  mixed  $data Any serializable data

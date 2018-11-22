@@ -7,7 +7,7 @@
  * Config class
  *
  * Each function returns a specific configuration option
- * 
+ *
  * @author Eric Höglander
  */
 class Config_Core {
@@ -69,14 +69,14 @@ class Config_Core {
   /**
    * Where to send approval e-mails if user registration is "admin_approval"
    * @see getUserRegistration
-   * @return string 
+   * @return string
    */
   public function getUserApprovalEmail() {
     return "";
   }
 
   /**
-   * Libraries to be included 
+   * Libraries to be included
    * @return array
    */
   public function getLibraries() {
@@ -112,6 +112,15 @@ class Config_Core {
    * @return array
    */
   public function getDomains() {
+    return null;
+  }
+
+  /**
+   * What domains to use if language detection is set to "domain"
+   * Reversed key/value from getDomains
+   * @return array
+   */
+  public function getDomainsLanguage() {
     return null;
   }
 
@@ -158,7 +167,7 @@ class Config_Core {
   public function getPrivatePath() {
     return substr(DOC_ROOT, 0, strrpos(DOC_ROOT, "/"))."/private";
   }
-  
+
   /**
    * The timespan for failed login attempts
    * @see \User_Entity_Core::userFloodProtection()
@@ -167,7 +176,7 @@ class Config_Core {
   public function getFloodProtectionTime() {
     return 60*60*5;
   }
-  
+
   /**
    * Number of tries for failed login attempts
    * @see \User_Entity_Core::userFloodProtection()
