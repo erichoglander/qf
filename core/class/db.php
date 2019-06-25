@@ -51,6 +51,7 @@ class Db_Core {
     try {
       $this->db = new PDO("mysql:host=".$host.";dbname=".$db.";charset=utf8", $user, $pass);
       $this->db->query("SET COLLATION_CONNECTION=UTF8_SWEDISH_CI");
+      $this->db->query("SET sql_mode = ''");
     }
     catch (PDOException $e) {
       $this->errors[] = $e->getMessage();
@@ -61,7 +62,7 @@ class Db_Core {
     $this->connected = true;
     return true;
   }
-  
+
   /**
    * Dumps the database to a file
    * @param  string $file
@@ -82,7 +83,7 @@ class Db_Core {
   public function getErrors() {
     return $this->errors;
   }
-  
+
   /**
    * Is called when a database error occurs
    * @param  array $debug
@@ -101,7 +102,7 @@ class Db_Core {
       exit;
     }
   }
-  
+
 
   /**
    * Creates a WHERE clause from parameters
@@ -168,7 +169,7 @@ class Db_Core {
       $sql.= implode(" && ", $condarr);
     }
   }
-  
+
   /**
    * Executes a query
    * @param  string|array $sql
@@ -224,7 +225,7 @@ class Db_Core {
     }
     return $stmt;
   }
-  
+
   /**
    * Number of rows matching a query
    * @param  string $sql
@@ -235,7 +236,7 @@ class Db_Core {
     $stmt = $this->query($sql, $param);
     return $stmt->rowCount();
   }
-  
+
   /**
    * Inserts data into the database
    * @param  string  $table
@@ -264,7 +265,7 @@ class Db_Core {
     $stmt = $this->query($sql, $vars);
     return (int) $this->db->lastInsertId();
   }
-  
+
   /**
    * Insert data into the database if a row with the same primary keys doesnt exist
    * @see    insert
@@ -275,7 +276,7 @@ class Db_Core {
   public function insertIgnore($table, $data) {
     return $this->insert($table, $data, true);
   }
-  
+
   /**
    * Updates a database row
    * @see    where
@@ -298,7 +299,7 @@ class Db_Core {
     $this->query($sql, $vars);
     return true;
   }
-  
+
   /**
    * Deletes a row from the database
    * @param  string $table
@@ -313,7 +314,7 @@ class Db_Core {
     $this->query($sql, $vars);
     return true;
   }
-  
+
   /**
    * Fetches a single result
    * @param  string $sql
@@ -324,7 +325,7 @@ class Db_Core {
     $stmt = $this->query($sql, $param);
     return $stmt->fetch(PDO::FETCH_OBJ);
   }
-  
+
   /**
    * Fetches all results
    * @param  string $sql
@@ -335,14 +336,14 @@ class Db_Core {
     $stmt = $this->query($sql, $param);
     return $stmt->fetchAll(PDO::FETCH_OBJ);
   }
-  
+
   /**
    * Compiles expressions into a query string
    * @param  array  $ex Expressions
    * @return string
    */
   public function compileQuery(&$ex) {
-    
+
     // Possible expressions
     $default = [
       "type" => "SELECT",
@@ -361,11 +362,11 @@ class Db_Core {
       "vars" => [],
     ];
     $ex+= $default;
-    
+
     // Backwards compatibility
     if (!empty($ex["from"]))
       $ex["table"] = $ex["from"];
-    
+
     // Query needs either union or table+columns
     if (empty($ex["union"])) {
       if (empty($ex["type"]))
@@ -377,15 +378,15 @@ class Db_Core {
       if (empty($ex["values"]) && in_array($ex["type"], ["INSERT", "UPDATE"]))
         throw new Exception("Cannot compile query, missing values");
     }
-    
+
     // Wrap single values in arrays
     foreach ($ex as $key => $val) {
-      if (array_key_exists($key, $default) && 
+      if (array_key_exists($key, $default) &&
           is_array($default[$key]) &&
           !is_array($val))
         $ex[$key] = [$val];
     }
-    
+
     // Compile query
     if (!empty($ex["union"])) {
       $unions = [];
@@ -445,7 +446,7 @@ class Db_Core {
       $sql.= "\nORDER BY ".implode(", ", $ex["order"]);
     if (!empty($ex["limit"]))
       $sql.= "\nLIMIT ".implode(", ", $ex["limit"]);
-    
+
     return $sql;
   }
 
