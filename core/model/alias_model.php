@@ -47,6 +47,7 @@ class Alias_Model_Core extends Model {
    */
   public function batchAliases($entity_type, $action, $lang = null) {
     $n = 0;
+    $entity_type = snakeToPascal($entity_type, "-");
     $Head = $this->getEntity($entity_type);
     $query = [
       "table" => $Head->tableName(),

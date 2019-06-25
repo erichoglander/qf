@@ -11,7 +11,7 @@
  * @author Eric Höglander
  */
 class Model {
-  
+
   /**
    * Config object
    * @var \Config_Core
@@ -47,15 +47,15 @@ class Model {
    * @var \User_Entity_Core
    */
   protected $User;
-  
+
 
   /**
    * Access control list
    * @var \Acl_Core
    */
   protected $Acl;
-  
-  
+
+
   /**
    * Constructor
    * @param \Config_Core      $Config
@@ -78,7 +78,7 @@ class Model {
     $this->Variable = $Variable;
     $this->User = $User;
     $this->Acl = $Acl;
-    if (is_callable([$this, "construct"])) 
+    if (is_callable([$this, "construct"]))
       call_user_func_array([$this, "construct"], $args);
   }
 
@@ -93,8 +93,8 @@ class Model {
     $cname = ucwords($name)."_Form";
     return $this->newClass($cname, $vars);
   }
-  
-  
+
+
   /**
    * Get entity of given name
    * @see newClass()
@@ -103,9 +103,10 @@ class Model {
    * @return \Entity
    */
   protected function getEntity($name, $id = null) {
-    return newClass($name."_Entity", $this->Db, $id);
+    $cname = ucwords($name)."_Entity";
+    return newClass($cname, $this->Db, $id);
   }
-  
+
   /**
    * Get multiple entities of given name
    * @see getEntity
@@ -130,7 +131,7 @@ class Model {
     }
     return $items;
   }
-  
+
   /**
    * Get model of given name
    * @see newClass()
@@ -158,7 +159,7 @@ class Model {
       throw new Exception("Can't find email message ".$name);
     return $Mail->send($to, $vars);
   }
-  
+
   /**
    * Get model extended object of given name
    * @param  string $name
@@ -169,7 +170,7 @@ class Model {
     array_splice($args, 0, 1);
     $params = [
       $name,
-      $this->Config, 
+      $this->Config,
       $this->Db,
       $this->Io,
       $this->Cache,
@@ -180,5 +181,5 @@ class Model {
     $params = array_merge($params, $args);
     return call_user_func_array("newClass", $params);
   }
-  
+
 };
