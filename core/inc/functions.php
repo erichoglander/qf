@@ -460,6 +460,9 @@ function langBaseUrl($lang) {
         }
       }
     }
+    if (!isset($base))
+      $base = HTTP_PROTOCOL."://".$domains["default"];
+
     $domains = $Config->getDomainsLanguage();
     if ($domains !== null) {
       foreach ($domains as $domain => $l) {
@@ -471,6 +474,7 @@ function langBaseUrl($lang) {
     }
     if (!isset($base))
       $base = HTTP_PROTOCOL."://".$domains["default"];
+
     return $base."/";
   }
   return SITE_URL;
