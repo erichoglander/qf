@@ -110,9 +110,11 @@ class File_Entity_Core extends Entity {
     $name = $Copy->get("name");
     $ext = $Copy->get("extension");
     for ($fname = $name."-0.".$ext, $i = 1; file_exists($path.$uri.$fname); $fname = $name."-".$i.".".$ext, $i++);
-    if (!copy($this->path(), $path.$uri.$fname)) {
-      setmsg("Failed to copy file: ".$this->path()." to ".$path.$uri.$fname, "error");
-      return false;
+    if (file_exists($this->path())) {
+      if (!copy($this->path(), $path.$uri.$fname)) {
+        setmsg("Failed to copy file: ".$this->path()." to ".$path.$uri.$fname, "error");
+        return false;
+      }
     }
     $Copy->set("uri", $uri.$fname);
     if (!$Copy->save())

@@ -45,6 +45,14 @@ class l10n_Entity extends Entity {
     if ($id)
       $this->load($id, $lang);
   }
+  
+  /**
+   * Clone
+   */
+  public function __clone() {
+    $this->set("sid", $this->sid());
+    parent::__clone();
+  }
 
   /**
    * Set default language for current entity

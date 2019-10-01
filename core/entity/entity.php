@@ -71,6 +71,17 @@ class Entity {
   }
   
   /**
+   * Clone
+   */
+  public function __clone() {
+    $this->is_new = true;
+    $this->set("created", null);
+    $this->set("updated", null);
+    unset($this->fields["id"]);
+    $this->stored_entities = [];
+  }
+  
+  /**
    * Get url path to the entity
    * @return string
    */
