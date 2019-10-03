@@ -665,3 +665,19 @@ function iconBtn($uri, $icon = "pencil") {
     return null;
   return '<a class="icon-btn" href="'.url($uri, true).'">'.FontAwesome\Icon($icon).'</a>';
 }
+
+/**
+ * Get environment variable
+ * @param  string $name
+ * @param  mixed $default
+ * @return mixed
+ */
+function env($name, $default = null) {
+  static $env;
+  $path = DOC_ROOT."/extend/inc/env.php";
+  if (!$env && file_exists($path))
+    $env = (include $path);
+  if ($env && array_key_exists($name, $env))
+    return $env[$name];
+  return $default;
+}
