@@ -262,6 +262,12 @@ class l10n_Model_Core extends Model {
         $data.= '
             </Row>';
       }
+      
+      // Column widths
+      $column_widths = '';
+      foreach ($langs as $lang)
+        $column_widths.= '<Column ss:AutoFitWidth="0" ss:Width="250"/>';
+      
       $xml = ' <?xml version="1.0"?>
         <?mso-application progid="Excel.Sheet"?>
         <Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
@@ -276,9 +282,7 @@ class l10n_Model_Core extends Model {
          </Styles>
          <Worksheet ss:Name="Default">
           <Table>
-           <Column ss:AutoFitWidth="0" ss:Width="250"/>
-           <Column ss:AutoFitWidth="0" ss:Width="250"/>
-           <Column ss:AutoFitWidth="0" ss:Width="250"/>
+            '.$column_widths.'
             '.$data.'
           </Table>
          </Worksheet>
