@@ -223,8 +223,8 @@ class l10n_Model_Core extends Model {
 
       // Get languages
       $langs = [];
-      if (!empty($values["languages"])) {
-        $langs = $values["languages"];
+      if (!empty($values["language"])) {
+        $langs = $values["language"];
       }
       else  {
         $languages = $this->Db->getRows("SELECT lang FROM `language` WHERE status = 1");
