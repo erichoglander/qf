@@ -9,7 +9,7 @@ class Tinymce_FormItem_Core extends FormItem {
 
   public function loadDefault() {
     $this->tinymce_default = [
-      "plugins" => "lists link contextmenu autoresize paste",
+      "plugins" => "lists link autoresize paste",
       "autoresize_top_margin" => 0,
       "autoresize_bottom_margin" => 10,
       "autoresize_min_height" => 100,
@@ -27,7 +27,7 @@ class Tinymce_FormItem_Core extends FormItem {
   }
 
   public function js() {
-    return ["//cdnjs.cloudflare.com/ajax/libs/tinymce/4.8.3/tinymce.min.js", fileUrl("library/tinymce/js/file.js")];
+    return ["//cdnjs.cloudflare.com/ajax/libs/tinymce/5.7.1/tinymce.min.js", fileUrl("library/tinymce/js/file.js")];
   }
 
   public function getAttributes() {
