@@ -17,7 +17,7 @@ DirectoryIndex index.php index.html index.htm
   
   RewriteRule ^ - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
   
-  RewriteRule "(^|/)\." - [F]
+  RewriteRule "(^|/)\.git" - [F]
   
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
