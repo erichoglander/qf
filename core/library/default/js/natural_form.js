@@ -15,7 +15,7 @@ function naturalFormsInit() {
     var observer = new MutationObserver(function(mutations) {
       mutations.forEach(function(mutation) {
         naturalFormsObserve(mutation.target);
-      });    
+      });
     });
     var config = { childList: true, subtree: true };
     observer.observe(document.body, config);
@@ -46,22 +46,22 @@ function naturalForm(el, name) {
   };
 
   this.name = name;
-  
+
   this.init = function() {
-  
+
     var self = this;
     this.current = 0;
     this.IE = (window.navigator.userAgent.match("Trident") ? true : false);
-    
+
     this.tags.root = this.tags.wrap.getElementByClassName("form-root-container");
     this.tags.button = this.tags.wrap.getElementByClassName("nf-button");
     this.tags.progress = this.tags.wrap.getElementByClassName("progress");
     this.tags.current = this.tags.wrap.getElementByClassName("current");
-    
+
     this.items = [];
     var items = this.tags.root.children;
     for (var i=0; i<items.length; i++) {
-      if (!items[i].hasClass("form-item"))
+      if (!items[i].hasClass("form-item") || items[i].hasClass("nf-skip"))
         continue;
       var inp;
       if (items[i].className.match("form-type-select"))
@@ -79,19 +79,19 @@ function naturalForm(el, name) {
           this.setActive(i);
       }
     }
-    
+
     for (var i=0; i<this.items.length; i++) {
       if (!this.items[i].wrap.className.match("form-type-text"))
         continue;
       this.items[i].input.addEventListener("keydown", function(e){ self.onKey(e); });
     }
-    
+
     this.tags.button.addEventListener("click", function(){ self.next(); });
-      
+
     this.progress();
-  
+
   }
-  
+
   this.reset = function() {
     this.items[this.current].wrap.removeClass("active");
     this.current = 0;
@@ -107,7 +107,7 @@ function naturalForm(el, name) {
     this.current = n;
     this.items[n].wrap.addClass("active");
     this.progress();
-    if (!this.IE) 
+    if (!this.IE)
       this.items[n].input.focus();
   }
   this.first = function() {
@@ -118,17 +118,17 @@ function naturalForm(el, name) {
   }
   this.values = function() {
     var values = {};
-    for (var i=0; i<this.items.length; i++) 
+    for (var i=0; i<this.items.length; i++)
       values[this.items[i].input.name] = this.items[i].input.value;
     return values;
   }
-  
+
   this.validate = function() {
     if (!this.items[this.current].input.value.length)
       return false;
     return true;
   }
-  
+
   this.prev = function() {
     if (this.current == 0)
       return;
@@ -150,7 +150,7 @@ function naturalForm(el, name) {
     this.tags.progress.style.width = p+"%";
     this.tags.current.innerHTML = this.current+1;
   }
-  
+
   this.onKey = function(e) {
     // 9  TAB
     // 13  ENTER
@@ -160,7 +160,7 @@ function naturalForm(el, name) {
     if (keyCode == 13 || keyCode == 9)
       this.next();
   }
-  
+
   this.init();
 
 }
