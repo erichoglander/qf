@@ -375,7 +375,7 @@ class Mail_Core extends Model {
       }
       else if (isset($attachment["path"])) {
         $info = pathinfo($attachment["path"]);
-        $file["name"] = $info["filename"];
+        $file["name"] = $info["basename"];
       }
       if (isset($attachment["type"])) {
         $file["type"] = $attachment["type"];
@@ -388,7 +388,7 @@ class Mail_Core extends Model {
       $file["content"] = @file_get_contents($attachment);
       $info = pathinfo($attachment);
       $file["type"] = mime_content_type($attachment);
-      $file["name"] = $info["filename"];
+      $file["name"] = $info["basename"];
     }
     return $file;
   }
