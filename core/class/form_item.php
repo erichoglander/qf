@@ -1000,6 +1000,7 @@ class FormItem extends Model {
     $json = $this->jsonStructure();
     $n = count($this->items);
     $last_item = $n-1;
+    $style = null;
     if ($this->multiple_max && $n >= $this->multiple_max)
       $style = ' style="display: none;"';
     return '<div class="form-button form-add-button btn"'.$style.' last_item="'.$last_item.'" onclick="formAddButton(this, '.$json.')">'.$this->add_button.'</div>';
