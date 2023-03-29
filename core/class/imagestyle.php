@@ -96,7 +96,8 @@ class Imagestyle_Core {
    */
   public function styleUri($name, $src) {
     $info = pathinfo(strtolower($src));
-    $sum = substr(md5(filesize($fname)."_checksum_".$src), 0, 8);
+    $size = file_exists($src) ? filesize($src) : 0;
+    $sum = substr(md5($size."_checksum_".$src), 0, 8);
     return "styles/".$name."/".$info["filename"]."_".$sum.".".$info["extension"];
   }
   
